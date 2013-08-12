@@ -154,7 +154,7 @@ public class Main extends JavaPlugin
         //Create Configs and files
         Infected.filesGetArenas().options().copyDefaults(true);
         Infected.filesGetKillTypes().options().copyDefaults(true);
-        //getConfig().options().copyDefaults(true);
+        getConfig().options().copyDefaults(true);
         Infected.filesGetShop().options().copyDefaults(true);
         Infected.filesGetPlayers().options().copyDefaults(true);
         Infected.filesGetMessages().options().copyDefaults(true);
