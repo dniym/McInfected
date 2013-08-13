@@ -698,20 +698,12 @@ public class PlayerListener implements Listener
         boolean Started = plugin.Booleans.get("Started");
         boolean BeforeGame = plugin.Booleans.get("BeforeGame");
         boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
-        if (e.getEntity() instanceof Player)
+        if (e.getEntity() instanceof Player && !(e.getEntity().getLastDamageCause() instanceof Player))
         {
             Player p = (Player) e.getEntity();
             if (plugin.inLobby.contains(p.getName()))
-            {
-                if (plugin.getConfig().getBoolean("Debug"))
-                {
-                    System.out.println("PVEhumans: " + plugin.humans.toString());
-                    System.out.println("PVEzombies: " + plugin.zombies.toString());
-                    System.out.println("PVEInGame " + plugin.inGame.toString());
-                    System.out.println("PVE In Lobby");
-                }
                 e.setCancelled(true);
-            }
+            
             else if (plugin.inGame.contains(p.getName()))
                 if (!(p.getLastDamageCause() instanceof Player))
                     if (plugin.inGame.contains(p.getName()) && Started == true)
@@ -729,102 +721,104 @@ public class PlayerListener implements Listener
                                 }
                             }
                         }
-            if (p.getHealth() - e.getDamage() <= 0)
+            
+            
+            if (p.getHealth() - e.getDamage() <= 0){
                 if (plugin.inGame.contains(p.getName()) && BeforeGame == true)
                 {
                     e.setCancelled(true);
                 }
                 else if (plugin.inGame.contains(p.getName()) && BeforeFirstInf == true)
-            {
-                p.sendMessage(plugin.I + "You almost died before the game even started!");
-                p.setHealth(20);
-                p.setFoodLevel(20);
-                plugin.KillStreaks.put(p.getName(), 0);
-                p.setFallDistance(0F);
-                p.setFoodLevel(20);
-                Methods.respawn(p);
-                p.setFallDistance(0F);
-                e.setCancelled(true);
-            }
-            else if (!(e.getCause() == DamageCause.ENTITY_ATTACK) && plugin.inGame.contains(p.getName()) && Started == true)
-            {
-                e.setDamage(0);
-                if (plugin.getConfig().getBoolean("Debug")) System.out.println("3");
-                Methods.equipZombies(p);
-                if (Main.Lasthit.containsKey(p.getName()))
                 {
-                    Player human = Bukkit.getPlayer(Main.Lasthit.get(p.getName()));
-                    Player Killed = p;
-                    Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(human, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
-                    Methods.stats(human, 1, 0);
-                    Methods.rewardPoints(human, "Kill");
-                    String kill = Methods.getKillType(Methods.getGroup(human) + "s", human.getName(), Killed.getName());
-                    for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                        if (plugin.inGame.contains(playing.getName()))
-                        {
-                            playing.sendMessage(kill);
-                        }
-                    if (!plugin.KillStreaks.containsKey(human.getName())) plugin.KillStreaks.put(human.getName(), 1);
-                    else plugin.KillStreaks.put(human.getName(), plugin.KillStreaks.get(human.getName()) + 1);
-                    Files.getPlayers().set("Players." + human.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(human.getName()));
-                    if (plugin.KillStreaks.get(human.getName()) > 2)
-                        for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                            if (plugin.inGame.contains(playing.getName()))
-                            {
-                                playing.sendMessage(plugin.I + ChatColor.GREEN + human.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + plugin.KillStreaks.get(human.getName()));
-                            }
-                    if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(plugin.KillStreaks.get(human.getName())))))
-                    {
-                        String command = null;
-                        command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + plugin.KillStreaks.get(human.getName()))).replaceAll("<player>", human.getName());
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                    }
-                    Methods.stats(Killed, 0, 1);
-                    if (plugin.KillStreaks.containsKey(Killed.getName()))
-                    {
-                        if (plugin.KillStreaks.get(Killed.getName()) > Files.getPlayers().getInt("Players." + Killed.getName().toLowerCase() + ".KillStreak"))
-                        {
-                            Files.getPlayers().set("Players." + Killed.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(Killed.getName()));
-                            Files.savePlayers();
-                        }
-                        plugin.KillStreaks.put(Killed.getName(), 0);
-                    }
-                    Main.Lasthit.remove(Killed.getName());
+                	p.sendMessage(plugin.I + "You almost died before the game even started!");
+                	p.setHealth(20);
+                	p.setFoodLevel(20);
+                	plugin.KillStreaks.put(p.getName(), 0);
+                	p.setFallDistance(0F);
+                	p.setFoodLevel(20);
+                	Methods.respawn(p);
+                	p.setFallDistance(0F);
+                	e.setCancelled(true);
                 }
-                else
+                else if (!(e.getCause() == DamageCause.ENTITY_ATTACK) && plugin.inGame.contains(p.getName()) && Started == true)
                 {
-                	if(Main.humans.contains(p)){
-	                    for (Player playing: Bukkit.getServer().getOnlinePlayers())
-	                    {
-	                        if (Infected.isPlayerInGame(playing))
-	                        {
-	                            playing.sendMessage(Methods.sendMessage("Game_GotInfected", p, null, null));
-	                        }
-	                    }
-                    }
-                }
-                p.setHealth(20);
-                p.setFallDistance(0F);
-                p.setFoodLevel(20);
-                Methods.respawn(p);
-                p.setFallDistance(0F);
-                e.setDamage(0);
-                Main.humans.remove(p.getName());
-                Main.Lasthit.remove(p.getName());
-                if (plugin.humans.size() == 0)
-                {
-                    Methods.endGame(false);
-                }
-                else
-                {
-                    Methods.equipZombies(p);
-                    Methods.zombifyPlayer(p);
-                }
-
-                if (plugin.Winners.contains(p.getName())) plugin.Winners.remove(p.getName());
-                if (plugin.humans.contains(p.getName())) plugin.humans.remove(p.getName());
-                if (!plugin.zombies.contains(p.getName())) plugin.zombies.add(p.getName());
-            }
+                	e.setDamage(0);
+                	Methods.equipZombies(p);
+                	if (Main.Lasthit.containsKey(p.getName()))
+                	{
+                		Player human = Bukkit.getPlayer(Main.Lasthit.get(p.getName()));
+                		Player Killed = p;
+                		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(human, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
+                		Methods.stats(human, 1, 0);
+                		Methods.rewardPoints(human, "Kill");
+                		String kill = Methods.getKillType(Methods.getGroup(human) + "s", human.getName(), Killed.getName());
+                		for (Player playing: Bukkit.getServer().getOnlinePlayers())
+                			if (plugin.inGame.contains(playing.getName()))
+                			{
+                				playing.sendMessage(kill);
+                			}	
+                		if (!plugin.KillStreaks.containsKey(human.getName())) plugin.KillStreaks.put(human.getName(), 1);
+                		else plugin.KillStreaks.put(human.getName(), plugin.KillStreaks.get(human.getName()) + 1);
+                		Files.getPlayers().set("Players." + human.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(human.getName()));
+                		if (plugin.KillStreaks.get(human.getName()) > 2)
+                			for (Player playing: Bukkit.getServer().getOnlinePlayers())
+                				if (plugin.inGame.contains(playing.getName()))
+                				{
+                					playing.sendMessage(plugin.I + ChatColor.GREEN + human.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + plugin.KillStreaks.get(human.getName()));
+                				}	
+                		if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(plugin.KillStreaks.get(human.getName())))))
+                		{
+                			String command = null;
+                			command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + plugin.KillStreaks.get(human.getName()))).replaceAll("<player>", human.getName());
+                			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                		}
+                		Methods.stats(Killed, 0, 1);
+                		if (plugin.KillStreaks.containsKey(Killed.getName()))
+                		{
+                			if (plugin.KillStreaks.get(Killed.getName()) > Files.getPlayers().getInt("Players." + Killed.getName().toLowerCase() + ".KillStreak"))
+                			{
+                				Files.getPlayers().set("Players." + Killed.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(Killed.getName()));
+                				Files.savePlayers();
+                			}
+                			plugin.KillStreaks.put(Killed.getName(), 0);
+                		}
+                		Main.Lasthit.remove(Killed.getName());
+                	}
+                	else
+                	{
+                		if(Main.humans.contains(p)){
+                			for (Player playing: Bukkit.getServer().getOnlinePlayers())
+                			{
+                				if (Infected.isPlayerInGame(playing))
+                				{
+                					playing.sendMessage(Methods.sendMessage("Game_GotInfected", p, null, null));
+                				}
+                			}
+                		}
+                	}
+                	p.setHealth(20);
+                	p.setFallDistance(0F);
+                	p.setFoodLevel(20);
+                	Methods.respawn(p);
+                	p.setFallDistance(0F);
+                	e.setDamage(0);
+                	Main.humans.remove(p.getName());
+                	Main.Lasthit.remove(p.getName());
+                	if (plugin.humans.size() == 0)
+                	{
+                		Methods.endGame(false);
+                	}	
+                	else
+                	{
+                		Methods.equipZombies(p);
+                		Methods.zombifyPlayer(p);
+                	}	
+                	
+                	if (plugin.Winners.contains(p.getName())) plugin.Winners.remove(p.getName());
+                	if (plugin.humans.contains(p.getName())) plugin.humans.remove(p.getName());
+                	if (!plugin.zombies.contains(p.getName())) plugin.zombies.add(p.getName());
+                }	
+        	}
         }
     }
 
@@ -887,156 +881,37 @@ public class PlayerListener implements Listener
                         //If the attacker is a human, and the attacky is a zombie
                         if (plugin.humans.contains(useruser.getName()) && plugin.zombies.contains(playeruser.getName()))
                         {
-                            if (plugin.getConfig().getBoolean("Debug")) System.out.println("4");
                             Player human = useruser;
                             Player zombie = playeruser;
-                            if (!Files.getArenas().getBoolean("Arenas." + Main.playingin + "Plain Zombie Survival"))
+                            
+                            Main.Lasthit.put(zombie.getName(), human.getName());
+                            
+                            //If the damage done will kill the zombie
+                            if (zombie.getHealth() - e.getDamage() <= 0)
                             {
-                                Main.Lasthit.put(zombie.getName(), human.getName());
-
-                                //If the damage done will kill the zombie
-                                if (zombie.getHealth() - e.getDamage() <= 0)
-                                {
-                                    Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(human, zombie, Infected.playerGetGroup(zombie), false));
-                                    if (plugin.getConfig().getBoolean("Debug")) System.out.println("4.1");
-                                    e.setDamage(0);
-
-                                    //Get a random killtype then set as string and send it out
-                                    String kill = Methods.getKillType("Humans", human.getName(), zombie.getName());
-                                    for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                    {
-                                        if (plugin.inGame.contains(playing.getName()))
-                                            playing.sendMessage(kill);
-                                    }
-                                    Methods.stats(human, 1, 0);
-                                    plugin.KillStreaks.put(human.getName(), plugin.KillStreaks.get(human.getName()) + 1);
-                                    Files.getPlayers().set("Players." + human.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(human.getName()));
-                                    if (plugin.KillStreaks.get(human.getName()) > 2)
-                                        for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                            if (plugin.inGame.contains(playing.getName()))
-                                                playing.sendMessage(plugin.I + ChatColor.GREEN + human.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + plugin.KillStreaks.get(human.getName()));
-                                    if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(plugin.KillStreaks.get(human.getName())))))
-                                    {
-                                        String command = null;
-                                        command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + plugin.KillStreaks.get(human.getName()))).replaceAll("<player>", human.getName());
-                                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                                    }
-                                    Methods.stats(zombie, 0, 1);
-                                    if (plugin.KillStreaks.containsKey(zombie.getName()))
-                                    {
-                                        if (plugin.KillStreaks.get(zombie.getName()) > Files.getPlayers().getInt("Players." + zombie.getName().toLowerCase() + ".KillStreak"))
-                                        {
-                                            Files.getPlayers().set("Players." + zombie.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(zombie.getName()));
-                                            Files.savePlayers();
-                                        }
-
-                                        plugin.KillStreaks.put(zombie.getName(), 0);
-                                    }
-                                    Methods.rewardPoints(human, "Kill");
-                                    Main.Lasthit.remove(zombie.getName());
-                                    //Reset the zombie
-                                    Methods.equipZombies(zombie);
-                                    zombie.setFoodLevel(20);
-                                    zombie.setHealth(20);
-                                    zombie.setFallDistance(0F);
-                                    if (plugin.getConfig().getBoolean("Debug")) System.out.println("4.3");
-                                    Methods.respawn(zombie);
-                                    zombie.setFallDistance(0F);
-                                    Methods.zombifyPlayer(zombie);
-                                }
+                            	Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(human, zombie, Infected.playerGetGroup(zombie), false));
+                            	e.setDamage(0);
+                            	AttackingManager.HumanAttackZombie(human, zombie);
                             }
                             //////////////////////////////////////////////////////////////////////////           ZOMBIE KILLING HUMAN
                         }
                         else if (plugin.humans.contains(playeruser.getName()) && plugin.zombies.contains(useruser.getName()))
                         {
-
-                            if (plugin.getConfig().getBoolean("Debug")) System.out.println("5");
-                            //If the attacker is a zombie and the attacky is a human
-                            Player newzombie = playeruser;
-                            Player zombie = useruser;
-                            Main.Lasthit.put(newzombie.getName(), zombie.getName());
-                            if (newzombie.getHealth() - e.getDamage() <= 0)
-                            {
-
-                                Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(zombie, newzombie, Infected.playerGetGroup(newzombie), true));
-                                e.setDamage(0);
-                                plugin.humans.remove(newzombie.getName());
-                                plugin.zombies.add(newzombie.getName());
-                                Methods.rewardPoints(zombie, "Kill");
-                                plugin.Winners.remove(newzombie.getName());
-                                Main.Lasthit.remove(newzombie.getName());
-                                newzombie.sendMessage(plugin.I + "You have become infected!");
-                                newzombie.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 2));
-                                Methods.equipZombies(newzombie);
-                                newzombie.setHealth(20);
-                                newzombie.setFoodLevel(20);
-                                Methods.stats(newzombie, 0, 1);
-                                Methods.stats(zombie, 1, 0);
-                                if (plugin.KillStreaks.get(newzombie.getName()) > Files.getPlayers().getInt("Players." + newzombie.getName().toLowerCase() + ".KillStreak"))
-                                {
-                                    Files.getPlayers().set("Players." + newzombie.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(newzombie.getName()));
-                                    Files.savePlayers();
-                                }
-
-                                if (!plugin.KillStreaks.containsKey(zombie.getName()))
-                                    plugin.KillStreaks.put(zombie.getName(), Integer.valueOf("0"));
-                                plugin.KillStreaks.put(newzombie.getName(), 0);
-                                plugin.KillStreaks.put(zombie.getName(), plugin.KillStreaks.get(zombie.getName()) + 1);
-
-                                if (plugin.KillStreaks.get(zombie.getName()) > 2)
-                                    for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                        if (plugin.inGame.contains(playing.getName()))
-                                            playing.sendMessage(plugin.I + ChatColor.RED + zombie.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + plugin.KillStreaks.get(zombie.getName()));
-                                if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(plugin.KillStreaks.get(zombie.getName())))))
-                                {
-                                    String command = null;
-                                    command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + plugin.KillStreaks.get(zombie.getName()))).replaceAll("<player>", zombie.getName());
-                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                                }
-                                String kill = Methods.getKillType("Zombies", newzombie.getName(), zombie.getName());
-                                for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                {
-                                    if (plugin.inGame.contains(playing.getName()))
-                                    {
-                                        playing.sendMessage(kill);
-                                    }
-                                    if (plugin.humans.contains(playing.getName())) Methods.rewardPoints(playing, "Survive");
-
-                                }
-                                if (plugin.humans.size() == 0)
-                                {
-                                    Methods.endGame(false);
-                                }
-                                else
-                                {
-                                    for (Player zombies: Bukkit.getOnlinePlayers())
-                                    {
-                                        if (Infected.isPlayerZombie(zombies) && !(zombies == newzombie)) Methods.rewardPoints(zombies, "Zombies Infected");
-                                    }
-                                    //If New Zombies Tp is true, tp the zombie on infection
-                                    if (plugin.getConfig().getBoolean("New Zombies Tp") == true)
-                                    {
-
-                                        newzombie.setFallDistance(0F);
-                                        Methods.respawn(newzombie);
-                                        newzombie.setFallDistance(0F);
-                                    }
-                                    Methods.zombifyPlayer(newzombie);
-                                }
-                            }
+                        	//If the attacker is a zombie and the attacky is a human
+                        	Player newzombie = playeruser;
+                        	Player zombie = useruser;
+                        	
+                        	Main.Lasthit.put(newzombie.getName(), zombie.getName());
+                        	if (newzombie.getHealth() - e.getDamage() <= 0)
+                        	{
+                        		
+                        		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(zombie, newzombie, Infected.playerGetGroup(newzombie), true));
+                        		e.setDamage(0);
+                        		AttackingManager.ZombieAttackHuman(zombie, newzombie);
+                        	}
                         }
                         else
                         {
-
-                            if (plugin.getConfig().getBoolean("Debug")) System.out.println("6");
-
-                            if (plugin.getConfig().getBoolean("Debug"))
-                            {
-                                System.out.println("humans: " + plugin.humans.toString());
-                                System.out.println("zombies: " + plugin.zombies.toString());
-                                System.out.println("InGame " + plugin.inGame.toString());
-                            }
-
                             //If the attackers arn't from different groups
                             //act like nothing happened
                             e.setDamage(0);
@@ -1045,8 +920,10 @@ public class PlayerListener implements Listener
                     }
                 }
         }
-    }@
-    EventHandler(priority = EventPriority.NORMAL)
+    }
+    
+    
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerReThrowEvent(PlayerPickupItemEvent event)
     {
         if (!event.isCancelled())
@@ -1443,7 +1320,7 @@ public class PlayerListener implements Listener
                              event.getBlock().breakNaturally();
                          }
                     	 boolean classFound = false;
-                    	 String className = "";
+                    	 String className = "None";
                          for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
                          {
                         	 
@@ -1453,7 +1330,7 @@ public class PlayerListener implements Listener
                         	   break;
                            }
                          }
-                         if(classFound){
+                         if(classFound || event.getLine(2).equalsIgnoreCase("None")){
 
                             	 event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
                             	 event.setLine(1, ChatColor.GRAY + "Class");
@@ -1470,7 +1347,7 @@ public class PlayerListener implements Listener
                               event.getBlock().breakNaturally();
                           }
                      	 boolean classFound = false;
-                     	 String className = "";
+                     	 String className = "None";
                           for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
                           {
                          	 
@@ -1480,7 +1357,7 @@ public class PlayerListener implements Listener
                          	   break;
                             }
                           }
-                          if(classFound){
+                          if(classFound || event.getLine(2).equalsIgnoreCase("None")){
                             	 event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
                             	 event.setLine(1, ChatColor.GRAY + "Class");
                             	 event.setLine(2, ChatColor.GREEN + className);

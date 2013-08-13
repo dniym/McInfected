@@ -38,7 +38,11 @@ import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 public class Methods
 {
 
-    public static HashMap < String, Integer > Stats = new HashMap < String, Integer > ();
+    private static HashMap < String, Integer > Stats = new HashMap < String, Integer > ();
+    
+    
+    
+    
     public static void rewardPoints(Player player, String PointsCause)
     {
         if (Main.config.getBoolean("Points.Use"))
