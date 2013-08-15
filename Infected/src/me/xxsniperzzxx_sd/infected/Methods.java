@@ -1,5 +1,6 @@
 package me.xxsniperzzxx_sd.infected;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
@@ -7,6 +8,7 @@ import java.util.Map.Entry;
 
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
 
 import org.bukkit.Bukkit;
@@ -41,8 +43,184 @@ public class Methods
     private static HashMap < String, Integer > Stats = new HashMap < String, Integer > ();
     
     
+    public static void openHumanMenu(final Player player){
+    	final ArrayList<String> classList = new ArrayList<String>();
+    	for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
+    	{
+    		if(!classes.contains(".")){
+    			classList.add(classes);
+    		}
+    	}
+    	IconMenu menu = new IconMenu(ChatColor.GREEN + player.getName() + " - Human Class", ((classList.size()/9)*9)+9, new IconMenu.OptionClickEventHandler() {
+            @Override
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+            	if(event.getName().equalsIgnoreCase("None")){
+            		Main.humanClasses.remove(player.getName());
+            		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a human class");
+            		event.setWillClose(true); 	
+                    event.setWillDestroy(true);	
+            	}
+            	else if(player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human."+event.getName())){
+            		Main.humanClasses.put(player.getName(), classList.get(event.getPosition()));
+            		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your human class is: " + event.getName());
+            		event.setWillClose(true);
+                    event.setWillDestroy(true);
+            	}else{
+                    player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+                    event.setWillClose(true);
+                    event.setWillDestroy(true);
+            	}
+            }
+    	}, Main.me);
+    	int i = 0;
+    	for (String classes: classList)
+    	{
+    		if(!classes.contains(".")){
+    			ItemStack item = new ItemStack(Material.getMaterial(getItemID(Infected.filesGetClasses().getStringList("Classes.Human."+classes+".Items").get(0))));
+    			menu.setOption(i, item, classes , ChatColor.GREEN+"Click to choose this class");   
+    			i++;
+    		}
+    	}
+		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", "Choose to have no class");
+    	menu.open(player);
+    }
+    
+    public static void openZombieMenu(final Player player){
+
+    	final ArrayList<String> classList = new ArrayList<String>();
+    	for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
+    	{
+    		if(!classes.contains(".")){
+    			classList.add(classes);
+    		}
+    	}
+    	IconMenu menu = new IconMenu(ChatColor.DARK_RED + player.getName() + " - Zombie Class", ((classList.size()/9)*9)+9, new IconMenu.OptionClickEventHandler() {
+            @Override
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+            	if(event.getName().equalsIgnoreCase("None")){
+            		Main.zombieClasses.remove(player.getName());
+            		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a zombie class");
+            		event.setWillClose(true); 	
+                    event.setWillDestroy(true);	
+            	}
+            	else if(player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie."+event.getName())){
+            		Main.zombieClasses.put(player.getName(), classList.get(event.getPosition()));
+            		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your zombie class is: " + event.getName());
+            		event.setWillClose(true);
+                    event.setWillDestroy(true);
+            	}else{
+                    player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+                    event.setWillClose(true);
+                    event.setWillDestroy(true);
+            	}
+            }
+    	}, Main.me);
+    	int i = 0;
+    	for (String classes: classList)
+    	{
+    		if(!classes.contains(".")){
+    			ItemStack item = new ItemStack(Material.getMaterial(getItemID(Infected.filesGetClasses().getStringList("Classes.Zombie."+classes+".Items").get(0))));
+    			menu.setOption(i, item, classes , ChatColor.RED + "Click to choose this class");   
+    			i++;
+    		}
+    	}
+		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", "Choose to have no class");
+    	menu.open(player);
+    }
     
     
+    
+    public static void openVotingMenu(final Player player){
+    	
+    	Infected.filesReloadArenas();
+        Main.possibleArenas.clear();
+        for (String parenas: Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
+        {
+            //Check if the string matchs an arena
+
+            if (Main.possibleArenas.contains(parenas))
+            {
+                Main.possibleArenas.remove(parenas);
+            }
+            if (!parenas.contains("."))
+            {
+                Main.possibleArenas.add(parenas);
+            }
+            if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
+            {
+                Main.possibleArenas.remove(parenas);
+            }
+        }
+        
+
+    	IconMenu menu = new IconMenu(ChatColor.DARK_BLUE + player.getName() + " - Map Vote", ((Main.possibleArenas.size()/9)*9)+9, new IconMenu.OptionClickEventHandler() {
+            @Override
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+            	if(event.getName().equalsIgnoreCase("Random")){
+                	Random r = new Random();
+                    int i = r.nextInt(Main.possibleArenas.size());
+                    String voted4 = Main.possibleArenas.get(i);
+
+                    if (Main.Votes.containsKey(voted4))
+                    {
+                        Main.Votes.put(voted4, Main.Votes.get(voted4) + 1);
+                    }
+                    else
+                    {
+                        Main.Votes.put(voted4, 1);
+                    }
+                    Main.Voted4.put(player.getName(), voted4);
+                    for (Player players: Bukkit.getServer().getOnlinePlayers())
+                        if (Main.inGame.contains(players.getName()))
+                        {
+                            players.sendMessage(Main.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + voted4);
+                        }
+                    if (Main.config.getBoolean("ScoreBoard Support"))
+                    {
+                        Methods.updateScoreBoard();
+                    }
+            		event.setWillClose(true); 	
+                    event.setWillDestroy(true);	
+            	}else{
+                    if (Main.Votes.containsKey(event.getName()))
+                    {
+                        Main.Votes.put(event.getName(), Main.Votes.get(event.getName()) + 1);
+                    }
+                    else
+                    {
+                        Main.Votes.put(event.getName(), 1);
+                    }
+                    Main.Voted4.put(player.getName(), event.getName());
+                    for (Player players: Bukkit.getServer().getOnlinePlayers())
+                        if (Main.inGame.contains(players.getName()))
+                        {
+                            players.sendMessage(Main.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + event.getName());
+                        }
+                    if (Main.config.getBoolean("ScoreBoard Support"))
+                    {
+                        Methods.updateScoreBoard();
+                    }
+            		event.setWillClose(true);
+                    event.setWillDestroy(true);
+            	}
+            }
+    	}, Main.me);
+    	int i = 0;
+    	for (String arenas: Main.possibleArenas)
+    	{
+    		menu.setOption(i, new ItemStack(Material.EMPTY_MAP), arenas , ChatColor.YELLOW + "Click to vote for this map");   
+    		i++;
+    	}
+		menu.setOption(i, new ItemStack(Material.MAP), "random" , ChatColor.YELLOW + "Click to vote for Random");  
+    	menu.open(player);
+    }
+    
+    
+    
+    
+    
+    
+    //===============================================================================
     public static void rewardPoints(Player player, String PointsCause)
     {
         if (Main.config.getBoolean("Points.Use"))
@@ -412,6 +590,31 @@ public class Methods
 	        }
 	        else
 	        {
+
+	            Main.possibleArenas.clear();
+	            for (String parenas: Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
+	            {
+	                //Check if the string matchs an arena
+	
+	                if (Main.possibleArenas.contains(parenas))
+	                {
+	                    Main.possibleArenas.remove(parenas);
+	                }
+	                if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
+	                {
+	                    Main.possibleArenas.remove(parenas);
+	                }
+	                else if (!parenas.contains("."))
+	                {
+	                    for (Entry < String, Integer > mapName: Main.Votes.entrySet())
+	                    {
+	                        if (parenas.equalsIgnoreCase(mapName.getKey()))
+	                        {
+	                            Main.voteBoard.resetScores(Bukkit.getOfflinePlayer(parenas));
+	                        }
+	                    }
+	                }
+	            }
 	            Main.possibleArenas.clear();
 	            for (String parenas: Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
 	            {
@@ -598,7 +801,10 @@ public class Methods
     SuppressWarnings("deprecation")
     public static void equipHumans(Player human)
     {
-        if (Main.tagapi)
+    	if(Main.config.getBoolean("Default Classes.Use"))
+    		Main.humanClasses.put(human.getName(), Main.config.getString("Default Classes.Human"));
+    
+    	if (Main.tagapi)
             TagAPI.refreshPlayer(human);
         if(Main.humanClasses.containsKey(human.getName())){
         	for (String s: Infected.filesGetClasses().getStringList("Classes.Human."+Main.humanClasses.get(human.getName())+".Items"))
@@ -627,6 +833,10 @@ public class Methods
     SuppressWarnings("deprecation")
     public static void equipZombies(Player zombie)
     {
+
+    	if(Main.config.getBoolean("Default Classes.Use"))
+    		Main.zombieClasses.put(zombie.getName(), Main.config.getString("Default Classes.Zombie"));
+    
     	updateScoreBoard();
         if (Main.tagapi)
             TagAPI.refreshPlayer(zombie);

@@ -13,7 +13,7 @@ Check For Updates:
 # |                   Plugin Addons                      | #
 # +======================================================+ #
 
-DisguiseCraft Support: false
+DisguiseCraft Support: true
 
 Zombie Abilities: false
 
@@ -21,7 +21,7 @@ Vault Support:
   Enable: false
   Reward: 100
   
-ScoreBoard Support: false
+ScoreBoard Support: true
 
 # +======================================================+ #
 # |                   Game Settings                      | #
@@ -29,6 +29,9 @@ ScoreBoard Support: false
 
 # Use books for Infecteds commands
 Book For Help: true
+
+# Should we use a GUI well voting for a map?
+Vote with a GUI: true
 
 # Info signs
 Info Signs:
@@ -38,12 +41,6 @@ Info Signs:
   
 # Should players be allowed to join once a game has started
 Prevent Joining During Game: false
-
-# Make the console perform a command per player
-# but only for joining and leaving(Game ending, and player leaving Infected
-ForcedCmds:
-  Join: ''
-  Leave: ''
 
 # Does the game auto start
 Automatic Start:
@@ -72,7 +69,7 @@ Allowed Commands:
 - /tell
 
 # This setting goes into the Arenas.yml and requires you to change the blocks players can break in that arena.
-Allow Breaking Certain Blocks: true
+Allow Breaking Certain Blocks: false
 
 # Play effects around the zombie every so many seconds
 Use Zombie Movement Effects: true
@@ -116,7 +113,13 @@ Score:
 # |                  Armor and Weapons                   | #
 # +======================================================+ #
 
-
+# Do they start off with a class instead of the defaults in the config? (Classes allow more in depth configuration)
+# Capitals DO matter
+Default Classes:
+  Use: false
+  Human: Knight
+  Zombie: Assassin
+  
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 Armor:
   Human:

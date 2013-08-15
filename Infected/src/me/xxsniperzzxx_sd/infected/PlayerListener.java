@@ -201,9 +201,8 @@ public class PlayerListener implements Listener
             if (!Started && !BeforeGame && !BeforeFirstInf)
             {
                 if (plugin.getConfig().getBoolean("Debug"))
-                {
                     System.out.println("Leave: Leaving, wellin lobby, no timers active");
-                }
+
                 e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
                 Methods.resetp(e.getPlayer());
                 for (Player players: Bukkit.getOnlinePlayers())
@@ -216,9 +215,8 @@ public class PlayerListener implements Listener
             else if (!Started && BeforeGame && !BeforeFirstInf)
             {
                 if (plugin.getConfig().getBoolean("Debug"))
-                {
                     System.out.println("Leave: Before Voting");
-                }
+
                 if (Main.inGame.size() == 1)
                 {
                     if (plugin.getConfig().getBoolean("Debug"))
@@ -229,13 +227,22 @@ public class PlayerListener implements Listener
                     Methods.resetp(e.getPlayer());
                     for (Player players: Bukkit.getOnlinePlayers())
                     {
-                        if (Methods.isPlayer(players))
+                        if (Infected.isPlayerInGame(players))
                         {
                             players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
                             Methods.tp2LobbyAfter(players);
                         }
                     }
                     Methods.resetInf();
+                }else{
+                	 Methods.resetp(e.getPlayer());
+                     for (Player players: Bukkit.getOnlinePlayers())
+                     {
+                         if (Methods.isPlayer(players))
+                         {
+                             players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
+                         }
+                     }
                 }
             }
 
@@ -246,6 +253,7 @@ public class PlayerListener implements Listener
                 {
                     System.out.println("Leave: In Arena Before Infected");
                 }
+                
                 if (Main.inGame.size() == 1)
                 {
                     if (plugin.getConfig().getBoolean("Debug"))
@@ -263,6 +271,15 @@ public class PlayerListener implements Listener
                         }
                     }
                     Methods.resetInf();
+                }else{
+                	 Methods.resetp(e.getPlayer());
+                     for (Player players: Bukkit.getOnlinePlayers())
+                     {
+                         if (Methods.isPlayer(players))
+                         {
+                             players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
+                         }
+                     }
                 }
             }
 
@@ -380,180 +397,209 @@ public class PlayerListener implements Listener
     EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(final PlayerQuitEvent e)
     {
-        boolean Started = plugin.Booleans.get("Started");
-        boolean BeforeGame = plugin.Booleans.get("BeforeGame");
-        boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
-        plugin.Creating.remove(e.getPlayer().getName());
-
-        //If a player logs out well playing, make sure it doesn't effect the game, end the game if it does
-        if (plugin.inGame.contains(e.getPlayer().getName()))
-        {
-            plugin.inGame.remove(e.getPlayer().getName());
-
-            //Leave well everyones in the lobby
-            if (!Started && !BeforeGame && !BeforeFirstInf)
-            {
-                if (plugin.getConfig().getBoolean("Debug"))
-                {
-                    System.out.println("Leave: Leaving, wellin lobby, no timers active");
-                }
-                e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                Methods.resetp(e.getPlayer());
-                for (Player players: Bukkit.getOnlinePlayers())
-                {
-                    if (Methods.isPlayer(players)) players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
-                }
-            }
-
-            //Voting has started, less then 2 people left
-            else if (!Started && BeforeGame && !BeforeFirstInf)
-            {
-                if (plugin.getConfig().getBoolean("Debug"))
-                {
-                    System.out.println("Leave: Before Voting");
-                }
-                if (Main.inGame.size() == 1)
-                {
-                    if (plugin.getConfig().getBoolean("Debug"))
-                    {
-                        System.out.println("Leave: Before Voting(Triggered)");
-                    }
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-                            Methods.tp2LobbyAfter(players);
-                        }
-                    }
-                    Methods.resetInf();
-                }
-                else
-                {
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
-                        }
-                    }
-                }
-            }
-
-            //In Arena, before first Infected
-            else if (!Started && !BeforeGame && BeforeFirstInf)
-            {
-                if (plugin.getConfig().getBoolean("Debug"))
-                {
-                    System.out.println("Leave: In Arena Before Infected");
-                }
-                if (Main.inGame.size() == 1)
-                {
-                    if (plugin.getConfig().getBoolean("Debug"))
-                    {
-                        System.out.println("Leave: In Arena Before Infected(Triggered)");
-                    }
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-                            Methods.tp2LobbyAfter(players);
-                        }
-                    }
-                    Methods.resetInf();
-                }
-                else
-                {
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
-                        }
-                    }
-                }
-            }
-
-            //In Arena, Game has started
-            else if (Started && !BeforeGame && !BeforeFirstInf)
-            {
-                if (plugin.getConfig().getBoolean("Debug"))
-                {
-                    System.out.println("Leave: In Arena, Game Has Started");
-                }
-                if (Main.inGame.size() == 1)
-                {
-                    if (plugin.getConfig().getBoolean("Debug"))
-                    {
-                        System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
-                    }
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-                            Methods.tp2LobbyAfter(players);
-                        }
-                    }
-                    Methods.resetInf();
-                }
-
-                // If Not Enough zombies remain 
-                else if (Main.zombies.size() == 1 && Infected.isPlayerZombie(e.getPlayer()))
-                {
-                    if (plugin.getConfig().getBoolean("Debug"))
-                    {
-                        System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
-                    }
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    Methods.newZombieSetUpEveryOne();
-                }
-
-                // Not enough humans left
-                else if (Main.humans.size() == 1 && plugin.humans.contains(e.getPlayer().getName()))
-                {
-                    if (plugin.getConfig().getBoolean("Debug"))
-                    {
-                        System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
-                    }
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-                            Methods.tp2LobbyAfter(players);
-                        }
-                    }
-                    Methods.resetInf();
-                }
-                else
-                {
-                    e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-                    Methods.resetp(e.getPlayer());
-                    for (Player players: Bukkit.getOnlinePlayers())
-                    {
-                        if (Methods.isPlayer(players))
-                        {
-                            players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
-                        }
-                    }
-                }
-            }
-        }
+    	boolean Started = plugin.Booleans.get("Started");
+    	boolean BeforeGame = plugin.Booleans.get("BeforeGame");
+    	boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
+    	plugin.Creating.remove(e.getPlayer().getName());
+    	
+    	//If a player logs out well playing, make sure it doesn't effect the game, end the game if it does
+    	if (plugin.inGame.contains(e.getPlayer().getName()))
+    	{
+    		plugin.inGame.remove(e.getPlayer().getName());
+    		
+    		//Leave well everyones in the lobby
+    		if (!Started && !BeforeGame && !BeforeFirstInf)
+    		{
+    			if (plugin.getConfig().getBoolean("Debug"))
+    				System.out.println("Leave: Leaving, wellin lobby, no timers active");
+    			
+    			e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+    			Methods.resetp(e.getPlayer());
+    			for (Player players: Bukkit.getOnlinePlayers())
+    			{
+    				if (Methods.isPlayer(players)) players.sendMessage(Methods.sendMessage("Leave_InLobby", e.getPlayer(), null, null));
+    			}
+    		}
+    		
+    		//Voting has started, less then 2 people left
+    		else if (!Started && BeforeGame && !BeforeFirstInf)
+    		{
+    			if (plugin.getConfig().getBoolean("Debug"))
+    				System.out.println("Leave: Before Voting");
+    			
+    			if (Main.inGame.size() == 1)
+    			{
+    				if (plugin.getConfig().getBoolean("Debug"))
+    				{
+    					System.out.println("Leave: Before Voting(Triggered)");
+    				}
+    				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Infected.isPlayerInGame(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
+    						Methods.tp2LobbyAfter(players);
+    					}
+    				}
+    				Methods.resetInf();
+    			}else{
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Methods.isPlayer(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
+    					}
+    				}
+    			}
+    		}
+    		
+    		//In Arena, before first Infected
+    		else if (!Started && !BeforeGame && BeforeFirstInf)
+    		{
+    			if (plugin.getConfig().getBoolean("Debug"))
+    			{
+    				System.out.println("Leave: In Arena Before Infected");
+    			}
+    			
+    			if (Main.inGame.size() == 1)
+    			{
+    				if (plugin.getConfig().getBoolean("Debug"))
+    				{
+    					System.out.println("Leave: In Arena Before Infected(Triggered)");
+    				}
+    				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Methods.isPlayer(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
+    						Methods.tp2LobbyAfter(players);
+    					}
+    				}
+    				Methods.resetInf();
+    			}else{
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Methods.isPlayer(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
+    					}
+    				}
+    			}
+    		}
+    		
+    		//In Arena, Game has started
+    		else if (Started && !BeforeGame && !BeforeFirstInf)
+    		{
+    			if (plugin.getConfig().getBoolean("Debug"))
+    			{
+    				System.out.println("Leave: In Arena, Game Has Started");
+    			}
+    			if (Main.inGame.size() == 1)
+    			{
+    				if (plugin.getConfig().getBoolean("Debug"))
+    				{
+    					System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
+    				}
+    				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Methods.isPlayer(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
+    						Methods.tp2LobbyAfter(players);
+    					}
+    				}
+    				Methods.resetInf();
+    			}
+    			
+    			// If Not Enough zombies remain 
+    			else if (Main.zombies.size() == 1 && Infected.isPlayerZombie(e.getPlayer()))
+    			{
+    				if (plugin.getConfig().getBoolean("Debug"))
+    				{
+    					System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
+    				}
+    				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+    				Methods.resetp(e.getPlayer());
+    				Random r = new Random();
+    				int alpha = r.nextInt(Main.inGame.size());
+    				String name = Main.inGame.get(alpha);
+    				Player zombie = Bukkit.getServer().getPlayer(name);
+    				zombie.sendMessage(Main.I + ChatColor.RED + "You are the new Infected! Good luck!");
+    				Main.zombies.clear();
+    				Main.zombies.add(zombie.getName());
+    				Main.Winners.remove(zombie.getName());
+    				if (plugin.getConfig().getBoolean("New Zombie Tp"))
+    				{
+    					Methods.respawn(zombie);
+    				}
+    				zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
+    				if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
+    				{
+    					zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000, 2), true);
+    					zombie.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 2000, 1), true);
+    				}
+    				Methods.zombifyPlayer(zombie);
+    				zombie.setHealth(20);
+    				Methods.equipZombies(zombie);
+    				
+    				//Inform humans of infected, prepare them
+    				for (Player online: Bukkit.getServer().getOnlinePlayers())
+    				{
+    					if (Infected.isPlayerInGame(online))
+    					{
+    						if (Main.inGame.contains(online.getName()) && (!(Main.zombies.contains(online.getName()))))
+    						{
+    							
+    							//if(Main.humans.contains(online)) {
+    							Main.humans.add(online.getName());
+    							online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
+    							online.setHealth(20);
+    							online.playEffect(online.getLocation(), Effect.SMOKE, 1);
+    						}
+    					}
+    				}
+    			}
+    			
+    			// Not enough humans left
+    			else if (Main.humans.size() == 1 && plugin.humans.contains(e.getPlayer().getName()))
+    			{
+    				if (plugin.getConfig().getBoolean("Debug"))
+    				{
+    					System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
+    				}
+    				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Methods.isPlayer(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
+    						Methods.tp2LobbyAfter(players);
+    					}
+    				}
+    				Methods.resetInf();
+    			}
+    			else
+    			{
+    				Methods.resetp(e.getPlayer());
+    				for (Player players: Bukkit.getOnlinePlayers())
+    				{
+    					if (Methods.isPlayer(players))
+    					{
+    						players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
+    					}
+    				}
+    			}
+    		}
+    	}
     }
 
     //When a player uses a command make sure it does, what its supposed to 

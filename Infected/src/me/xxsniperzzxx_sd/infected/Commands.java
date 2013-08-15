@@ -2,6 +2,7 @@ package me.xxsniperzzxx_sd.infected;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -99,128 +100,32 @@ public class Commands implements CommandExecutor
             	}
             	Player player = (Player)sender;
             	if(Infected.booleanIsStarted()){
-            		sender.sendMessage(plugin.I + ChatColor.RED + "Please choose your class before the game starts!");
+            		player.sendMessage(Methods.sendMessage("Error_GameStarted", player, null, null));
             		return true;
             	}
-            	else if(args.length == 3){
-            		if(args[1].equalsIgnoreCase("Human"))
-            		{
+            	if(!Infected.isPlayerInLobby(player)){
+            		player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
+            		return true;
+            	}
+            	else if(args.length == 2){
+            		if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null) && !(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null)){
+            			if(args[1].equalsIgnoreCase("Human"))
+            			{
+            				Methods.openHumanMenu(player);
+            			}
+            			else if(args[1].equalsIgnoreCase("Zombie"))
+            			{
 
-                        if (!sender.hasPermission("Infected.Classes.Human") && !sender.hasPermission("Infected.Classes.Human."+args[2]))
-                        {
-                            sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
-                            return true;
-                        }
-                  	  if (Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null)
-                        {
-                            player.sendMessage(plugin.I + ChatColor.RED + " Missing classes... wtf?");
-                            return true;
-                        }
-                  	  boolean classFound = false;
-                  	  String className = "";
-                  	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
-                        {
-                       	 
-                          if((!classes.contains(".")) && args[2].equalsIgnoreCase(classes)){
-                       	   classFound = true;
-                       	   className = classes;
-                       	   break;
-                          }
-                        }
-                        if(classFound)
-                        {
-                        	Main.humanClasses.put(player.getName(), className);
-                			player.sendMessage(Main.I+ChatColor.DARK_AQUA+"Your current human class is: "+args[2]);
-                        }
-                        else{
-                       	 player.sendMessage(plugin.I + ChatColor.RED + " That class doesn't exist");
-                        }
-            		}
-            		else if(args[1].equalsIgnoreCase("Zombie"))
-            		{
-                        if (!sender.hasPermission("Infected.Classes.Zombie") && !sender.hasPermission("Infected.Classes.Zombie."+args[2]))
-                        {
-                            sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
-                            return true;
-                        }
-            			if (Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null)
-                          {
-                              player.sendMessage(plugin.I + ChatColor.RED + " Missing classes... wtf?");
-                              return true;
-                          }
-                    	  boolean classFound = false;
-                    	  String className = "";
-                    	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
-                          {
-                         	 
-                            if((!classes.contains(".")) && args[2].equalsIgnoreCase(classes)){
-                         	   classFound = true;
-                         	   className = classes;
-                         	   break;
-                            }
-                          }
-                          if(classFound)
-                          {
-                          	Main.zombieClasses.put(player.getName(), className);
-                  			player.sendMessage(Main.I+ChatColor.DARK_AQUA+"Your current zombie class is: "+args[2]);
-                          }
-                  		else
-                		{
-               			 player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human> [ClassName]");
-            			 player.sendMessage(plugin.I + ChatColor.GREEN + "Human Classes:");
-
-                    	  if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null))
-                        	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
-                                if((!classes.contains("."))){
-                       			 player.sendMessage(plugin.I + ChatColor.GOLD + classes);
-                                }
-             			 player.sendMessage(plugin.I + ChatColor.RED + "\nZombie Classes:");
-
-                    	  if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null))
-                        	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
-                                if((!classes.contains("."))){
-                       			 player.sendMessage(plugin.I + ChatColor.GOLD + classes);
-                                }
-                		}
+            				Methods.openZombieMenu(player);
+            			}	
+            			else
+            				player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human>");
             		}
             		else
-            		{
-           			 player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human> [ClassName]");
-        			 player.sendMessage(plugin.I + ChatColor.GREEN + "Human Classes:");
-
-                	  if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null))
-                    	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
-                            if((!classes.contains("."))){
-                   			 player.sendMessage(plugin.I + ChatColor.GOLD + classes);
-                            }
-         			 player.sendMessage(plugin.I + ChatColor.RED + "\nZombie Classes:");
-
-                	  if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null))
-                    	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
-                            if((!classes.contains("."))){
-                   			 player.sendMessage(plugin.I + ChatColor.GOLD + classes);
-                            }
-            		}
-                    	
+            			player.sendMessage(plugin.I+ChatColor.RED+"No Classes were found...");
             	}
         		else
-        		{
-       			 player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human> [ClassName]");
-    			 player.sendMessage(plugin.I + ChatColor.GREEN + "Human Classes:");
-
-            	  if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null))
-                	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
-                        if((!classes.contains("."))){
-               			 player.sendMessage(plugin.I + ChatColor.GOLD + classes);
-                        }
-     			 player.sendMessage(plugin.I + ChatColor.RED + "\nZombie Classes:");
-
-            	  if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null))
-                	  for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
-                        if((!classes.contains("."))){
-               			 player.sendMessage(plugin.I + ChatColor.GOLD + classes);
-                        }
-        		}
+        			player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human>");
             }
             /////////////////////////////////////////////////////////////////////////////////////////////////////     JOIN
             else if (args.length == 1)
@@ -487,7 +392,7 @@ public class Commands implements CommandExecutor
                     else
                     {
                         //If the player tries to suicide and they arnt in the lobby
-                        player.sendMessage(plugin.I + "Your not even in started a game!");
+                    	player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
                         return true;
                     }
                 }
@@ -871,8 +776,15 @@ public class Commands implements CommandExecutor
                     }
                     else
                     {
-                        player.performCommand("Infected arenas");
-                        player.sendMessage(plugin.I + ChatColor.YELLOW + "Or you could just vote for \"/Infected Vote Random\"");
+                    	if(plugin.config.getBoolean("Vote with a GUI"))
+                    	{
+                    		Methods.openVotingMenu(player);
+                    	}
+                    	else
+                    	{
+                    		player.performCommand("Infected arenas");
+                    		player.sendMessage(plugin.I + ChatColor.YELLOW + "Or you could just vote for \"/Infected Vote Random\"");
+                    	}
                     }
                     return true;
                     /////////////////////////////////////////////////////////////////////////////////////////////////////    MANUAL START
@@ -1626,7 +1538,12 @@ public class Commands implements CommandExecutor
                                 plugin.possibleArenas.remove(parenas);
                             }
                         }
+                        if(voted4.equalsIgnoreCase("Random")){
 
+                        	Random r = new Random();
+                            int i = r.nextInt(Main.possibleArenas.size());
+                            voted4 = Main.possibleArenas.get(i);
+                        }
                         if (!voted4.equals("random") && !Infected.filesGetArenas().contains("Arenas." + voted4 + ".Spawns"))
                         {
                             player.sendMessage(plugin.I + ChatColor.RED + "Error: Something's wrong with that arena!");
@@ -1640,11 +1557,7 @@ public class Commands implements CommandExecutor
                         }
                         else
                         {
-                            //save who voted for what, and add
-                            //the vote to the hashmap
-                            //Votes are total vote numbers
-                            //Voted4 is  Player:Map
-                            if (plugin.Votes.containsKey(voted4))
+                        	if (plugin.Votes.containsKey(voted4))
                             {
                                 plugin.Votes.put(voted4, plugin.Votes.get(voted4) + 1);
                             }
