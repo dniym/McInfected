@@ -167,160 +167,172 @@ public class Game
                         {
                             String[] floc = loc.split(",");
                             World world = Bukkit.getServer().getWorld(floc[0]);
-                            Location Loc = new Location(world, Integer.valueOf(floc[1]), Integer.valueOf(floc[2]), Integer.valueOf(floc[3]));
-                            if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded()) Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
-                        }
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-                        {@
-                            Override
-                            public void run()
-                            {
-                                //Get Players in lobby setup
-                                Main.inLobby.clear();
-                                for (Player p: Bukkit.getServer().getOnlinePlayers())
-                                {
-                                    if (Main.inGame.contains(p.getName()))
-                                    {
-                                        p.setHealth(20);
-                                        p.setFoodLevel(20);
-                                        p.sendMessage(Methods.sendMessage("Game_FirstInfectedIn", null, Methods.getTime(Long.valueOf(Main.Wait)), null));
-                                        if (Main.config.getBoolean("ScoreBoard Support"))
-                                        {
-                                            p.setScoreboard(Main.playingBoard);
-                                            Methods.updateScoreBoard();
-                                        }
-                                        Methods.respawn(p);
-                                        Methods.equipHumans(p);
-                                        if (Main.config.getBoolean("Allow Breaking Certain Blocks"))
-                                            p.setGameMode(GameMode.SURVIVAL);
-                                        else
-                                            p.setGameMode(GameMode.ADVENTURE);
-                                        if (!Main.KillStreaks.containsKey(p.getName()))
-                                            Main.KillStreaks.put(p.getName(), Integer.valueOf("0"));
-                                    }
-                                }
-                                Main.Voted4.clear();
-                                Main.Votes.clear();
-                                Main.Booleans.put("BeforeFirstInf", true);
-                                Main.Booleans.put("BeforeGame", false);
-                                Main.timestart = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
-                                {
-                                    int timeleft = Main.Wait;@
-                                    Override
-                                    public void run()
-                                    {
-                                        if (timeleft != -1)
-                                        {
-                                            timeleft -= 1;
-                                            Main.currentTime = timeleft;
-                                            if(timeleft == 5 || timeleft == 4 ||timeleft == 3||timeleft == 2||timeleft == 1){
-                                            	 for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                                 {
-                                                     if (Main.inGame.contains(playing.getName()))
-                                                     {
-                                                       playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
-                                                     }
-                                                 }
-                                            }
-                                            if (timeleft == 60 || timeleft == 50 || timeleft == 40 || timeleft == 30 || timeleft == 20 || timeleft == 10 || timeleft == 9 || timeleft == 8 || timeleft == 7 || timeleft == 6 || timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
-                                            {
-                                                for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                                {
-                                                    if (Main.inGame.contains(playing.getName()))
-                                                    {
-                                                        playing.sendMessage(Methods.sendMessage("Game_InfectionTimer", null, Methods.getTime(Long.valueOf(timeleft)), null));
-                                                    }
-                                                }
-                                            }
-                                            else if (timeleft == -1)
-                                            {
-                                                //Choose the first infected
-                                                Main.Booleans.put("BeforeFirstInf", false);
-                                                Main.Booleans.put("Started", true);
-                                                for (Player players: Bukkit.getServer().getOnlinePlayers())
-                                                {
-                                                    if (Main.inGame.contains(players.getName()))
-                                                    {
-                                                        if (!Main.Winners.contains(players.getName()))
-                                                        {
-                                                            Main.Winners.add(players.getName());
-                                                        }
-                                                        Main.Timein.put(players.getName(), System.currentTimeMillis() / 1000);
-                                                        Main.inLobby.remove(players.getName());
-                                                    }
-                                                }
-                                                Methods.newZombieSetUpEveryOne();
-                                                Bukkit.getServer().getPluginManager().callEvent(new InfectedGameStartEvent(Main.inGame, Main.Wait, Bukkit.getPlayer(Main.zombies.get(0))));
-                                                if (Main.config.getBoolean("Debug"))
-                                                {
-                                                    System.out.println("humans: " + Main.humans.toString());
-                                                    System.out.println("zombies: " + Main.zombies.toString());
-                                                    System.out.println("InGame " + Main.inGame.toString());
-                                                }
-                                                //Set the game's time limit
-                                                Main.timeLimit = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
-                                                {
-                                                    int timeleft = Main.GtimeLimit;@
-                                                    Override
-                                                    public void run()
-                                                    {
-                                                        if (timeleft != -1)
-                                                        {
-                                                            timeleft -= 1;
-                                                            Main.currentTime = timeleft;
-
-                                                            for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                                            {
-                                                                if (Main.inGame.contains(playing.getName()))
-                                                                	playing.setLevel(timeleft);
-                                                            }
-                                                            if (Main.GtimeLimit - timeleft == 10)
-                                                                for(final Player playing : Bukkit.getOnlinePlayers()){
-                                                                	if(Main.inGame.contains(playing.getName()) || Main.inLobby.contains(playing.getName())){
-                                                                		playing.teleport(playing.getLocation());
-                                                                	}
-                                                                }
-                                                            if(timeleft == 5 || timeleft == 4 ||timeleft == 3||timeleft == 2||timeleft == 1){
-                                                           	 for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                                                {
-                                                                    if (Main.inGame.contains(playing.getName()))
-                                                                    {
-                                                                      playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
-                                                                    }
-                                                                }
-                                                           }
-                                                            if (timeleft == (Main.GtimeLimit / 4) * 3 || timeleft == Main.GtimeLimit / 2 || timeleft == Main.GtimeLimit / 4 || timeleft == 60 || timeleft == 10 || timeleft == 9 || timeleft == 8 || timeleft == 7 || timeleft == 6 || timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
-                                                            {
-                                                                for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                                                                {
-                                                                    if (Main.inGame.contains(playing.getName()))
-                                                                        if (timeleft > 61)
-                                                                        {
-                                                                            playing.sendMessage(Methods.sendMessage("Game_TimeLeft", null, Methods.getTime(Long.valueOf(timeleft)), null));
-                                                                            playing.sendMessage(Main.I + ChatColor.GREEN + "Humans Left: " + ChatColor.YELLOW + Main.humans.size() + ChatColor.GREEN + " |" + ChatColor.RED + "| Total Zombies: " + ChatColor.YELLOW + Main.zombies.size());
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            playing.sendMessage(Methods.sendMessage("Game_TimeLeft", null, Methods.getTime(Long.valueOf(timeleft)), null));
-                                                                        }
-                                                                }
-                                                            }
-                                                            else if (timeleft == -1)
-                                                            {
-                                                                Methods.endGame(true);
-
-                                                            }
-                                                        }
-                                                    }
-                                                }, 0L, 20L);
-                                            }
-                                        }
-                                    }
-                                }, 0L, 20L);
-                            }
-                        }, 200L);
-                    }
-                }
+                            if(new Location(world, Integer.valueOf(floc[1]), Integer.valueOf(floc[2]), Integer.valueOf(floc[3])) == null){
+                            	 for (Player p: Bukkit.getServer().getOnlinePlayers())
+	                                {
+	                                    if (Main.inGame.contains(p.getName()))
+	                                    {
+	                                    	p.sendMessage(Main.I+" The arena's location was unable to be found. Please get an admin to reset it.");
+	                                    	Methods.tp2LobbyAfter(p);
+	                                    }
+	                                    	
+	                                }
+                            }else{
+	                            Location Loc = new Location(world, Integer.valueOf(floc[1]), Integer.valueOf(floc[2]), Integer.valueOf(floc[3]));
+	                            if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded()) Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
+	                        }
+	                        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+	                        {@
+	                            Override
+	                            public void run()
+	                            {
+	                                //Get Players in lobby setup
+	                                Main.inLobby.clear();
+	                                for (Player p: Bukkit.getServer().getOnlinePlayers())
+	                                {
+	                                    if (Main.inGame.contains(p.getName()))
+	                                    {
+	                                        p.setHealth(20);
+	                                        p.setFoodLevel(20);
+	                                        p.sendMessage(Methods.sendMessage("Game_FirstInfectedIn", null, Methods.getTime(Long.valueOf(Main.Wait)), null));
+	                                        if (Main.config.getBoolean("ScoreBoard Support"))
+	                                        {
+	                                            p.setScoreboard(Main.playingBoard);
+	                                            Methods.updateScoreBoard();
+	                                        }
+	                                        Methods.respawn(p);
+	                                        Methods.equipHumans(p);
+	                                        if (Main.config.getBoolean("Allow Breaking Certain Blocks"))
+	                                            p.setGameMode(GameMode.SURVIVAL);
+	                                        else
+	                                            p.setGameMode(GameMode.ADVENTURE);
+	                                        if (!Main.KillStreaks.containsKey(p.getName()))
+	                                            Main.KillStreaks.put(p.getName(), Integer.valueOf("0"));
+	                                    }
+	                                }
+	                                Main.Voted4.clear();
+	                                Main.Votes.clear();
+	                                Main.Booleans.put("BeforeFirstInf", true);
+	                                Main.Booleans.put("BeforeGame", false);
+	                                Main.timestart = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+	                                {
+	                                    int timeleft = Main.Wait;@
+	                                    Override
+	                                    public void run()
+	                                    {
+	                                        if (timeleft != -1)
+	                                        {
+	                                            timeleft -= 1;
+	                                            Main.currentTime = timeleft;
+	                                            if(timeleft == 5 || timeleft == 4 ||timeleft == 3||timeleft == 2||timeleft == 1){
+	                                            	 for (Player playing: Bukkit.getServer().getOnlinePlayers())
+	                                                 {
+	                                                     if (Main.inGame.contains(playing.getName()))
+	                                                     {
+	                                                       playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+	                                                     }
+	                                                 }
+	                                            }
+	                                            if (timeleft == 60 || timeleft == 50 || timeleft == 40 || timeleft == 30 || timeleft == 20 || timeleft == 10 || timeleft == 9 || timeleft == 8 || timeleft == 7 || timeleft == 6 || timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
+	                                            {
+	                                                for (Player playing: Bukkit.getServer().getOnlinePlayers())
+	                                                {
+	                                                    if (Main.inGame.contains(playing.getName()))
+	                                                    {
+	                                                        playing.sendMessage(Methods.sendMessage("Game_InfectionTimer", null, Methods.getTime(Long.valueOf(timeleft)), null));
+	                                                    }
+	                                                }
+	                                            }
+	                                            else if (timeleft == -1)
+	                                            {
+	                                                //Choose the first infected
+	                                                Main.Booleans.put("BeforeFirstInf", false);
+	                                                Main.Booleans.put("Started", true);
+	                                                for (Player players: Bukkit.getServer().getOnlinePlayers())
+	                                                {
+	                                                    if (Main.inGame.contains(players.getName()))
+	                                                    {
+	                                                        if (!Main.Winners.contains(players.getName()))
+	                                                        {
+	                                                            Main.Winners.add(players.getName());
+	                                                        }
+	                                                        Main.Timein.put(players.getName(), System.currentTimeMillis() / 1000);
+	                                                        Main.inLobby.remove(players.getName());
+	                                                    }
+	                                                }
+	                                                Methods.newZombieSetUpEveryOne();
+	                                                Bukkit.getServer().getPluginManager().callEvent(new InfectedGameStartEvent(Main.inGame, Main.Wait, Bukkit.getPlayer(Main.zombies.get(0))));
+	                                                if (Main.config.getBoolean("Debug"))
+	                                                {
+	                                                    System.out.println("humans: " + Main.humans.toString());
+	                                                    System.out.println("zombies: " + Main.zombies.toString());
+	                                                    System.out.println("InGame " + Main.inGame.toString());
+	                                                }
+	                                                //Set the game's time limit
+	                                                Main.timeLimit = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+	                                                {
+	                                                    int timeleft = Main.GtimeLimit;@
+	                                                    Override
+	                                                    public void run()
+	                                                    {
+	                                                        if (timeleft != -1)
+	                                                        {
+	                                                            timeleft -= 1;
+	                                                            Main.currentTime = timeleft;
+	
+	                                                            for (Player playing: Bukkit.getServer().getOnlinePlayers())
+	                                                            {
+	                                                                if (Main.inGame.contains(playing.getName()))
+	                                                                	playing.setLevel(timeleft);
+	                                                            }
+	                                                            if (Main.GtimeLimit - timeleft == 10)
+	                                                                for(final Player playing : Bukkit.getOnlinePlayers()){
+	                                                                	if(Main.inGame.contains(playing.getName()) || Main.inLobby.contains(playing.getName())){
+	                                                                		playing.teleport(playing.getLocation());
+	                                                                	}
+	                                                                }
+	                                                            if(timeleft == 5 || timeleft == 4 ||timeleft == 3||timeleft == 2||timeleft == 1){
+	                                                           	 for (Player playing: Bukkit.getServer().getOnlinePlayers())
+	                                                                {
+	                                                                    if (Main.inGame.contains(playing.getName()))
+	                                                                    {
+	                                                                      playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+	                                                                    }
+	                                                                }
+	                                                           }
+	                                                            if (timeleft == (Main.GtimeLimit / 4) * 3 || timeleft == Main.GtimeLimit / 2 || timeleft == Main.GtimeLimit / 4 || timeleft == 60 || timeleft == 10 || timeleft == 9 || timeleft == 8 || timeleft == 7 || timeleft == 6 || timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
+	                                                            {
+	                                                                for (Player playing: Bukkit.getServer().getOnlinePlayers())
+	                                                                {
+	                                                                    if (Main.inGame.contains(playing.getName()))
+	                                                                        if (timeleft > 61)
+	                                                                        {
+	                                                                            playing.sendMessage(Methods.sendMessage("Game_TimeLeft", null, Methods.getTime(Long.valueOf(timeleft)), null));
+	                                                                            playing.sendMessage(Main.I + ChatColor.GREEN + "Humans Left: " + ChatColor.YELLOW + Main.humans.size() + ChatColor.GREEN + " |" + ChatColor.RED + "| Total Zombies: " + ChatColor.YELLOW + Main.zombies.size());
+	                                                                        }
+	                                                                        else
+	                                                                        {
+	                                                                            playing.sendMessage(Methods.sendMessage("Game_TimeLeft", null, Methods.getTime(Long.valueOf(timeleft)), null));
+	                                                                        }
+	                                                                }
+	                                                            }
+	                                                            else if (timeleft == -1)
+	                                                            {
+	                                                                Methods.endGame(true);
+	
+	                                                            }
+	                                                        }
+	                                                    }
+	                                                }, 0L, 20L);
+	                                            }
+	                                        }
+	                                    }
+	                                }, 0L, 20L);
+	                            }
+	                        }, 200L);
+	                    }
+	                }
+	            }
             }
         }, 0L, 20L);
     }

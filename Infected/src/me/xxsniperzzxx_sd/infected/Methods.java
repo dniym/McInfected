@@ -57,18 +57,12 @@ public class Methods
             	if(event.getName().equalsIgnoreCase("None")){
             		Main.humanClasses.remove(player.getName());
             		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a human class");
-            		event.setWillClose(true); 	
-                    event.setWillDestroy(true);	
             	}
             	else if(player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human."+event.getName())){
             		Main.humanClasses.put(player.getName(), classList.get(event.getPosition()));
             		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your human class is: " + event.getName());
-            		event.setWillClose(true);
-                    event.setWillDestroy(true);
             	}else{
                     player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
-                    event.setWillClose(true);
-                    event.setWillDestroy(true);
             	}
             }
     	}, Main.me);
@@ -100,18 +94,12 @@ public class Methods
             	if(event.getName().equalsIgnoreCase("None")){
             		Main.zombieClasses.remove(player.getName());
             		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a zombie class");
-            		event.setWillClose(true); 	
-                    event.setWillDestroy(true);	
             	}
             	else if(player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie."+event.getName())){
             		Main.zombieClasses.put(player.getName(), classList.get(event.getPosition()));
             		event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your zombie class is: " + event.getName());
-            		event.setWillClose(true);
-                    event.setWillDestroy(true);
             	}else{
                     player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
-                    event.setWillClose(true);
-                    event.setWillDestroy(true);
             	}
             }
     	}, Main.me);
@@ -156,6 +144,7 @@ public class Methods
     	IconMenu menu = new IconMenu(ChatColor.DARK_BLUE + player.getName() + " - Map Vote", ((Main.possibleArenas.size()/9)*9)+9, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
+            	
             	if(event.getName().equalsIgnoreCase("Random")){
                 	Random r = new Random();
                     int i = r.nextInt(Main.possibleArenas.size());
@@ -179,8 +168,6 @@ public class Methods
                     {
                         Methods.updateScoreBoard();
                     }
-            		event.setWillClose(true); 	
-                    event.setWillDestroy(true);	
             	}else{
                     if (Main.Votes.containsKey(event.getName()))
                     {
@@ -200,8 +187,6 @@ public class Methods
                     {
                         Methods.updateScoreBoard();
                     }
-            		event.setWillClose(true);
-                    event.setWillDestroy(true);
             	}
             }
     	}, Main.me);
@@ -211,7 +196,9 @@ public class Methods
     		menu.setOption(i, new ItemStack(Material.EMPTY_MAP), arenas , ChatColor.YELLOW + "Click to vote for this map");   
     		i++;
     	}
-		menu.setOption(i, new ItemStack(Material.MAP), "random" , ChatColor.YELLOW + "Click to vote for Random");  
+		menu.setOption(i, new ItemStack(Material.MAP), "random" , ChatColor.YELLOW + "Click to vote for Random"); 
+		
+		
     	menu.open(player);
     }
     
@@ -562,6 +549,32 @@ public class Methods
         {
 	        if (Infected.booleanIsStarted())
 	        {
+	            Main.possibleArenas.clear();
+	            for (String parenas: Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
+	            {
+	                //Check if the string matchs an arena
+	
+	                if (Main.possibleArenas.contains(parenas))
+	                {
+	                    Main.possibleArenas.remove(parenas);
+	                }
+	                if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
+	                {
+	                    Main.possibleArenas.remove(parenas);
+	                }
+	                else if (!parenas.contains("."))
+	                {
+	                    for (Entry < String, Integer > mapName: Main.Votes.entrySet())
+	                    {
+	                        if (parenas.equalsIgnoreCase(mapName.getKey()))
+	                        {
+	                            Main.voteBoard.resetScores(Bukkit.getOfflinePlayer(parenas));
+	                        }
+	                    }
+	                }
+	            }
+	        	
+	        	
 	            Score score = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Humans:"));
 	            score.setScore(Main.humans.size());
 	            Score score2 = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Zombies:"));
@@ -1198,8 +1211,8 @@ public class Methods
         }
         if (DidHumansWin)
         {
-        	if(Main.config.getString("Vault Support.Reward") != null){
-        		int rewardMoney = Main.config.getInt("Vault.Support");
+        	if(Main.config.getBoolean("Vault Support.Enable")){
+        		int rewardMoney = Main.config.getInt("Vault Support.Reward");
 
                 for (Player players: Bukkit.getOnlinePlayers())
                     if (Main.Winners.contains(players.getName()))
@@ -1461,7 +1474,10 @@ public class Methods
         }
         resetPlayersInventory(player);
         player.updateInventory();
-        player.setGameMode(GameMode.valueOf(Main.gamemode.get(player.getName())));
+        if(GameMode.valueOf(Main.gamemode.get(player.getName())) == null)
+        	player.setGameMode(GameMode.SURVIVAL);
+        else
+        	player.setGameMode(GameMode.valueOf(Main.gamemode.get(player.getName())));
         Main.Lasthit.remove(player.getName());
         if (Main.Inventory.containsKey(player.getName())) player.getInventory().setContents(Main.Inventory.get(player.getName()));
         if (Main.Armor.containsKey(player.getName())) player.getInventory().setArmorContents(Main.Armor.get(player.getName()));

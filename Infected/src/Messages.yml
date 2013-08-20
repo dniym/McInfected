@@ -1,4 +1,4 @@
-# Default Message.yml, Last Edited in v1.6.8
+# Default Message.yml, Last Edited in v1.9.0
 # If you want to write "don't", write "don't" instead (note the doubled apostrophe)
 Error_NoPermission: "&cInvalid Permissions!"
 Error_CantUseCommand: "&cYou can't use that command in Infected!"
@@ -8,6 +8,7 @@ Error_AlreadyInGame: "&cYour already in the game!"
 Error_InfectedDisabled: "&cInfected has been disabled..."
 Error_NotAStat: "&cInfected doesn't count that."
 Error_JoinWellStartedBlocked: "&cSorry you are unable to join well a game is going!"
+Error_CantEditInventoryYet: "&cPlease wait till first Infected''s chosen before editing inventory"
 Grenade_Disabled: "&cGrenades are disabled..."
 Grenade_OnlyBuyInGame: "&cYou can only buy grenades in game..."
 Grenade_NoZombies: "&cWe Don't Serve Zombies..."

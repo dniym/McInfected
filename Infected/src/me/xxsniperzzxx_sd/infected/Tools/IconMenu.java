@@ -68,17 +68,13 @@ public class IconMenu implements Listener {
                 Plugin plugin = this.plugin;
                 OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames[slot]);
                 handler.onOptionClick(e);
-                if (e.willClose()) {
                     final Player p = (Player)event.getWhoClicked();
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         public void run() {
                             p.closeInventory();
                         }
                     }, 1);
-                }
-                if (e.willDestroy()) {
                     destroy();
-                }
             }
         }
     }

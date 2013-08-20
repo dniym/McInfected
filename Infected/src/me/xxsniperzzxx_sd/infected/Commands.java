@@ -48,7 +48,7 @@ public class Commands implements CommandExecutor
             boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
             if (sender.getName().equalsIgnoreCase("xXSniperzzXx_SD") && args.length >= 1 && args[0].equalsIgnoreCase("Test"))
             {
-            	//Insert what ever im testing in here
+            	//TESTING STUFF
             }
             /////////////////////////////////////////////////////////////////////////////////////////////////// CHAT
             else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
@@ -107,7 +107,7 @@ public class Commands implements CommandExecutor
             		player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
             		return true;
             	}
-            	else if(args.length == 2){
+           	else if(args.length == 2){
             		if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null) && !(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null)){
             			if(args[1].equalsIgnoreCase("Human"))
             			{
@@ -223,6 +223,7 @@ public class Commands implements CommandExecutor
                     plugin.Winners.clear();
                     plugin.inLobby.add(player.getName());
                     plugin.gamemode.put(player.getName(), player.getGameMode().toString());
+                    Methods.updateScoreBoard();
                     if (Main.config.getBoolean("DisguiseCraft Support"))
                     	if(Main.dcAPI.isDisguised(player))
                     		Main.dcAPI.undisguisePlayer(player);
