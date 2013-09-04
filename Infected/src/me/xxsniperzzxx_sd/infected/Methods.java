@@ -1267,6 +1267,7 @@ public class Methods
 
                 for (Player players: Bukkit.getOnlinePlayers())
                     if (Main.Winners.contains(players.getName()))
+                    	
                     	Main.economy.depositPlayer(players.getName(), rewardMoney);
         	}
             if (!(Main.config.getString("Command Reward").equalsIgnoreCase(null) || Main.config.getString("Command Reward").equalsIgnoreCase("[]")))
