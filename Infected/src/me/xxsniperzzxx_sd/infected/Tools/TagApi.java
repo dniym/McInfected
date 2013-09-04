@@ -24,6 +24,10 @@ public class TagApi implements Listener
             {
                 e.setTag(ChatColor.GREEN + e.getNamedPlayer().getName());
             }
+            else{
+            	if(!plugin.getConfig().getBoolean("DisguiseCraft Support"))
+            		e.setTag(ChatColor.DARK_RED + e.getNamedPlayer().getName());
+            }
         }
     }
 }
