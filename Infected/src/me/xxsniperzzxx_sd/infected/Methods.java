@@ -233,20 +233,22 @@ public class Methods
 
 
             reward = Main.config.getInt("Points." + PointsCause);
-            if (getPoints(player) > Main.config.getInt("Points.Max Points"))
+            if (Infected.playerGetPoints(player) > Main.config.getInt("Points.Max Points"))
                 player.sendMessage(Main.I + ChatColor.RED + "You have exceded the max points!");
-            if (getScore(player) > Main.config.getInt("Score.Max Score"))
+            if (Infected.playerGetScore(player) > Main.config.getInt("Score.Max Score"))
                 player.sendMessage(Main.I + ChatColor.RED + "You have exceded the max score!");
             else
             {
-                setPoints(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points") + reward);
-                setScore(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Score") + score);
+                Infected.playerSetPoints(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points") + reward);
+                Infected.playerSetScore(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Score") + score);
                 Files.savePlayers();
                 player.sendMessage(Main.I + ChatColor.AQUA + "Points +" + reward);
                 Files.savePlayers();
             }
         }
     }
+    
+    
     public static void applyAbilities(Player player)
     {
         Random r = new Random();
@@ -313,6 +315,8 @@ public class Methods
     		player.addPotionEffect(new PotionEffect(PotionEffectType.getById(id), time, power));
     	}
     }
+    
+    
     public static void disguisePlayer(Player player)
     {
         if (Main.config.getBoolean("DisguiseCraft Support") == true)
@@ -385,6 +389,8 @@ public class Methods
         disguisePlayer(player);
         
     }
+    
+    
     public static String grenadeGetName(Integer id)
     {
         return Files.getGrenades().getString(id + ".Name");
@@ -426,6 +432,63 @@ public class Methods
         }
 
     }
+    
+
+    public static void grenadeKill(Player Killer, Player Killed)
+    {
+        Methods.stats(Killer, 1, 0);
+        Methods.rewardPoints(Killer, "Kill");
+        String kill = getKillType(Infected.playerGetGroup(Killer) + "s", Killer.getName(), Killed.getName());
+        for (Player playing: Bukkit.getServer().getOnlinePlayers())
+            if (Main.inGame.contains(playing.getName()))
+            {
+                playing.sendMessage(kill);
+            }
+        Main.KillStreaks.put(Killer.getName(), Main.KillStreaks.get(Killer.getName()) + 1);
+        Files.getPlayers().set("Players." + Killer.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(Killer.getName()));
+        if (Main.KillStreaks.get(Killer.getName()) > 2)
+            for (Player playing: Bukkit.getServer().getOnlinePlayers())
+                if (Main.inGame.contains(playing.getName()))
+                {
+                    playing.sendMessage(Main.I + ChatColor.GREEN + Killer.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(Killer.getName()));
+                }
+        if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(Killer.getName())))))
+        {
+            String command = null;
+            command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + Main.KillStreaks.get(Killer.getName()))).replaceAll("<player>", Killer.getName());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        }
+        Methods.stats(Killed, 0, 1);
+        if (Main.KillStreaks.containsKey(Killed.getName()))
+        {
+            if (Main.KillStreaks.get(Killed.getName()) > Files.getPlayers().getInt("Players." + Killed.getName().toLowerCase() + ".KillStreak"))
+            {
+                Files.getPlayers().set("Players." + Killed.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(Killed.getName()));
+                Files.savePlayers();
+            }
+
+            Main.KillStreaks.put(Killed.getName(), 0);
+        }
+        Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(Killer, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
+        Killed.setHealth(20);
+        Killed.setFallDistance(0F);
+        Killed.setFoodLevel(20);
+        Methods.respawn(Killed);
+        Killed.setFallDistance(0F);
+        Main.humans.remove(Killed.getName());
+        Main.Lasthit.remove(Killed.getName());
+        if (Main.humans.size() == 0)
+        {
+            Methods.endGame(false);
+        }
+        else
+        {
+            Methods.equipZombies(Killed);
+            Methods.zombifyPlayer(Killed);
+        }
+    }
+    
+    
     public static void saveInventory(Player player, String loc)
     {
         String data = ItemSerialization.toBase64(player.getInventory());
@@ -454,6 +517,20 @@ public class Methods
         Inventory copy = ItemSerialization.fromBase64(data);
         return copy.getContents();
     }
+    
+
+    @
+    SuppressWarnings("deprecation")
+    public static void resetPlayersInventory(Player player)
+    {
+        player.getInventory().clear();
+        player.getInventory().setHelmet(null);
+        player.getInventory().setChestplate(null);
+        player.getInventory().setLeggings(null);
+        player.getInventory().setBoots(null);
+        player.updateInventory();
+    }
+    
     public static void SetOnlineTime(Player player)
     {
         long time = Main.Timein.get(player.getName());
@@ -477,6 +554,29 @@ public class Methods
     }
 
 
+    public static String getTime(Long Time)
+    {
+        String times = null;
+        Long time = Time;
+        Long seconds = time;
+        long minutes = seconds / 60;
+        seconds %= 60;
+        if (seconds == 0)
+        {
+            if (minutes <= 1) times = minutes + " Minute";
+            else times = minutes + " Minutes";
+        }
+        else if (minutes == 0)
+        {
+            if (seconds <= 1) times = seconds + " Second";
+            else times = seconds + " Seconds";
+        }
+        else
+        {
+            times = minutes + " Minutes " + seconds + " Seconds";
+        }
+        return times;
+    }
 
     public static void newZombieSetUpEveryOne()
     {
@@ -661,24 +761,40 @@ public class Methods
 	        }
         }
     }
-    public static int getPlayerKills(Player user)
+    
+    
+
+    public static void joinInfectHuman(Player player)
     {
-        return Files.getPlayers().getInt("Players." + user.getName().toLowerCase() + ".Kills");
+        Player newzombie = player;
+        if (!Main.Timein.containsKey(newzombie.getName())) Main.Timein.put(newzombie.getName(), System.currentTimeMillis() / 1000);
+        Main.humans.remove(newzombie.getName());
+        if (!Main.KillStreaks.containsKey(newzombie.getName()))
+            Main.KillStreaks.put(newzombie.getName(), Integer.valueOf("0"));
+        newzombie.sendMessage(Main.I + "You have became infected!");
+        Methods.equipZombies(newzombie);
+        newzombie.setHealth(20);
+        newzombie.setFoodLevel(20);
+        Main.KillStreaks.remove(newzombie.getName());
+        for (Player playing: Bukkit.getServer().getOnlinePlayers())
+        {
+            if ((!(playing == newzombie)) && Main.inGame.contains(playing.getName()))
+                playing.sendMessage(Methods.sendMessage("Game_GotInfected", newzombie, null, null));
+        }
+        newzombie.setFallDistance(0F);
+        Methods.respawn(newzombie);
+        newzombie.setFallDistance(0F);
+
+        Main.zombies.add(newzombie.getName());
+        Main.Winners.remove(newzombie.getName());
+        Main.inLobby.remove(newzombie.getName());
+        newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
+        Methods.zombifyPlayer(newzombie);
+        newzombie.setHealth(20);
+        Methods.equipZombies(newzombie);
     }
-    public static int getPlayerDeaths(Player user)
-    {
-        return Files.getPlayers().getInt("Players." + user.getName().toLowerCase() + ".Deaths");
-    }
-    public static void setPlayerKills(Player user, Integer Int)
-    {
-        Files.getPlayers().set("Players." + "Players." + user.getName().toLowerCase() + ".Kills", Int);
-        Files.savePlayers();
-    }
-    public static void setPlayerDeaths(Player user, Integer Int)
-    {
-        Files.getPlayers().set("Players." + "Players." + user.getName().toLowerCase() + ".Deaths", Int);
-        Files.savePlayers();
-    }
+
+    
     public static Double KD(Player player)
     {
         int kills = Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Kills");
@@ -700,117 +816,100 @@ public class Methods
         Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Deaths", deaths + Deaths);
         Files.savePlayers();
     }
-    public static void grenadeKill(Player Killer, Player Killed)
+    
+
+    public static String countdown(HashMap < String, Integer > map)
     {
-        Methods.stats(Killer, 1, 0);
-        Methods.rewardPoints(Killer, "Kill");
-        String kill = getKillType(getGroup(Killer) + "s", Killer.getName(), Killed.getName());
-        for (Player playing: Bukkit.getServer().getOnlinePlayers())
-            if (Main.inGame.contains(playing.getName()))
-            {
-                playing.sendMessage(kill);
+        String top = null;
+        int maxValueInMap = (Collections.max(map.values())); // This will return max value in the Hashmap
+        for (Entry < String, Integer > entry: map.entrySet())
+        { // Itrate through hashmap
+            if (entry.getValue() == maxValueInMap)
+            { // Print the key with max value
+                top = entry.getKey();
             }
-        Main.KillStreaks.put(Killer.getName(), Main.KillStreaks.get(Killer.getName()) + 1);
-        Files.getPlayers().set("Players." + Killer.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(Killer.getName()));
-        if (Main.KillStreaks.get(Killer.getName()) > 2)
-            for (Player playing: Bukkit.getServer().getOnlinePlayers())
-                if (Main.inGame.contains(playing.getName()))
-                {
-                    playing.sendMessage(Main.I + ChatColor.GREEN + Killer.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(Killer.getName()));
-                }
-        if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(Killer.getName())))))
-        {
-            String command = null;
-            command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + Main.KillStreaks.get(Killer.getName()))).replaceAll("<player>", Killer.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
-        Methods.stats(Killed, 0, 1);
-        if (Main.KillStreaks.containsKey(Killed.getName()))
+
+        return top;
+    }
+    public static String[] getTop5(String stat)
+    {
+        String Stat = stat;
+        char[] stringArray = Stat.toCharArray();
+        stringArray[0] = Character.toUpperCase(stringArray[0]);
+        Stat = new String(stringArray);
+        for (String user: Files.getPlayers().getConfigurationSection("Players").getKeys(true))
         {
-            if (Main.KillStreaks.get(Killed.getName()) > Files.getPlayers().getInt("Players." + Killed.getName().toLowerCase() + ".KillStreak"))
+            if (!user.contains("."))
             {
-                Files.getPlayers().set("Players." + Killed.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(Killed.getName()));
-                Files.savePlayers();
+                Stats.put(user, Files.getPlayers().getInt("Players." + user + "." + Stat));
             }
-
-            Main.KillStreaks.put(Killed.getName(), 0);
         }
-        Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(Killer, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
-        Killed.setHealth(20);
-        Killed.setFallDistance(0F);
-        Killed.setFoodLevel(20);
-        Methods.respawn(Killed);
-        Killed.setFallDistance(0F);
-        Main.humans.remove(Killed.getName());
-        Main.Lasthit.remove(Killed.getName());
-        if (Main.humans.size() == 0)
+        if (Stats.size() < 6)
         {
-            Methods.endGame(false);
+            Stats.put(" ", 0);
+            Stats.put("  ", 0);
+            Stats.put("   ", 0);
+            Stats.put("    ", 0);
+            Stats.put("     ", 0);
         }
-        else
+        String name1 = Methods.countdown(Stats);
+        Stats.remove(name1);
+        String name2 = Methods.countdown(Stats);
+        Stats.remove(name2);
+        String name3 = Methods.countdown(Stats);
+        Stats.remove(name3);
+        String name4 = Methods.countdown(Stats);
+        Stats.remove(name4);
+        String name5 = Methods.countdown(Stats);
+        Stats.remove(name5);
+        String[] top = {
+            name1, name2, name3, name4, name5
+        };
+        Stats.clear();
+        return top;
+    }
+    
+
+    
+    public static void saveLocation(Location loc, String saveto)
+    {
+        int ix = (int) loc.getX();
+        int iy = (int) loc.getY();
+        int iz = (int) loc.getZ();
+        World world = loc.getWorld();
+        float yaw = loc.getYaw();
+        float pitch = loc.getPitch();
+        String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
+        Main.config.set(saveto, s);
+    }
+    public static Location getLocation(String loc)
+    {
+        String[] floc = loc.split(",");
+        World world = Bukkit.getServer().getWorld(floc[0]);
+        Location Loc = new Location(world, Integer.valueOf(floc[1])+.5, Integer.valueOf(floc[2])+.5, Integer.valueOf(floc[3])+.5, Float.valueOf(floc[4]), Float.valueOf(floc[5]));
+        return Loc;
+    }
+    public static void respawn(Player player)
+    {
+        player.setHealth(20.0);
+        player.setFoodLevel(20);
+        player.setFireTicks(0);
+        Random r = new Random();
+        int i = r.nextInt(Files.getArenas().getStringList("Arenas." + Main.playingin + ".Spawns").size());
+        String loc = Files.getArenas().getStringList("Arenas." + Main.playingin + ".Spawns").get(i);
+        String[] floc = loc.split(",");
+        World world = Bukkit.getServer().getWorld(floc[0]);
+        Location Loc = new Location(world, Integer.valueOf(floc[1])+.5, Integer.valueOf(floc[2])+.5, Integer.valueOf(floc[3])+.5, Float.valueOf(floc[4]), Float.valueOf(floc[5]));
+        player.teleport(Loc);
+        Main.Lasthit.remove(player.getName());
+        if (Main.config.getBoolean("ScoreBoard Support"))
         {
-            Methods.equipZombies(Killed);
-            Methods.zombifyPlayer(Killed);
+            updateScoreBoard();
         }
     }
-    public static int getPoints(Player player)
-    {
-        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points");
-
-    }
-    public static void setPoints(Player player, Integer Int)
-    {
-        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", Int);
-        Files.savePlayers();
-    }
-    public static void delPoints(Player player)
-    {
-        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", null);
-        Files.savePlayers();
-    }
-    public static int getScore(Player player)
-    {
-        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Score");
-
-    }
-    public static void setScore(Player player, Integer Int)
-    {
-        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Score", Int);
-        Files.savePlayers();
-    }
-    public static void delScore(Player player)
-    {
-        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Score", null);
-        Files.savePlayers();
-    }
-    public static void addPlayer(Player player)
-    {
-        Main.inGame.add(player.getName());
-    }
-    public static void delPlayer(Player player)
-    {
-        Main.inGame.remove(player.getName());
-    }
-    public static void clearPlayers()
-    {
-        Main.inGame.clear();
-    }
-    public static boolean isInLobby(Player player)
-    {
-        return Main.inLobby.contains(player.getName());
-    }
-    public static void addInLobby(Player player)
-    {
-        Main.inLobby.add(player.getName());
-    }
-    public static void delInLobby(Player player)
-    {
-        Main.inLobby.remove(player.getName());
-    }
-    public static void clearInLobby()
-    {
-        Main.inLobby.clear();
-    }@
+    
+    @
     SuppressWarnings("deprecation")
     public static void equipHumans(Player human)
     {
@@ -842,8 +941,9 @@ public class Methods
 	        }
         human.updateInventory();
         applyClassAbility(human);
-    }@
-    SuppressWarnings("deprecation")
+    }
+    
+    @SuppressWarnings("deprecation")
     public static void equipZombies(Player zombie)
     {
 
@@ -904,6 +1004,9 @@ public class Methods
         }
         zombie.updateInventory();
     }
+    
+    
+    
     public static String sendMessage(String message, Player player, String Time, String List)
     {
         String msg = String.valueOf(Files.getMessages().getString(message));
@@ -921,7 +1024,20 @@ public class Methods
         String newMsg = Main.I + msg1;
         return newMsg;
     }
+    
 
+    public static String getKillType(String group, String human, String zombie)
+    {
+        Random r = new Random();
+        int i = r.nextInt(Files.getKills().getStringList(group).size());
+        String killtype = ChatColor.GRAY + Files.getKills().getStringList(group).get(i);
+        String msg = null;
+        msg = killtype.replaceAll("<zombie>", ChatColor.RED + zombie).replaceAll("<human>", ChatColor.GREEN + human);
+        String cmsg = ChatColor.translateAlternateColorCodes('&', msg);
+        return cmsg;
+    }
+
+    
     public static ItemStack getItemStack(String Path)
     {
         ItemStack is = new ItemStack(getItem(Path));
@@ -1124,75 +1240,10 @@ public class Methods
         return is;
 
     }
-    public static void joinInfectHuman(Player player)
-    {
-        Player newzombie = player;
-        if (!Main.Timein.containsKey(newzombie.getName())) Main.Timein.put(newzombie.getName(), System.currentTimeMillis() / 1000);
-        Main.humans.remove(newzombie.getName());
-        if (!Main.KillStreaks.containsKey(newzombie.getName()))
-            Main.KillStreaks.put(newzombie.getName(), Integer.valueOf("0"));
-        newzombie.sendMessage(Main.I + "You have became infected!");
-        Methods.equipZombies(newzombie);
-        newzombie.setHealth(20);
-        newzombie.setFoodLevel(20);
-        Main.KillStreaks.remove(newzombie.getName());
-        for (Player playing: Bukkit.getServer().getOnlinePlayers())
-        {
-            if ((!(playing == newzombie)) && Main.inGame.contains(playing.getName()))
-                playing.sendMessage(Methods.sendMessage("Game_GotInfected", newzombie, null, null));
-        }
-        newzombie.setFallDistance(0F);
-        Methods.respawn(newzombie);
-        newzombie.setFallDistance(0F);
-
-        Main.zombies.add(newzombie.getName());
-        Main.Winners.remove(newzombie.getName());
-        Main.inLobby.remove(newzombie.getName());
-        newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
-        Methods.zombifyPlayer(newzombie);
-        newzombie.setHealth(20);
-        Methods.equipZombies(newzombie);
-    }
-    public static String getGroup(Player player)
-    {
-        String group = null;
-        if (Methods.isHuman(player)) group = "Human";
-        if (Methods.isZombie(player)) group = "Zombie";
-        return group;
-    }
-    public static boolean isPlayer(Player player)
-    {
-        return Main.inGame.contains(player.getName());
-    }
-    public static void addZombie(Player player)
-    {
-        Main.zombies.add(player.getName());
-    }
-    public static void delZombie(Player player)
-    {
-        Main.zombies.remove(player.getName());
-    }
-    public static void clearZombies()
-    {
-        Main.zombies.clear();
-    }
-    public static boolean isZombie(Player player)
-    {
-        return Main.zombies.contains(player.getName());
-    }
-    public static void addHuman(Player player)
-    {
-        Main.humans.add(player.getName());
-    }
-    public static void delHuman(Player player)
-    {
-        Main.humans.remove(player.getName());
-    }
-    public static void clearHumans()
-    {
-        Main.humans.clear();
-    }@
-    SuppressWarnings("deprecation")
+    
+    
+    
+    @SuppressWarnings("deprecation")
     public static void endGame(Boolean DidHumansWin)
     {
         for (Player players: Bukkit.getServer().getOnlinePlayers())
@@ -1305,58 +1356,10 @@ public class Methods
             public void run() {
             	if (Main.inGame.size() >= Main.config.getInt("Automatic Start.Minimum Players") && Infected.booleanIsStarted() == false && Infected.booleanIsBeforeGame() == false && Infected.booleanIsBeforeInfected() == false && Main.config.getBoolean("Automatic Start.Use"))
             	{
-            		Game.START();
+            		Game.restartGame();
             	}
             }
         }, 10*60);
-    }
-    public static String getTime(Long Time)
-    {
-        String times = null;
-        Long time = Time;
-        Long seconds = time;
-        long minutes = seconds / 60;
-        seconds %= 60;
-        if (seconds == 0)
-        {
-            if (minutes <= 1) times = minutes + " Minute";
-            else times = minutes + " Minutes";
-        }
-        else if (minutes == 0)
-        {
-            if (seconds <= 1) times = seconds + " Second";
-            else times = seconds + " Seconds";
-        }
-        else
-        {
-            times = minutes + " Minutes " + seconds + " Seconds";
-        }
-        return times;
-    }
-    public static boolean isHuman(Player player)
-    {
-        return Main.humans.contains(player.getName());
-    }
-    public static String getKillType(String group, String human, String zombie)
-    {
-        Random r = new Random();
-        int i = r.nextInt(Files.getKills().getStringList(group).size());
-        String killtype = ChatColor.GRAY + Files.getKills().getStringList(group).get(i);
-        String msg = null;
-        msg = killtype.replaceAll("<zombie>", ChatColor.RED + zombie).replaceAll("<human>", ChatColor.GREEN + human);
-        String cmsg = ChatColor.translateAlternateColorCodes('&', msg);
-        return cmsg;
-    }
-    @
-    SuppressWarnings("deprecation")
-    public static void resetPlayersInventory(Player player)
-    {
-        player.getInventory().clear();
-        player.getInventory().setHelmet(null);
-        player.getInventory().setChestplate(null);
-        player.getInventory().setLeggings(null);
-        player.getInventory().setBoots(null);
-        player.updateInventory();
     }
     @
     SuppressWarnings("deprecation")
@@ -1554,91 +1557,7 @@ public class Methods
         Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
         resetInf();
     }
-    public static String countdown(HashMap < String, Integer > map)
-    {
-        String top = null;
-        int maxValueInMap = (Collections.max(map.values())); // This will return max value in the Hashmap
-        for (Entry < String, Integer > entry: map.entrySet())
-        { // Itrate through hashmap
-            if (entry.getValue() == maxValueInMap)
-            { // Print the key with max value
-                top = entry.getKey();
-            }
-        }
-
-        return top;
-    }
-    public static String[] getTop5(String stat)
-    {
-        String Stat = stat;
-        char[] stringArray = Stat.toCharArray();
-        stringArray[0] = Character.toUpperCase(stringArray[0]);
-        Stat = new String(stringArray);
-        for (String user: Files.getPlayers().getConfigurationSection("Players").getKeys(true))
-        {
-            if (!user.contains("."))
-            {
-                Stats.put(user, Files.getPlayers().getInt("Players." + user + "." + Stat));
-            }
-        }
-        if (Stats.size() < 6)
-        {
-            Stats.put(" ", 0);
-            Stats.put("  ", 0);
-            Stats.put("   ", 0);
-            Stats.put("    ", 0);
-            Stats.put("     ", 0);
-        }
-        String name1 = Methods.countdown(Stats);
-        Stats.remove(name1);
-        String name2 = Methods.countdown(Stats);
-        Stats.remove(name2);
-        String name3 = Methods.countdown(Stats);
-        Stats.remove(name3);
-        String name4 = Methods.countdown(Stats);
-        Stats.remove(name4);
-        String name5 = Methods.countdown(Stats);
-        Stats.remove(name5);
-        String[] top = {
-            name1, name2, name3, name4, name5
-        };
-        Stats.clear();
-        return top;
-    }
-    public static void saveLocation(Location loc, String saveto)
-    {
-        int ix = (int) loc.getX();
-        int iy = (int) loc.getY();
-        int iz = (int) loc.getZ();
-        World world = loc.getWorld();
-        float yaw = loc.getYaw();
-        float pitch = loc.getPitch();
-        String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
-        Main.config.set(saveto, s);
-    }
-    public static Location getLocation(String loc)
-    {
-        String[] floc = loc.split(",");
-        World world = Bukkit.getServer().getWorld(floc[0]);
-        Location Loc = new Location(world, Integer.valueOf(floc[1])+.5, Integer.valueOf(floc[2])+.5, Integer.valueOf(floc[3])+.5, Float.valueOf(floc[4]), Float.valueOf(floc[5]));
-        return Loc;
-    }
-    public static void respawn(Player player)
-    {
-        player.setHealth(20.0);
-        player.setFoodLevel(20);
-        player.setFireTicks(0);
-        Random r = new Random();
-        int i = r.nextInt(Files.getArenas().getStringList("Arenas." + Main.playingin + ".Spawns").size());
-        String loc = Files.getArenas().getStringList("Arenas." + Main.playingin + ".Spawns").get(i);
-        String[] floc = loc.split(",");
-        World world = Bukkit.getServer().getWorld(floc[0]);
-        Location Loc = new Location(world, Integer.valueOf(floc[1])+.5, Integer.valueOf(floc[2])+.5, Integer.valueOf(floc[3])+.5, Float.valueOf(floc[4]), Float.valueOf(floc[5]));
-        player.teleport(Loc);
-        Main.Lasthit.remove(player.getName());
-        if (Main.config.getBoolean("ScoreBoard Support"))
-        {
-            updateScoreBoard();
-        }
-    }
+    
+    
+    
 }

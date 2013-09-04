@@ -107,6 +107,10 @@ public class Commands implements CommandExecutor
             		player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
             		return true;
             	}
+            	if(!plugin.getConfig().getBoolean("Class Support")){
+            		player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
+            		return true;
+            	}
            	else if(args.length == 2){
             		if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null) && !(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null)){
             			if(args[1].equalsIgnoreCase("Human"))
@@ -528,7 +532,7 @@ public class Commands implements CommandExecutor
                             Methods.resetp(player);
                             for (Player players: Bukkit.getOnlinePlayers())
                             {
-                                if (Methods.isPlayer(players)) players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
+                                if (Infected.isPlayerInGame(players)) players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
                             }
                         }
                         //Voting has started, less then 2 people left
@@ -548,7 +552,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
                                         Methods.tp2LobbyAfter(players);
@@ -562,7 +566,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
                                     }
@@ -586,7 +590,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
                                         Methods.tp2LobbyAfter(players);
@@ -600,7 +604,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
                                     }
@@ -624,7 +628,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
                                         Methods.tp2LobbyAfter(players);
@@ -654,7 +658,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
                                         Methods.tp2LobbyAfter(players);
@@ -668,7 +672,7 @@ public class Commands implements CommandExecutor
                                 Methods.resetp(player);
                                 for (Player players: Bukkit.getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(players))
+                                    if (Infected.isPlayerInGame(players))
                                     {
                                         players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
                                     }
@@ -1792,8 +1796,8 @@ public class Commands implements CommandExecutor
                     }
                     else if (args[1].equalsIgnoreCase("DStats"))
                     {
-                        Methods.setPlayerDeaths(user, Methods.getPlayerDeaths(user) + i);
-                        player.sendMessage(plugin.I + user.getName() + "'s new death count is: " + Methods.getPlayerDeaths(user));
+                        Infected.playerSetDeaths(user, Infected.playerGetDeaths(user) + i);
+                        player.sendMessage(plugin.I + user.getName() + "'s new death count is: " + Infected.playerGetDeaths(user));
                     }
                     else
                     {

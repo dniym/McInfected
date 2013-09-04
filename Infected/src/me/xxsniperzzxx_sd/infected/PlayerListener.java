@@ -104,7 +104,7 @@ public class PlayerListener implements Listener
     //If the game hasn't started yet
     @
     EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerDropItem(InventoryClickEvent e)
+    public void onPlayerUseInventory(InventoryClickEvent e)
     {
         if (Main.inGame.contains(e.getWhoClicked().getName()))
             if (!Infected.booleanIsStarted()){
@@ -136,7 +136,7 @@ public class PlayerListener implements Listener
             else if (Main.inGame.contains(e.getPlayer().getName()))
             {
                 e.getBlock().getDrops().clear();
-                if (Files.getArenas().getIntegerList("Arenas." + Main.playingin + ".Allow Breaking Of.Global").contains(e.getBlock().getTypeId()) || Files.getArenas().getIntegerList("Arenas." + Main.playingin + ".Allow Breaking Of." + Methods.getGroup(e.getPlayer())).contains(e.getBlock().getTypeId()))
+                if (Files.getArenas().getIntegerList("Arenas." + Main.playingin + ".Allow Breaking Of.Global").contains(e.getBlock().getTypeId()) || Files.getArenas().getIntegerList("Arenas." + Main.playingin + ".Allow Breaking Of." + Infected.playerGetGroup(e.getPlayer())).contains(e.getBlock().getTypeId()))
                 {
                 	if(!plugin.db.getBlocks().containsKey(e.getBlock().getLocation())){
                 		Location loc = e.getBlock().getLocation();
@@ -211,7 +211,7 @@ public class PlayerListener implements Listener
                 Methods.resetp(e.getPlayer());
                 for (Player players: Bukkit.getOnlinePlayers())
                 {
-                    if (Methods.isPlayer(players)) players.sendMessage(Methods.sendMessage("Leave_InLobby", e.getPlayer(), null, null));
+                    if (Infected.isPlayerInGame(players)) players.sendMessage(Methods.sendMessage("Leave_InLobby", e.getPlayer(), null, null));
                 }
             }
 
@@ -242,7 +242,7 @@ public class PlayerListener implements Listener
                 	 Methods.resetp(e.getPlayer());
                      for (Player players: Bukkit.getOnlinePlayers())
                      {
-                         if (Methods.isPlayer(players))
+                         if (Infected.isPlayerInGame(players))
                          {
                              players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
                          }
@@ -268,7 +268,7 @@ public class PlayerListener implements Listener
                     Methods.resetp(e.getPlayer());
                     for (Player players: Bukkit.getOnlinePlayers())
                     {
-                        if (Methods.isPlayer(players))
+                        if (Infected.isPlayerInGame(players))
                         {
                             players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
                             Methods.tp2LobbyAfter(players);
@@ -279,7 +279,7 @@ public class PlayerListener implements Listener
                 	 Methods.resetp(e.getPlayer());
                      for (Player players: Bukkit.getOnlinePlayers())
                      {
-                         if (Methods.isPlayer(players))
+                         if (Infected.isPlayerInGame(players))
                          {
                              players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
                          }
@@ -304,7 +304,7 @@ public class PlayerListener implements Listener
                     Methods.resetp(e.getPlayer());
                     for (Player players: Bukkit.getOnlinePlayers())
                     {
-                        if (Methods.isPlayer(players))
+                        if (Infected.isPlayerInGame(players))
                         {
                             players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
                             Methods.tp2LobbyAfter(players);
@@ -373,7 +373,7 @@ public class PlayerListener implements Listener
                     Methods.resetp(e.getPlayer());
                     for (Player players: Bukkit.getOnlinePlayers())
                     {
-                        if (Methods.isPlayer(players))
+                        if (Infected.isPlayerInGame(players))
                         {
                             players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
                             Methods.tp2LobbyAfter(players);
@@ -386,7 +386,7 @@ public class PlayerListener implements Listener
                     Methods.resetp(e.getPlayer());
                     for (Player players: Bukkit.getOnlinePlayers())
                     {
-                        if (Methods.isPlayer(players))
+                        if (Infected.isPlayerInGame(players))
                         {
                             players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
                         }
@@ -421,7 +421,7 @@ public class PlayerListener implements Listener
     			Methods.resetp(e.getPlayer());
     			for (Player players: Bukkit.getOnlinePlayers())
     			{
-    				if (Methods.isPlayer(players)) players.sendMessage(Methods.sendMessage("Leave_InLobby", e.getPlayer(), null, null));
+    				if (Infected.isPlayerInGame(players)) players.sendMessage(Methods.sendMessage("Leave_InLobby", e.getPlayer(), null, null));
     			}
     		}
     		
@@ -452,7 +452,7 @@ public class PlayerListener implements Listener
     				Methods.resetp(e.getPlayer());
     				for (Player players: Bukkit.getOnlinePlayers())
     				{
-    					if (Methods.isPlayer(players))
+    					if (Infected.isPlayerInGame(players))
     					{
     						players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
     					}
@@ -478,7 +478,7 @@ public class PlayerListener implements Listener
     				Methods.resetp(e.getPlayer());
     				for (Player players: Bukkit.getOnlinePlayers())
     				{
-    					if (Methods.isPlayer(players))
+    					if (Infected.isPlayerInGame(players))
     					{
     						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
     						Methods.tp2LobbyAfter(players);
@@ -489,7 +489,7 @@ public class PlayerListener implements Listener
     				Methods.resetp(e.getPlayer());
     				for (Player players: Bukkit.getOnlinePlayers())
     				{
-    					if (Methods.isPlayer(players))
+    					if (Infected.isPlayerInGame(players))
     					{
     						players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
     					}
@@ -514,7 +514,7 @@ public class PlayerListener implements Listener
     				Methods.resetp(e.getPlayer());
     				for (Player players: Bukkit.getOnlinePlayers())
     				{
-    					if (Methods.isPlayer(players))
+    					if (Infected.isPlayerInGame(players))
     					{
     						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
     						Methods.tp2LobbyAfter(players);
@@ -583,7 +583,7 @@ public class PlayerListener implements Listener
     				Methods.resetp(e.getPlayer());
     				for (Player players: Bukkit.getOnlinePlayers())
     				{
-    					if (Methods.isPlayer(players))
+    					if (Infected.isPlayerInGame(players))
     					{
     						players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
     						Methods.tp2LobbyAfter(players);
@@ -596,7 +596,7 @@ public class PlayerListener implements Listener
     				Methods.resetp(e.getPlayer());
     				for (Player players: Bukkit.getOnlinePlayers())
     				{
-    					if (Methods.isPlayer(players))
+    					if (Infected.isPlayerInGame(players))
     					{
     						players.sendMessage(Methods.sendMessage("Leave_NoEffect", e.getPlayer(), null, null));
     					}
@@ -718,7 +718,7 @@ public class PlayerListener implements Listener
     EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(final PlayerMoveEvent e)
     {
-        if (plugin.getConfig().getBoolean("Use Zombie Movement Effects") && Methods.isZombie(e.getPlayer()))
+        if (plugin.getConfig().getBoolean("Use Zombie Movement Effects") && Infected.isPlayerZombie(e.getPlayer()))
         {
             if (!Bukkit.getScheduler().isCurrentlyRunning(effect))
             {
@@ -748,7 +748,7 @@ public class PlayerListener implements Listener
         boolean Started = plugin.Booleans.get("Started");
         boolean BeforeGame = plugin.Booleans.get("BeforeGame");
         boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
-        if (e.getEntity() instanceof Player && !(e.getEntity().getLastDamageCause() instanceof Player))
+        if (e.getEntity() instanceof Player )
         {
             Player p = (Player) e.getEntity();
             if (plugin.inLobby.contains(p.getName()))
@@ -801,7 +801,7 @@ public class PlayerListener implements Listener
                 		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(human, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
                 		Methods.stats(human, 1, 0);
                 		Methods.rewardPoints(human, "Kill");
-                		String kill = Methods.getKillType(Methods.getGroup(human) + "s", human.getName(), Killed.getName());
+                		String kill = Methods.getKillType(Infected.playerGetGroup(human) + "s", human.getName(), Killed.getName());
                 		for (Player playing: Bukkit.getServer().getOnlinePlayers())
                 			if (plugin.inGame.contains(playing.getName()))
                 			{
@@ -1030,7 +1030,7 @@ public class PlayerListener implements Listener
                                 grenade.getWorld().playEffect(grenade.getLocation(), Effect.SMOKE, 5);
                                 for (Player ppl: Bukkit.getServer().getOnlinePlayers())
                                 {
-                                    if (Methods.isPlayer(ppl) && ((!(Methods.getGroup(ppl) == Methods.getGroup(player))) || (Main.grenades.getBoolean("Damage Self") && ppl == player)) && ppl.getLocation().distance(grenade.getLocation()) < Methods.grenadeGetRange(Integer.valueOf(ItemId)))
+                                    if (Infected.isPlayerInGame(ppl) && ((!(Infected.playerGetGroup(ppl) == Infected.playerGetGroup(player))) || (Main.grenades.getBoolean("Damage Self") && ppl == player)) && ppl.getLocation().distance(grenade.getLocation()) < Methods.grenadeGetRange(Integer.valueOf(ItemId)))
                                     {
                                         Methods.grenadeAddPotion(ppl, Integer.valueOf(ItemId));
                                         ppl.playEffect(EntityEffect.HURT);
@@ -1068,16 +1068,13 @@ public class PlayerListener implements Listener
                     player.performCommand("Infected Join");
                 }
 
-            }, 20L);
+            }, 10L);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   SHOP
 
 
-    @
-    SuppressWarnings(
-    {
-        "deprecation"
-    })@ EventHandler(priority = EventPriority.NORMAL)
+    @ SuppressWarnings("deprecation")
+    @ EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerClickSign(PlayerInteractEvent event)
     {
     	if(!event.isCancelled()){
@@ -1103,7 +1100,7 @@ public class PlayerListener implements Listener
 	    				}
 	    			}
 	    		}
-	    		if (Methods.isInLobby(player) || Methods.isPlayer(player))
+	    		if (Infected.isPlayerInLobby(player) || Infected.isPlayerInGame(player))
 	    		{
 	    			if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
 	    			{
@@ -1112,41 +1109,46 @@ public class PlayerListener implements Listener
 	    				{
 	    					if (Files.getShop().getBoolean("Use"))
 	    					{
-	    						int points = Methods.getPoints(player);
+	    						int points = Infected.playerGetPoints(player);
 	    						Sign sign = ((Sign) b.getState());
 	    						if (sign.getLine(0).contains("[Infected]"))
 	    						{
 	    							if(sign.getLine(1).contains("Class"))
 	    							{
-	    								String className = sign.getLine(2).replaceAll("§a", "");
-	    								if(sign.getLine(3).contains("Human"))
-	    								{
-	    									if(className.equalsIgnoreCase("None"))
-	    									{
-	    										Main.humanClasses.remove(player.getName());
-	    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"You no longer have a selected human class");	
-	    									}
-	    									else if(player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human."+className))
-	    									{
-	    										Main.humanClasses.put(player.getName(), className);
-	    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"Your current human class is: "+sign.getLine(2));
-	    										
-	    									}else player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
-	    								}
-	    								else if(sign.getLine(3).contains("Zombie"))
-	    								{
-	    									if(className.equalsIgnoreCase("None"))
-	    									{
-	    										Main.zombieClasses.remove(player.getName());
-	    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"You no longer have a selected zombie class");	
-	    									}
-	    									else if(player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie."+className))
-	    									{
-	    										Main.zombieClasses.put(player.getName(), className);
-	    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"Your current zombie class is: "+sign.getLine(2));
-	    										
-	    									}else player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
-	    								}
+
+	    				            	if(!plugin.getConfig().getBoolean("Class Support"))
+	    				            		player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
+	    				            	else{
+		    								String className = sign.getLine(2).replaceAll("§a", "");
+		    								if(sign.getLine(3).contains("Human"))
+		    								{
+		    									if(className.equalsIgnoreCase("None"))
+		    									{
+		    										Main.humanClasses.remove(player.getName());
+		    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"You no longer have a selected human class");	
+		    									}
+		    									else if(player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human."+className))
+		    									{
+		    										Main.humanClasses.put(player.getName(), className);
+		    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"Your current human class is: "+sign.getLine(2));
+		    										
+		    									}else player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
+		    								}
+		    								else if(sign.getLine(3).contains("Zombie"))
+		    								{
+		    									if(className.equalsIgnoreCase("None"))
+		    									{
+		    										Main.zombieClasses.remove(player.getName());
+		    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"You no longer have a selected zombie class");	
+		    									}
+		    									else if(player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie."+className))
+		    									{
+		    										Main.zombieClasses.put(player.getName(), className);
+		    										player.sendMessage(Main.I+ChatColor.DARK_AQUA+"Your current zombie class is: "+sign.getLine(2));
+		    										
+		    									}else player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
+		    								}
+		    							}
 	    							}
 	    							else
 	    							{
@@ -1181,7 +1183,7 @@ public class PlayerListener implements Listener
 	    									{
 	    										if (price < points + 1)
 	    										{
-	    											Methods.setPoints(player, points - price);
+	    											Infected.playerSetPoints(player, points - price);
 	    											ItemStack stack = new ItemStack(item);
 	    											stack.setDurability(itemdata);
 	    											if (!player.getInventory().contains(stack))
@@ -1218,7 +1220,7 @@ public class PlayerListener implements Listener
 	    										{
 	    											if (player.hasPermission("Infected.Shop") || player.hasPermission("Infected.Shop." + itemname))
 	    											{
-	    												Methods.setPoints(player, points - price);
+	    												Infected.playerSetPoints(player, points - price);
 	    												ItemMeta i = is.getItemMeta();
 	    												if (!player.getInventory().contains(is))
 	    												{
@@ -1265,7 +1267,7 @@ public class PlayerListener implements Listener
 	    										Material item = Material.getMaterial(Integer.valueOf(itemi));
 	    										if (price < points + 1)
 	    										{
-	    											Methods.setPoints(player, points - price);
+	    											Infected.playerSetPoints(player, points - price);
 	    											ItemStack stack = new ItemStack(Material.getMaterial(Integer.valueOf(itemi)));
 	    											stack.setDurability(itemd);
 	    											if (!player.getInventory().contains(stack))
@@ -1363,65 +1365,66 @@ public class PlayerListener implements Listener
                         event.setCancelled(true);
                     }
                     if(event.getLine(1).equalsIgnoreCase("Class")){
-
-                   	 if(event.getLine(3).equalsIgnoreCase("Zombie"))
-                   	 {
-                    	 if (Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null)
-                         {
-                             player.sendMessage(plugin.I + ChatColor.RED + " Missing classes... wtf?");
-                             event.setCancelled(true);
-                             event.getBlock().breakNaturally();
-                         }
-                    	 boolean classFound = false;
-                    	 String className = "None";
-                         for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
-                         {
-                        	 
-                           if((!classes.contains(".")) && event.getLine(2).equalsIgnoreCase(classes)){
-                        	   classFound = true;
-                        	   className = classes;
-                        	   break;
-                           }
-                         }
-                         if(classFound || event.getLine(2).equalsIgnoreCase("None")){
-
-                            	 event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-                            	 event.setLine(1, ChatColor.GRAY + "Class");
-                            	 event.setLine(2, ChatColor.GREEN + className);
-                            	 event.setLine(3, ChatColor.RED+"-> Zombie <-"); 
-                        	 }
-                   	 }
-                      else if(event.getLine(3).equalsIgnoreCase("Human"))
-                      {
-                    	  if (Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null)
-                          {
-                              player.sendMessage(plugin.I + ChatColor.RED + " Missing classes... wtf?");
-                              event.setCancelled(true);
-                              event.getBlock().breakNaturally();
-                          }
-                     	 boolean classFound = false;
-                     	 String className = "None";
-                          for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
-                          {
+                    	if(!plugin.getConfig().getBoolean("Class Support"))
+                    		player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
+                    	else{	
+                    		if(event.getLine(3).equalsIgnoreCase("Zombie"))
+                    		{
+                    			if (Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null)
+                    			{
+                    				player.sendMessage(plugin.I + ChatColor.RED + " Missing classes... wtf?");
+                    				event.setCancelled(true);
+                    				event.getBlock().breakNaturally();
+                    			}
+                    			boolean classFound = false;
+                    			String className = "None";
+                    			for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
+                    			{	
+                    				if((!classes.contains(".")) && event.getLine(2).equalsIgnoreCase(classes)){
+                    					classFound = true;
+                    					className = classes;
+                    					break;
+                    				}
+                    			}
+                    			if(classFound || event.getLine(2).equalsIgnoreCase("None")){
+	
+                    				event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+                    				event.setLine(1, ChatColor.GRAY + "Class");
+                    				event.setLine(2, ChatColor.GREEN + className);
+                    				event.setLine(3, ChatColor.RED+"-> Zombie <-"); 
+                    			}
+                    		}
+                    		else if(event.getLine(3).equalsIgnoreCase("Human"))
+                    		{
+                    			if (Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null)
+                    			{
+                    				player.sendMessage(plugin.I + ChatColor.RED + " Missing classes... wtf?");
+                    				event.setCancelled(true);
+                    				event.getBlock().breakNaturally();
+                    			}
+                    			boolean classFound = false;
+                    			String className = "None";
+                    			for (String classes: Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
+                    			{
                          	 
-                            if((!classes.contains(".")) && event.getLine(2).equalsIgnoreCase(classes)){
-                         	   classFound = true;
-                         	   className = classes;
-                         	   break;
-                            }
-                          }
-                          if(classFound || event.getLine(2).equalsIgnoreCase("None")){
-                            	 event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-                            	 event.setLine(1, ChatColor.GRAY + "Class");
-                            	 event.setLine(2, ChatColor.GREEN + className);
-                            	 event.setLine(3, ChatColor.DARK_GREEN+"-> Human <-"); 
-                        	 }
-                         }else{
-                        	 player.sendMessage(plugin.I + ChatColor.RED + " Well we managed to see you attempt to make a class sign, but thats not a class...");
-                        	 event.setCancelled(true);
-                        	 event.getBlock().breakNaturally();
-                         }
-                    	
+                    				if((!classes.contains(".")) && event.getLine(2).equalsIgnoreCase(classes)){
+                    					classFound = true;
+                    					className = classes;
+                    					break;
+                    				}
+                    			}
+                    			if(classFound || event.getLine(2).equalsIgnoreCase("None")){
+                    				event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+                    				event.setLine(1, ChatColor.GRAY + "Class");
+                    				event.setLine(2, ChatColor.GREEN + className);
+                    				event.setLine(3, ChatColor.DARK_GREEN+"-> Human <-"); 
+                    			}
+                    		}else{
+                    			player.sendMessage(plugin.I + ChatColor.RED + " Well we managed to see you attempt to make a class sign, but thats not a class...");
+                    			event.setCancelled(true);
+                    			event.getBlock().breakNaturally();
+                    		}
+                    	}
                     }else
 	                    {
 	                     if (event.getLine(1).isEmpty())

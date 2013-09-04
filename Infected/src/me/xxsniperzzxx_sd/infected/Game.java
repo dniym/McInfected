@@ -336,4 +336,9 @@ public class Game
             }
         }, 0L, 20L);
     }
+    
+    public static void restartGame(){
+    	Bukkit.getScheduler().cancelTask(Main.timeVote);
+    	START();
+    }
 }

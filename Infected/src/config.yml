@@ -19,6 +19,8 @@ DisguiseCraft Support: true
 
 Zombie Abilities: false
 
+Class Support: true
+
 Vault Support:
   Enable: false
   Reward: 100

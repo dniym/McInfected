@@ -2,6 +2,14 @@
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 # Infected's Potion Effect Codes ----  PotionID:Durtaion:Power
 # If class is purely for humans put Disguise: Nothing (Humans won't be disguised no matter what this says) It just won't disguise the zombies
+# Infected.Classes
+#    Infected.Class.Human
+#       Infected.Class.Human.<ClassName>
+#    Infected.Class.Zombie
+#       Infected.Class.Zombie.<ClassName>
+
+
+
 Classes:
   Human:
     Knight:

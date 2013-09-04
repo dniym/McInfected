@@ -45,9 +45,20 @@ public class Infected
     {
         return Methods.getInventory(player, "Shop Inventory");
     }
+
+    
+    
+    public static String playerGetGroup(Player player)
+    {
+    	String group = null;
+    	if (Infected.isPlayerHuman(player)) group = "Human";
+    	if (Infected.isPlayerZombie(player)) group = "Zombie";
+    	return group;
+    }
+    
     public static void clearZombie()
     {
-        Methods.clearZombies();
+        Main.zombies.clear();
     }
     public static ArrayList < String > listZombies()
     {
@@ -55,7 +66,7 @@ public class Infected
     }
     public static void clearHuman()
     {
-        Methods.clearHumans();
+        Main.humans.clear();
     }
     public static ArrayList < String > listHumans()
     {
@@ -63,7 +74,7 @@ public class Infected
     }
     public static void clearInGame()
     {
-        Methods.clearPlayers();
+        Main.inGame.clear();
     }
     public static ArrayList < String > listInGame()
     {
@@ -71,7 +82,7 @@ public class Infected
     }
     public static void clearInLobby()
     {
-        Methods.clearInLobby();
+        Main.inLobby.clear();
     }
     public static ArrayList < String > listInLobby()
     {
@@ -79,51 +90,52 @@ public class Infected
     }
     public static void addPlayerZombie(Player player)
     {
-        Methods.addZombie(player);
+        Main.zombies.add(player.getName());
     }
     public static void addPlayerHuman(Player player)
     {
-        Methods.addHuman(player);
+        Main.humans.add(player.getName());
     }
     public static void addPlayerInGame(Player player)
     {
-        Methods.addPlayer(player);
+        Main.inGame.add(player.getName());
     }
     public static void addPlayerInLobby(Player player)
     {
-        Methods.addInLobby(player);
+        Main.inLobby.add(player.getName());
     }
     public static void delPlayerZombie(Player player)
     {
-        Methods.delZombie(player);
+        Main.zombies.remove(player.getName());
     }
     public static void delPlayerHuman(Player player)
     {
-        Methods.delHuman(player);
+        Main.humans.remove(player.getName());
     }
     public static void delPlayerInGame(Player player)
     {
-        Methods.delPlayer(player);
+        Main.inGame.remove(player.getName());
     }
     public static void delPlayerInLobby(Player player)
     {
-        Methods.delInLobby(player);
+        Main.inLobby.remove(player.getName());
     }
+    
     public static boolean isPlayerZombie(Player player)
     {
-        return Methods.isZombie(player);
+        return Main.zombies.contains(player.getName());
     }
     public static boolean isPlayerHuman(Player player)
     {
-        return Methods.isHuman(player);
+        return Main.humans.contains(player);
     }
     public static boolean isPlayerInGame(Player player)
     {
-        return Methods.isPlayer(player);
+        return Main.inGame.contains(player.getName());
     }
     public static boolean isPlayerInLobby(Player player)
     {
-        return Methods.isInLobby(player);
+        return Main.inLobby.contains(player.getName());
     }
     public static boolean booleanIsBeforeGame()
     {
@@ -193,13 +205,17 @@ public class Infected
     {
         Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Time", null);
     }
+    
+    
+    
     public static void playerSetKills(Player player, Integer kills)
     {
-        Methods.setPlayerKills(player, kills);
+        Files.getPlayers().set("Players." + "Players." + player.getName().toLowerCase() + ".Kills", kills);
+        Files.savePlayers();
     }
     public static int playerGetKills(Player player)
     {
-        return Methods.getPlayerKills(player);
+        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Kills");
     }
     public static void playerDelKills(Player player)
     {
@@ -207,39 +223,47 @@ public class Infected
     }
     public static void playerSetDeaths(Player player, Integer deaths)
     {
-        Methods.setPlayerDeaths(player, deaths);
+        Files.getPlayers().set("Players." + "Players." + player.getName().toLowerCase() + ".Deaths", deaths);
+        Files.savePlayers();
     }
     public static int playerGetDeaths(Player player)
     {
-        return Methods.getPlayerDeaths(player);
+        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Deaths");
     }
     public static void playerDelDeaths(Player player)
     {
         Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Deaths", null);
     }
+    
+    
+    
     public static void playerSetPoints(Player player, Integer points)
     {
-        Methods.setPoints(player, points);
+        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", points);
+        Files.savePlayers();
     }
     public static int playerGetPoints(Player player)
     {
-        return Methods.getPoints(player);
+        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points");
     }
     public static void playerDelPoints(Player player)
     {
-        Methods.delPoints(player);
+        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", null);
+        Files.savePlayers();
     }
     public static void playerSetScore(Player player, Integer score)
     {
-        Methods.setScore(player, score);
+        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Score", score);
+        Files.savePlayers();
     }
     public static int playerGetScore(Player player)
     {
-        return Methods.getScore(player);
+        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Score");
     }
     public static void playerDelScore(Player player)
     {
-        Methods.delScore(player);
+        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Score", null);
+        Files.savePlayers();
     }
     public static void inventoryClearItems()
     {
@@ -424,10 +448,6 @@ public class Infected
     public static void resetPlugin()
     {
         Methods.reset();
-    }
-    public static String playerGetGroup(Player player)
-    {
-        return Methods.getGroup(player);
     }
     public static String playerGetLastDamage(Player player)
     {
