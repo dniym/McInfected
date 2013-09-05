@@ -147,12 +147,12 @@ public class SignListener implements Listener
 								if (sign.getLine(0).contains("[Infected]"))
 								{
 									String prices = sign.getLine(3).replaceAll("§4Cost: ", "");
-									if(prices.contains("$") && plugin.getConfig().getBoolean("Vault Support.Enable")){
+									if(prices.contains(plugin.getConfig().getString("Vault Support.Symbol")) && plugin.getConfig().getBoolean("Vault Support.Enable")){
 										///////////////////////////////////////////////////   VAULT MONEY SUPPORT
 										
 
 										int points = (int)plugin.economy.getBalance(player.getName());
-										int price = Integer.valueOf(prices.replace("$", ""));
+										int price = Integer.valueOf(prices.replace(plugin.getConfig().getString("Vault Support.Symbol"), ""));
 										String itemstring = sign.getLine(1).replaceAll("§f", "").replaceAll("§7", "");
 										String itemname = null;
 										short itemdata = 0;
@@ -557,7 +557,7 @@ public class SignListener implements Listener
 			if (Files.getShop().getBoolean("Use"))
 			{
 				Player player = event.getPlayer();
-				if (event.getLine(0).equalsIgnoreCase("[Infected]"))
+				if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class"))
 				{
 					if (!player.hasPermission("Infected.Setup"))
 					{
@@ -594,10 +594,15 @@ public class SignListener implements Listener
 							}
 							if (im != null)
 							{
+								String price = event.getLine(2);
+								boolean vault = false;
+								if(plugin.getConfig().getBoolean("Vault Support.Enable") && price.contains(plugin.getConfig().getString("Vault Support.Symbol")))
+									vault = true;
+								price = price.replaceAll(plugin.getConfig().getString("Vault Support.Symbol"), "");
+								System.out.println(vault);
 								try
-								{@
-									SuppressWarnings("unused")
-								int amount = Integer.valueOf(event.getLine(2).replaceAll("$", ""));
+								{
+									Integer.valueOf(price);
 								}
 								catch (NumberFormatException nfe)
 								{
@@ -605,22 +610,22 @@ public class SignListener implements Listener
 									event.getBlock().breakNaturally();
 									event.setCancelled(true);
 								}
-
-
-							}
-							int amount = Integer.valueOf(event.getLine(2));
-							event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-							event.setLine(1, ChatColor.GRAY + event.getLine(1));
-							event.setLine(2, ChatColor.GREEN + "Click To Buy");
-							event.setLine(3, ChatColor.DARK_RED + "Cost: " + String.valueOf(amount));
+								
+								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+								event.setLine(1, ChatColor.GRAY + event.getLine(1));
+								event.setLine(2, ChatColor.GREEN + "Click To Buy");
+								if(vault)	event.setLine(3, ChatColor.DARK_RED + "Cost: " + plugin.getConfig().getString("Vault Support.Symbol") + price);
+								else		event.setLine(3, ChatColor.DARK_RED + "Cost: " + price);
+								
+								}
 						}
 						else
 						{
 							try
 							{
 								String s = event.getLine(1);
-								String[] s1 = s.split(":");@
-								SuppressWarnings("unused")
+								String[] s1 = s.split(":");
+								@SuppressWarnings("unused")
 								int itemid = Integer.valueOf(s1[0]);
 							}
 							catch (NumberFormatException nfe)
@@ -654,8 +659,20 @@ public class SignListener implements Listener
 								}
 							if (im != null)
 							{
-
-								int amount = Integer.valueOf(event.getLine(2));
+								boolean vault = false;
+								String price = event.getLine(2);
+								if(plugin.getConfig().getBoolean("Vault Support.Enable") && event.getLine(2).startsWith(plugin.getConfig().getString("Vault Support.Symbol")))
+									vault = true;	
+								price = price.replaceAll(plugin.getConfig().getString("Vault Support.Symbol"), "");
+								try{
+									Integer.valueOf(price);	
+								}
+								catch (NumberFormatException nfe)
+								{
+									event.getPlayer().sendMessage(Main.I + ChatColor.RED + "Cost must be a number!");
+									event.getBlock().breakNaturally();
+									event.setCancelled(true);
+								}
 								Material item = Material.getMaterial(Integer.valueOf(itemid));
 								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 								event.setLine(1, ChatColor.GRAY + item.name().toUpperCase() + ":" + itemdata);
@@ -663,7 +680,8 @@ public class SignListener implements Listener
 									event.setLine(1, ChatColor.GRAY + item.name().toUpperCase());
 								}
 								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + "Cost: " + String.valueOf(amount));
+								if(vault)	event.setLine(3, ChatColor.DARK_RED + "Cost: "+ plugin.getConfig().getString("Vault Support.Symbol") + price);
+								else		event.setLine(3, ChatColor.DARK_RED + "Cost: " + price);
 								if (itemdata == "")
 								{
 									itemdata = "0";
@@ -673,7 +691,6 @@ public class SignListener implements Listener
 						}
 					}
 				}
-
 			}
 		}
 	}
@@ -686,7 +703,7 @@ public class SignListener implements Listener
 		{
 
 			Player player = event.getPlayer();
-			if (event.getLine(0).equalsIgnoreCase("[Infected]"))
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Info"))
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
@@ -701,7 +718,6 @@ public class SignListener implements Listener
 				}
 				else
 				{
-					if (event.getLine(1).equalsIgnoreCase("Info"))
 						if (plugin.getConfig().getBoolean("Info Signs.Enabled"))
 						{
 							if (!player.hasPermission("Infected.Setup"))
@@ -742,7 +758,7 @@ public class SignListener implements Listener
 		{
 
 			Player player = event.getPlayer();
-			if (event.getLine(0).equalsIgnoreCase("[Infected]"))
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Cmd"))
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
@@ -756,13 +772,11 @@ public class SignListener implements Listener
 					event.setCancelled(true);
 				}
 				else{
-					if (event.getLine(1).equalsIgnoreCase("Cmd") || event.getLine(1).equalsIgnoreCase("Command"))
-					{
-						event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-						event.setLine(1, ChatColor.GREEN + "Click to use CMD");
-						event.setLine(2, ChatColor.GOLD + event.getLine(2).toUpperCase());
-						event.setLine(3, ChatColor.GOLD + event.getLine(3).toUpperCase());
-					}
+					event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+					event.setLine(1, ChatColor.GREEN + "Click to use CMD");
+					event.setLine(2, ChatColor.GOLD + event.getLine(2).toUpperCase());
+					event.setLine(3, ChatColor.GOLD + event.getLine(3).toUpperCase());
+					
 				}
 			}
 		}
@@ -775,14 +789,13 @@ public class SignListener implements Listener
 		if (!event.isCancelled())
 		{
 			Player player = event.getPlayer();
-			if (event.getLine(0).equalsIgnoreCase("[Infected]"))
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Class"))
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
 					player.sendMessage(Main.I + "Invalid Permissions.");
 					event.setCancelled(true);
 				}
-				if(event.getLine(1).equalsIgnoreCase("Class")){
 					if(!plugin.getConfig().getBoolean("Class Support")) {
 						player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
 					} else{
@@ -844,7 +857,6 @@ public class SignListener implements Listener
 						}
 					}
 				}
-			}
 
 		}
 	}

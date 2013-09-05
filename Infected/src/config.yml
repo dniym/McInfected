@@ -2,18 +2,164 @@
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 # See Infecteds dev page for help
 # http://dev.bukkit.org/server-mods/infected-core
+# # +======================================================+ #
+# # |                      Updates                         | #
+# # +======================================================+ #
+# #
+# # Check for updates
+# Check For Updates:
+#   Enable: true
+# #
+# # +======================================================+ #
+# # |                   Plugin Addons                      | #
+# # +======================================================+ #
+# #
+# DisguiseCraft Support: true
+# #
+# Zombie Abilities: false
+# #
+# Class Support: true
+# #
+# Vault Support:
+#   Enable: false
+# # How much do you get if you win as a human
+#   Reward: 100
+# # Cash symbol for Vault sign supports (Don't use $ as it doesnt work for some reason)
+#   Symbol: C
+# #
+# ScoreBoard Support: true
+# #
+# # +======================================================+ #
+# # |                   Game Settings                      | #
+# # +======================================================+ #
+# #
+# # Use books for Infecteds commands
+# Book For Help: true
+# #
+# # Should we use a GUI well voting for a map?
+# Vote with a GUI: true
+# #
+# # Info signs
+# Info Signs:
+#   Enabled: true
+# # How long between each refresh time for the signs
+#   Refresh Time: 2
+# #  
+# # Should players be allowed to join once a game has started
+# Prevent Joining During Game: false
+# #
+# # Does the game auto start
+# Automatic Start:
+#   Use: true
+#   Minimum Players: 3
+# #  
+# # Whats the time for each phase
+#  Time:
+#    Voting Time: 30
+#    Alpha Zombie Infection: 20
+#    Game Time Limit: 480
+# #
+# # Chances for players to become a special zombie
+# # Chances work like this:
+# # Chance to be a regular is 100, and chance for everything else is 20
+# # All together its 140
+# # So if the random is <101 theyll be a regular zombie
+# # If its >100 and <121 they'll be a pig zombie
+# # If its >120 and <141 they'll be a npc zombie
+# # Chance To Be Pig Zombie: 20
+# # Chance To Be NPC Zombie: 20
+# #
+# # Commands players can use inside Infected they have to be in lowercase (Ops can use all commands regardless of being in Infected)
+# Allowed Commands:
+# - /list
+# - /tell
+# #
+# # This setting goes into the Arenas.yml and requires you to change the blocks players can break in that arena.
+# Allow Breaking Certain Blocks: false
+# #
+# # Play effects around the zombie every so many seconds
+# Use Zombie Movement Effects: true
+# #
+# Disable Hunger: true
+# Disable Enchanting: true
+# Allow Interacting: true
+# #
+# # Are players allowed to vote. If not the maps will cycle through the finished maps
+# Allow Votes: true
+# #
+# # When a player becomes a zombie are they respawned?
+# New Zombie Tp: false
+# #
+# #
+# # +======================================================+ #
+# # |                  Points and Score                    | #
+# # +======================================================+ #
+# #
+# # Max - The most a user can have
+# # Survive - What you get for each other human getting infected(As a human)
+# # Zombies Infected - What you get for each human getting infected(As a zombie)
+# # Kill - What you get when a game ends
+# # Game Over - What you get when a game ends
+# Points:
+#   Use: true
+#   Max Points: 10000
+#   Survive: 3
+#   Zombies Infected: 3
+#   Kill: 2
+#   Game Over: 10
+# Score:
+#   Use: true
+#   Max Score: 10000
+#   Survive: 3
+#   Zombies Infected: 3
+#   Kill: 2
+#   Game Over: 10
+# #
+# # +======================================================+ #
+# # |                  Armor and Weapons                   | #
+# # +======================================================+ #
+# #
+# # Do they start off with a class instead of the defaults in the config? (Classes allow more in depth configuration)
+# # Capitals DO matter
+# Default Classes:
+#   Use: false
+#   Human: Knight
+#   Zombie: Assassin
+# #
+# # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
+# Armor:
+#   Human:
+#     Head: '298'
+#     Chest: '299'
+#     Legs: '300'
+#     Feet: '301'
+#     Items:
+#     - 272-34@100
+#     - '261'
+#     - 262,64
+#   Zombie:
+#     Head: 302:2-5@1
+#     Chest: '303'
+#     Legs: '304'
+#     Feet: '305'
+#     Items:
+#     - 272-34@100
+# #   
+# # +======================================================+ #
+# # |                After Game Rewards                    | #
+# # +======================================================+ #
+# #
+# # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
+# Rewards:
+# - 351:2,3
+# - 265,2
+# #
+# # The command triggered for each player when a player wins Infected
+# Command Reward: tell <player> you have won!
+# # +======================================================+ #
 
-# +======================================================+ #
-# |                      Updates                         | #
-# +======================================================+ #
-
-# Check for updates
 Check For Updates:
   Enable: true
-
-# +======================================================+ #
-# |                   Plugin Addons                      | #
-# +======================================================+ #
 
 DisguiseCraft Support: true
 
@@ -24,80 +170,48 @@ Class Support: true
 Vault Support:
   Enable: false
   Reward: 100
+  Symbol: C
   
 ScoreBoard Support: true
 
-# +======================================================+ #
-# |                   Game Settings                      | #
-# +======================================================+ #
-
-# Use books for Infecteds commands
 Book For Help: true
 
-# Should we use a GUI well voting for a map?
 Vote with a GUI: true
 
-# Info signs
 Info Signs:
   Enabled: true
-  # How long between each refresh time for the signs
   Refresh Time: 2
   
-# Should players be allowed to join once a game has started
 Prevent Joining During Game: false
 
-# Does the game auto start
 Automatic Start:
   Use: true
   Minimum Players: 3
   
- # Whats the time for each phase
 Time:
   Voting Time: 30
   Alpha Zombie Infection: 20
   Game Time Limit: 480
 
-# Chances for players to become a special zombie
-# Chances work like this:
-# Chance to be a regular is 100, and chance for everything else is 20
-# All together its 140
-# So if the random is <101 theyll be a regular zombie
-# If its >100 and <121 they'll be a pig zombie
-# If its >120 and <141 they'll be a npc zombie
 Chance To Be Pig Zombie: 20
 Chance To Be NPC Zombie: 20
 
-# Commands players can use inside Infected they have to be in lowercase (Ops can use all commands regardless of being in Infected)
 Allowed Commands:
 - /list
 - /tell
 
-# This setting goes into the Arenas.yml and requires you to change the blocks players can break in that arena.
 Allow Breaking Certain Blocks: false
 
-# Play effects around the zombie every so many seconds
 Use Zombie Movement Effects: true
 
 Disable Hunger: true
 Disable Enchanting: true
 Allow Interacting: true
 
-# Are players allowed to vote. If not the maps will cycle through the finished maps
 Allow Votes: true
 
-# When a player becomes a zombie are they respawned?
 New Zombie Tp: false
 
-  
-# +======================================================+ #
-# |                  Points and Score                    | #
-# +======================================================+ #
-
-# Max - The most a user can have
-# Survive - What you get for each other human getting infected(As a human)
-# Zombies Infected - What you get for each human getting infected(As a zombie)
-# Kill - What you get when a game ends
-# Game Over - What you get when a game ends
 Points:
   Use: true
   Max Points: 10000
@@ -112,19 +226,12 @@ Score:
   Zombies Infected: 3
   Kill: 2
   Game Over: 10
-  
-# +======================================================+ #
-# |                  Armor and Weapons                   | #
-# +======================================================+ #
 
-# Do they start off with a class instead of the defaults in the config? (Classes allow more in depth configuration)
-# Capitals DO matter
 Default Classes:
   Use: false
   Human: Knight
   Zombie: Assassin
   
-# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 Armor:
   Human:
     Head: '298'
@@ -143,14 +250,8 @@ Armor:
     Items:
     - 272-34@100
     
-# +======================================================+ #
-# |                After Game Rewards                    | #
-# +======================================================+ #
-
-# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 Rewards:
 - 351:2,3
 - 265,2
 
-# The command triggered for each player when a player wins Infected
 Command Reward: tell <player> you have won!
