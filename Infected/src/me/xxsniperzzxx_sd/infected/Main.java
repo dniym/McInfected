@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
+import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
+import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Tools.Database;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
@@ -37,15 +40,14 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
-public class Main extends JavaPlugin
-{
+public class Main extends JavaPlugin {
 
-	//Initialize all the variables
+	// Initialize all the variables
 	public static String bVersion = "1.6.2";
 	public static int currentTime = 0;
 	public static String v = null;
 
-	//Set up all the needed things for files
+	// Set up all the needed things for files
 	public static YamlConfiguration abilities = null;
 	public static File abilitiesFile = null;
 	public static YamlConfiguration killT = null;
@@ -63,36 +65,36 @@ public class Main extends JavaPlugin
 	public static YamlConfiguration grenades = null;
 	public static File grenadesfile = null;
 
-	//Lists, Strings and Integers Infected needs
+	// Lists, Strings and Integers Infected needs
 	public static int arenaNumber = 0;
-	public static ArrayList < String > possibleArenas = new ArrayList < String > ();
-	public static ArrayList < String > possibleArenasU = new ArrayList < String > ();
-	public static ArrayList < String > Winners = new ArrayList < String > ();
-	public static ArrayList < Integer > Score = new ArrayList < Integer > ();
-	public static ArrayList < Integer > Grenades = new ArrayList < Integer > ();
-	public static ArrayList < String > inLobby = new ArrayList < String > ();
-	public static ArrayList < String > zombies = new ArrayList < String > ();
-	public static ArrayList < String > humans = new ArrayList < String > ();
-	public static ArrayList < String > inGame = new ArrayList < String > ();
-	public static HashMap < String, String > humanClasses = new HashMap < String, String > ();
-	public static HashMap < String, String > zombieClasses = new HashMap < String, String > ();
-	public static HashMap < String, Integer > Leaders = new HashMap < String, Integer > ();
-	public static HashMap < String, Boolean > Booleans = new HashMap < String, Boolean > ();
-	public static HashMap < String, Long > Timein = new HashMap < String, Long > ();
-	public static HashMap < String, String > gamemode = new HashMap < String, String > ();
-	public static HashMap < String, String > Lasthit = new HashMap < String, String > ();
-	public static HashMap < String, String > Voted4 = new HashMap < String, String > ();
-	public static HashMap < String, String > Creating = new HashMap < String, String > ();
-	public static HashMap < String, Integer > Votes = new HashMap < String, Integer > ();
-	public static HashMap < String, Integer > Levels = new HashMap < String, Integer > ();
-	public static HashMap < String, Float > Exp = new HashMap < String, Float > ();
-	public static HashMap < String, Integer > KillStreaks = new HashMap < String, Integer > ();
-	public static HashMap < String, Double > Health = new HashMap < String, Double > ();
-	public static HashMap < String, Integer > Food = new HashMap < String, Integer > ();
-	public static HashMap < String, ItemStack[] > Armor = new HashMap < String, ItemStack[] > ();
-	public static HashMap < String, ItemStack[] > Inventory = new HashMap < String, ItemStack[] > ();
+	public static ArrayList<String> possibleArenas = new ArrayList<String>();
+	public static ArrayList<String> possibleArenasU = new ArrayList<String>();
+	public static ArrayList<String> Winners = new ArrayList<String>();
+	public static ArrayList<Integer> Score = new ArrayList<Integer>();
+	public static ArrayList<Integer> Grenades = new ArrayList<Integer>();
+	public static ArrayList<String> inLobby = new ArrayList<String>();
+	public static ArrayList<String> zombies = new ArrayList<String>();
+	public static ArrayList<String> humans = new ArrayList<String>();
+	public static ArrayList<String> inGame = new ArrayList<String>();
+	public static HashMap<String, String> humanClasses = new HashMap<String, String>();
+	public static HashMap<String, String> zombieClasses = new HashMap<String, String>();
+	public static HashMap<String, Integer> Leaders = new HashMap<String, Integer>();
+	public static HashMap<String, Boolean> Booleans = new HashMap<String, Boolean>();
+	public static HashMap<String, Long> Timein = new HashMap<String, Long>();
+	public static HashMap<String, String> gamemode = new HashMap<String, String>();
+	public static HashMap<String, String> Lasthit = new HashMap<String, String>();
+	public static HashMap<String, String> Voted4 = new HashMap<String, String>();
+	public static HashMap<String, String> Creating = new HashMap<String, String>();
+	public static HashMap<String, Integer> Votes = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> Levels = new HashMap<String, Integer>();
+	public static HashMap<String, Float> Exp = new HashMap<String, Float>();
+	public static HashMap<String, Integer> KillStreaks = new HashMap<String, Integer>();
+	public static HashMap<String, Double> Health = new HashMap<String, Double>();
+	public static HashMap<String, Integer> Food = new HashMap<String, Integer>();
+	public static HashMap<String, ItemStack[]> Armor = new HashMap<String, ItemStack[]>();
+	public static HashMap<String, ItemStack[]> Inventory = new HashMap<String, ItemStack[]>();
 	public static String I = ChatColor.DARK_RED + "" + "«†" + ChatColor.RESET + ChatColor.DARK_RED + "Infected" + ChatColor.DARK_RED + "†»" + ChatColor.RESET + ChatColor.GRAY + " ";
-	public static HashMap < String, Location > Spot = new HashMap < String, Location > ();
+	public static HashMap<String, Location> Spot = new HashMap<String, Location>();
 	public static String playingin = null;
 	public static int timestart;
 	public static int queuedtpback;
@@ -118,40 +120,37 @@ public class Main extends JavaPlugin
 	public String currentBukkitVersion = null;
 	public String updateBukkitVersion = null;
 
-	//Item Serializer class
+	// Item Serializer class
 	public static ItemSerialization is = null;
 
-	//Scoreboard
+	// Scoreboard
 	private ScoreboardManager manager;
 	public static Scoreboard voteBoard;
 	public static Scoreboard playingBoard;
 	public static Objective voteList;
 	public static Objective playingList;
 
-	//Plugin Addons
+	// Plugin Addons
 	public static boolean tagapi = false;
 	public static DisguiseCraftAPI dcAPI;
 	public static Economy economy = null;
-	//	public NamedItemStack NIS;
 
+	// public NamedItemStack NIS;
 
+	@Override
+	public void onEnable() {
 
-	@
-	Override
-	public void onEnable()
-	{
-
-		//Setup the scoreboard
+		// Setup the scoreboard
 		manager = Bukkit.getScoreboardManager();
 		Main.voteBoard = manager.getNewScoreboard();
 		Main.playingBoard = manager.getNewScoreboard();
 		Main.playingList = Main.playingBoard.registerNewObjective("playing", "dummy");
 		Main.voteList = Main.voteBoard.registerNewObjective("votes", "dummy");
 
-		//Item Serialization
+		// Item Serialization
 		Main.is = new ItemSerialization();
 
-		//Create Configs and files
+		// Create Configs and files
 		Infected.filesGetArenas().options().copyDefaults(true);
 		Infected.filesGetKillTypes().options().copyDefaults(true);
 		getConfig().options().copyDefaults(true);
@@ -171,7 +170,7 @@ public class Main extends JavaPlugin
 		Configuration getconfig = getConfig();
 		Main.config = getconfig;
 
-		//Check for an update
+		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
 		Main.v = pdf.getVersion();
 		String[] s = Bukkit.getBukkitVersion().split("-");
@@ -179,7 +178,8 @@ public class Main extends JavaPlugin
 		if (getConfig().getBoolean("Check For Updates.Enable"))
 		{
 
-			Updater updater = new Updater(this, "Infected-Core", getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+			Updater updater = new Updater(this, "Infected-Core", getFile(),
+					Updater.UpdateType.NO_DOWNLOAD, false);
 
 			Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			Main.name = updater.getLatestVersionString();
@@ -187,26 +187,25 @@ public class Main extends JavaPlugin
 
 			if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
 				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))
-					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4)))) {
+					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4))))
+					{
 						Main.update = false;
 					}
 		}
 
-		//Check if the plugin addons are there
+		// Check if the plugin addons are there
 		if (getConfig().getBoolean("DisguiseCraft Support"))
 		{
 			if (getServer().getPluginManager().getPlugin("ProtocolLib") == null)
 			{
 				System.out.println(Main.I + "DisguiseCraft was enabled but ProtocolLib wasn't found on the server");
 				getConfig().set("DisguiseCraft Support", false);
-			}
-			else
+			} else
 			{
 				if (!(getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
 				{
 					setupDisguiseCraft();
-				}
-				else
+				} else
 				{
 					System.out.println(Main.I + "DisguiseCraft wasn't found on this server, switching to DisguiseCraft Support: false");
 					getConfig().set("DisguiseCraft Support", false);
@@ -214,14 +213,13 @@ public class Main extends JavaPlugin
 				}
 			}
 		}
-		//Check if the plugin addons are there
+		// Check if the plugin addons are there
 		if (getConfig().getBoolean("Vault Support.Enable"))
 		{
 			if (!(getServer().getPluginManager().getPlugin("Vault") == null))
 			{
 				setupEconomy();
-			}
-			else
+			} else
 			{
 				System.out.println(Main.I + "Vault wasn't found on this server, switching to Vault Support: false");
 				getConfig().set("Vault Support.Enable", false);
@@ -232,71 +230,75 @@ public class Main extends JavaPlugin
 		if (getServer().getPluginManager().getPlugin("TagAPI") == null)
 		{
 			getLogger().info(Main.I + "TagAPI was not found...");
-		}
-		else
+		} else
 		{
 			TagApi TagApi = new TagApi(this);
 			pm.registerEvents(TagApi, this);
 			Main.tagapi = true;
 		}
 
-		//On enable set the times form the config
+		// On enable set the times form the config
 		Main.voteTime = getConfig().getInt("Time.Voting Time");
 		Main.Wait = getConfig().getInt("Time.Alpha Zombie Infection");
 		Main.GtimeLimit = getConfig().getInt("Time.Game Time Limit");
 
-		//Setup metrics
+		// Setup metrics
 		try
 		{
 			Metrics metrics = new Metrics(this);
 			metrics.start();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			System.out.println("Error getting metrics!");
 		}
 
-		//Save booleans in an array...(I forget why i did this...)
+		// Save booleans in an array...(I forget why i did this...)
 		Main.Booleans.put("Started", false);
 		Main.Booleans.put("BeforeGame", false);
 		Main.Booleans.put("BeforeFirstInf", false);
 
-		//Get the Commands class and the Listener
+		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
 		PlayerListener PlayerListener = new PlayerListener(this);
-		SignListener Signs = new SignListener(this);
+		SignListener SignListener = new SignListener(this);
 		TeleportFix TeleportFix = new TeleportFix(this);
+		GrenadeListener GrenadeListener = new GrenadeListener(this);
 		pm.registerEvents(PlayerListener, this);
-		pm.registerEvents(Signs, this);
+		pm.registerEvents(GrenadeListener, this);
+		pm.registerEvents(SignListener, this);
 		pm.registerEvents(TeleportFix, this);
 
-		//Clear the blocks DB because a game couldnt have started before the plugins up
+		// Clear the blocks DB because a game couldnt have started before the
+		// plugins up
 		Main.db.getBlocks().clear();
 		Main.db.loadDB("plugins/Infected/Database.db");
 
-		//Do the info signs (Updating the info)
+		// Do the info signs (Updating the info)
 		if (getConfig().getBoolean("Info Signs.Enabled"))
 		{
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
 			{
 				@Override
-				public void run()
-				{
+				public void run() {
 					if (!Main.db.getInfoSigns().isEmpty())
 					{
-						for (String loc: Main.db.getInfoSigns().keySet())
+						for (String loc : Main.db.getInfoSigns().keySet())
 						{
 							String status;
 
-							if (Infected.booleanIsBeforeGame()) {
+							if (Infected.booleanIsBeforeGame())
+							{
 								status = "Voting";
 							}
-							if (Infected.booleanIsBeforeInfected()) {
+							if (Infected.booleanIsBeforeInfected())
+							{
 								status = "B4 Infected";
 							}
-							if (Infected.booleanIsStarted()) {
+							if (Infected.booleanIsStarted())
+							{
 								status = "Started";
-							} else {
+							} else
+							{
 								status = "In Lobby";
 							}
 
@@ -318,7 +320,7 @@ public class Main extends JavaPlugin
 			}, 100L, getConfig().getInt("Info Signs.Refresh Time") * 20);
 		}
 
-		//Make sure the Infected's CB is the same as the server's CB
+		// Make sure the Infected's CB is the same as the server's CB
 		if (!currentBukkitVersion.equalsIgnoreCase(Main.bVersion))
 		{
 			System.out.println("==========================================================");
@@ -329,93 +331,83 @@ public class Main extends JavaPlugin
 			System.out.println("==========================================================");
 		}
 
-		//Setup the scoreboards
+		// Setup the scoreboards
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
 
-			//Votes
+			// Votes
 			Main.voteList.setDisplaySlot(DisplaySlot.SIDEBAR);
 			Main.voteList.setDisplayName("Votes");
 
-			//Playing
+			// Playing
 			Main.playingList.setDisplaySlot(DisplaySlot.SIDEBAR);
 			Main.playingList.setDisplayName("Playing");
 
 		}
 	}
 
-
 	@SuppressWarnings("deprecation")
-	@
-	Override
-	public void onDisable()
-	{
+	@Override
+	public void onDisable() {
 
-		//On disable reset players with everything from before
-		for (Player player: Bukkit.getServer().getOnlinePlayers())
+		// On disable reset players with everything from before
+		for (Player player : Bukkit.getServer().getOnlinePlayers())
 			if (player != null)
 				if (Main.inGame.contains(player.getName()))
 				{
 					player.sendMessage(Main.I + "Server was reloaded!");
 					player.setHealth(20.0);
 					player.setFoodLevel(20);
-					for (PotionEffect reffect: player.getActivePotionEffects())
+					for (PotionEffect reffect : player.getActivePotionEffects())
 					{
 						player.removePotionEffect(reffect.getType());
 					}
 					player.setGameMode(GameMode.valueOf(Main.gamemode.get(player.getName())));
 					Main.Lasthit.remove(player.getName());
-					if (Main.Inventory.containsKey(player.getName())) {
+					if (Main.Inventory.containsKey(player.getName()))
+					{
 						player.getInventory().setContents(Main.Inventory.get(player.getName()));
 					}
-					if (Main.Armor.containsKey(player.getName())) {
+					if (Main.Armor.containsKey(player.getName()))
+					{
 						player.getInventory().setArmorContents(Main.Armor.get(player.getName()));
 					}
 					player.updateInventory();
 					player.setExp(Main.Exp.get(player.getName()));
 					player.setLevel(Main.Levels.get(player.getName()));
-					if (Main.Spot.containsKey(player.getName())) {
+					if (Main.Spot.containsKey(player.getName()))
+					{
 						player.teleport(Main.Spot.get(player.getName()));
 					}
-					if (Main.Food.containsKey(player.getName())) {
+					if (Main.Food.containsKey(player.getName()))
+					{
 						player.setFoodLevel(Main.Food.get(player.getName()));
 					}
-					if (Main.Health.containsKey(player.getName())) {
+					if (Main.Health.containsKey(player.getName()))
+					{
 						player.setHealth(Main.Health.get(player.getName()));
 					}
 				}
-		//Empty all the hashmaps and database settings(Blocks)
+		// Empty all the hashmaps and database settings(Blocks)
 		Main.db.getBackups().clear();
 		Main.db.getBlocks().clear();
 		Main.db.getChests().clear();
 		Main.db.saveDB("plugins/Infected/Database.db");
 	}
 
-	//Setup DisguiseCraft
-	public void setupDisguiseCraft()
-	{
+	// Setup DisguiseCraft
+	public void setupDisguiseCraft() {
 		Main.dcAPI = DisguiseCraft.getAPI();
 	}
 
-
-	private boolean setupEconomy()
-	{
+	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null) {
+		if (economyProvider != null)
+		{
 			Main.economy = economyProvider.getProvider();
 		}
 
 		return (Main.economy != null);
 	}
-
-
-
-
-
-
-
-
-
-
 
 }

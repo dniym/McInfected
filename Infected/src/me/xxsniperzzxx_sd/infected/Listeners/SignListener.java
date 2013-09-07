@@ -1,7 +1,10 @@
-package me.xxsniperzzxx_sd.infected;
+package me.xxsniperzzxx_sd.infected.Listeners;
 
 import java.util.ArrayList;
 
+import me.xxsniperzzxx_sd.infected.Infected;
+import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.ChatColor;

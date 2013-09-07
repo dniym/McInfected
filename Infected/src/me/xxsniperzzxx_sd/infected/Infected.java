@@ -470,6 +470,6 @@ public class Infected
                 loc.getBlock().setType(Main.db.getBlocks().get(loc));
             }
         }
-        Main.db.getBlocks().clear();
-    }
+		Main.db.getBlocks().clear();
+	}
 }
