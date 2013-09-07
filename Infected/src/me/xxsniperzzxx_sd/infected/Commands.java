@@ -450,9 +450,11 @@ public class Commands implements CommandExecutor {
 								if (grenades.matches("[0-9]+"))
 								{
 									gname = Infected.filesGetGrenades().getString(grenades + ".Name");
-									gcost = Infected.filesGetGrenades().getInt(grenades + ".Cost");
-									player.sendMessage(ChatColor.GRAY + String.valueOf(i) + ". " + ChatColor.DARK_AQUA + gname + ChatColor.DARK_GRAY + " - " + ChatColor.AQUA + gcost);
-									i++;
+									if(player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades." + gname)){
+										gcost = Infected.filesGetGrenades().getInt(grenades + ".Cost");
+										player.sendMessage(ChatColor.GRAY + String.valueOf(i) + ". " + ChatColor.DARK_AQUA + gname + ChatColor.DARK_GRAY + " - " + ChatColor.AQUA + gcost);
+										i++;
+									}
 								}
 							}
 						}

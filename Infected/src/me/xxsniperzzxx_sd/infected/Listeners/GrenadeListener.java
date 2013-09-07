@@ -60,7 +60,7 @@ public class GrenadeListener implements Listener {
 		{
 			if (Infected.booleanIsStarted() && Files.getGrenades().getBoolean("Use"))
 			{
-				if (!Main.inLobby.contains(player.getName()) && player.hasPermission("Infected.Grenades"))
+				if (!Main.inLobby.contains(player.getName()) && (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades."+ Methods.grenadeGetName(player.getItemInHand().getTypeId()))))
 				{
 					final int delay = Methods.grenadeGetDelay(player.getItemInHand().getTypeId());
 					final String ItemId = String.valueOf(player.getItemInHand().getTypeId());
