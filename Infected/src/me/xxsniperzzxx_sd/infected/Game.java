@@ -72,7 +72,7 @@ public class Game {
 				Methods.updateScoreBoard();
 			}
 
-		// ING TIME
+		// VOTEING TIME
 		Bukkit.getServer().getPluginManager().callEvent(new InfectedVoteStartEvent(
 				Main.inGame, Main.voteTime));
 
@@ -168,6 +168,7 @@ public class Game {
 									Integer.valueOf(floc[2]),
 									Integer.valueOf(floc[3])) == null)
 							{
+								
 								for (Player p : Bukkit.getServer().getOnlinePlayers())
 								{
 									if (Main.inGame.contains(p.getName()))
@@ -186,6 +187,7 @@ public class Game {
 								if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded())
 									Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
 							}
+						}
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 							{
 								@Override
@@ -338,7 +340,6 @@ public class Game {
 									}, 0L, 20L);
 								}
 							}, 200L);
-						}
 					}
 				}
 			}
