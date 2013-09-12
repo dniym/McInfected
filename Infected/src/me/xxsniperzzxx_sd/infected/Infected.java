@@ -51,8 +51,8 @@ public class Infected
     public static String playerGetGroup(Player player)
     {
     	String group = null;
-    	if (Infected.isPlayerHuman(player)) group = "Human";
-    	if (Infected.isPlayerZombie(player)) group = "Zombie";
+    	if (isPlayerHuman(player)) group = "Human";
+    	else if (isPlayerZombie(player)) group = "Zombie";
     	return group;
     }
     
@@ -127,7 +127,7 @@ public class Infected
     }
     public static boolean isPlayerHuman(Player player)
     {
-        return Main.humans.contains(player);
+        return Main.humans.contains(player.getName());
     }
     public static boolean isPlayerInGame(Player player)
     {

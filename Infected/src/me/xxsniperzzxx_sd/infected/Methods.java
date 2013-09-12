@@ -18,6 +18,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -636,7 +637,7 @@ public class Methods {
 						}
 						online.sendMessage(Methods.sendMessage("Game_FirstInfected", zombie, null, null));
 						online.setHealth(20);
-						online.playEffect(online.getLocation(), Effect.SMOKE, 1);
+						online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
 
 					}
 				}
@@ -782,7 +783,7 @@ public class Methods {
 		Main.zombies.add(newzombie.getName());
 		Main.Winners.remove(newzombie.getName());
 		Main.inLobby.remove(newzombie.getName());
-		newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
+		newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
 		Methods.zombifyPlayer(newzombie);
 		newzombie.setHealth(20);
 		Methods.equipZombies(newzombie);

@@ -17,6 +17,7 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -339,7 +340,7 @@ public class PlayerListener implements Listener {
 					{
 						Methods.respawn(zombie);
 					}
-					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
+					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
 					if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
 					{
 						zombie.addPotionEffect(new PotionEffect(
@@ -363,7 +364,7 @@ public class PlayerListener implements Listener {
 								Main.humans.add(online.getName());
 								online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
 								online.setHealth(20);
-								online.playEffect(online.getLocation(), Effect.SMOKE, 1);
+								online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
 							}
 						}
 					}
@@ -553,7 +554,7 @@ public class PlayerListener implements Listener {
 					{
 						Methods.respawn(zombie);
 					}
-					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
+					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
 					if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
 					{
 						zombie.addPotionEffect(new PotionEffect(
@@ -577,7 +578,7 @@ public class PlayerListener implements Listener {
 								Main.humans.add(online.getName());
 								online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
 								online.setHealth(20);
-								online.playEffect(online.getLocation(), Effect.SMOKE, 1);
+								online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
 							}
 						}
 					}
