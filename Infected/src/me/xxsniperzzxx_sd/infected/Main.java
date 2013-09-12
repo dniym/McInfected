@@ -67,6 +67,7 @@ public class Main extends JavaPlugin {
 
 	// Lists, Strings and Integers Infected needs
 	public static int arenaNumber = 0;
+	public static ArrayList<String> infectedChat = new ArrayList<String>();
 	public static ArrayList<String> possibleArenas = new ArrayList<String>();
 	public static ArrayList<String> possibleArenasU = new ArrayList<String>();
 	public static ArrayList<String> Winners = new ArrayList<String>();
@@ -350,6 +351,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 
+		Methods.updateScoreBoard();
 		// On disable reset players with everything from before
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
 			if (player != null)

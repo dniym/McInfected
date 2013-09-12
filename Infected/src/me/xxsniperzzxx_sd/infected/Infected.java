@@ -237,14 +237,21 @@ public class Infected
     
     
     
-    public static void playerSetPoints(Player player, Integer points)
+    public static void playerSetPoints(Player player, Integer points, Integer price)
     {
-        Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", points);
-        Files.savePlayers();
+    	if(Main.config.getBoolean("Vault Support.Enable")){
+    		Main.economy.withdrawPlayer(player.getName(), price);
+    	}else{
+    		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", points - price);
+    		Files.savePlayers();
+    	}
     }
     public static int playerGetPoints(Player player)
     {
-        return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points");
+    	if(Main.config.getBoolean("Vault Support.Enable"))
+    		return (int)Main.economy.getBalance(player.getName());
+    	else 
+    		return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points");
     }
     public static void playerDelPoints(Player player)
     {

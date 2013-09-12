@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 1.9.1
+# Default Infected Config, Last edited in 1.9.2
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 # See Infecteds dev page for help
 # http://dev.bukkit.org/server-mods/infected-core
@@ -32,6 +32,14 @@
 # # +======================================================+ #
 # # |                   Game Settings                      | #
 # # +======================================================+ #
+# #
+# # The force join options(Used on automated servers)
+# Force Join:
+#   Enable: false
+# # Want to hide the <Player> has joined the server
+#   Hide Join Messages: true
+# # Want to prevent players from leaving the game
+#   Disable Leave Command: true
 # #
 # # Use books for Infecteds commands
 # Book For Help: true
@@ -158,6 +166,7 @@
 # Command Reward: tell <player> you have won!
 # # +======================================================+ #
 
+
 Check For Updates:
   Enable: true
 
@@ -173,6 +182,11 @@ Vault Support:
   Symbol: C
   
 ScoreBoard Support: true
+
+Force Join:
+  Enable: false
+  Hide Join Messages: true
+  Disable Leave Command: true
 
 Book For Help: true
 

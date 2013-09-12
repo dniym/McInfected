@@ -246,7 +246,7 @@ public class Methods {
 				player.sendMessage(Main.I + ChatColor.RED + "You have exceded the max score!");
 			else
 			{
-				Infected.playerSetPoints(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points") + reward);
+				Infected.playerSetPoints(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points") + reward, 0);
 				Infected.playerSetScore(player, Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Score") + score);
 				Files.savePlayers();
 				player.sendMessage(Main.I + ChatColor.AQUA + "Points +" + reward);
@@ -740,14 +740,13 @@ public class Methods {
 						Main.possibleArenas.remove(parenas);
 					} else if (!parenas.contains("."))
 					{
-						for (Entry<String, Integer> mapName : Main.Votes.entrySet())
-						{
-							if (parenas.equalsIgnoreCase(mapName.getKey()))
-							{
-								Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + parenas));
-								score.setScore(mapName.getValue());
+						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + parenas));
+						if(Main.Votes.get(parenas) != null) score.setScore(Main.Votes.get(parenas));
+						else{
+							score.setScore(1);
+							score.setScore(0);
 							}
-						}
+						
 					}
 				}
 

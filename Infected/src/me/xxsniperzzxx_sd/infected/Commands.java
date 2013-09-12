@@ -62,13 +62,23 @@ public class Commands implements CommandExecutor {
 				{
 					player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
 					return true;
-				} else if (args.length == 1)
-				{
-					player.sendMessage(plugin.I + "/Inf Chat <Message>");
-					return true;
-				} else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || !Infected.booleanIsStarted())
+				}  
+				else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || !Infected.booleanIsStarted())
 				{
 					player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
+					return true;
+				}
+				else if (args.length == 1)
+				{
+					if(!plugin.infectedChat.contains(player.getName())){
+						plugin.infectedChat.add(player.getName());
+						player.sendMessage(plugin.I + "Toggled " + ChatColor.GREEN + "in " + ChatColor.GRAY + "to Infected's Chat");
+					}
+					else if(plugin.infectedChat.contains(player.getName())){
+						player.sendMessage(plugin.I + "Toggled " + ChatColor.RED + "out " + ChatColor.GRAY + "of Infected's Chat");
+						plugin.infectedChat.remove(player.getName());
+					}
+					
 					return true;
 				}
 				StringBuilder message = new StringBuilder(args[1]);
@@ -507,6 +517,10 @@ public class Commands implements CommandExecutor {
 					// LEAVE
 				} else if (args[0].equalsIgnoreCase("Leave"))
 				{
+					if(plugin.getConfig().getBoolean("Force Join.Enable")){
+						 if(plugin.getConfig().getBoolean("Force Join.Disable Leave Command"))
+							 return true;
+					}
 					if (!(sender instanceof Player))
 					{
 						sender.sendMessage(plugin.I + ChatColor.RED + "Expected a player!");
@@ -975,7 +989,7 @@ public class Commands implements CommandExecutor {
 					}
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "------= " + user + " =------");
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Points") + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(Bukkit.getPlayer(user)) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Methods.getOnlineTime(user.toLowerCase()));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Methods.KD(Bukkit.getPlayer(user)));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".KillStreak"));
@@ -1432,7 +1446,7 @@ public class Commands implements CommandExecutor {
 									im.setDisplayName("§e" + Infected.filesGetGrenades().getString(Main.Grenades.get(gi) + ".Name"));
 									itemstack.setItemMeta(im);
 									player.getInventory().addItem(itemstack);
-									Infected.playerSetPoints(player, Infected.playerGetPoints(player) - Infected.filesGetGrenades().getInt(Main.Grenades.get(gi) + ".Cost"));
+									Infected.playerSetPoints(player, Infected.playerGetPoints(player), Infected.filesGetGrenades().getInt(Main.Grenades.get(gi) + ".Cost"));
 									player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "You have just bought a " + ChatColor.AQUA + Infected.filesGetGrenades().getString(Main.Grenades.get(gi) + ".Name"));
 								} else
 									player.sendMessage(plugin.I + ChatColor.RED + "You don't have enough points to make this purchase!");
@@ -1455,7 +1469,7 @@ public class Commands implements CommandExecutor {
 					String user = args[1].toLowerCase();
 					if (!Infected.filesGetPlayers().contains(user))
 					{
-						player.sendMessage(plugin.I + "That user has never played infected!");
+						player.sendMessage(plugin.I + "That user isn't online!");
 						return true;
 					}
 					if (Bukkit.getServer().getPlayer(user) != null)
@@ -1468,7 +1482,7 @@ public class Commands implements CommandExecutor {
 					}
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "------= " + user + " =------");
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Points"));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(Bukkit.getPlayer(user)) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Methods.getOnlineTime(user.toLowerCase()));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Methods.KD(Bukkit.getPlayer(user)));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".KillStreak"));
@@ -1804,7 +1818,7 @@ public class Commands implements CommandExecutor {
 					int i = Integer.parseInt(args[3]);
 					if (args[1].equalsIgnoreCase("Points"))
 					{
-						Infected.playerSetPoints(user, Infected.playerGetPoints(user) + i);
+						Infected.playerSetPoints(user, Infected.playerGetPoints(user) + i, 0);
 						player.sendMessage(plugin.I + user.getName() + "'s new points is: " + Infected.playerGetPoints(user));
 					} else if (args[1].equalsIgnoreCase("Score"))
 					{

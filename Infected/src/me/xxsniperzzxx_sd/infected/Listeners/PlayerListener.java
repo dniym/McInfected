@@ -1,3 +1,4 @@
+
 package me.xxsniperzzxx_sd.infected.Listeners;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -47,6 +49,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
 
 @SuppressWarnings("static-access")
 public class PlayerListener implements Listener {
@@ -80,6 +83,13 @@ public class PlayerListener implements Listener {
 					player.sendMessage(Main.I + ChatColor.RED + "An update is available: " + Main.name);
 					player.sendMessage(Main.I + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
 				}
+		if (plugin.getConfig().getBoolean("Force Join.Enable"))
+		{
+			player.performCommand("Infected Join");
+
+			if (plugin.getConfig().getBoolean("Force Join.Hide Join Messages"))
+				event.setJoinMessage("");
+		}
 	}
 
 	// Disable dropping items if the player is in game
@@ -93,7 +103,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerUseInventory(InventoryClickEvent e) {
 		if (Main.inGame.contains(e.getWhoClicked().getName()))
-			if (!Infected.booleanIsStarted())
+			if (!Infected.booleanIsStarted() && (!e.getInventory().getTitle().contains("Class") && !e.getInventory().getTitle().contains("Vote")))
 			{
 				Player player = (Player) e.getViewers().get(0);
 				player.sendMessage(Methods.sendMessage("Error_CantEditInventoryYet", null, null, null));
@@ -136,6 +146,15 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
+	
+	  @EventHandler(priority = EventPriority.HIGHEST)
+	    public void onPlayerChat(AsyncPlayerChatEvent e) {
+	    	if(plugin.infectedChat.contains(e.getPlayer().getName())){
+	    		String msg = e.getMessage();
+	    		e.getPlayer().performCommand("Inf Chat " + msg);
+	    		e.setCancelled(true);
+	    	}
+	    }
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent e) {
@@ -702,6 +721,7 @@ public class PlayerListener implements Listener {
 					effectb = true;
 					effect = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 					{
+
 						@Override
 						public void run() {
 							e.getPlayer().getWorld().playEffect(e.getPlayer().getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
@@ -973,6 +993,7 @@ public class PlayerListener implements Listener {
 		if (Main.inGame.contains(player.getName()))
 			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 			{
+
 				@Override
 				public void run() {
 					player.sendMessage(Main.I + "Apperently i missed a way to die...");
