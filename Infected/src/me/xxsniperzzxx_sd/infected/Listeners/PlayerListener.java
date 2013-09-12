@@ -142,7 +142,13 @@ public class PlayerListener implements Listener {
 					}
 				} else
 				{
-					e.setCancelled(true);
+					if (plugin.db.getBlocks().containsKey(e.getBlock().getLocation()))
+					{
+						Location loc = e.getBlock().getLocation();
+						plugin.db.getBlocks().remove(loc);
+						e.getBlock().getDrops().clear();
+					}else
+						e.setCancelled(true);
 				}
 			}
 		}
