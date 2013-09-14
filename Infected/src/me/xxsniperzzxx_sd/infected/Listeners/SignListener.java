@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
+import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.ChatColor;
@@ -569,18 +570,16 @@ public class SignListener implements Listener
 								event.setCancelled(true);
 							}
 							event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-							String status;
-							if (Infected.booleanIsBeforeGame()) {
+
+							String status = "";
+							if (Infected.getGameState() == GameState.VOTING)
 								status = "Voting";
-							}
-							if (Infected.booleanIsBeforeInfected()) {
+							if (Infected.getGameState() == GameState.BEFOREINFECTED)
 								status = "B4 Infected";
-							}
-							if (Infected.booleanIsStarted()) {
+							if (Infected.getGameState() == GameState.STARTED)
 								status = "Started";
-							} else {
+							else
 								status = "In Lobby";
-							}
 							int time = Main.currentTime;
 							event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
 							event.setLine(2, ChatColor.GOLD + status);

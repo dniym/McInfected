@@ -27,6 +27,14 @@
 # # Cash symbol for Vault sign supports (Don't use $ as it doesnt work for some reason)
 #   Symbol: C
 # #
+# # Want to use Crack Shot?
+# CrackShot Support:
+#   Enable: true
+# #
+# # Want to use TagApi?
+# TagApi Support:
+#   Enable: true
+# #
 # ScoreBoard Support: true
 # #
 # # +======================================================+ #
@@ -180,6 +188,12 @@ Vault Support:
   Enable: false
   Reward: 100
   Symbol: C
+  
+CrackShot Support:
+  Enable: true
+  
+TagApi Support:
+  Enable: true
   
 ScoreBoard Support: true
 

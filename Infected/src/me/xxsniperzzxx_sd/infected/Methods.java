@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
+import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
@@ -219,7 +220,7 @@ public class Methods {
 	}
 
 	// ===============================================================================
-	public static void rewardPoints(Player player, String PointsCause) {
+	public static void rewardPointsAndScore(Player player, String PointsCause) {
 		if (Main.config.getBoolean("Points.Use"))
 		{
 			if (Main.config.getBoolean("Debug"))
@@ -444,54 +445,61 @@ public class Methods {
 
 	}
 
-	public static void grenadeKill(Player Killer, Player Killed) {
+	public static void playerDies(Player Killer, Player Killed) {
+		
+		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(Killer, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
+		
 		Methods.stats(Killer, 1, 0);
-		Methods.rewardPoints(Killer, "Kill");
+		Methods.stats(Killed, 0, 1);
+		
+		Methods.handleKillStreaks(true, Killed);
+		Methods.handleKillStreaks(false, Killer);
+		
 		String kill = getKillType(Infected.playerGetGroup(Killer) + "s", Killer.getName(), Killed.getName());
 		for (Player playing : Bukkit.getServer().getOnlinePlayers())
 			if (Main.inGame.contains(playing.getName()))
-			{
 				playing.sendMessage(kill);
-			}
-		Main.KillStreaks.put(Killer.getName(), Main.KillStreaks.get(Killer.getName()) + 1);
-		Files.getPlayers().set("Players." + Killer.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(Killer.getName()));
-		if (Main.KillStreaks.get(Killer.getName()) > 2)
-			for (Player playing : Bukkit.getServer().getOnlinePlayers())
-				if (Main.inGame.contains(playing.getName()))
-				{
-					playing.sendMessage(Main.I + ChatColor.GREEN + Killer.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(Killer.getName()));
-				}
-		if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(Killer.getName())))))
-		{
-			String command = null;
-			command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + Main.KillStreaks.get(Killer.getName()))).replaceAll("<player>", Killer.getName());
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-		}
-		Methods.stats(Killed, 0, 1);
-		if (Main.KillStreaks.containsKey(Killed.getName()))
-		{
-			if (Main.KillStreaks.get(Killed.getName()) > Files.getPlayers().getInt("Players." + Killed.getName().toLowerCase() + ".KillStreak"))
-			{
-				Files.getPlayers().set("Players." + Killed.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(Killed.getName()));
-				Files.savePlayers();
-			}
+		
+		if(Infected.isPlayerHuman(Killed)){
+			if(Main.config.getBoolean("New Zombies Tp")){
+				Methods.zombifyPlayer(Killed);
+				Methods.respawn(Killed);
+					
+			}else
+				Methods.zombifyPlayer(Killed);	
 
-			Main.KillStreaks.put(Killed.getName(), 0);
+			
+			Killed.sendMessage(Main.I + "You have become infected!");
+			Killed.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,20, 2));
+			
+			Methods.equipZombies(Killed);
+			Killed.setHealth(20);
+			Killed.setFoodLevel(20);
 		}
-		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(
-				Killer, Killed, Infected.playerGetGroup(Killed),
-				Infected.isPlayerHuman(Killed) ? true : false));
-		Killed.setHealth(20);
+		else{
+			Methods.respawn(Killed);
+			Methods.equipZombies(Killed);
+		}
+			
 		Killed.setFallDistance(0F);
-		Killed.setFoodLevel(20);
-		Methods.respawn(Killed);
-		Killed.setFallDistance(0F);
-		Main.humans.remove(Killed.getName());
-		Main.Lasthit.remove(Killed.getName());
-		if (Main.humans.size() == 0)
-		{
-			Methods.endGame(false);
-		} else
+
+		if (Infected.isPlayerHuman(Killed))
+			Infected.delPlayerHuman(Killed);
+		
+		if (!Infected.isPlayerZombie(Killed))
+			Infected.addPlayerZombie(Killed);
+		
+		if(Main.Lasthit.containsKey(Killed.getName()))
+			Main.Lasthit.remove(Killed.getName());
+
+		if (Main.Winners.contains(Killed.getName()))
+			Main.Winners.remove(Killed.getName());
+		
+		
+		if (Main.humans.size() == 0 && Infected.getGameState() == GameState.STARTED)
+			Game.endGame(false);
+		
+		else
 		{
 			Methods.equipZombies(Killed);
 			Methods.zombifyPlayer(Killed);
@@ -652,8 +660,9 @@ public class Methods {
 	public static void updateScoreBoard() {
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
-			if (Infected.booleanIsStarted())
+			if (Infected.getGameState() == GameState.STARTED)
 			{
+
 				Main.possibleArenas.clear();
 				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
 				{
@@ -668,13 +677,12 @@ public class Methods {
 						Main.possibleArenas.remove(parenas);
 					} else if (!parenas.contains("."))
 					{
-						for (Entry<String, Integer> mapName : Main.Votes.entrySet())
-						{
-							if (parenas.equalsIgnoreCase(mapName.getKey()))
-							{
-								Main.voteBoard.resetScores(Bukkit.getOfflinePlayer(parenas));
-							}
-						}
+						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + parenas));
+						if(Main.Votes.get(parenas) != null) score.setScore(Main.Votes.get(parenas));
+						else{
+							score.setScore(1);
+							score.setScore(0);
+						}	
 					}
 				}
 
@@ -683,50 +691,8 @@ public class Methods {
 				Score score2 = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Zombies:"));
 				score2.setScore(Main.zombies.size());
 
-				// Resetting Votes
-				Main.possibleArenas.clear();
-				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
-				{
-					// Check if the string matchs an arena
-
-					if (Main.possibleArenas.contains(parenas))
-					{
-						Main.possibleArenas.remove(parenas);
-					}
-					if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
-					{
-						Main.possibleArenas.remove(parenas);
-					} else if (!parenas.contains("."))
-					{
-						Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(parenas));
-					}
-				}
 			} else
 			{
-
-				Main.possibleArenas.clear();
-				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
-				{
-					// Check if the string matchs an arena
-
-					if (Main.possibleArenas.contains(parenas))
-					{
-						Main.possibleArenas.remove(parenas);
-					}
-					if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
-					{
-						Main.possibleArenas.remove(parenas);
-					} else if (!parenas.contains("."))
-					{
-						for (Entry<String, Integer> mapName : Main.Votes.entrySet())
-						{
-							if (parenas.equalsIgnoreCase(mapName.getKey()))
-							{
-								Main.voteBoard.resetScores(Bukkit.getOfflinePlayer(parenas));
-							}
-						}
-					}
-				}
 				Main.possibleArenas.clear();
 				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
 				{
@@ -908,7 +874,7 @@ public class Methods {
 		if (Main.config.getBoolean("Default Classes.Use"))
 			Main.humanClasses.put(human.getName(), Main.config.getString("Default Classes.Human"));
 
-		if (Main.tagapi)
+		if (Main.config.getBoolean("TagApi Support.Enable"))
 			TagAPI.refreshPlayer(human);
 		if (Main.humanClasses.containsKey(human.getName()))
 		{
@@ -952,7 +918,7 @@ public class Methods {
 			Main.zombieClasses.put(zombie.getName(), Main.config.getString("Default Classes.Zombie"));
 
 		updateScoreBoard();
-		if (Main.tagapi)
+		if (Main.config.getBoolean("TagApi Support.Enable"))
 			TagAPI.refreshPlayer(zombie);
 		// Give infected their armor
 
@@ -1232,128 +1198,53 @@ public class Methods {
 			}
 		}
 		return is;
-
 	}
-
-	@SuppressWarnings("deprecation")
-	public static void endGame(Boolean DidHumansWin) {
-		for (Player players : Bukkit.getServer().getOnlinePlayers())
-		{
-			if (Infected.isPlayerInGame(players))
-			{
-				if (Main.KillStreaks.containsKey(players.getName()))
-				{
-					if (Main.KillStreaks.get(players.getName()) > Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".KillStreak"))
-					{
-						Files.getPlayers().set("Players." + players.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(players.getName()));
-						Files.savePlayers();
-					}
-				}
+	
+	public static void handleKillStreaks(boolean killed, Player player){
+		if(killed){
+			if(!Main.KillStreaks.containsKey(player.getName()))
+				Main.KillStreaks.put(player.getName(), 0);
+			
+			if(Main.KillStreaks.get(player.getName()) > Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".KillStreak")){
+				Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(player.getName()));
+				Files.savePlayers();
 			}
+			
+			Main.KillStreaks.put(player.getName(), 0);
+		}else{
+			if(!Main.KillStreaks.containsKey(player.getName()))
+				Main.KillStreaks.put(player.getName(), 0);
+			Main.KillStreaks.put(player.getName(), Main.KillStreaks.get(player.getName())+1);
+
+			if (Main.KillStreaks.get(player.getName()) >= 3)
+				for (Player playing : Bukkit.getServer().getOnlinePlayers())
+					if (Main.inGame.contains(playing.getName()))
+						playing.sendMessage(Main.I + (Infected.isPlayerHuman(player) ?  ChatColor.RED + player.getName() : ChatColor.GREEN + player.getName()) + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(player.getName()));
+
+
+			if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(player.getName())))))
+			{
+				String command = null;
+				command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + Main.KillStreaks.get(player.getName()))).replaceAll("<player>", player.getName());
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+			}
+			if(Infected.isPlayerHuman(player))
+				Methods.rewardPointsAndScore(player, "Kill");
+
+			else{
+				Methods.rewardPointsAndScore(player, "Kill");
+
+				for(String playing : Infected.listInGame()){
+					if(Infected.isPlayerHuman(Bukkit.getPlayer(playing)))
+						Methods.rewardPointsAndScore(Bukkit.getPlayer(playing), "Survive");
+					
+					else if(Infected.isPlayerZombie(Bukkit.getPlayer(playing)))
+						Methods.rewardPointsAndScore(Bukkit.getPlayer(playing), "Zombies Infected");
+				}
+				
+			}
+
 		}
-		if (DidHumansWin)
-		{
-			if (Main.config.getBoolean("Vault Support.Enable"))
-			{
-				int rewardMoney = Main.config.getInt("Vault Support.Reward");
-
-				for (Player players : Bukkit.getOnlinePlayers())
-					if (Main.Winners.contains(players.getName()))
-
-						Main.economy.depositPlayer(players.getName(), rewardMoney);
-			}
-			if (!(Main.config.getString("Command Reward").equalsIgnoreCase(null) || Main.config.getString("Command Reward").equalsIgnoreCase("[]")))
-			{
-				for (Player players : Bukkit.getOnlinePlayers())
-				{
-					if (Main.Winners.contains(players.getName()))
-					{
-						String s = Main.config.getString("Command Reward").replaceAll("<player>", players.getName());
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
-					}
-				}
-			}
-			for (String s : Main.config.getStringList("Rewards"))
-			{
-				for (Player players : Bukkit.getOnlinePlayers())
-				{
-					if (Main.Winners.contains(players.getName()))
-					{
-						players.getInventory().setContents(Main.Inventory.get(players.getName()));
-						players.updateInventory();
-						players.getInventory().addItem(Methods.getItemStack(s));
-						players.updateInventory();
-						Main.Inventory.put(players.getName(), players.getInventory().getContents());
-						resetPlayersInventory(players);
-						players.updateInventory();
-					}
-				}
-			}
-			for (Player players : Bukkit.getServer().getOnlinePlayers())
-			{
-				if (Main.inGame.contains(players.getName()))
-				{
-					Methods.rewardPoints(players, "Game Over");
-					players.sendMessage(Methods.sendMessage("AfterGame_HumansWin", null, null, null));
-					StringBuilder winners = new StringBuilder();
-					for (Object o : Main.Winners)
-					{
-						winners.append(o.toString());
-						winners.append(", ");
-					}
-					players.sendMessage(Main.I + "Winners: " + winners.toString());
-					players.sendMessage(Main.I + "Total Points: " + Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".Points"));
-					Methods.SetOnlineTime(players);
-					Files.savePlayers();
-					if (Main.config.getBoolean("DisguiseCraft Support") == true)
-						if (Main.dcAPI.isDisguised(players))
-						{
-							Main.dcAPI.undisguisePlayer(players);
-						}
-					for (PotionEffect reffect : players.getActivePotionEffects())
-					{
-						players.removePotionEffect(reffect.getType());
-					}
-					Methods.tp2LobbyAfter(players);
-				}
-			}
-		} else
-		{
-			for (Player players : Bukkit.getServer().getOnlinePlayers())
-				if (Main.inGame.contains(players.getName()))
-				{
-					if (Main.config.getBoolean("Debug"))
-						System.out.println(players.getName() + " KillStreaks: " + Main.KillStreaks.get(players.getName()));
-					Methods.rewardPoints(players, "Game Over");
-					Methods.SetOnlineTime(players);
-					if (Main.config.getBoolean("Debug"))
-					{
-						System.out.println("Zombie Kills Human");
-						System.out.println("Humans: " + Main.humans.toString());
-						System.out.println("Zombies: " + Main.zombies.toString());
-						System.out.println("InGame:" + Main.inGame.toString());
-					}
-					Files.savePlayers();
-					players.sendMessage(Methods.sendMessage("AfterGame_ZombiesWin", null, null, null));
-					players.sendMessage(Main.I + "Total Points: " + Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".Points"));
-					for (PotionEffect reffect : players.getActivePotionEffects())
-						players.removePotionEffect(reffect.getType());
-					Methods.tp2LobbyAfter(players);
-				}
-		}
-		updateScoreBoard();
-		Main.Winners.clear();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-		{
-			@Override
-			public void run() {
-				Infected.booleanStarted(false);
-				if (Main.inGame.size() >= Main.config.getInt("Automatic Start.Minimum Players") && !Infected.booleanIsStarted() && !Infected.booleanIsBeforeGame() && !Infected.booleanIsBeforeInfected() && Main.config.getBoolean("Automatic Start.Use"))
-				{
-					Game.restartGame();
-				}
-			}
-		}, 10 * 60);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1403,9 +1294,7 @@ public class Methods {
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
 		Main.KillStreaks.remove(player.getName());
-		Main.Booleans.put("Started", false);
-		Main.Booleans.put("BeforeGame", false);
-		Main.Booleans.put("BeforeFirstInf", false);
+		Infected.setGameState(GameState.INLOBBY);
 		Main.Voted4.clear();
 		Bukkit.getServer().getScheduler().cancelTask(Main.timestart);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
@@ -1420,9 +1309,7 @@ public class Methods {
 	}
 
 	public static void resetInf() {
-		Infected.booleanBeforeGame(false);
-		Infected.booleanBeforeInfected(false);
-		Infected.booleanStarted(false);
+		Infected.setGameState(GameState.INLOBBY);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timestart);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
@@ -1551,9 +1438,7 @@ public class Methods {
 		Main.Inventory.clear();
 		Main.Spot.clear();
 		Main.Armor.clear();
-		Main.Booleans.put("Started", false);
-		Main.Booleans.put("BeforeGame", false);
-		Main.Booleans.put("BeforeFirstInf", false);
+		Infected.setGameState(GameState.INLOBBY);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timestart);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);

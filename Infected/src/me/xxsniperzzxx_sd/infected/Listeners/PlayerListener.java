@@ -4,9 +4,10 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 import java.util.ArrayList;
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.AttackingManager;
+import me.xxsniperzzxx_sd.infected.Game;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -104,7 +105,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerUseInventory(InventoryClickEvent e) {
 		if (Main.inGame.contains(e.getWhoClicked().getName()))
-			if (!Infected.booleanIsStarted() && (!e.getInventory().getTitle().contains("Class") && !e.getInventory().getTitle().contains("Vote")))
+			if (!(Infected.getGameState() == GameState.STARTED) && (!e.getInventory().getTitle().contains("Class") && !e.getInventory().getTitle().contains("Vote")))
 			{
 				Player player = (Player) e.getViewers().get(0);
 				player.sendMessage(Methods.sendMessage("Error_CantEditInventoryYet", null, null, null));
@@ -166,7 +167,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if (!e.isCancelled())
-			if (Infected.booleanIsStarted() && Infected.isPlayerInGame(e.getPlayer()))
+			if (Infected.getGameState() == GameState.STARTED && Infected.isPlayerInGame(e.getPlayer()))
 			{
 				if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
 				{
@@ -199,9 +200,6 @@ public class PlayerListener implements Listener {
 	// See if a player got kicked and if it effected the game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerGetKicked(final PlayerKickEvent e) {
-		boolean Started = plugin.Booleans.get("Started");
-		boolean BeforeGame = plugin.Booleans.get("BeforeGame");
-		boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
 		plugin.Creating.remove(e.getPlayer().getName());
 
 		// If a player logs out well playing, make sure it doesn't effect the
@@ -211,7 +209,7 @@ public class PlayerListener implements Listener {
 			plugin.inGame.remove(e.getPlayer().getName());
 
 			// Leave well everyones in the lobby
-			if (!Started && !BeforeGame && !BeforeFirstInf)
+			if (Infected.getGameState() == GameState.INLOBBY)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 					System.out.println("Leave: Leaving, wellin lobby, no timers active");
@@ -226,7 +224,7 @@ public class PlayerListener implements Listener {
 			}
 
 			// Voting has started, less then 2 people left
-			else if (!Started && BeforeGame && !BeforeFirstInf)
+			else if (Infected.getGameState() == GameState.VOTING)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 					System.out.println("Leave: Before Voting");
@@ -262,7 +260,7 @@ public class PlayerListener implements Listener {
 			}
 
 			// In Arena, before first Infected
-			else if (!Started && !BeforeGame && BeforeFirstInf)
+			else if (Infected.getGameState() == GameState.BEFOREINFECTED)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 				{
@@ -300,7 +298,7 @@ public class PlayerListener implements Listener {
 			}
 
 			// In Arena, Game has started
-			else if (Started && !BeforeGame && !BeforeFirstInf)
+			else if (Infected.getGameState() == GameState.STARTED)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 				{
@@ -413,9 +411,6 @@ public class PlayerListener implements Listener {
 	// game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(final PlayerQuitEvent e) {
-		boolean Started = plugin.Booleans.get("Started");
-		boolean BeforeGame = plugin.Booleans.get("BeforeGame");
-		boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
 		plugin.Creating.remove(e.getPlayer().getName());
 
 		// If a player logs out well playing, make sure it doesn't effect the
@@ -425,7 +420,7 @@ public class PlayerListener implements Listener {
 			plugin.inGame.remove(e.getPlayer().getName());
 
 			// Leave well everyones in the lobby
-			if (!Started && !BeforeGame && !BeforeFirstInf)
+			if (Infected.getGameState() == GameState.INLOBBY)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 					System.out.println("Leave: Leaving, wellin lobby, no timers active");
@@ -440,7 +435,7 @@ public class PlayerListener implements Listener {
 			}
 
 			// Voting has started, less then 2 people left
-			else if (!Started && BeforeGame && !BeforeFirstInf)
+			else if (Infected.getGameState() == GameState.VOTING)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 					System.out.println("Leave: Before Voting");
@@ -476,7 +471,7 @@ public class PlayerListener implements Listener {
 			}
 
 			// In Arena, before first Infected
-			else if (!Started && !BeforeGame && BeforeFirstInf)
+			else if (Infected.getGameState() == GameState.BEFOREINFECTED)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 				{
@@ -514,7 +509,7 @@ public class PlayerListener implements Listener {
 			}
 
 			// In Arena, Game has started
-			else if (Started && !BeforeGame && !BeforeFirstInf)
+			else if (Infected.getGameState() == GameState.STARTED)
 			{
 				if (plugin.getConfig().getBoolean("Debug"))
 				{
@@ -700,7 +695,7 @@ public class PlayerListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerShootBow(EntityShootBowEvent e) {
-		if (!e.isCancelled() && !Infected.booleanIsStarted())
+		if (!e.isCancelled() && Infected.getGameState() != GameState.STARTED)
 			if (e.getEntity() instanceof Player)
 			{
 				Player player = (Player) e.getEntity();
@@ -744,247 +739,190 @@ public class PlayerListener implements Listener {
 	// When entity is damaged
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageEvent e) {
-		boolean Started = plugin.Booleans.get("Started");
-		boolean BeforeGame = plugin.Booleans.get("BeforeGame");
-		boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
 		if (e.getEntity() instanceof Player)
 		{
-			Player p = (Player) e.getEntity();
-			if (plugin.inLobby.contains(p.getName()))
-				e.setCancelled(true);
+			Player victim = (Player) e.getEntity();
 
-			else if (plugin.inGame.contains(p.getName()))
-				if (!(p.getLastDamageCause() instanceof Player))
-					if (plugin.inGame.contains(p.getName()) && Started == true)
-						if (e.getCause() == DamageCause.PROJECTILE)
-						{
-							EntityDamageByEntityEvent ee = (EntityDamageByEntityEvent) e;
-							if (ee.getDamager() instanceof Arrow)
+			if(Infected.isPlayerInGame(victim)){
+				if(e.getCause() != DamageCause.ENTITY_ATTACK && e.getCause() != DamageCause.PROJECTILE){
+					
+					//If the attack happened before the game started
+					if(Infected.getGameState() == GameState.VOTING)
+						e.setCancelled(true);
+			
+					//Before a zombie is chosen
+					else if(Infected.getGameState() == GameState.BEFOREINFECTED){
+						if(victim.getHealth() - e.getDamage() <= 0){
+							e.setDamage(0);
+							
+							victim.sendMessage(plugin.I + "You almost died before the game even started!");
+							victim.setHealth(20);
+							victim.setFoodLevel(20);
+							Methods.handleKillStreaks(true, victim);
+							victim.setFoodLevel(20);
+							Methods.respawn(victim);
+							victim.setFallDistance(0F);
+						}
+					}
+					//If the game has fully started
+					else if(Infected.getGameState() == GameState.STARTED){
+						Player killer = null;
+						if(Main.Lasthit.containsKey(victim.getName()))
+							killer = Bukkit.getPlayer(Main.Lasthit.get(victim.getName()));
+						
+						if ((victim != null ) && (killer != null)){
+							
+							//Make sure both are in the game(you never know :P)
+							if(Infected.isPlayerInGame(killer) && Infected.isPlayerInGame(victim)){	
+								
+								//Saves who hit the person last
+								Main.Lasthit.put(victim.getName(), killer.getName());
+								
+								//If it was enough to kill the player
+								if(victim.getHealth() - e.getDamage() <= 0){
+									Methods.playerDies(killer, victim);
+									e.setDamage(0);
+								}
+							}
+						}else{
+
+							if (Main.humans.contains(victim))
 							{
-								if (e.getEntity() instanceof Player)
+								for (Player victimlaying : Bukkit.getServer().getOnlinePlayers())
 								{
-									playeruser = (Player) e.getEntity();
-									Arrow arrow = (Arrow) ee.getDamager();
-									useruser = (Player) arrow.getShooter();
-									Main.Lasthit.put(playeruser.getName(), useruser.getName());
+									if (Infected.isPlayerInGame(victimlaying))
+									{
+										victimlaying.sendMessage(Methods.sendMessage("Game_GotInfected", victim, null, null));
+									}
 								}
 							}
 						}
 
-			if (p.getHealth() - e.getDamage() <= 0)
-			{
-				if (plugin.inGame.contains(p.getName()) && BeforeGame == true)
-				{
-					e.setCancelled(true);
-				} else if (plugin.inGame.contains(p.getName()) && BeforeFirstInf == true)
-				{
-					p.sendMessage(plugin.I + "You almost died before the game even started!");
-					p.setHealth(20);
-					p.setFoodLevel(20);
-					plugin.KillStreaks.put(p.getName(), 0);
-					p.setFallDistance(0F);
-					p.setFoodLevel(20);
-					Methods.respawn(p);
-					p.setFallDistance(0F);
-					e.setCancelled(true);
-				} else if (!(e.getCause() == DamageCause.ENTITY_ATTACK) && plugin.inGame.contains(p.getName()) && Started == true)
-				{
-					e.setDamage(0);
-					Methods.equipZombies(p);
-					if (Main.Lasthit.containsKey(p.getName()))
-					{
-						Player human = Bukkit.getPlayer(Main.Lasthit.get(p.getName()));
-						Player Killed = p;
-						Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(
-								human, Killed, Infected.playerGetGroup(Killed),
-								Infected.isPlayerHuman(Killed) ? true : false));
-						Methods.stats(human, 1, 0);
-						Methods.rewardPoints(human, "Kill");
-						String kill = Methods.getKillType(Infected.playerGetGroup(human) + "s", human.getName(), Killed.getName());
-						for (Player playing : Bukkit.getServer().getOnlinePlayers())
-							if (plugin.inGame.contains(playing.getName()))
-							{
-								playing.sendMessage(kill);
-							}
-						if (!plugin.KillStreaks.containsKey(human.getName()))
-							plugin.KillStreaks.put(human.getName(), 1);
-						else
-							plugin.KillStreaks.put(human.getName(), plugin.KillStreaks.get(human.getName()) + 1);
-						Files.getPlayers().set("Players." + human.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(human.getName()));
-						if (plugin.KillStreaks.get(human.getName()) > 2)
-							for (Player playing : Bukkit.getServer().getOnlinePlayers())
-								if (plugin.inGame.contains(playing.getName()))
-								{
-									playing.sendMessage(plugin.I + ChatColor.GREEN + human.getName() + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + plugin.KillStreaks.get(human.getName()));
-								}
-						if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(plugin.KillStreaks.get(human.getName())))))
-						{
-							String command = null;
-							command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + plugin.KillStreaks.get(human.getName()))).replaceAll("<player>", human.getName());
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-						}
-						Methods.stats(Killed, 0, 1);
-						if (plugin.KillStreaks.containsKey(Killed.getName()))
-						{
-							if (plugin.KillStreaks.get(Killed.getName()) > Files.getPlayers().getInt("Players." + Killed.getName().toLowerCase() + ".KillStreak"))
-							{
-								Files.getPlayers().set("Players." + Killed.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(Killed.getName()));
-								Files.savePlayers();
-							}
-							plugin.KillStreaks.put(Killed.getName(), 0);
-						}
-						Main.Lasthit.remove(Killed.getName());
-					} else
-					{
-						if (Main.humans.contains(p))
+						if (Infected.isPlayerHuman(victim))
 						{
 							for (Player playing : Bukkit.getServer().getOnlinePlayers())
 							{
 								if (Infected.isPlayerInGame(playing))
 								{
-									playing.sendMessage(Methods.sendMessage("Game_GotInfected", p, null, null));
+									playing.sendMessage(Methods.sendMessage("Game_GotInfected", victim, null, null));
 								}
 							}
 						}
+						victim.setHealth(20);
+						victim.setFallDistance(0F);
+						victim.setFoodLevel(20);
+						Methods.respawn(victim);
+						victim.setFallDistance(0F);
+						e.setDamage(0);
+						Main.humans.remove(victim.getName());
+						Main.Lasthit.remove(victim.getName());
+						Main.Winners.remove(victim.getName());
+						if (Infected.listHumans().size() == 0)
+						{
+							Game.endGame(false);
+						} else
+						{
+							Methods.equipZombies(victim);
+							Methods.zombifyPlayer(victim);
+						}
 					}
-					p.setHealth(20);
-					p.setFallDistance(0F);
-					p.setFoodLevel(20);
-					Methods.respawn(p);
-					p.setFallDistance(0F);
-					e.setDamage(0);
-					Main.humans.remove(p.getName());
-					Main.Lasthit.remove(p.getName());
-					if (plugin.humans.size() == 0)
-					{
-						Methods.endGame(false);
-					} else
-					{
-						Methods.equipZombies(p);
-						Methods.zombifyPlayer(p);
-					}
-
-					if (plugin.Winners.contains(p.getName()))
-						plugin.Winners.remove(p.getName());
-					if (plugin.humans.contains(p.getName()))
-						plugin.humans.remove(p.getName());
-					if (!plugin.zombies.contains(p.getName()))
-						plugin.zombies.add(p.getName());
 				}
 			}
 		}
 	}
-
-	// Player is Damaged, User is Damager
-	// When entity is damaged by another entity(As some times the first one
-	// doesn't work...
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
-		if (plugin.getConfig().getBoolean("Debug"))
-		{
-			System.out.println("PVPhumans: " + plugin.humans.toString());
-			System.out.println("PVPzombies: " + plugin.zombies.toString());
-			System.out.println("PVPInGame " + plugin.inGame.toString());
-		}
-		boolean Started = plugin.Booleans.get("Started");
-		boolean BeforeGame = plugin.Booleans.get("BeforeGame");
-		boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
+		
+		//Is the victim a player?
 		if (e.getEntity() instanceof Player)
 		{
-			if (e.getDamager() instanceof Arrow)
-			{
-				playeruser = (Player) e.getEntity();
-				Arrow arrow = (Arrow) e.getDamager();
-				if (arrow.getShooter() instanceof Player)
+			Player victim = (Player) e.getEntity();	
+			Player killer = null;
+			
+			//If they're in the game
+			if(Infected.isPlayerInGame(victim)){
+				
+				//Get the attacker
+				if (e.getDamager() instanceof Player)
+					killer = (Player) e.getDamager();
+				
+				else if (e.getDamager() instanceof Arrow)
 				{
-					useruser = (Player) arrow.getShooter();
+					victim = (Player) e.getEntity();
+					Arrow arrow = (Arrow) e.getDamager();
+					
+					if (arrow.getShooter() instanceof Player)
+						killer = (Player) arrow.getShooter();
 				}
-			}
-			if (e.getDamager() instanceof Snowball)
-			{
-				playeruser = (Player) e.getEntity();
-				Snowball ball = (Snowball) e.getDamager();
-				if (ball.getShooter() instanceof Player)
+				
+				else if (e.getDamager() instanceof Snowball)
 				{
-					useruser = (Player) ball.getShooter();
+					victim = (Player) e.getEntity();
+					Snowball ball = (Snowball) e.getDamager();
+				
+					if (ball.getShooter() instanceof Player)
+						killer = (Player) ball.getShooter();
 				}
-			}
-			if (e.getDamager() instanceof Player && e.getEntity() instanceof Player)
-			{
-				playeruser = (Player) e.getEntity();
-				useruser = (Player) e.getDamager();
-			}
-			if (e.getEntity() instanceof Player && (e.getDamager() instanceof Player || e.getDamager() instanceof Arrow))
-				if (plugin.inGame.contains(playeruser.getName()) || plugin.inLobby.contains(playeruser.getName()))
-				{
-					if (!plugin.inGame.contains(useruser.getName()))
+				
+				//Make sure they arn't on the same team
+				if (Infected.isPlayerHuman(killer) && Infected.isPlayerHuman(victim))
+					e.setCancelled(true);
+				
+				if (Infected.isPlayerZombie(killer) && Infected.isPlayerZombie(victim))
+					e.setCancelled(true);
+				
+				else{
+					
+					//If the attack happened before the game started
+					if(Infected.getGameState() == GameState.VOTING)
 						e.setCancelled(true);
-					if (BeforeGame)
-						e.setCancelled(true);
-					else if (BeforeFirstInf)
-						e.setCancelled(true);
-					else if (Started)
-					{
-						if (plugin.humans.contains(playeruser.getName()) && plugin.humans.contains(useruser.getName()))
-							e.setCancelled(true);
-						if (plugin.zombies.contains(playeruser.getName()) && plugin.zombies.contains(useruser.getName()))
-							e.setCancelled(true);
-						// /////////////////////////////////////////////////////////////////////////////////
-						// HUMAN KILLING ZOMBIE
-						// If the attacker is a human, and the attacky is a
-						// zombie
-						if (plugin.humans.contains(useruser.getName()) && plugin.zombies.contains(playeruser.getName()))
-						{
-							Player human = useruser;
-							Player zombie = playeruser;
-
-							Main.Lasthit.put(zombie.getName(), human.getName());
-
-							// If the damage done will kill the zombie
-							if (zombie.getHealth() - e.getDamage() <= 0)
-							{
-								Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(
-										human, zombie,
-										Infected.playerGetGroup(zombie), false));
-								e.setDamage(0);
-								AttackingManager.HumanAttackZombie(human, zombie);
-							}
-							// ////////////////////////////////////////////////////////////////////////
-							// ZOMBIE KILLING HUMAN
-						} else if (plugin.humans.contains(playeruser.getName()) && plugin.zombies.contains(useruser.getName()))
-						{
-							// If the attacker is a zombie and the attacky is a
-							// human
-							Player newzombie = playeruser;
-							Player zombie = useruser;
-
-							Main.Lasthit.put(newzombie.getName(), zombie.getName());
-							if (newzombie.getHealth() - e.getDamage() <= 0)
-							{
-
-								Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(
-										zombie, newzombie,
-										Infected.playerGetGroup(newzombie),
-										true));
-								e.setDamage(0);
-								AttackingManager.ZombieAttackHuman(zombie, newzombie);
-							}
-						} else
-						{
-							// If the attackers arn't from different groups
-							// act like nothing happened
+					
+					//Before a zombie is chosen
+					else if(Infected.getGameState() == GameState.BEFOREINFECTED){
+						if(victim.getHealth() - e.getDamage() <= 0){
 							e.setDamage(0);
-							e.setCancelled(true);
+							victim.sendMessage(plugin.I + "You almost died before the game even started!");
+							victim.setHealth(20);
+							victim.setFoodLevel(20);
+							Methods.handleKillStreaks(true, victim);
+							victim.setFoodLevel(20);
+							Methods.respawn(victim);
+							victim.setFallDistance(0F);
 						}
 					}
+					
+					//If the game has fully started
+					else if(Infected.getGameState() == GameState.STARTED){
+						//If it doesn't end up null (In case a mob hit them)
+						if ((victim != null ) && (killer != null)){
+							
+							//Make sure both are in the game(you never know :P)
+							if(Infected.isPlayerInGame(killer) && Infected.isPlayerInGame(victim)){	
+								
+								//Saves who hit the person last
+								Main.Lasthit.put(victim.getName(), killer.getName());
+								
+								//If it was enough to kill the player
+								if(victim.getHealth() - e.getDamage() <= 0){
+									Methods.playerDies(killer, victim);
+									e.setDamage(0);
+								}
+							}
+						}
+					}else{
+						e.setDamage(0);
+						e.setCancelled(true);
+					}
 				}
+			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowPotion(PlayerInteractEvent e) {
 		if (!e.isCancelled())
-			if ((Infected.isPlayerInGame(e.getPlayer()) || Infected.isPlayerInLobby(e.getPlayer())) && !Infected.booleanIsStarted())
+			if ((Infected.isPlayerInGame(e.getPlayer()) || Infected.isPlayerInLobby(e.getPlayer())) && Infected.getGameState() != GameState.STARTED)
 			{
 				if (e.getPlayer().getItemInHand().getTypeId() == 373)
 				{

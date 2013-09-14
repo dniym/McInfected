@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
+import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -58,7 +59,7 @@ public class GrenadeListener implements Listener {
 		final Player player = event.getPlayer();
 		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && Main.inGame.contains(player.getName()) && Files.getGrenades().contains(String.valueOf(player.getItemInHand().getTypeId())))
 		{
-			if (Infected.booleanIsStarted() && Files.getGrenades().getBoolean("Use"))
+			if (Infected.getGameState() == GameState.STARTED && Files.getGrenades().getBoolean("Use"))
 			{
 				if (!Main.inLobby.contains(player.getName()) && (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades."+ Methods.grenadeGetName(player.getItemInHand().getTypeId()))))
 				{
@@ -92,7 +93,7 @@ public class GrenadeListener implements Listener {
 									ppl.playEffect(EntityEffect.HURT);
 									if (ppl.getHealth() - Methods.grenadeGetDamage(Integer.valueOf(ItemId)) <= 0)
 									{
-										Methods.grenadeKill(player, ppl);
+										Methods.playerDies(player, ppl);
 									} else
 									{
 										ppl.setHealth(ppl.getHealth() - Methods.grenadeGetDamage(Integer.valueOf(ItemId)));

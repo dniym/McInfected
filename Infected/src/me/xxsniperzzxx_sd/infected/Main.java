@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.xxsniperzzxx_sd.infected.Listeners.CrackShotApi;
 import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
 import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
+import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
 import me.xxsniperzzxx_sd.infected.Tools.Database;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
-import me.xxsniperzzxx_sd.infected.Tools.TagApi;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import net.milkbowl.vault.economy.Economy;
@@ -37,6 +38,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+import com.shampaggon.crackshot.CSDirector;
+
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
@@ -46,6 +49,8 @@ public class Main extends JavaPlugin {
 	public static String bVersion = "1.6.2";
 	public static int currentTime = 0;
 	public static String v = null;
+	public static enum GameState {INLOBBY, VOTING, BEFOREINFECTED, STARTED, GAMEOVER, DISABLED}; 
+	public static GameState gameState = GameState.INLOBBY;
 
 	// Set up all the needed things for files
 	public static YamlConfiguration abilities = null;
@@ -80,7 +85,6 @@ public class Main extends JavaPlugin {
 	public static HashMap<String, String> humanClasses = new HashMap<String, String>();
 	public static HashMap<String, String> zombieClasses = new HashMap<String, String>();
 	public static HashMap<String, Integer> Leaders = new HashMap<String, Integer>();
-	public static HashMap<String, Boolean> Booleans = new HashMap<String, Boolean>();
 	public static HashMap<String, Long> Timein = new HashMap<String, Long>();
 	public static HashMap<String, String> gamemode = new HashMap<String, String>();
 	public static HashMap<String, String> Lasthit = new HashMap<String, String>();
@@ -114,7 +118,6 @@ public class Main extends JavaPlugin {
 	public static Plugin me;
 	public static File file;
 	public static String BV = null;
-	public boolean Enabled = true;
 
 	public static Configuration config = null;
 	public static Database db = new Database();
@@ -132,7 +135,6 @@ public class Main extends JavaPlugin {
 	public static Objective playingList;
 
 	// Plugin Addons
-	public static boolean tagapi = false;
 	public static DisguiseCraftAPI dcAPI;
 	public static Economy economy = null;
 
@@ -208,7 +210,7 @@ public class Main extends JavaPlugin {
 					setupDisguiseCraft();
 				} else
 				{
-					System.out.println(Main.I + "DisguiseCraft wasn't found on this server, switching to DisguiseCraft Support: false");
+					System.out.println(Main.I + "DisguiseCraft wasn't found on this server, disabling DisguiseCraft Support");
 					getConfig().set("DisguiseCraft Support", false);
 					saveConfig();
 				}
@@ -222,20 +224,43 @@ public class Main extends JavaPlugin {
 				setupEconomy();
 			} else
 			{
-				System.out.println(Main.I + "Vault wasn't found on this server, switching to Vault Support: false");
+				System.out.println(Main.I + "Vault wasn't found on this server, Disabling Vault Support");
 				getConfig().set("Vault Support.Enable", false);
 				saveConfig();
 
 			}
 		}
-		if (getServer().getPluginManager().getPlugin("TagAPI") == null)
+
+		// Check if the plugin addons are there
+		if (getConfig().getBoolean("CrackShot Support.Enable"))
 		{
-			getLogger().info(Main.I + "TagAPI was not found...");
-		} else
+			if (getServer().getPluginManager().getPlugin("CrackShot") == null)
+			{
+
+				System.out.println(Main.I + "CrackShot wasn't found on this server, disabling CrackShot Support");
+				getConfig().set("CrackShot Support.Enable", false);
+				saveConfig();
+			} else
+			{
+			CrackShotApi CSApi = new CrackShotApi(this);
+			pm.registerEvents(CSApi, this);
+			}
+		}
+
+		// Check if the plugin addons are there
+		if (getConfig().getBoolean("TagAPI Support.Enable"))
 		{
-			TagApi TagApi = new TagApi(this);
-			pm.registerEvents(TagApi, this);
-			Main.tagapi = true;
+			if (getServer().getPluginManager().getPlugin("TagAPI") == null)
+			{
+
+				System.out.println(Main.I + "TagApi wasn't found on this server, disabling TagApi Support");
+				getConfig().set("TagApi Support.Enable", false);
+				saveConfig();
+			} else
+			{
+				TagApi TagApi = new TagApi(this);
+				pm.registerEvents(TagApi, this);
+			}
 		}
 
 		// On enable set the times form the config
@@ -252,11 +277,6 @@ public class Main extends JavaPlugin {
 		{
 			System.out.println("Error getting metrics!");
 		}
-
-		// Save booleans in an array...(I forget why i did this...)
-		Main.Booleans.put("Started", false);
-		Main.Booleans.put("BeforeGame", false);
-		Main.Booleans.put("BeforeFirstInf", false);
 
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
@@ -287,15 +307,15 @@ public class Main extends JavaPlugin {
 						{
 							String status;
 
-							if (Infected.booleanIsBeforeGame())
+							if (Infected.getGameState() == GameState.VOTING)
 							{
 								status = "Voting";
 							}
-							if (Infected.booleanIsBeforeInfected())
+							if (Infected.getGameState() == GameState.BEFOREINFECTED)
 							{
 								status = "B4 Infected";
 							}
-							if (Infected.booleanIsStarted())
+							if (Infected.getGameState() == GameState.STARTED)
 							{
 								status = "Started";
 							} else

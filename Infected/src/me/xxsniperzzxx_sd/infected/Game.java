@@ -4,6 +4,9 @@ import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
+import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Tools.Files;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -11,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
 public class Game {
 
@@ -76,17 +80,38 @@ public class Game {
 		Bukkit.getServer().getPluginManager().callEvent(new InfectedVoteStartEvent(
 				Main.inGame, Main.voteTime));
 
-		Main.Booleans.put("BeforeGame", true);
+		Infected.setGameState(GameState.VOTING);
 		Main.timeVote = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
 		{
 			int timeleft = Main.voteTime;
 
+			boolean allVoted = false;
+			boolean divided = false;
 			@Override
 			public void run() {
 				if (timeleft != -1)
 				{
+					if(Main.Voted4.size() == Main.inGame.size())
+						allVoted = true;
+						if(allVoted && !divided){
+							divided = true;
+							timeleft /= 2 ;
+							allVoted = false;
+							for (Player playing : Bukkit.getServer().getOnlinePlayers())
+								if (Main.inGame.contains(playing.getName()))
+								{
+									playing.playSound(playing.getLocation(), Sound.CREEPER_HISS, 1, 1);
+									playing.sendMessage(Methods.sendMessage("Vote_TimeLeft", null, Methods.getTime(Long.valueOf(timeleft)), null));
+								}
+						}
+						
 					timeleft -= 1;
 					Main.currentTime = timeleft;
+					
+					for (Player playing : Bukkit.getServer().getOnlinePlayers())
+						if (Main.inGame.contains(playing.getName()))
+							playing.setLevel(timeleft);
+					
 					if (timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
 					{
 						for (Player playing : Bukkit.getServer().getOnlinePlayers())
@@ -158,7 +183,7 @@ public class Game {
 							if (Main.inGame.contains(p.getName()))
 							{
 								p.sendMessage(Main.I + ChatColor.GOLD + "Map: " + ChatColor.WHITE + Main.playingin);
-								p.sendMessage(Main.I + "Game Starting in 10 Seconds.");
+								p.sendMessage(Main.I + "Game Starting in 5 Seconds.");
 							}
 						for (String loc : Infected.filesGetArenas().getStringList("Arenas." + Main.playingin + ".Spawns"))
 						{
@@ -218,8 +243,7 @@ public class Game {
 									}
 									Main.Voted4.clear();
 									Main.Votes.clear();
-									Main.Booleans.put("BeforeFirstInf", true);
-									Main.Booleans.put("BeforeGame", false);
+									Infected.setGameState(GameState.BEFOREINFECTED);
 									Main.timestart = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
 									{
 										int timeleft = Main.Wait;
@@ -229,6 +253,10 @@ public class Game {
 											if (timeleft != -1)
 											{
 												timeleft -= 1;
+												for (Player playing : Bukkit.getServer().getOnlinePlayers())
+													if (Main.inGame.contains(playing.getName()))
+														playing.setLevel(timeleft);
+												
 												Main.currentTime = timeleft;
 												if (timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
 												{
@@ -252,8 +280,8 @@ public class Game {
 												} else if (timeleft == -1)
 												{
 													// Choose the first infected
-													Main.Booleans.put("BeforeFirstInf", false);
-													Main.Booleans.put("Started", true);
+
+													Infected.setGameState(GameState.STARTED);
 													for (Player players : Bukkit.getServer().getOnlinePlayers())
 													{
 														if (Main.inGame.contains(players.getName()))
@@ -290,10 +318,9 @@ public class Game {
 																Main.currentTime = timeleft;
 
 																for (Player playing : Bukkit.getServer().getOnlinePlayers())
-																{
 																	if (Main.inGame.contains(playing.getName()))
 																		playing.setLevel(timeleft);
-																}
+																
 																if (Main.GtimeLimit - timeleft == 10)
 																	for (final Player playing : Bukkit.getOnlinePlayers())
 																	{
@@ -328,7 +355,8 @@ public class Game {
 																	}
 																} else if (timeleft == -1)
 																{
-																	Methods.endGame(true);
+																	if(Infected.getGameState() == GameState.STARTED)
+																		endGame(true);
 
 																}
 															}
@@ -338,13 +366,155 @@ public class Game {
 											}
 										}
 									}, 0L, 20L);
+									
 								}
-							}, 200L);
+							}, 100L);
 					}
 				}
 			}
 		}, 0L, 20L);
 	}
+	
+
+	@SuppressWarnings("deprecation")
+	public static void endGame(Boolean DidHumansWin) {
+		if(Infected.getGameState() == GameState.STARTED){
+			Infected.setGameState(GameState.GAMEOVER);
+			
+			for (Player players : Bukkit.getServer().getOnlinePlayers())
+			{
+				if (Infected.isPlayerInGame(players))
+				{
+					if (Main.KillStreaks.containsKey(players.getName()))
+					{
+						if (Main.KillStreaks.get(players.getName()) > Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".KillStreak"))
+						{
+							Files.getPlayers().set("Players." + players.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(players.getName()));
+							Files.savePlayers();
+						}
+					}
+				}
+			}
+			if (DidHumansWin)
+			{
+				if (Main.config.getBoolean("Vault Support.Enable"))
+				{
+					int rewardMoney = Main.config.getInt("Vault Support.Reward");
+	
+					for (Player players : Bukkit.getOnlinePlayers())
+						if (Main.Winners.contains(players.getName()))
+	
+							Main.economy.depositPlayer(players.getName(), rewardMoney);
+				}
+				if (!(Main.config.getString("Command Reward").equalsIgnoreCase(null) || Main.config.getString("Command Reward").equalsIgnoreCase("[]")))
+				{
+					for (Player players : Bukkit.getOnlinePlayers())
+					{
+						if (Main.Winners.contains(players.getName()))
+						{
+							String s = Main.config.getString("Command Reward").replaceAll("<player>", players.getName());
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
+						}
+					}
+				}
+				for (String s : Main.config.getStringList("Rewards"))
+				{
+					for (Player players : Bukkit.getOnlinePlayers())
+					{
+						if (Main.Winners.contains(players.getName()))
+						{
+							players.getInventory().setContents(Main.Inventory.get(players.getName()));
+							players.updateInventory();
+							players.getInventory().addItem(Methods.getItemStack(s));
+							players.updateInventory();
+							Main.Inventory.put(players.getName(), players.getInventory().getContents());
+							Methods.resetPlayersInventory(players);
+							players.updateInventory();
+						}
+					}
+				}
+				for (final Player players : Bukkit.getServer().getOnlinePlayers())
+				{
+					if (Main.inGame.contains(players.getName()))
+					{
+						Methods.rewardPointsAndScore(players, "Game Over");
+						players.sendMessage(Methods.sendMessage("AfterGame_HumansWin", null, null, null));
+						StringBuilder winners = new StringBuilder();
+						for (Object o : Main.Winners)
+						{
+							winners.append(o.toString());
+							winners.append(", ");
+						}
+						players.sendMessage(Main.I + "Winners: " + winners.toString());
+						players.sendMessage(Main.I + "Total Points: " + Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".Points"));
+						Methods.SetOnlineTime(players);
+						Files.savePlayers();
+						if (Main.config.getBoolean("DisguiseCraft Support") == true)
+							if (Main.dcAPI.isDisguised(players))
+							{
+								Main.dcAPI.undisguisePlayer(players);
+							}
+						for (PotionEffect reffect : players.getActivePotionEffects())
+						{
+							players.removePotionEffect(reffect.getType());
+						}
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+						{
+							@Override
+							public void run() {
+								Methods.tp2LobbyAfter(players);
+							}
+						}, 100L);
+					}
+				}
+			} else
+			{
+				for (final Player players : Bukkit.getServer().getOnlinePlayers())
+					if (Main.inGame.contains(players.getName()))
+					{
+						if (Main.config.getBoolean("Debug"))
+							System.out.println(players.getName() + " KillStreaks: " + Main.KillStreaks.get(players.getName()));
+						Methods.rewardPointsAndScore(players, "Game Over");
+						Methods.SetOnlineTime(players);
+						if (Main.config.getBoolean("Debug"))
+						{
+							System.out.println("Zombie Kills Human");
+							System.out.println("Humans: " + Main.humans.toString());
+							System.out.println("Zombies: " + Main.zombies.toString());
+							System.out.println("InGame:" + Main.inGame.toString());
+						}
+						Files.savePlayers();
+						players.sendMessage(Methods.sendMessage("AfterGame_ZombiesWin", null, null, null));
+						players.sendMessage(Main.I + "Total Points: " + Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".Points"));
+						for (PotionEffect reffect : players.getActivePotionEffects())
+							players.removePotionEffect(reffect.getType());
+	
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+						{
+							@Override
+							public void run() {
+								Methods.tp2LobbyAfter(players);
+							}
+						}, 100L);
+					}
+			}
+			Methods.updateScoreBoard();
+			Main.Winners.clear();
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+			{
+				@Override
+				public void run() {
+	
+					Infected.setGameState(GameState.INLOBBY);
+					if (Main.inGame.size() >= Main.config.getInt("Automatic Start.Minimum Players") && Infected.getGameState() == GameState.INLOBBY && Main.config.getBoolean("Automatic Start.Use"))
+					{
+						Game.restartGame();
+					}
+				}
+			}, 10 * 60);
+		}
+	}
+
 
 	public static void restartGame() {
 		Bukkit.getScheduler().cancelTask(Main.timeVote);

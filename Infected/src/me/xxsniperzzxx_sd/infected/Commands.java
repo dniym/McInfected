@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
@@ -40,9 +41,6 @@ public class Commands implements CommandExecutor {
 		{
 			// Set the basics
 			String creating = plugin.Creating.get(sender.getName());
-			boolean Started = plugin.Booleans.get("Started");
-			boolean BeforeGame = plugin.Booleans.get("BeforeGame");
-			boolean BeforeFirstInf = plugin.Booleans.get("BeforeFirstInf");
 			if (sender.getName().equalsIgnoreCase("xXSniperzzXx_SD") && args.length >= 1 && args[0].equalsIgnoreCase("Test"))
 			{
 				// TESTING STUFF
@@ -63,7 +61,7 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
 					return true;
 				}  
-				else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || !Infected.booleanIsStarted())
+				else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || Infected.getGameState() != GameState.STARTED)
 				{
 					player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
 					return true;
@@ -106,7 +104,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				Player player = (Player) sender;
-				if (Infected.booleanIsStarted())
+				if (Infected.getGameState() == GameState.STARTED)
 				{
 					player.sendMessage(Methods.sendMessage("Error_GameStarted", player, null, null));
 					return true;
@@ -150,7 +148,7 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 					Player player = (Player) sender;
-					if (!plugin.Enabled)
+					if (Infected.getGameState() == GameState.DISABLED)
 					{
 						player.sendMessage(Methods.sendMessage("Error_InfectedDisabled", null, null, null));
 						return true;
@@ -197,7 +195,7 @@ public class Commands implements CommandExecutor {
 					}
 					if (plugin.getConfig().getBoolean("Prevent Joining During Game"))
 					{
-						if (Started)
+						if (Infected.getGameState() == GameState.STARTED)
 						{
 							player.sendMessage(Methods.sendMessage("Error_JoinWellStartedBlocked", null, null, null));
 							return true;
@@ -254,12 +252,12 @@ public class Commands implements CommandExecutor {
 					player.setFlying(false);
 					if (!plugin.KillStreaks.containsKey(player.getName()))
 						plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
-					if (plugin.inGame.size() >= plugin.getConfig().getInt("Automatic Start.Minimum Players") && Started == false && BeforeGame == false && BeforeFirstInf == false && plugin.getConfig().getBoolean("Automatic Start.Use"))
+					if (plugin.inGame.size() >= plugin.getConfig().getInt("Automatic Start.Minimum Players") && Infected.getGameState() == GameState.INLOBBY && plugin.getConfig().getBoolean("Automatic Start.Use"))
 					{
 						Game.START();
 						return true;
 					}
-					if (BeforeGame)
+					if (Infected.getGameState() == GameState.VOTING)
 					{
 						player.sendMessage(Methods.sendMessage("Vote_HowToVote", null, null, null));
 						player.performCommand("Infected Arenas");
@@ -270,7 +268,7 @@ public class Commands implements CommandExecutor {
 						}
 						return true;
 					}
-					if (Started)
+					if (Infected.getGameState() == GameState.STARTED)
 					{
 						player.setGameMode(GameMode.SURVIVAL);
 						Methods.joinInfectHuman(player);
@@ -282,7 +280,7 @@ public class Commands implements CommandExecutor {
 						}
 						return true;
 					}
-					if (BeforeFirstInf)
+					if (Infected.getGameState() == GameState.BEFOREINFECTED)
 					{
 						if (Main.config.getBoolean("ScoreBoard Support"))
 						{
@@ -338,11 +336,11 @@ public class Commands implements CommandExecutor {
 					}
 
 					String status = "";
-					if (Infected.booleanIsBeforeGame())
+					if (Infected.getGameState() == GameState.VOTING)
 						status = "Voting";
-					if (Infected.booleanIsBeforeInfected())
+					if (Infected.getGameState() == GameState.BEFOREINFECTED)
 						status = "B4 Infected";
-					if (Infected.booleanIsStarted())
+					if (Infected.getGameState() == GameState.STARTED)
 						status = "Started";
 					else
 						status = "In Lobby";
@@ -370,7 +368,7 @@ public class Commands implements CommandExecutor {
 					}
 					Player player = (Player) sender;
 
-					if (plugin.inGame.contains(player.getName()) && Infected.booleanIsStarted())
+					if (plugin.inGame.contains(player.getName()) && Infected.getGameState() == GameState.STARTED)
 					{
 						if (Main.humans.contains(player))
 							for (Player playing : Bukkit.getServer().getOnlinePlayers())
@@ -400,7 +398,7 @@ public class Commands implements CommandExecutor {
 
 						if (plugin.humans.size() == 0)
 						{
-							Methods.endGame(false);
+							Game.endGame(false);
 						} else
 						{
 							player.setFallDistance(0F);
@@ -540,7 +538,7 @@ public class Commands implements CommandExecutor {
 						// doesn't effect the game, end the game if it does
 						plugin.inGame.remove(player.getName());
 						// Leave well everyones in the lobby
-						if (!Started && !BeforeGame && !BeforeFirstInf)
+						if (Infected.getGameState() == GameState.INLOBBY)
 						{
 							if (Main.config.getBoolean("Debug"))
 							{
@@ -555,7 +553,7 @@ public class Commands implements CommandExecutor {
 							}
 						}
 						// Voting has started, less then 2 people left
-						else if (!Started && BeforeGame && !BeforeFirstInf)
+						else if (Infected.getGameState() == GameState.VOTING)
 						{
 							if (Main.config.getBoolean("Debug"))
 							{
@@ -592,7 +590,7 @@ public class Commands implements CommandExecutor {
 							}
 						}
 						// In Arena, before first Infected
-						else if (!Started && !BeforeGame && BeforeFirstInf)
+						else if (Infected.getGameState() == GameState.BEFOREINFECTED)
 						{
 							if (Main.config.getBoolean("Debug"))
 							{
@@ -629,7 +627,7 @@ public class Commands implements CommandExecutor {
 							}
 						}
 						// In Arena, Game has started
-						else if (Started && !BeforeGame && !BeforeFirstInf)
+						else if (Infected.getGameState() == GameState.STARTED)
 						{
 							if (Main.config.getBoolean("Debug"))
 							{
@@ -783,7 +781,7 @@ public class Commands implements CommandExecutor {
 					{
 						player.sendMessage(Methods.sendMessage("Error_NotInGame", null, null, null));
 						return true;
-					} else if (Started == true)
+					} else if (Infected.getGameState() != GameState.INLOBBY && Infected.getGameState() != GameState.VOTING)
 					{
 						player.sendMessage(Methods.sendMessage("Vote_GameAlreadyStarted", null, null, null));
 						return true;
@@ -818,12 +816,6 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(plugin.I + plugin.inGame.size() + "/" + plugin.getConfig().getInt("Automatic Start.Minimum Players") + " Players till an automatic start.");
 						return true;
 					}
-					if (plugin.getConfig().getBoolean("Debug"))
-					{
-						System.out.println("Started: " + Started);
-						System.out.println("BeforeGame: " + BeforeGame);
-						System.out.println("BeforeInf " + BeforeFirstInf);
-					}
 
 					// If /start with only 1 player
 					if (plugin.inGame.size() < 2)
@@ -833,7 +825,7 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 					// If the game already started
-					if (Started || BeforeFirstInf || BeforeGame)
+					if (Infected.getGameState() != GameState.INLOBBY)
 					{
 						player.sendMessage(Methods.sendMessage("Error_GameStarted", null, null, null));
 						return true;
@@ -1550,7 +1542,7 @@ public class Commands implements CommandExecutor {
 					{
 						player.sendMessage(Methods.sendMessage("Error_NotInGame", null, null, null));
 						return true;
-					} else if (Started || BeforeFirstInf)
+					} else if (Infected.getGameState() != GameState.INLOBBY && Infected.getGameState() != GameState.VOTING)
 					{
 						player.sendMessage(Methods.sendMessage("Vote_GameAlreadyStarted", null, null, null));
 						return true;
@@ -1690,13 +1682,14 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
 						return true;
 					}
-					if (plugin.Enabled)
+					if (Infected.getGameState() != GameState.DISABLED)
 					{
-						plugin.Enabled = false;
+						Infected.setGameState(GameState.DISABLED);
 						player.sendMessage(plugin.I + ChatColor.GRAY + "Joining Infected has been disabled.");
 					} else
 					{
-						plugin.Enabled = true;
+
+						Infected.setGameState(GameState.INLOBBY);
 						player.sendMessage(plugin.I + ChatColor.GRAY + "Joining Infected has been enabled.");
 					}
 				} else if (args.length == 2 && args[0].equalsIgnoreCase("Admin") && args[1].equalsIgnoreCase("Reload"))
@@ -1751,7 +1744,7 @@ public class Commands implements CommandExecutor {
 						}
 						return true;
 					}
-					if (Started == false)
+					if (Infected.getGameState() != GameState.STARTED)
 					{
 						player.sendMessage(plugin.I + ChatColor.GRAY + "The game hasn't started!");
 						return true;

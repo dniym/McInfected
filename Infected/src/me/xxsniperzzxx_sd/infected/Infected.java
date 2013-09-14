@@ -1,6 +1,8 @@
 package me.xxsniperzzxx_sd.infected;
 
 import java.util.ArrayList;
+
+import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Location;
@@ -137,29 +139,13 @@ public class Infected
     {
         return Main.inLobby.contains(player.getName());
     }
-    public static boolean booleanIsBeforeGame()
+    public static GameState getGameState()
     {
-        return Main.Booleans.get("BeforeGame");
+        return Main.gameState;
     }
-    public static void booleanBeforeGame(Boolean value)
+    public static void setGameState(GameState gs)
     {
-        Main.Booleans.put("BeforeGame", value);
-    }
-    public static boolean booleanIsBeforeInfected()
-    {
-        return Main.Booleans.get("BeforeFirstInf");
-    }
-    public static void booleanBeforeInfected(Boolean value)
-    {
-        Main.Booleans.put("BeforeFirstInf", value);
-    }
-    public static boolean booleanIsStarted()
-    {
-        return Main.Booleans.get("Started");
-    }
-    public static void booleanStarted(Boolean value)
-    {
-        Main.Booleans.put("Started", value);
+        Main.gameState = gs;
     }
     public static String playerCreatingArena(Player player)
     {
