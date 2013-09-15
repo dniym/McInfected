@@ -10,7 +10,7 @@ import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
 import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
-import me.xxsniperzzxx_sd.infected.Tools.Database;
+import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
@@ -24,7 +24,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -38,8 +37,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import com.shampaggon.crackshot.CSDirector;
-
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
@@ -51,24 +48,6 @@ public class Main extends JavaPlugin {
 	public static String v = null;
 	public static enum GameState {INLOBBY, VOTING, BEFOREINFECTED, STARTED, GAMEOVER, DISABLED}; 
 	public static GameState gameState = GameState.INLOBBY;
-
-	// Set up all the needed things for files
-	public static YamlConfiguration abilities = null;
-	public static File abilitiesFile = null;
-	public static YamlConfiguration killT = null;
-	public static File killTFile = null;
-	public static YamlConfiguration classes = null;
-	public static File classesFile = null;
-	public static YamlConfiguration arenas = null;
-	public static File arenasFile = null;
-	public static YamlConfiguration playerF = null;
-	public static File playerFile = null;
-	public static YamlConfiguration messages = null;
-	public static File messagesfile = null;
-	public static YamlConfiguration shop = null;
-	public static File shopfile = null;
-	public static YamlConfiguration grenades = null;
-	public static File grenadesfile = null;
 
 	// Lists, Strings and Integers Infected needs
 	public static int arenaNumber = 0;
@@ -86,18 +65,24 @@ public class Main extends JavaPlugin {
 	public static HashMap<String, String> zombieClasses = new HashMap<String, String>();
 	public static HashMap<String, Integer> Leaders = new HashMap<String, Integer>();
 	public static HashMap<String, Long> Timein = new HashMap<String, Long>();
-	public static HashMap<String, String> gamemode = new HashMap<String, String>();
 	public static HashMap<String, String> Lasthit = new HashMap<String, String>();
 	public static HashMap<String, String> Voted4 = new HashMap<String, String>();
 	public static HashMap<String, String> Creating = new HashMap<String, String>();
 	public static HashMap<String, Integer> Votes = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> KillStreaks = new HashMap<String, Integer>();
+	
+	public static HashMap<String, String> gamemode = new HashMap<String, String>();
 	public static HashMap<String, Integer> Levels = new HashMap<String, Integer>();
 	public static HashMap<String, Float> Exp = new HashMap<String, Float>();
-	public static HashMap<String, Integer> KillStreaks = new HashMap<String, Integer>();
 	public static HashMap<String, Double> Health = new HashMap<String, Double>();
 	public static HashMap<String, Integer> Food = new HashMap<String, Integer>();
 	public static HashMap<String, ItemStack[]> Armor = new HashMap<String, ItemStack[]>();
 	public static HashMap<String, ItemStack[]> Inventory = new HashMap<String, ItemStack[]>();
+	
+
+	public static HashMap<Location, Material> Blocks = new HashMap<Location, Material>();
+	public static HashMap<Location, ItemStack[]> Chests = new HashMap<Location, ItemStack[]>();
+	
 	public static String I = ChatColor.DARK_RED + "" + "«†" + ChatColor.RESET + ChatColor.DARK_RED + "Infected" + ChatColor.DARK_RED + "†»" + ChatColor.RESET + ChatColor.GRAY + " ";
 	public static HashMap<String, Location> Spot = new HashMap<String, Location>();
 	public static String playingin = null;
@@ -120,7 +105,6 @@ public class Main extends JavaPlugin {
 	public static String BV = null;
 
 	public static Configuration config = null;
-	public static Database db = new Database();
 	public String currentBukkitVersion = null;
 	public String updateBukkitVersion = null;
 
@@ -163,9 +147,15 @@ public class Main extends JavaPlugin {
 		Infected.filesGetGrenades().options().copyDefaults(true);
 		Infected.filesGetAbilities().options().copyDefaults(true);
 		Infected.filesGetClasses().options().copyDefaults(true);
+		Infected.filesGetSigns().options().copyDefaults(true);
 		Infected.filesSafeAllButConfig();
 		saveConfig();
 
+		
+		
+		
+		
+		
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		Main.me = this;
@@ -291,8 +281,8 @@ public class Main extends JavaPlugin {
 
 		// Clear the blocks DB because a game couldnt have started before the
 		// plugins up
-		Main.db.getBlocks().clear();
-		Main.db.loadDB("plugins/Infected/Database.db");
+		Main.Chests.clear();
+		Main.Blocks.clear();
 
 		// Do the info signs (Updating the info)
 		if (getConfig().getBoolean("Info Signs.Enabled"))
@@ -301,9 +291,9 @@ public class Main extends JavaPlugin {
 			{
 				@Override
 				public void run() {
-					if (!Main.db.getInfoSigns().isEmpty())
+					if (!Files.getSigns().getStringList("Info Signs").isEmpty())
 					{
-						for (String loc : Main.db.getInfoSigns().keySet())
+						for (String loc : Files.getSigns().getStringList("Info Signs"))
 						{
 							String status;
 
@@ -324,11 +314,12 @@ public class Main extends JavaPlugin {
 							}
 
 							int time = Main.currentTime;
-							if (!Main.db.getInfoSign(loc).equals(null))
+							if (Files.getSigns().getStringList("Info Signs").contains(loc))
 							{
-								if (Main.db.getInfoSign(loc).getType() == Material.SIGN_POST || Main.db.getInfoSign(loc).getType() == Material.WALL_SIGN)
+								Location location = Methods.getLocationFromString(loc);
+								if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
 								{
-									Sign sign = (Sign) Main.db.getInfoSign(loc).getBlock().getState();
+									Sign sign = (Sign) location.getBlock().getState();
 									sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
 									sign.setLine(2, ChatColor.GOLD + status);
 									sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
@@ -371,7 +362,6 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 
-		Methods.updateScoreBoard();
 		// On disable reset players with everything from before
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
 			if (player != null)
@@ -410,11 +400,7 @@ public class Main extends JavaPlugin {
 						player.setHealth(Main.Health.get(player.getName()));
 					}
 				}
-		// Empty all the hashmaps and database settings(Blocks)
-		Main.db.getBackups().clear();
-		Main.db.getBlocks().clear();
-		Main.db.getChests().clear();
-		Main.db.saveDB("plugins/Infected/Database.db");
+		
 	}
 
 	// Setup DisguiseCraft

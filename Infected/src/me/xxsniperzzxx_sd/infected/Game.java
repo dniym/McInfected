@@ -22,8 +22,8 @@ public class Game {
 
 		Main.Winners.clear();
 		Infected.filesReloadArenas();
-
-		Main.db.getBlocks().clear();
+		Infected.arenaReset();
+		
 		for (Player playing : Bukkit.getServer().getOnlinePlayers())
 			if (Main.inGame.contains(playing.getName()))
 			{
@@ -314,9 +314,10 @@ public class Game {
 														public void run() {
 															if (timeleft != -1)
 															{
+																if(Infected.getGameState() != GameState.GAMEOVER){
 																timeleft -= 1;
 																Main.currentTime = timeleft;
-
+																}
 																for (Player playing : Bukkit.getServer().getOnlinePlayers())
 																	if (Main.inGame.contains(playing.getName()))
 																		playing.setLevel(timeleft);

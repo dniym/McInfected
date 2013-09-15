@@ -20,7 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -42,6 +41,7 @@ public class Methods {
 
 	private static HashMap<String, Integer> Stats = new HashMap<String, Integer>();
 
+	@SuppressWarnings("deprecation")
 	public static void openHumanMenu(final Player player) {
 		final ArrayList<String> classList = new ArrayList<String>();
 		for (String classes : Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
@@ -87,6 +87,7 @@ public class Methods {
 		menu.open(player);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void openZombieMenu(final Player player) {
 
 		final ArrayList<String> classList = new ArrayList<String>();
@@ -257,6 +258,7 @@ public class Methods {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void applyAbilities(Player player) {
 		Random r = new Random();
 		int n = 0;
@@ -294,6 +296,7 @@ public class Methods {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void applyClassAbility(Player player) {
 
 		for (PotionEffect reffect : player.getActivePotionEffects())
@@ -427,6 +430,11 @@ public class Methods {
 		return Files.getGrenades().getInt(id + ".Delay") * 20;
 	}
 
+	public static boolean grenadeDamageSelf(Integer id) {
+		return Files.getGrenades().getBoolean(id + ".Damage Self"); 
+	}
+
+	@SuppressWarnings("deprecation")
 	public static void grenadeAddPotion(Player player, Integer Itemid) {
 		Integer id = 0;
 		Integer time = 0;
@@ -614,7 +622,7 @@ public class Methods {
 			Main.Winners.remove(zombie.getName());
 			if (Main.config.getBoolean("New Zombie Tp"))
 				Methods.respawn(zombie);
-			zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
+			zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
 			if (Main.config.getBoolean("Zombie Abilities") == true)
 			{
 				zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
@@ -1167,6 +1175,7 @@ public class Methods {
 		return itemName;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack getItem(String location) {
 		ItemStack is = null;
 		if (Material.getMaterial(getItemID(location)) != null)
@@ -1199,6 +1208,34 @@ public class Methods {
 		}
 		return is;
 	}
+	
+	
+	 
+	 
+
+	 public static String getLocationToString(Location loc)
+	 {
+		 int ix = (int) loc.getX();
+		 int iy = (int) loc.getY();
+		 int iz = (int) loc.getZ();
+		 World world = loc.getWorld();
+		 String s = world.getName() + "," + ix + "," + iy + "," + iz;
+		 return s;
+	 }
+	 
+	 public static Location getLocationFromString(String loc)
+	 {
+		 if(loc.contains(",")){
+			 String[] floc = loc.split(",");
+			 World world = Bukkit.getServer().getWorld(floc[0]);
+			 Location Loc = new Location(world, Integer.valueOf(floc[1]), Integer.valueOf(floc[2]), Integer.valueOf(floc[3]));
+			 return Loc;
+		 }
+		 else
+			 return null;
+	 }
+	
+	
 	
 	public static void handleKillStreaks(boolean killed, Player player){
 		if(killed){
@@ -1249,33 +1286,15 @@ public class Methods {
 
 	@SuppressWarnings("deprecation")
 	public static void tp2LobbyAfter(Player player) {
-		if (!Main.db.getBlocks().isEmpty())
-		{
-			for (Location loc : Main.db.getBlocks().keySet())
-			{
-				loc.getBlock().setType(Main.db.getBlocks().get(loc));
-			}
-		}
-		if (!Main.db.getChests().isEmpty())
-		{
-			for (Location loc : Main.db.getChests().keySet())
-			{
-				if (loc.getBlock().getTypeId() == 54)
-				{
-					Chest chest = (Chest) loc.getBlock().getState();
-					chest.getBlockInventory().setContents(ItemSerialization.fromBase64(Main.db.getChests().get(loc)).getContents());
-				}
-			}
-		}
+		
+		Infected.arenaReset();
+		
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
-
 			player.setScoreboard(Main.voteBoard);
 			Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Humans:"));
 			Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.DARK_RED + "Zombies:"));
 		}
-		Main.db.getBlocks().clear();
-		Main.db.clearChests();
 		player.teleport(Methods.getLocation(Main.config.getString("Lobby")));
 		resetPlayersInventory(player);
 		if (Infected.filesGetShop().getBoolean("Save Items"))
@@ -1318,26 +1337,7 @@ public class Methods {
 		Main.humans.clear();
 		Main.zombies.clear();
 		Main.KillStreaks.clear();
-		if (!Main.db.getBlocks().isEmpty())
-		{
-			for (Location loc : Main.db.getBlocks().keySet())
-			{
-				loc.getBlock().setType(Main.db.getBlocks().get(loc));
-			}
-		}
-		if (!Main.db.getChests().isEmpty())
-		{
-			for (Location loc : Main.db.getChests().keySet())
-			{
-				if (loc.getBlock().getTypeId() == 54)
-				{
-					Chest chest = (Chest) loc.getBlock().getState();
-					chest.getBlockInventory().setContents(ItemSerialization.fromBase64(Main.db.getChests().get(loc)).getContents());
-				}
-			}
-		}
-		Main.db.clearChests();
-		Main.db.getBlocks().clear();
+		Infected.arenaReset();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1383,7 +1383,6 @@ public class Methods {
 		Main.zombieClasses.remove(player.getName());
 		Main.inLobby.remove(player.getName());
 		Main.zombies.remove(player.getName());
-		Main.KillStreaks.remove(player.getName());
 		Main.humans.remove(player.getName());
 		Main.inGame.remove(player.getName());
 		Main.Creating.remove(player.getName());
@@ -1420,8 +1419,8 @@ public class Methods {
 				}
 			}
 		}
-		Main.db.getBlocks().clear();
-		Main.db.clearChests();
+		Infected.arenaReset();
+		
 		Main.KillStreaks.clear();
 		Main.possibleArenas.clear();
 		Main.inLobby.clear();

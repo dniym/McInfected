@@ -87,7 +87,7 @@ public class GrenadeListener implements Listener {
 							grenade.getWorld().playEffect(grenade.getLocation(), Effect.SMOKE, 5);
 							for (Player ppl : Bukkit.getServer().getOnlinePlayers())
 							{
-								if (Infected.isPlayerInGame(ppl) && ((!(Infected.playerGetGroup(ppl) == Infected.playerGetGroup(player))) || (Main.grenades.getBoolean("Damage Self") && ppl == player)) && ppl.getLocation().distance(grenade.getLocation()) < Methods.grenadeGetRange(Integer.valueOf(ItemId)))
+								if (Infected.isPlayerInGame(ppl) && ((!(Infected.playerGetGroup(ppl) == Infected.playerGetGroup(player))) || (Methods.grenadeDamageSelf(Integer.valueOf(ItemId)) && ppl == player)) && ppl.getLocation().distance(grenade.getLocation()) < Methods.grenadeGetRange(Integer.valueOf(ItemId)))
 								{
 									Methods.grenadeAddPotion(ppl, Integer.valueOf(ItemId));
 									ppl.playEffect(EntityEffect.HURT);

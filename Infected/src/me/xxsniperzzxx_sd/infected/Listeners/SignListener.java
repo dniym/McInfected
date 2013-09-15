@@ -1,6 +1,7 @@
 package me.xxsniperzzxx_sd.infected.Listeners;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
@@ -252,9 +253,10 @@ public class SignListener implements Listener
 												event.setCancelled(true);
 											}
 											Location loc = event.getClickedBlock().getLocation();
-											if (Main.db.isSign(loc))
+											if (loc.getBlock().getType() == Material.SIGN_POST || loc.getBlock().getType() == Material.WALL_SIGN)
 											{
-												String i = Main.db.getSignsItem(loc);
+
+												String i = Files.getSigns().getString("Shop Signs." + Methods.getLocationToString(loc));
 												String itemi = null;
 												short itemd = 0;
 												if (i.contains(":"))
@@ -392,6 +394,7 @@ public class SignListener implements Listener
 
 
 
+	@SuppressWarnings("deprecation")
 	@
 	EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateShop(SignChangeEvent event)
@@ -530,7 +533,11 @@ public class SignListener implements Listener
 								{
 									itemdata = "0";
 								}
-								Main.db.setSigns(event.getBlock().getLocation(), itemid + ":" + Integer.valueOf(itemdata));
+								
+								Location loc = event.getBlock().getLocation();
+								
+								Infected.filesGetSigns().set("Shop Signs." + Methods.getLocationToString(loc), itemid + ":" + Integer.valueOf(itemdata));
+								Infected.filesSaveSigns();
 							}
 						}
 					}
@@ -584,7 +591,20 @@ public class SignListener implements Listener
 							event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
 							event.setLine(2, ChatColor.GOLD + status);
 							event.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
-							Main.db.setInfoSigns(event.getBlock().getLocation());
+							
+							if (Files.getSigns().getStringList("Info Signs") == null)
+							{
+								String[] list = { Methods.getLocationToString(event.getBlock().getLocation()) };
+								Files.getSigns().set("Info Signs", list);
+						        Files.saveSigns();
+							} else
+							{
+								List<String> list = Files.getSigns().getStringList("Info Signs");
+								list.add(Methods.getLocationToString(event.getBlock().getLocation()));
+								Files.getSigns().set("Info Signs", list);
+						        Files.saveSigns();
+							}
+							
 						}
 				}
 			}

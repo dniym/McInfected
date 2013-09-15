@@ -9,7 +9,6 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Methods;
-import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -48,7 +47,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -115,38 +114,41 @@ public class PlayerListener implements Listener {
 
 	// Check if the player is in game and the situation around them breaking a
 	// block
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBreakBlock(BlockBreakEvent e) {
 		if (!e.isCancelled())
 		{
-			if (Main.db.isInfoSign(e.getBlock().getLocation()))
-			{
-				Main.db.removeInfoSignLoc(e.getBlock().getLocation());
+			if (Files.getSigns().getStringList("Info Signs").contains(Methods.getLocationToString(e.getBlock().getLocation()))){
+				Files.getSigns().getStringList("Info Signs").remove(Methods.getLocationToString(e.getBlock().getLocation()));
+				Files.saveSigns();
 			}
-			if (Main.db.isSign(e.getBlock().getLocation()))
-			{
-				Main.db.removeSign(e.getBlock().getLocation());
+
+			if (Files.getSigns().getStringList("Shop Signs").contains(Methods.getLocationToString(e.getBlock().getLocation()))){
+				Files.getSigns().getStringList("Shop Signs").remove(Methods.getLocationToString(e.getBlock().getLocation()));
+				Files.saveSigns();
 			}
+
 			if (Main.inLobby.contains(e.getPlayer().getName()))
-			{
 				e.setCancelled(true);
-			} else if (Main.inGame.contains(e.getPlayer().getName()))
+			
+			else if (Main.inGame.contains(e.getPlayer().getName()))
 			{
 				e.getBlock().getDrops().clear();
 				if (Files.getArenas().getIntegerList("Arenas." + Main.playingin + ".Allow Breaking Of.Global").contains(e.getBlock().getTypeId()) || Files.getArenas().getIntegerList("Arenas." + Main.playingin + ".Allow Breaking Of." + Infected.playerGetGroup(e.getPlayer())).contains(e.getBlock().getTypeId()))
 				{
-					if (!plugin.db.getBlocks().containsKey(e.getBlock().getLocation()))
+					if (!Main.Blocks.containsKey(e.getBlock().getLocation()))
 					{
 						Location loc = e.getBlock().getLocation();
-						plugin.db.getBlocks().put(loc, e.getBlock().getType());
+						Main.Blocks.put(loc, e.getBlock().getType());
 						e.getBlock().getDrops().clear();
 					}
 				} else
 				{
-					if (plugin.db.getBlocks().containsKey(e.getBlock().getLocation()))
+					if (Main.Blocks.containsKey(e.getBlock().getLocation()))
 					{
 						Location loc = e.getBlock().getLocation();
-						plugin.db.getBlocks().remove(loc);
+						Main.Blocks.remove(loc);
 						e.getBlock().getDrops().clear();
 					}else
 						e.setCancelled(true);
@@ -172,13 +174,12 @@ public class PlayerListener implements Listener {
 				if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
 				{
 					Block b = e.getClickedBlock();
-					if (e.getClickedBlock().getTypeId() == 54)
+					if (e.getClickedBlock().getType() == Material.CHEST)
 					{
 						Chest chest = (Chest) b.getState();
-						Inventory z;
-						z = chest.getBlockInventory();
-						if (!Main.db.getChests().containsKey(b.getLocation()))
-							Main.db.saveChest(b.getLocation(), z);
+						ItemStack[] z = chest.getBlockInventory().getContents();
+						if (!Main.Chests.containsKey(b.getLocation()))
+							Main.Chests.put(b.getLocation(), z);
 					}
 				}
 			}
@@ -187,13 +188,14 @@ public class PlayerListener implements Listener {
 	// Check to make sure they arn't trying to place a block in game
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerBlockPlace(BlockPlaceEvent e) {
+		
 		if (Main.inLobby.contains(e.getPlayer().getName()))
-		{
 			e.setCancelled(true);
-		} else if (Main.inGame.contains(e.getPlayer().getName()))
+		
+		else if (Main.inGame.contains(e.getPlayer().getName()))
 		{
 			Location loc = e.getBlock().getLocation();
-			plugin.db.getBlocks().put(loc, Material.AIR);
+			Main.Blocks.put(loc, Material.AIR);
 		}
 	}
 
@@ -924,7 +926,7 @@ public class PlayerListener implements Listener {
 		if (!e.isCancelled())
 			if ((Infected.isPlayerInGame(e.getPlayer()) || Infected.isPlayerInLobby(e.getPlayer())) && Infected.getGameState() != GameState.STARTED)
 			{
-				if (e.getPlayer().getItemInHand().getTypeId() == 373)
+				if (e.getPlayer().getItemInHand().getType() == Material.POTION)
 				{
 					e.setUseItemInHand(Result.DENY);
 					e.setCancelled(true);

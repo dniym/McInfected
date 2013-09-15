@@ -1,11 +1,11 @@
 package me.xxsniperzzxx_sd.infected;
 
 import java.util.ArrayList;
-
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +22,7 @@ public class Infected
         filesSaveMessages();
         filesSaveAbilities();
         filesSaveClasses();
+        filesSaveSigns();
     }
     public static void filesReloadAllButConfig()
     {
@@ -33,7 +34,7 @@ public class Infected
         filesReloadMessages();
         filesReloadAbilities();
         filesReloadClasses();
-
+        filesReloadSigns();
     }
     public static void playerSaveShopInventory(Player player)
     {
@@ -370,6 +371,10 @@ public class Infected
     {
         return Files.getAbilities();
     }
+    public static Configuration filesGetSigns()
+    {
+        return Files.getSigns();
+    }
     public static void filesSaveAbilities()
     {
         Files.saveAbilities();
@@ -402,9 +407,17 @@ public class Infected
     {
         Files.saveGrenades();
     }
+    public static void filesSaveSigns()
+    {
+        Files.saveSigns();
+    }
     public static void filesReloadClasses()
     {
         Files.reloadClasses();
+    }
+    public static void filesReloadSigns()
+    {
+        Files.reloadSigns();
     }
     public static void filesReloadAbilities()
     {
@@ -442,6 +455,8 @@ public class Infected
     {
         Methods.reset();
     }
+    
+    
     public static String playerGetLastDamage(Player player)
     {
         return Main.Lasthit.get(player.getName());
@@ -454,15 +469,29 @@ public class Infected
     {
         return Main.Lasthit.containsKey(player.getName());
     }
+    
     public static void arenaReset()
     {
-        if (!Main.db.getBlocks().isEmpty())
+    	if (!Main.Blocks.isEmpty())
         {
-            for (Location loc: Main.db.getBlocks().keySet())
+            for (Location loc: Main.Blocks.keySet())
             {
-                loc.getBlock().setType(Main.db.getBlocks().get(loc));
+                loc.getBlock().setType(Main.Blocks.get(loc));
             }
         }
-		Main.db.getBlocks().clear();
-	}
+		Main.Blocks.clear();
+		
+// Clear Chests too
+		if (!Main.Chests.isEmpty())
+		{
+			for (Location loc : Main.Chests.keySet())
+			{
+				if (loc.getBlock().getType() == Material.CHEST)
+				{
+					Chest chest = (Chest) loc.getBlock().getState();
+					chest.getBlockInventory().setContents(Main.Chests.get(loc));
+				}
+			}
+		}
+    }
 }

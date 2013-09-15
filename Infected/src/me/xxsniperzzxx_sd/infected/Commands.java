@@ -227,7 +227,6 @@ public class Commands implements CommandExecutor {
 					plugin.Levels.put(player.getName(), player.getLevel());
 					plugin.Exp.put(player.getName(), player.getExp());
 					plugin.Inventory.put(player.getName(), player.getInventory().getContents());
-					plugin.db.setBackup(player.getName(), player.getInventory().getContents());
 					plugin.Armor.put(player.getName(), player.getInventory().getArmorContents());
 					plugin.Winners.clear();
 					plugin.inLobby.add(player.getName());
@@ -728,7 +727,7 @@ public class Commands implements CommandExecutor {
 							if (player.hasPermission("Infected.Admin"))
 								pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " Infected Force\n" + "     Commands" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Start\n" + ChatColor.BLACK + " - Force the game to start\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "End\n" + ChatColor.BLACK + " - Force the game to end\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Refresh\n" + ChatColor.BLACK + " - Force all the players to refresh eachother\n");
 							if (player.hasPermission("Infected.Admin"))
-								pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "       Menu" + "\n\n" + ChatColor.AQUA + "/Inf Admin Points <Player> <#>\n" + ChatColor.BLACK + "/Inf Admin Score <Player> <#>\n" + ChatColor.BLUE + "/Inf Admin KStats <Player> <#>\n" + ChatColor.DARK_AQUA + "/Inf Admin DStats <Player> <#>\n" + ChatColor.DARK_BLUE + "/Inf Admin Restore <Player>\n" + ChatColor.DARK_GREEN + "/Inf Admin Kick <Player>\n" + ChatColor.DARK_BLUE + "/Inf Admin Reload\n");
+								pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "       Menu" + "\n\n" + ChatColor.AQUA + "/Inf Admin Points <Player> <#>\n" + ChatColor.BLACK + "/Inf Admin Score <Player> <#>\n" + ChatColor.BLUE + "/Inf Admin KStats <Player> <#>\n" + ChatColor.DARK_AQUA + "/Inf Admin DStats <Player> <#>\n" + ChatColor.DARK_GREEN + "/Inf Admin Kick <Player>\n" + ChatColor.DARK_BLUE + "/Inf Admin Reload\n");
 							if (player.hasPermission("Infected.Admin"))
 								pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "     Menu (2)" + "\n\n" + ChatColor.DARK_PURPLE + "/Inf Admin Reset <Player>\n" + ChatColor.GOLD + "/Inf Admin Shutdown\n");
 							if (player.hasPermission("Infected.SetUp"))
@@ -944,7 +943,6 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Score <Player> <#>");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin KStats <Player> <#>");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin DStats <Player> <#>");
-					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Restore <Player>");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Kick <Player>");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Reset <Player>");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Shutdown");
@@ -1831,21 +1829,7 @@ public class Commands implements CommandExecutor {
 					}
 				} else if (args.length == 3)
 				{
-					if (args[1].equalsIgnoreCase("Restore"))
-					{
-						Player user = Bukkit.getPlayer(args[2]);
-						if (plugin.db.hasBackup(user.getName()))
-						{
-							user.getInventory().setContents(plugin.db.getBackup(user.getName()));
-							user.updateInventory();
-							player.sendMessage(plugin.I + "You have restored their backup inventory");
-							plugin.db.delBackup(user.getName());
-						} else
-						{
-							player.sendMessage(plugin.I + "This player doesn't have a backup in memory...");
-							return true;
-						}
-					} else if (args[1].equalsIgnoreCase("Kick"))
+					if (args[1].equalsIgnoreCase("Kick"))
 					{
 						Player user = Bukkit.getPlayer(args[2]);
 						if (user == null || !Infected.isPlayerInGame(user) || !Infected.isPlayerInLobby(user))
