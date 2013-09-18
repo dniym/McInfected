@@ -1,6 +1,5 @@
 package me.xxsniperzzxx_sd.infected;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
@@ -9,8 +8,9 @@ import java.util.Map.Entry;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
+import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
+import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,205 +20,18 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.kitteh.tag.TagAPI;
-
-import pgDev.bukkit.DisguiseCraft.disguise.Disguise;
-import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 public class Methods {
 
 	private static HashMap<String, Integer> Stats = new HashMap<String, Integer>();
-
-	@SuppressWarnings("deprecation")
-	public static void openHumanMenu(final Player player) {
-		final ArrayList<String> classList = new ArrayList<String>();
-		for (String classes : Infected.filesGetClasses().getConfigurationSection("Classes.Human").getKeys(true))
-		{
-			if (!classes.contains("."))
-			{
-				classList.add(classes);
-			}
-		}
-		IconMenu menu = new IconMenu(
-				ChatColor.GREEN + player.getName() + " - Human Class",
-				((classList.size() / 9) * 9) + 9,
-				new IconMenu.OptionClickEventHandler()
-				{
-					@Override
-					public void onOptionClick(IconMenu.OptionClickEvent event) {
-						if (event.getName().equalsIgnoreCase("None"))
-						{
-							Main.humanClasses.remove(player.getName());
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a human class");
-						} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + event.getName()))
-						{
-							Main.humanClasses.put(player.getName(), classList.get(event.getPosition()));
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your human class is: " + event.getName());
-						} else
-						{
-							player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
-						}
-					}
-				}, Main.me);
-		int i = 0;
-		for (String classes : classList)
-		{
-			if (!classes.contains("."))
-			{
-				ItemStack item = new ItemStack(
-						Material.getMaterial(getItemID(Infected.filesGetClasses().getStringList("Classes.Human." + classes + ".Items").get(0))));
-				menu.setOption(i, item, classes, ChatColor.GREEN + "Click to choose this class");
-				i++;
-			}
-		}
-		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", "Choose to have no class");
-		menu.open(player);
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void openZombieMenu(final Player player) {
-
-		final ArrayList<String> classList = new ArrayList<String>();
-		for (String classes : Infected.filesGetClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
-		{
-			if (!classes.contains("."))
-			{
-				classList.add(classes);
-			}
-		}
-		IconMenu menu = new IconMenu(
-				ChatColor.DARK_RED + player.getName() + " - Zombie Class",
-				((classList.size() / 9) * 9) + 9,
-				new IconMenu.OptionClickEventHandler()
-				{
-					@Override
-					public void onOptionClick(IconMenu.OptionClickEvent event) {
-						if (event.getName().equalsIgnoreCase("None"))
-						{
-							Main.zombieClasses.remove(player.getName());
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a zombie class");
-						} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + event.getName()))
-						{
-							Main.zombieClasses.put(player.getName(), classList.get(event.getPosition()));
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your zombie class is: " + event.getName());
-						} else
-						{
-							player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
-						}
-					}
-				}, Main.me);
-		int i = 0;
-		for (String classes : classList)
-		{
-			if (!classes.contains("."))
-			{
-				ItemStack item = new ItemStack(
-						Material.getMaterial(getItemID(Infected.filesGetClasses().getStringList("Classes.Zombie." + classes + ".Items").get(0))));
-				menu.setOption(i, item, classes, ChatColor.RED + "Click to choose this class");
-				i++;
-			}
-		}
-		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", "Choose to have no class");
-		menu.open(player);
-	}
-
-	public static void openVotingMenu(final Player player) {
-
-		Infected.filesReloadArenas();
-		Main.possibleArenas.clear();
-		for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
-		{
-			// Check if the string matchs an arena
-
-			if (Main.possibleArenas.contains(parenas))
-			{
-				Main.possibleArenas.remove(parenas);
-			}
-			if (!parenas.contains("."))
-			{
-				Main.possibleArenas.add(parenas);
-			}
-			if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
-			{
-				Main.possibleArenas.remove(parenas);
-			}
-		}
-
-		IconMenu menu = new IconMenu(
-				ChatColor.DARK_BLUE + player.getName() + " - Map Vote",
-				((Main.possibleArenas.size() / 9) * 9) + 9,
-				new IconMenu.OptionClickEventHandler()
-				{
-					@Override
-					public void onOptionClick(IconMenu.OptionClickEvent event) {
-
-						if (event.getName().equalsIgnoreCase("Random"))
-						{
-							Random r = new Random();
-							int i = r.nextInt(Main.possibleArenas.size());
-							String voted4 = Main.possibleArenas.get(i);
-
-							if (Main.Votes.containsKey(voted4))
-							{
-								Main.Votes.put(voted4, Main.Votes.get(voted4) + 1);
-							} else
-							{
-								Main.Votes.put(voted4, 1);
-							}
-							Main.Voted4.put(player.getName(), voted4);
-							for (Player players : Bukkit.getServer().getOnlinePlayers())
-								if (Main.inGame.contains(players.getName()))
-								{
-									players.sendMessage(Main.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + voted4);
-								}
-							if (Main.config.getBoolean("ScoreBoard Support"))
-							{
-								Methods.updateScoreBoard();
-							}
-						} else
-						{
-							if (Main.Votes.containsKey(event.getName()))
-							{
-								Main.Votes.put(event.getName(), Main.Votes.get(event.getName()) + 1);
-							} else
-							{
-								Main.Votes.put(event.getName(), 1);
-							}
-							Main.Voted4.put(player.getName(), event.getName());
-							for (Player players : Bukkit.getServer().getOnlinePlayers())
-								if (Main.inGame.contains(players.getName()))
-								{
-									players.sendMessage(Main.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + event.getName());
-								}
-							if (Main.config.getBoolean("ScoreBoard Support"))
-							{
-								Methods.updateScoreBoard();
-							}
-						}
-					}
-				}, Main.me);
-		int i = 0;
-		for (String arenas : Main.possibleArenas)
-		{
-			menu.setOption(i, new ItemStack(Material.EMPTY_MAP), arenas, ChatColor.YELLOW + "Click to vote for this map");
-			i++;
-		}
-		menu.setOption(i, new ItemStack(Material.MAP), "random", ChatColor.YELLOW + "Click to vote for Random");
-
-		menu.open(player);
-	}
 
 	// ===============================================================================
 	public static void rewardPointsAndScore(Player player, String PointsCause) {
@@ -331,69 +144,6 @@ public class Methods {
 		}
 	}
 
-	public static void disguisePlayer(Player player) {
-		if (Main.config.getBoolean("DisguiseCraft Support") == true)
-		{
-			if (Main.zombieClasses.containsKey(player.getName()))
-			{
-				if (!Main.dcAPI.isDisguised(player))
-				{
-					if (!(DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise")) == null))
-					{
-						Main.dcAPI.disguisePlayer(player, new Disguise(
-								Main.dcAPI.newEntityID(),
-								DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise"))).addSingleData("noarmor"));
-					} else
-						Main.dcAPI.disguisePlayer(player, new Disguise(
-								Main.dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
-
-				} else
-				{
-					Main.dcAPI.undisguisePlayer(player);
-					disguisePlayer(player);
-				}
-			} else
-			{
-				// https://gitorious.org/disguisecraft/disguisecraft/blobs/master/src/pgDev/bukkit/DisguiseCraft/disguise/Disguise.java#line234
-				Random ra = new Random();
-				int chance = ra.nextInt(100);
-				if (!Main.dcAPI.isDisguised(player))
-				{
-					if (chance <= Main.config.getInt("Chance To Be Pig Zombie"))
-					{
-						Main.dcAPI.disguisePlayer(player, new Disguise(
-								Main.dcAPI.newEntityID(),
-								DisguiseType.PigZombie).addSingleData("noarmor"));
-						if (Main.config.getBoolean("Debug"))
-						{
-							System.out.println("Choosing new zombie: " + player.getName() + " = pigzombie");
-						}
-					} else if (chance <= (Main.config.getInt("Chance To Be NPC Zombie") + Main.config.getInt("Chance To Be NPC Zombie")))
-					{
-						if (Main.config.getBoolean("Debug"))
-						{
-							System.out.println("Choosing new zombie: " + player.getName() + " = infected zombie");
-						}
-						Main.dcAPI.disguisePlayer(player, new Disguise(
-								Main.dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("infected").addSingleData("noarmor"));
-					} else
-					{
-						Main.dcAPI.disguisePlayer(player, new Disguise(
-								Main.dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
-						if (Main.config.getBoolean("Debug"))
-						{
-							System.out.println("Choosing new zombie: " + player.getName() + " = zombie");
-						}
-					}
-				} else
-				{
-					Main.dcAPI.undisguisePlayer(player);
-					disguisePlayer(player);
-				}
-			}
-		}
-	}
-
 	public static void zombifyPlayer(Player player) {
 		if (Main.zombieClasses.containsKey(player.getName()))
 		{
@@ -402,7 +152,7 @@ public class Methods {
 		{
 			applyAbilities(player);
 		}
-		disguisePlayer(player);
+		DisguisePlayer.disguisePlayer(player);
 
 	}
 
@@ -605,13 +355,9 @@ public class Methods {
 		} else
 		{
 			for (Player online : Bukkit.getServer().getOnlinePlayers())
-			{
-				if (Infected.isPlayerInGame(online) && Main.config.getBoolean("DisguiseCraft Support"))
-				{
-					if (Main.dcAPI.isDisguised(online))
-						Main.dcAPI.undisguisePlayer(online);
-				}
-			}
+				if (Infected.isPlayerInGame(online) && Main.config.getBoolean("Disguise Support.Enabled"))
+					if (DisguisePlayer.isPlayerDisguised(online))
+						DisguisePlayer.unDisguisePlayer(online);
 			int alpha = r.nextInt(Main.inGame.size());
 			String name = Main.inGame.get(alpha);
 			Player zombie = Bukkit.getServer().getPlayer(name);
@@ -888,32 +634,32 @@ public class Methods {
 		{
 			for (String s : Infected.filesGetClasses().getStringList("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Items"))
 			{
-				human.getInventory().addItem(getItemStack(s));
+				human.getInventory().addItem(ItemHandler.getItemStack(s));
 				human.updateInventory();
 			}
 			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head") != null)
-				human.getInventory().setHelmet(getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head")));
+				human.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head")));
 			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest") != null)
-				human.getInventory().setChestplate(getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest")));
+				human.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest")));
 			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs") != null)
-				human.getInventory().setLeggings(getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs")));
+				human.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs")));
 			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet") != null)
-				human.getInventory().setBoots(getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet")));
+				human.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet")));
 		} else
 		{
 			for (String s : Main.config.getStringList("Armor.Human.Items"))
 			{
-				human.getInventory().addItem(getItemStack(s));
+				human.getInventory().addItem(ItemHandler.getItemStack(s));
 				human.updateInventory();
 			}
 			if (Main.config.getString("Armor.Human.Head") != null)
-				human.getInventory().setHelmet(getItemStack(Main.config.getString("Armor.Human.Head")));
+				human.getInventory().setHelmet(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Head")));
 			if (Main.config.getString("Armor.Human.Chest") != null)
-				human.getInventory().setChestplate(getItemStack(Main.config.getString("Armor.Human.Chest")));
+				human.getInventory().setChestplate(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Chest")));
 			if (Main.config.getString("Armor.Human.Legs") != null)
-				human.getInventory().setLeggings(getItemStack(Main.config.getString("Armor.Human.Legs")));
+				human.getInventory().setLeggings(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Legs")));
 			if (Main.config.getString("Armor.Human.Feet") != null)
-				human.getInventory().setBoots(getItemStack(Main.config.getString("Armor.Human.Feet")));
+				human.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Feet")));
 		}
 		human.updateInventory();
 		applyClassAbility(human);
@@ -933,9 +679,9 @@ public class Methods {
 		// Take away humans items
 		for (String s : Main.config.getStringList("Armor.Human.Items"))
 		{
-			if (zombie.getInventory().contains(getItem(s).getType()))
+			if (zombie.getInventory().contains(ItemHandler.getItem(s).getType()))
 			{
-				zombie.getInventory().remove(getItem(s).getType());
+				zombie.getInventory().remove(ItemHandler.getItem(s).getType());
 			}
 		}
 		// Take away any items from their human class
@@ -943,15 +689,15 @@ public class Methods {
 		{
 			for (String s : Infected.filesGetClasses().getStringList("Classes.Human." + Main.humanClasses.get(zombie.getName()) + ".Items"))
 			{
-				if (zombie.getInventory().contains(getItem(s).getType()))
+				if (zombie.getInventory().contains(ItemHandler.getItem(s).getType()))
 				{
-					zombie.getInventory().remove(getItem(s).getType());
+					zombie.getInventory().remove(ItemHandler.getItem(s).getType());
 				}
 			}
 		}
 		for (ItemStack armor : zombie.getInventory().getArmorContents())
 		{
-			if (!(armor == null || armor.getType() == Material.AIR) && (armor == getItem(Main.config.getString("Armor.Zombie.Head")) || armor == getItem(Main.config.getString("Armor.Zombie.Chest")) || armor == getItem(Main.config.getString("Armor.Zombie.Legs")) || armor == getItem(Main.config.getString("Armor.Zombie.Feet"))))
+			if (!(armor == null || armor.getType() == Material.AIR) && (armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Head")) || armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Chest")) || armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Legs")) || armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Feet"))))
 			{
 				zombie.getInventory().addItem(armor);
 			}
@@ -962,33 +708,33 @@ public class Methods {
 		{
 			for (String s : Infected.filesGetClasses().getStringList("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Items"))
 			{
-				if (!zombie.getInventory().contains(getItem(s)))
-					zombie.getInventory().addItem(getItemStack(s));
+				if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
+					zombie.getInventory().addItem(ItemHandler.getItemStack(s));
 				zombie.updateInventory();
 			}
 			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head") != null)
-				zombie.getInventory().setHelmet(getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head")));
+				zombie.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head")));
 			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest") != null)
-				zombie.getInventory().setChestplate(getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest")));
+				zombie.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest")));
 			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs") != null)
-				zombie.getInventory().setLeggings(getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs")));
+				zombie.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs")));
 			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet") != null)
-				zombie.getInventory().setBoots(getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet")));
+				zombie.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet")));
 		} else
 		{
 			for (String s : Main.config.getStringList("Armor.Zombie.Items"))
 			{
-				if (!zombie.getInventory().contains(getItem(s)))
-					zombie.getInventory().addItem(getItemStack(s));
+				if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
+					zombie.getInventory().addItem(ItemHandler.getItemStack(s));
 			}
 			if (Main.config.getString("Armor.Zombie.Head") != null)
-				zombie.getInventory().setHelmet(getItemStack(Main.config.getString("Armor.Zombie.Head")));
+				zombie.getInventory().setHelmet(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Head")));
 			if (Main.config.getString("Armor.Zombie.Chest") != null)
-				zombie.getInventory().setChestplate(getItemStack(Main.config.getString("Armor.Zombie.Chest")));
+				zombie.getInventory().setChestplate(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Chest")));
 			if (Main.config.getString("Armor.Zombie.Legs") != null)
-				zombie.getInventory().setLeggings(getItemStack(Main.config.getString("Armor.Zombie.Legs")));
+				zombie.getInventory().setLeggings(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Legs")));
 			if (Main.config.getString("Armor.Zombie.Feet") != null)
-				zombie.getInventory().setBoots(getItemStack(Main.config.getString("Armor.Zombie.Feet")));
+				zombie.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Feet")));
 		}
 		zombie.updateInventory();
 	}
@@ -1025,193 +771,6 @@ public class Methods {
 		return cmsg;
 	}
 
-	public static ItemStack getItemStack(String Path) {
-		ItemStack is = new ItemStack(getItem(Path));
-		is.setDurability(getItemData(Path));
-		return is;
-	}
-
-	private static Integer getItemID(String Path) {
-		String itemid = null;
-		String string = Path;
-		if (string.contains(":"))
-		{
-			String[] ss = string.split(":");
-			itemid = ss[0];
-		} else if (string.contains(","))
-		{
-			String[] ss = string.split(",");
-			itemid = ss[0];
-		} else if (string.contains("-"))
-		{
-			String[] ss = string.split("-");
-			itemid = ss[0];
-		} else if (string.contains("@"))
-		{
-			String[] ss = string.split("@");
-			itemid = ss[0];
-		} else if (string.contains("%"))
-		{
-			String[] ss = string.split("%");
-			itemid = ss[0];
-		} else
-			itemid = string;
-		int i = Integer.valueOf(itemid);
-		return i;
-	}
-
-	private static Short getItemData(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains(":"))
-		{
-			String[] s = string.split(":");
-			if (s[1].contains(","))
-			{
-				String[] ss = s[1].split(",");
-				itemdata = ss[0];
-			} else if (s[1].contains("-"))
-			{
-				String[] ss = s[1].split("-");
-				itemdata = ss[0];
-			} else if (s[1].contains("@"))
-			{
-				String[] ss = s[1].split("@");
-				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-				itemdata = "0";
-
-		} else
-			itemdata = "0";
-		Short s = Short.valueOf(itemdata);
-		return s;
-	}
-
-	private static Integer getItemAmount(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains(","))
-		{
-			String[] s = string.split(",");
-			if (s[1].contains("-"))
-			{
-				String[] ss = s[1].split("-");
-				itemdata = ss[0];
-			} else if (s[1].contains("@"))
-			{
-				String[] ss = s[1].split("@");
-				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-				itemdata = s[1];
-		} else
-			itemdata = "1";
-		return Integer.valueOf(itemdata);
-	}
-
-	private static int getItemEnchant(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains("-"))
-		{
-			String[] s = string.split("-");
-			if (s[1].contains("@"))
-			{
-				String[] ss = s[1].split("@");
-				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-			{
-				itemdata = s[1];
-			}
-		} else
-			itemdata = "0";
-		return Integer.valueOf(itemdata);
-	}
-
-	private static int getItemEnchantLvl(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains("@"))
-		{
-			String[] s = string.split("@");
-			if (s[1].contains("-"))
-			{
-				String[] ss = s[1].split("-");
-				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-			{
-				itemdata = s[1];
-			}
-		} else
-			itemdata = "1";
-		return Integer.valueOf(itemdata);
-	}
-
-	private static String getItemName(String Path) {
-		String itemName = null;
-		if (Path.contains("%"))
-		{
-			String[] ss = Path.split("%");
-			itemName = ChatColor.translateAlternateColorCodes('&', ss[1]);
-		} else
-		{
-			itemName = null;
-		}
-		return itemName;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static ItemStack getItem(String location) {
-		ItemStack is = null;
-		if (Material.getMaterial(getItemID(location)) != null)
-			is = new ItemStack(Material.getMaterial(getItemID(location)),
-					getItemAmount(String.valueOf(location)));
-		else
-			is = new ItemStack(Material.AIR);
-
-		is.setDurability(getItemData(location));
-
-		if (!(getItemName(location) == null))
-		{
-			ItemMeta im = is.getItemMeta();
-			String name = getItemName(location).replaceAll("_", " ");
-			im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-			is.setItemMeta(im);
-		}
-		if (location.contains("-"))
-		{
-			int i;
-			String enchants[] = location.split("-");
-			for (i = 1; i != enchants.length; i++)
-			{
-				if (enchants[i] != null)
-				{
-					enchants[i] = "-" + enchants[i];
-					is.addUnsafeEnchantment(Enchantment.getById(getItemEnchant(enchants[i])), getItemEnchantLvl(enchants[i]));
-				}
-			}
-		}
-		return is;
-	}
-	
-	
-	 
-	 
 
 	 public static String getLocationToString(Location loc)
 	 {
@@ -1319,9 +878,10 @@ public class Methods {
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
 		Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
-		if (Main.config.getBoolean("DisguiseCraft Support"))
-			if (Main.dcAPI.isDisguised(player) == true)
-				Main.dcAPI.undisguisePlayer(player);
+		if (Infected.isPlayerInGame(player) && Main.config.getBoolean("Disguise Support.Enabled"))
+			if (DisguisePlayer.isPlayerDisguised(player))
+				DisguisePlayer.unDisguisePlayer(player);
+
 		if (Main.inGame.size() == 0)
 			Main.Winners.clear();
 
@@ -1345,13 +905,7 @@ public class Methods {
 
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
-			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard board = manager.getNewScoreboard();
-			board.registerNewObjective("empty", "dummy");
-
-			Objective objective = board.getObjective("empty");
-			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-			player.setScoreboard(board);
+			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 		}
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
@@ -1392,11 +946,10 @@ public class Methods {
 		Main.Inventory.remove(player.getName());
 		Main.Spot.remove(player.getName());
 		Main.Winners.remove(player.getName());
-		if (Main.config.getBoolean("DisguiseCraft Support"))
-		{
-			if (Main.dcAPI.isDisguised(player))
-				Main.dcAPI.undisguisePlayer(player);
-		}
+		if (Infected.isPlayerInGame(player) && Main.config.getBoolean("Disguise Support.Enabled"))
+			if (DisguisePlayer.isPlayerDisguised(player))
+				DisguisePlayer.unDisguisePlayer(player);
+
 		if (Main.Voted4.containsKey(player.getName()))
 		{
 			if (Main.Votes.containsKey(Main.Voted4.get(player.getName())))

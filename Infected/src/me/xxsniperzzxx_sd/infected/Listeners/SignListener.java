@@ -8,6 +8,7 @@ import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -208,7 +209,7 @@ public class SignListener implements Listener
 										{
 											if (Files.getShop().contains(itemname))
 											{
-												ItemStack is = Methods.getItemStack(Files.getShop().getString(itemname));
+												ItemStack is = ItemHandler.getItemStack(Files.getShop().getString(itemname));
 												for (Material items: Material.values())
 												{
 													if (items == is.getType())
@@ -430,7 +431,7 @@ public class SignListener implements Listener
 						{
 							String s = Files.getShop().getString(event.getLine(1));
 							Material im = null;
-							ItemStack is = new ItemStack(Methods.getItem(s));
+							ItemStack is = new ItemStack(ItemHandler.getItem(s));
 							for (Material items: Material.values())
 							{
 								if (items == is.getType())

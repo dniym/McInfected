@@ -6,6 +6,8 @@ import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -426,7 +428,7 @@ public class Game {
 						{
 							players.getInventory().setContents(Main.Inventory.get(players.getName()));
 							players.updateInventory();
-							players.getInventory().addItem(Methods.getItemStack(s));
+							players.getInventory().addItem(ItemHandler.getItemStack(s));
 							players.updateInventory();
 							Main.Inventory.put(players.getName(), players.getInventory().getContents());
 							Methods.resetPlayersInventory(players);
@@ -450,11 +452,10 @@ public class Game {
 						players.sendMessage(Main.I + "Total Points: " + Files.getPlayers().getInt("Players." + players.getName().toLowerCase() + ".Points"));
 						Methods.SetOnlineTime(players);
 						Files.savePlayers();
-						if (Main.config.getBoolean("DisguiseCraft Support") == true)
-							if (Main.dcAPI.isDisguised(players))
-							{
-								Main.dcAPI.undisguisePlayer(players);
-							}
+						if (Main.config.getBoolean("Disguise Support.Enabled"))
+							if (DisguisePlayer.isPlayerDisguised(players))
+								DisguisePlayer.unDisguisePlayer(players);
+
 						for (PotionEffect reffect : players.getActivePotionEffects())
 						{
 							players.removePotionEffect(reffect.getType());

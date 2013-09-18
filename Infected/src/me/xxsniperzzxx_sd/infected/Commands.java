@@ -7,6 +7,8 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Menus;
+import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -124,11 +126,11 @@ public class Commands implements CommandExecutor {
 					{
 						if (args[1].equalsIgnoreCase("Human"))
 						{
-							Methods.openHumanMenu(player);
+							Menus.openHumanMenu(player);
 						} else if (args[1].equalsIgnoreCase("Zombie"))
 						{
 
-							Methods.openZombieMenu(player);
+							Menus.openZombieMenu(player);
 						} else
 							player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human>");
 					} else
@@ -232,9 +234,11 @@ public class Commands implements CommandExecutor {
 					plugin.inLobby.add(player.getName());
 					plugin.gamemode.put(player.getName(), player.getGameMode().toString());
 					Methods.updateScoreBoard();
-					if (Main.config.getBoolean("DisguiseCraft Support"))
-						if (Main.dcAPI.isDisguised(player))
-							Main.dcAPI.undisguisePlayer(player);
+					if (Main.config.getBoolean("Disguise Support.Enabled"))
+						if (DisguisePlayer.isPlayerDisguised(player))
+							DisguisePlayer.unDisguisePlayer(player);
+
+					
 					// Prepare player
 					player.setMaxHealth(20.0);
 					player.setHealth(20.0);
@@ -796,7 +800,7 @@ public class Commands implements CommandExecutor {
 					{
 						if (plugin.config.getBoolean("Vote with a GUI"))
 						{
-							Methods.openVotingMenu(player);
+							Menus.openVotingMenu(player);
 						} else
 						{
 							player.performCommand("Infected arenas");
@@ -848,11 +852,10 @@ public class Commands implements CommandExecutor {
 					{
 						if (plugin.inGame.contains(players.getName()))
 						{
-							if (plugin.getConfig().getBoolean("DisguiseCraft Support") == true)
-								if (!plugin.dcAPI.isDisguised(players))
-								{
-									plugin.dcAPI.undisguisePlayer(players);
-								}
+							if (Main.config.getBoolean("Disguise Support.Enabled"))
+								if (DisguisePlayer.isPlayerDisguised(players))
+									DisguisePlayer.unDisguisePlayer(players);
+
 							// Give player's all their stuff/stats back
 							Methods.resetp(players);
 							players.sendMessage(Methods.sendMessage("Game_ForcedToStop", null, null, null));

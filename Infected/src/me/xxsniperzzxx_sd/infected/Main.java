@@ -37,6 +37,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+import de.robingrether.idisguise.api.DisguiseAPI;
+
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
@@ -117,9 +119,12 @@ public class Main extends JavaPlugin {
 	public static Scoreboard playingBoard;
 	public static Objective voteList;
 	public static Objective playingList;
+	
 
 	// Plugin Addons
 	public static DisguiseCraftAPI dcAPI;
+	public static DisguiseAPI idAPI;
+	public static Plugin Disguiser;
 	public static Economy economy = null;
 
 	// public NamedItemStack NIS;
@@ -133,6 +138,7 @@ public class Main extends JavaPlugin {
 		Main.playingBoard = manager.getNewScoreboard();
 		Main.playingList = Main.playingBoard.registerNewObjective("playing", "dummy");
 		Main.voteList = Main.voteBoard.registerNewObjective("votes", "dummy");
+		
 
 		// Item Serialization
 		Main.is = new ItemSerialization();
@@ -187,25 +193,6 @@ public class Main extends JavaPlugin {
 		}
 
 		// Check if the plugin addons are there
-		if (getConfig().getBoolean("DisguiseCraft Support"))
-		{
-			if (getServer().getPluginManager().getPlugin("ProtocolLib") == null)
-			{
-				System.out.println(Main.I + "DisguiseCraft was enabled but ProtocolLib wasn't found on the server");
-				getConfig().set("DisguiseCraft Support", false);
-			} else
-			{
-				if (!(getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
-				{
-					setupDisguiseCraft();
-				} else
-				{
-					System.out.println(Main.I + "DisguiseCraft wasn't found on this server, disabling DisguiseCraft Support");
-					getConfig().set("DisguiseCraft Support", false);
-					saveConfig();
-				}
-			}
-		}
 		// Check if the plugin addons are there
 		if (getConfig().getBoolean("Vault Support.Enable"))
 		{
@@ -251,6 +238,32 @@ public class Main extends JavaPlugin {
 				TagApi TagApi = new TagApi(this);
 				pm.registerEvents(TagApi, this);
 			}
+		}
+		if (getConfig().getBoolean("Disguise Support.Enabled"))
+		{
+			if(getConfig().getString("Disguise Support.Disguise Plugin").equalsIgnoreCase("DisguiseCraft"))	
+				if (!(getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
+				{
+					setupDisguiseCraft();
+					Disguiser = getServer().getPluginManager().getPlugin("DisguiseCraft");
+				} else
+				{
+					System.out.println(Main.I + "DisguiseCraft wasn't found on this server, disabling Disguise Support");
+					getConfig().set("Disguise Support.Enabled", false);
+					saveConfig();
+				}
+			else if(getConfig().getString("Disguise Support.Disguise Plugin").equalsIgnoreCase("iDisguise"))	
+
+				if (!(getServer().getPluginManager().getPlugin("iDisguise") == null))
+				{
+					idAPI = getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
+					Disguiser = getServer().getPluginManager().getPlugin("iDisguise");
+				} else
+				{
+					System.out.println(Main.I + "iDisguise wasn't found on this server, disabling Disguise Support");
+					getConfig().set("Disguise Support.Enabled", false);
+					saveConfig();
+				}
 		}
 
 		// On enable set the times form the config

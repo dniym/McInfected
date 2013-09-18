@@ -1,0 +1,201 @@
+package me.xxsniperzzxx_sd.infected.Tools;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+
+public class ItemHandler {
+
+
+	public static ItemStack getItemStack(String Path) {
+		ItemStack is = new ItemStack(getItem(Path));
+		is.setDurability(getItemData(Path));
+		return is;
+	}
+
+	public static Integer getItemID(String Path) {
+		String itemid = null;
+		String string = Path;
+		if (string.contains(":"))
+		{
+			String[] ss = string.split(":");
+			itemid = ss[0];
+		} else if (string.contains(","))
+		{
+			String[] ss = string.split(",");
+			itemid = ss[0];
+		} else if (string.contains("-"))
+		{
+			String[] ss = string.split("-");
+			itemid = ss[0];
+		} else if (string.contains("@"))
+		{
+			String[] ss = string.split("@");
+			itemid = ss[0];
+		} else if (string.contains("%"))
+		{
+			String[] ss = string.split("%");
+			itemid = ss[0];
+		} else
+			itemid = string;
+		int i = Integer.valueOf(itemid);
+		return i;
+	}
+
+	private static Short getItemData(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains(":"))
+		{
+			String[] s = string.split(":");
+			if (s[1].contains(","))
+			{
+				String[] ss = s[1].split(",");
+				itemdata = ss[0];
+			} else if (s[1].contains("-"))
+			{
+				String[] ss = s[1].split("-");
+				itemdata = ss[0];
+			} else if (s[1].contains("@"))
+			{
+				String[] ss = s[1].split("@");
+				itemdata = ss[0];
+			} else if (s[1].contains("%"))
+			{
+				String[] ss = s[1].split("%");
+				itemdata = ss[0];
+			} else
+				itemdata = "0";
+
+		} else
+			itemdata = "0";
+		Short s = Short.valueOf(itemdata);
+		return s;
+	}
+
+	private static Integer getItemAmount(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains(","))
+		{
+			String[] s = string.split(",");
+			if (s[1].contains("-"))
+			{
+				String[] ss = s[1].split("-");
+				itemdata = ss[0];
+			} else if (s[1].contains("@"))
+			{
+				String[] ss = s[1].split("@");
+				itemdata = ss[0];
+			} else if (s[1].contains("%"))
+			{
+				String[] ss = s[1].split("%");
+				itemdata = ss[0];
+			} else
+				itemdata = s[1];
+		} else
+			itemdata = "1";
+		return Integer.valueOf(itemdata);
+	}
+
+	private static int getItemEnchant(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains("-"))
+		{
+			String[] s = string.split("-");
+			if (s[1].contains("@"))
+			{
+				String[] ss = s[1].split("@");
+				itemdata = ss[0];
+			} else if (s[1].contains("%"))
+			{
+				String[] ss = s[1].split("%");
+				itemdata = ss[0];
+			} else
+			{
+				itemdata = s[1];
+			}
+		} else
+			itemdata = "0";
+		return Integer.valueOf(itemdata);
+	}
+
+	private static int getItemEnchantLvl(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains("@"))
+		{
+			String[] s = string.split("@");
+			if (s[1].contains("-"))
+			{
+				String[] ss = s[1].split("-");
+				itemdata = ss[0];
+			} else if (s[1].contains("%"))
+			{
+				String[] ss = s[1].split("%");
+				itemdata = ss[0];
+			} else
+			{
+				itemdata = s[1];
+			}
+		} else
+			itemdata = "1";
+		return Integer.valueOf(itemdata);
+	}
+
+	private static String getItemName(String Path) {
+		String itemName = null;
+		if (Path.contains("%"))
+		{
+			String[] ss = Path.split("%");
+			itemName = ChatColor.translateAlternateColorCodes('&', ss[1]);
+		} else
+		{
+			itemName = null;
+		}
+		return itemName;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static ItemStack getItem(String location) {
+		ItemStack is = null;
+		if (Material.getMaterial(getItemID(location)) != null)
+			is = new ItemStack(Material.getMaterial(getItemID(location)),
+					getItemAmount(String.valueOf(location)));
+		else
+			is = new ItemStack(Material.AIR);
+
+		is.setDurability(getItemData(location));
+
+		if (!(getItemName(location) == null))
+		{
+			ItemMeta im = is.getItemMeta();
+			String name = getItemName(location).replaceAll("_", " ");
+			im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+			is.setItemMeta(im);
+		}
+		if (location.contains("-"))
+		{
+			int i;
+			String enchants[] = location.split("-");
+			for (i = 1; i != enchants.length; i++)
+			{
+				if (enchants[i] != null)
+				{
+					enchants[i] = "-" + enchants[i];
+					is.addUnsafeEnchantment(Enchantment.getById(getItemEnchant(enchants[i])), getItemEnchantLvl(enchants[i]));
+				}
+			}
+		}
+		return is;
+	}
+	
+	
+	 
+	 
+	
+}
