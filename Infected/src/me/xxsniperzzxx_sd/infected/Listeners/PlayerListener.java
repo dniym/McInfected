@@ -20,6 +20,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -346,7 +347,7 @@ public class PlayerListener implements Listener {
 					{
 						Methods.respawn(zombie);
 					}
-					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
+					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 2);
 					if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
 					{
 						zombie.addPotionEffect(new PotionEffect(
@@ -370,7 +371,7 @@ public class PlayerListener implements Listener {
 								Main.humans.add(online.getName());
 								online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
 								online.setHealth(20);
-								online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
+								online.playEffect(online.getLocation(), Effect.SMOKE, 2);
 							}
 						}
 					}
@@ -557,7 +558,7 @@ public class PlayerListener implements Listener {
 					{
 						Methods.respawn(zombie);
 					}
-					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
+					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 2);
 					if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
 					{
 						zombie.addPotionEffect(new PotionEffect(
@@ -581,7 +582,7 @@ public class PlayerListener implements Listener {
 								Main.humans.add(online.getName());
 								online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
 								online.setHealth(20);
-								online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
+								online.playEffect(online.getLocation(), Effect.SMOKE, 2);
 							}
 						}
 					}
@@ -862,6 +863,15 @@ public class PlayerListener implements Listener {
 				{
 					victim = (Player) e.getEntity();
 					Snowball ball = (Snowball) e.getDamager();
+				
+					if (ball.getShooter() instanceof Player)
+						killer = (Player) ball.getShooter();
+				}
+				
+				else if (e.getDamager() instanceof Egg)
+				{
+					victim = (Player) e.getEntity();
+					Egg ball = (Egg) e.getDamager();
 				
 					if (ball.getShooter() instanceof Player)
 						killer = (Player) ball.getShooter();

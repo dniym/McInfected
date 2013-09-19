@@ -132,6 +132,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
+		System.out.println("===== Infected =====");
 		// Setup the scoreboard
 		manager = Bukkit.getScoreboardManager();
 		Main.voteBoard = manager.getNewScoreboard();
@@ -198,6 +199,7 @@ public class Main extends JavaPlugin {
 		{
 			if (!(getServer().getPluginManager().getPlugin("Vault") == null))
 			{
+				System.out.println("Vault support has been enabled!");
 				setupEconomy();
 			} else
 			{
@@ -206,7 +208,8 @@ public class Main extends JavaPlugin {
 				saveConfig();
 
 			}
-		}
+		}else
+			System.out.println("Vault Support is Disabled");
 
 		// Check if the plugin addons are there
 		if (getConfig().getBoolean("CrackShot Support.Enable"))
@@ -221,8 +224,10 @@ public class Main extends JavaPlugin {
 			{
 			CrackShotApi CSApi = new CrackShotApi(this);
 			pm.registerEvents(CSApi, this);
+			System.out.println("CrackShot support has been enabled!");
 			}
-		}
+		}else
+			System.out.println("CrackShot Support is Disabled");
 
 		// Check if the plugin addons are there
 		if (getConfig().getBoolean("TagAPI Support.Enable"))
@@ -231,20 +236,25 @@ public class Main extends JavaPlugin {
 			{
 
 				System.out.println(Main.I + "TagApi wasn't found on this server, disabling TagApi Support");
-				getConfig().set("TagApi Support.Enable", false);
+				getConfig().set("TagAPI Support.Enable", false);
 				saveConfig();
 			} else
 			{
 				TagApi TagApi = new TagApi(this);
 				pm.registerEvents(TagApi, this);
+				System.out.println("TagApi support has been enabled!");
 			}
-		}
+		}else
+			System.out.println("TagAPI Support is Disabled");
+		
+		//If disguises are a go
 		if (getConfig().getBoolean("Disguise Support.Enabled"))
 		{
+			//If we're looking for disguisecraft
 			if(getConfig().getString("Disguise Support.Disguise Plugin").equalsIgnoreCase("DisguiseCraft"))	
 				if (!(getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
 				{
-					setupDisguiseCraft();
+					Main.dcAPI = DisguiseCraft.getAPI();
 					Disguiser = getServer().getPluginManager().getPlugin("DisguiseCraft");
 				} else
 				{
@@ -252,6 +262,8 @@ public class Main extends JavaPlugin {
 					getConfig().set("Disguise Support.Enabled", false);
 					saveConfig();
 				}
+			
+			//If were looking for iDisguise
 			else if(getConfig().getString("Disguise Support.Disguise Plugin").equalsIgnoreCase("iDisguise"))	
 
 				if (!(getServer().getPluginManager().getPlugin("iDisguise") == null))
@@ -264,7 +276,14 @@ public class Main extends JavaPlugin {
 					getConfig().set("Disguise Support.Enabled", false);
 					saveConfig();
 				}
-		}
+			else{
+				System.out.println(Main.I + "Infected doesn't support that Disguise Plugin just yet... disabling Disguise Support");
+				getConfig().set("Disguise Support.Enabled", false);
+				saveConfig();
+			}
+			System.out.println("For Disguise Support we're using " + Disguiser);
+		}else
+			System.out.println("Disguise Support is Disabled");
 
 		// On enable set the times form the config
 		Main.voteTime = getConfig().getInt("Time.Voting Time");
@@ -362,13 +381,14 @@ public class Main extends JavaPlugin {
 
 			// Votes
 			Main.voteList.setDisplaySlot(DisplaySlot.SIDEBAR);
-			Main.voteList.setDisplayName("Votes");
+			Main.voteList.setDisplayName(ChatColor.RED+ "" + ChatColor.BOLD + "Votes");
 
 			// Playing
 			Main.playingList.setDisplaySlot(DisplaySlot.SIDEBAR);
-			Main.playingList.setDisplayName("Playing");
+			Main.playingList.setDisplayName(ChatColor.RED+ "" + ChatColor.BOLD + "Playing");
 
 		}
+		System.out.println("====================");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -415,12 +435,6 @@ public class Main extends JavaPlugin {
 				}
 		
 	}
-
-	// Setup DisguiseCraft
-	public void setupDisguiseCraft() {
-		Main.dcAPI = DisguiseCraft.getAPI();
-	}
-
 	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null)

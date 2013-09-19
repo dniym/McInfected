@@ -5,7 +5,7 @@ import java.util.List;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
+import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -61,7 +61,7 @@ public class TeleportFix implements Listener {
 		{
 			if (Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player))
 			{
-				if (Main.config.getBoolean("DisguiseCraft Support"))
+				if (Main.config.getBoolean("Disguise Support.Enabled"))
 				{
 					if (visible)
 					{

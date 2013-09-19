@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Menus;
-import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1885,7 +1885,7 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(plugin.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + plugin.v);
 				player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev:" + ChatColor.GREEN + " http://bit.ly/QN6Xg5");
 				if (player.hasPermission("Infected.SetUp"))
-					player.sendMessage(plugin.I + ChatColor.GRAY + "DisguiseCraft Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("DisguiseCraft Support") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support.Enabled:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Disguise Support") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + ChatColor.GREEN + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))

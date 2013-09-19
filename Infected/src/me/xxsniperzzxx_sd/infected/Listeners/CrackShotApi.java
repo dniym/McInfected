@@ -22,7 +22,7 @@ public class CrackShotApi implements Listener {
 		this.plugin = instance;
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerGetShot(WeaponDamageEntityEvent e) {
 
 		//Is the victim a player?
@@ -35,8 +35,8 @@ public class CrackShotApi implements Listener {
 			if(Infected.isPlayerInGame(victim)){
 
 				//Get the attacker
-				if(e.getDamager() instanceof Player)
-					killer = (Player)e.getDamager();
+				if(e.getPlayer() instanceof Player)
+					killer = e.getPlayer();
 
 				//Make sure they arn't on the same team
 				if (Infected.isPlayerHuman(killer) && Infected.isPlayerHuman(victim))
@@ -52,35 +52,22 @@ public class CrackShotApi implements Listener {
 
 					//Before a zombie is chosen	
 					else if(Infected.getGameState() == GameState.BEFOREINFECTED){
-						if(victim.getHealth() - e.getDamage() <= 0){
-							
-							victim.sendMessage(Main.I + "You almost died before the game even started!");
-							victim.setHealth(20);
-							victim.setFoodLevel(20);
-							Methods.handleKillStreaks(true, victim);
-							victim.setFoodLevel(20);
-							Methods.respawn(victim);
-							victim.setFallDistance(0F);
-						}
+						e.setDamage(0);
+						e.setCancelled(true);
 					}
 				
 					//If the game has fully started
 					else{
-						//If it doesn't end up null (In case a mob hit them)
-						if ((victim != null ) && (killer != null)){
-							
-							//Make sure both are in the game(you never know :P)
-							if(Infected.isPlayerInGame(killer) && Infected.isPlayerInGame(victim)){	
-								
-								//Saves who hit the person last
-								Main.Lasthit.put(victim.getName(), killer.getName());
-								
-								//If it was enough to kill the player
-								if(victim.getHealth() - e.getDamage() <= 0){
-										Methods.playerDies(killer, victim);
-								}
-							}
+						
+						//Saves who hit the person last
+						Main.Lasthit.put(victim.getName(), killer.getName());
+						
+						//If it was enough to kill the player
+						if(victim.getHealth() - e.getDamage() <= 0){
+							e.setDamage(0);
+							Methods.playerDies(killer, victim);
 						}
+						
 					}
 				}
 			}

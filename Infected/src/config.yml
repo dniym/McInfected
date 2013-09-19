@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 1.9.2
+# Default Infected Config, Last edited in 1.9.3
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 # See Infecteds dev page for help
 # http://dev.bukkit.org/server-mods/infected-core
@@ -20,16 +20,6 @@
 # # What plugin do you use for diguises(Valid ones are DisguiseCraft or iDisguise) 
 #   Disguise Plugin: DisguiseCraft
 # #
-# # Chances for players to become a special zombie
-# # Chances work like this:
-# # Chance to be a regular is 100, and chance for everything else is 20
-# # All together its 140
-# # So if the random is <101 theyll be a regular zombie
-# # If its >100 and <121 they'll be a pig zombie
-# # If its >120 and <141 they'll be a npc zombie
-# # Chance To Be Pig Zombie: 20
-# # Chance To Be NPC Zombie: 20
-# #
 # Zombie Abilities: false
 # #
 # Class Support: true
@@ -46,7 +36,7 @@
 #   Enable: true
 # #
 # # Want to use TagApi?
-# TagApi Support:
+# TagAPI Support:
 #   Enable: true
 # #
 # ScoreBoard Support: true
@@ -182,8 +172,8 @@
 Check For Updates:
   Enable: true
 
-Use Disguises:
-  Enabed: true
+Disguise Support:
+  Enabled: true
   Disguise Plugin: DisguiseCraft
 
 Zombie Abilities: false
@@ -195,10 +185,10 @@ Vault Support:
   Reward: 100
   Symbol: C
   
-# CrackShot Support:
-#   Enable: true
+CrackShot Support:
+  Enable: true
   
-TagApi Support:
+TagAPI Support:
   Enable: true
   
 ScoreBoard Support: true

@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.Tools.Disguise;
+package me.xxsniperzzxx_sd.infected.Disguise;
 
 import me.xxsniperzzxx_sd.infected.Main;
 

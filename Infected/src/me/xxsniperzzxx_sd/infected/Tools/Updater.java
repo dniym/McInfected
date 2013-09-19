@@ -13,6 +13,8 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
+
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -277,6 +279,10 @@ public class Updater {
 	}
 
 	public String getVersion() {
+		if(versionTitle == null){
+			System.out.println("Bukkits down, so we couldn't check for an update!");
+			return "0.0.0";
+		}
 		String[] s1 = versionTitle.split("v");
 		String s2 = s1[1];
 		return s2;
@@ -544,6 +550,10 @@ public class Updater {
 		if (type != UpdateType.NO_VERSION_CHECK)
 		{
 			String version = plugin.getDescription().getVersion();
+			if(title == null){
+				result = Updater.UpdateResult.NO_UPDATE;
+				return false;
+			}
 			if (title.split("v").length == 2)
 			{
 				String remoteVersion = title.split("v")[1].split(" ")[0]; // Get

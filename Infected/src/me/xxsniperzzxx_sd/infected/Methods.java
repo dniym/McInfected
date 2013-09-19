@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
-import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +19,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -368,7 +367,7 @@ public class Methods {
 			Main.Winners.remove(zombie.getName());
 			if (Main.config.getBoolean("New Zombie Tp"))
 				Methods.respawn(zombie);
-			zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
+			zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 5);
 			if (Main.config.getBoolean("Zombie Abilities") == true)
 			{
 				zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
@@ -399,7 +398,7 @@ public class Methods {
 						}
 						online.sendMessage(Methods.sendMessage("Game_FirstInfected", zombie, null, null));
 						online.setHealth(20);
-						online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
+						online.playEffect(online.getLocation(), Effect.SMOKE, 2);
 
 					}
 				}
@@ -431,7 +430,7 @@ public class Methods {
 						Main.possibleArenas.remove(parenas);
 					} else if (!parenas.contains("."))
 					{
-						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + parenas));
+						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + ""+ ChatColor.ITALIC + parenas));
 						if(Main.Votes.get(parenas) != null) score.setScore(Main.Votes.get(parenas));
 						else{
 							score.setScore(1);
@@ -440,9 +439,9 @@ public class Methods {
 					}
 				}
 
-				Score score = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Humans:"));
+				Score score = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN +""+ ChatColor.ITALIC + "Humans:"));
 				score.setScore(Main.humans.size());
-				Score score2 = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Zombies:"));
+				Score score2 = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + ""+ ChatColor.ITALIC +"Zombies:"));
 				score2.setScore(Main.zombies.size());
 
 			} else
@@ -461,7 +460,7 @@ public class Methods {
 						Main.possibleArenas.remove(parenas);
 					} else if (!parenas.contains("."))
 					{
-						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + parenas));
+						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW +""+ ChatColor.ITALIC + parenas));
 						if(Main.Votes.get(parenas) != null) score.setScore(Main.Votes.get(parenas));
 						else{
 							score.setScore(1);
@@ -472,8 +471,8 @@ public class Methods {
 				}
 
 				// Reset Team board
-				Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Humans:"));
-				Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.DARK_RED + "Zombies:"));
+				Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + ""+ ChatColor.ITALIC +"Humans:"));
+				Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.DARK_RED + ""+ ChatColor.ITALIC +"Zombies:"));
 
 			}
 		}
@@ -503,7 +502,7 @@ public class Methods {
 		Main.zombies.add(newzombie.getName());
 		Main.Winners.remove(newzombie.getName());
 		Main.inLobby.remove(newzombie.getName());
-		newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
+		newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 2);
 		Methods.zombifyPlayer(newzombie);
 		newzombie.setHealth(20);
 		Methods.equipZombies(newzombie);
@@ -628,7 +627,7 @@ public class Methods {
 		if (Main.config.getBoolean("Default Classes.Use"))
 			Main.humanClasses.put(human.getName(), Main.config.getString("Default Classes.Human"));
 
-		if (Main.config.getBoolean("TagApi Support.Enable"))
+		if (Main.config.getBoolean("TagAPI Support.Enable"))
 			TagAPI.refreshPlayer(human);
 		if (Main.humanClasses.containsKey(human.getName()))
 		{
@@ -672,7 +671,7 @@ public class Methods {
 			Main.zombieClasses.put(zombie.getName(), Main.config.getString("Default Classes.Zombie"));
 
 		updateScoreBoard();
-		if (Main.config.getBoolean("TagApi Support.Enable"))
+		if (Main.config.getBoolean("TagAPI Support.Enable"))
 			TagAPI.refreshPlayer(zombie);
 		// Give infected their armor
 

@@ -2,12 +2,12 @@ package me.xxsniperzzxx_sd.infected;
 
 import java.util.Random;
 
+import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
-import me.xxsniperzzxx_sd.infected.Tools.Disguise.DisguisePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
