@@ -15,10 +15,11 @@
 # # +======================================================+ #
 # #
 # # Do you want zombies to look like zombies?
-# Use Disguises:
-#   Enabed: true
-# # What plugin do you use for diguises(Valid ones are DisguiseCraft or iDisguise) 
-#   Disguise Plugin: DisguiseCraft
+# Disguise Support:
+#   Enabled: true
+# # Enable what you use and disable what you dont
+#   DisguiseCraft: true
+#   iDisguise: true
 # #
 # Zombie Abilities: false
 # #
@@ -174,8 +175,9 @@ Check For Updates:
 
 Disguise Support:
   Enabled: true
-  Disguise Plugin: DisguiseCraft
-
+  DisguiseCraft: true
+  iDisguise: true
+  
 Zombie Abilities: false
 
 Class Support: true

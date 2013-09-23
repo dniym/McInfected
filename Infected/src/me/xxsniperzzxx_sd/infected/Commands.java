@@ -17,6 +17,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,6 +46,16 @@ public class Commands implements CommandExecutor {
 			String creating = plugin.Creating.get(sender.getName());
 			if (sender.getName().equalsIgnoreCase("xXSniperzzXx_SD") && args.length >= 1 && args[0].equalsIgnoreCase("Test"))
 			{
+				System.out.println(DisguisePlayer.isPlayerDisguised((Player)sender));
+				if(args.length == 2){
+					DisguisePlayer.disguisePlayer((Player)sender);
+					Methods.tp2LobbyAfter((Player)sender);
+					System.out.println(DisguisePlayer.isPlayerDisguised((Player)sender));
+				}
+				if(args.length == 3){
+					DisguisePlayer.unDisguisePlayer((Player)sender);
+					System.out.println(DisguisePlayer.isPlayerDisguised((Player)sender));
+				}
 				// TESTING STUFF
 			}
 			// /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,7 +312,7 @@ public class Commands implements CommandExecutor {
 							plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
 						player.setHealth(20.0);
 						player.setFoodLevel(20);
-						player.playEffect(player.getLocation(), Effect.SMOKE, 1);
+						player.playEffect(player.getLocation(), Effect.SMOKE, BlockFace.UP);
 						Methods.equipHumans(player);
 						Infected.delPlayerInLobby(player);
 						return true;

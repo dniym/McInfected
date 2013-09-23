@@ -347,7 +347,7 @@ public class PlayerListener implements Listener {
 					{
 						Methods.respawn(zombie);
 					}
-					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 2);
+					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
 					if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
 					{
 						zombie.addPotionEffect(new PotionEffect(
@@ -371,7 +371,7 @@ public class PlayerListener implements Listener {
 								Main.humans.add(online.getName());
 								online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
 								online.setHealth(20);
-								online.playEffect(online.getLocation(), Effect.SMOKE, 2);
+								online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
 							}
 						}
 					}
@@ -558,7 +558,7 @@ public class PlayerListener implements Listener {
 					{
 						Methods.respawn(zombie);
 					}
-					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 2);
+					zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, BlockFace.UP);
 					if (plugin.getConfig().getBoolean("Zombie Abilties") == true)
 					{
 						zombie.addPotionEffect(new PotionEffect(
@@ -582,7 +582,7 @@ public class PlayerListener implements Listener {
 								Main.humans.add(online.getName());
 								online.sendMessage(Main.I + ChatColor.RED + zombie.getName() + " has became the new Infected!");
 								online.setHealth(20);
-								online.playEffect(online.getLocation(), Effect.SMOKE, 2);
+								online.playEffect(online.getLocation(), Effect.SMOKE, BlockFace.UP);
 							}
 						}
 					}
@@ -791,15 +791,14 @@ public class PlayerListener implements Listener {
 
 							if (Main.humans.contains(victim))
 							{
-								for (Player victimlaying : Bukkit.getServer().getOnlinePlayers())
+								for (Player playing : Bukkit.getServer().getOnlinePlayers())
 								{
-									if (Infected.isPlayerInGame(victimlaying))
+									if (Infected.isPlayerInGame(playing))
 									{
-										victimlaying.sendMessage(Methods.sendMessage("Game_GotInfected", victim, null, null));
+										playing.sendMessage(Methods.sendMessage("Game_GotInfected", victim, null, null));
 									}
 								}
 							}
-						}
 
 						if (Infected.isPlayerHuman(victim))
 						{
@@ -830,6 +829,7 @@ public class PlayerListener implements Listener {
 						}
 					}
 				}
+			}
 			}
 		}
 	}
@@ -876,7 +876,7 @@ public class PlayerListener implements Listener {
 					if (ball.getShooter() instanceof Player)
 						killer = (Player) ball.getShooter();
 				}
-				
+				if(killer instanceof Player){
 				//Make sure they arn't on the same team
 				if (Infected.isPlayerHuman(killer) && Infected.isPlayerHuman(victim))
 					e.setCancelled(true);
@@ -928,6 +928,8 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
+			}
+				
 		}
 	}
 

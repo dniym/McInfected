@@ -151,7 +151,8 @@ public class Methods {
 		{
 			applyAbilities(player);
 		}
-		DisguisePlayer.disguisePlayer(player);
+		if(Main.config.getBoolean("Disguise Support.Enabled"))
+			DisguisePlayer.disguisePlayer(player);
 
 	}
 
@@ -346,6 +347,7 @@ public class Methods {
 		return times;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void newZombieSetUpEveryOne() {
 		Random r = new Random();
 		if (Main.inGame.size() <= 0)
@@ -478,6 +480,7 @@ public class Methods {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void joinInfectHuman(Player player) {
 		Player newzombie = player;
 		if (!Main.Timein.containsKey(newzombie.getName()))
@@ -877,7 +880,7 @@ public class Methods {
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
 		Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
-		if (Infected.isPlayerInGame(player) && Main.config.getBoolean("Disguise Support.Enabled"))
+		if (Main.config.getBoolean("Disguise Support.Enabled"))
 			if (DisguisePlayer.isPlayerDisguised(player))
 				DisguisePlayer.unDisguisePlayer(player);
 

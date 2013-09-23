@@ -6,11 +6,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.math.BigInteger;
-import net.minecraft.server.v1_6_R2.NBTBase;
-import net.minecraft.server.v1_6_R2.NBTTagCompound;
-import net.minecraft.server.v1_6_R2.NBTTagList;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryCustom;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
+
+import net.minecraft.server.v1_6_R3.NBTBase;
+import net.minecraft.server.v1_6_R3.NBTTagCompound;
+import net.minecraft.server.v1_6_R3.NBTTagList;
+
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -44,7 +46,7 @@ public class ItemSerialization {
 		for (int i = 0; i < inventory.getSize(); i++)
 		{
 			NBTTagCompound outputObject = new NBTTagCompound();
-			net.minecraft.server.v1_6_R2.ItemStack craft = getCraftVersion(inventory.getItem(i));
+			net.minecraft.server.v1_6_R3.ItemStack craft = getCraftVersion(inventory.getItem(i));
 			// Convert the item stack to a NBT compound
 			if (craft != null)
 				craft.save(outputObject);
@@ -73,14 +75,14 @@ public class ItemSerialization {
 			// IsEmpty
 			if (!inputObject.isEmpty())
 			{
-				inventory.setItem(i, CraftItemStack.asBukkitCopy(net.minecraft.server.v1_6_R2.ItemStack.createStack(inputObject)));
+				inventory.setItem(i, CraftItemStack.asBukkitCopy(net.minecraft.server.v1_6_R3.ItemStack.createStack(inputObject)));
 			}
 		}
 		// Serialize that array
 		return inventory;
 	}
 
-	private static net.minecraft.server.v1_6_R2.ItemStack getCraftVersion(ItemStack stack) {
+	private static net.minecraft.server.v1_6_R3.ItemStack getCraftVersion(ItemStack stack) {
 		if (stack != null)
 			return CraftItemStack.asNMSCopy(stack);
 		return null;

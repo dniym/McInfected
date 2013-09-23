@@ -1,3 +1,4 @@
+
 package me.xxsniperzzxx_sd.infected.Tools;
 
 import java.io.*;
@@ -14,9 +15,9 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
-
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+
 
 /**
  * Check dev.bukkit.org to find updates for a given plugin, and download the
@@ -39,6 +40,7 @@ import org.bukkit.plugin.Plugin;
  * @author H31IX
  */
 public class Updater {
+
 	private Plugin plugin;
 	private UpdateType type;
 	private String versionTitle;
@@ -67,7 +69,7 @@ public class Updater {
 																					// project's
 																					// RSS
 																					// feed
-	private String[] noUpdateTag = { "InfLib -DEV", "-PRE" }; // If the version
+	private String[] noUpdateTag = { "-DEV", "-CB", "-PRE" }; // If the version
 																// number
 																// contains one
 																// of these,
@@ -132,6 +134,7 @@ public class Updater {
 		 * to NO_DOWNLOAD, it wasn't downloaded.
 		 */
 		UPDATE_AVAILABLE(7);
+
 		private static final Map<Integer, Updater.UpdateResult> valueList = new HashMap<Integer, Updater.UpdateResult>();
 		private final int value;
 
@@ -177,6 +180,7 @@ public class Updater {
 		 * actually download anything.
 		 */
 		NO_DOWNLOAD(3);
+
 		private static final Map<Integer, Updater.UpdateType> valueList = new HashMap<Integer, Updater.UpdateType>();
 		private final int value;
 
@@ -279,7 +283,8 @@ public class Updater {
 	}
 
 	public String getVersion() {
-		if(versionTitle == null){
+		if (versionTitle == null)
+		{
 			System.out.println("Bukkits down, so we couldn't check for an update!");
 			return "0.0.0";
 		}
@@ -550,7 +555,8 @@ public class Updater {
 		if (type != UpdateType.NO_VERSION_CHECK)
 		{
 			String version = plugin.getDescription().getVersion();
-			if(title == null){
+			if (title == null)
+			{
 				result = Updater.UpdateResult.NO_UPDATE;
 				return false;
 			}

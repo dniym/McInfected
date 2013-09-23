@@ -62,7 +62,6 @@ public class DisguiseIDisguise {
 	public static void unDisguisePlayer(Player player){
 		
 		Main.idAPI.undisguiseToAll(player);
-		disguisePlayer(player);
 	}
 
 

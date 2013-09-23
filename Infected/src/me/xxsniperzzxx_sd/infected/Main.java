@@ -11,7 +11,6 @@ import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
@@ -45,7 +44,7 @@ import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 public class Main extends JavaPlugin {
 
 	// Initialize all the variables
-	public static String bVersion = "1.6.2";
+	public static String bVersion = "1.6.4";
 	public static int currentTime = 0;
 	public static String v = null;
 	public static enum GameState {INLOBBY, VOTING, BEFOREINFECTED, STARTED, GAMEOVER, DISABLED}; 
@@ -80,13 +79,13 @@ public class Main extends JavaPlugin {
 	public static HashMap<String, Integer> Food = new HashMap<String, Integer>();
 	public static HashMap<String, ItemStack[]> Armor = new HashMap<String, ItemStack[]>();
 	public static HashMap<String, ItemStack[]> Inventory = new HashMap<String, ItemStack[]>();
-	
+	public static HashMap<String, Location> Spot = new HashMap<String, Location>();
 
 	public static HashMap<Location, Material> Blocks = new HashMap<Location, Material>();
 	public static HashMap<Location, ItemStack[]> Chests = new HashMap<Location, ItemStack[]>();
 	
 	public static String I = ChatColor.DARK_RED + "" + "«†" + ChatColor.RESET + ChatColor.DARK_RED + "Infected" + ChatColor.DARK_RED + "†»" + ChatColor.RESET + ChatColor.GRAY + " ";
-	public static HashMap<String, Location> Spot = new HashMap<String, Location>();
+	
 	public static String playingin = null;
 	public static int timestart;
 	public static int queuedtpback;
@@ -110,8 +109,6 @@ public class Main extends JavaPlugin {
 	public String currentBukkitVersion = null;
 	public String updateBukkitVersion = null;
 
-	// Item Serializer class
-	public static ItemSerialization is = null;
 
 	// Scoreboard
 	private ScoreboardManager manager;
@@ -133,16 +130,16 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 
 		System.out.println("===== Infected =====");
-		// Setup the scoreboard
-		manager = Bukkit.getScoreboardManager();
-		Main.voteBoard = manager.getNewScoreboard();
-		Main.playingBoard = manager.getNewScoreboard();
-		Main.playingList = Main.playingBoard.registerNewObjective("playing", "dummy");
-		Main.voteList = Main.voteBoard.registerNewObjective("votes", "dummy");
 		
-
-		// Item Serialization
-		Main.is = new ItemSerialization();
+		// Setup the scoreboard
+		if (getConfig().getBoolean("ScoreBoard Support"))
+		{
+			manager = Bukkit.getScoreboardManager();
+			Main.voteBoard = manager.getNewScoreboard();
+			Main.playingBoard = manager.getNewScoreboard();
+			Main.playingList = Main.playingBoard.registerNewObjective("playing", "dummy");
+			Main.voteList = Main.voteBoard.registerNewObjective("votes", "dummy");
+		}
 
 		// Create Configs and files
 		Infected.filesGetArenas().options().copyDefaults(true);
@@ -158,10 +155,6 @@ public class Main extends JavaPlugin {
 		Infected.filesSafeAllButConfig();
 		saveConfig();
 
-		
-		
-		
-		
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
@@ -200,8 +193,15 @@ public class Main extends JavaPlugin {
 			if (!(getServer().getPluginManager().getPlugin("Vault") == null))
 			{
 				System.out.println("Vault support has been enabled!");
-				setupEconomy();
-			} else
+			
+				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+				if (economyProvider != null)
+				{
+					Main.economy = economyProvider.getProvider();
+				}
+				
+			} 
+			else
 			{
 				System.out.println(Main.I + "Vault wasn't found on this server, Disabling Vault Support");
 				getConfig().set("Vault Support.Enable", false);
@@ -251,20 +251,21 @@ public class Main extends JavaPlugin {
 		if (getConfig().getBoolean("Disguise Support.Enabled"))
 		{
 			//If we're looking for disguisecraft
-			if(getConfig().getString("Disguise Support.Disguise Plugin").equalsIgnoreCase("DisguiseCraft"))	
+			if(getConfig().getBoolean("Disguise Support.DisguiseCraft")){
 				if (!(getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
 				{
 					Main.dcAPI = DisguiseCraft.getAPI();
 					Disguiser = getServer().getPluginManager().getPlugin("DisguiseCraft");
-				} else
+				}
+				else
 				{
-					System.out.println(Main.I + "DisguiseCraft wasn't found on this server, disabling Disguise Support");
-					getConfig().set("Disguise Support.Enabled", false);
+					System.out.println("DisguiseCraft wasn't found on this server, disabling DisguiseCraft Support");
+					getConfig().set("Disguise Support.DisguiseCraft", false);
 					saveConfig();
 				}
 			
-			//If were looking for iDisguise
-			else if(getConfig().getString("Disguise Support.Disguise Plugin").equalsIgnoreCase("iDisguise"))	
+			}//If were looking for iDisguise
+			if(getConfig().getBoolean("Disguise Support.iDisguise")){
 
 				if (!(getServer().getPluginManager().getPlugin("iDisguise") == null))
 				{
@@ -272,16 +273,18 @@ public class Main extends JavaPlugin {
 					Disguiser = getServer().getPluginManager().getPlugin("iDisguise");
 				} else
 				{
-					System.out.println(Main.I + "iDisguise wasn't found on this server, disabling Disguise Support");
-					getConfig().set("Disguise Support.Enabled", false);
+					System.out.println("iDisguise wasn't found on this server, disabling iDisguise Support");
+					getConfig().set("Disguise Support.iDisguise", false);
 					saveConfig();
 				}
+			}
 			else{
-				System.out.println(Main.I + "Infected doesn't support that Disguise Plugin just yet... disabling Disguise Support");
+				System.out.println(Main.I + "No Valid Disguise Plugins found... disabling Disguise Support");
 				getConfig().set("Disguise Support.Enabled", false);
 				saveConfig();
 			}
-			System.out.println("For Disguise Support we're using " + Disguiser);
+			if(Disguiser != null)
+				System.out.println("For Disguise Support we're using " + Disguiser);
 		}else
 			System.out.println("Disguise Support is Disabled");
 
@@ -310,11 +313,6 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(GrenadeListener, this);
 		pm.registerEvents(SignListener, this);
 		pm.registerEvents(TeleportFix, this);
-
-		// Clear the blocks DB because a game couldnt have started before the
-		// plugins up
-		Main.Chests.clear();
-		Main.Blocks.clear();
 
 		// Do the info signs (Updating the info)
 		if (getConfig().getBoolean("Info Signs.Enabled"))
@@ -376,7 +374,7 @@ public class Main extends JavaPlugin {
 		}
 
 		// Setup the scoreboards
-		if (Main.config.getBoolean("ScoreBoard Support"))
+		if (getConfig().getBoolean("ScoreBoard Support"))
 		{
 
 			// Votes
@@ -400,6 +398,7 @@ public class Main extends JavaPlugin {
 			if (player != null)
 				if (Main.inGame.contains(player.getName()))
 				{
+					player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 					player.sendMessage(Main.I + "Server was reloaded!");
 					player.setHealth(20.0);
 					player.setFoodLevel(20);
@@ -433,16 +432,6 @@ public class Main extends JavaPlugin {
 						player.setHealth(Main.Health.get(player.getName()));
 					}
 				}
-		
-	}
-	private boolean setupEconomy() {
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null)
-		{
-			Main.economy = economyProvider.getProvider();
-		}
-
-		return (Main.economy != null);
 	}
 
 }
