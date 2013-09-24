@@ -820,7 +820,7 @@ public class Methods {
 						playing.sendMessage(Main.I + (Infected.isPlayerHuman(player) ?  ChatColor.RED + player.getName() : ChatColor.GREEN + player.getName()) + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(player.getName()));
 
 
-			if (!(Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(player.getName())))))
+			if ((Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(player.getName())))))
 			{
 				String command = null;
 				command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + Main.KillStreaks.get(player.getName()))).replaceAll("<player>", player.getName());
