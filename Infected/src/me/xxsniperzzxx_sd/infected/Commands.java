@@ -1896,7 +1896,7 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(plugin.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + plugin.v);
 				player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev:" + ChatColor.GREEN + " http://bit.ly/QN6Xg5");
 				if (player.hasPermission("Infected.SetUp"))
-					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support.Enabled:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Disguise Support") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + ChatColor.GREEN + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))

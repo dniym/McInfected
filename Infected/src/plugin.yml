@@ -39,6 +39,7 @@ permissions:
             infected.info: true
             infected.suicide: true
             infected.classes: true
+            infected.cmdsets: true
     Infected.Classes:
         default: true
         children:

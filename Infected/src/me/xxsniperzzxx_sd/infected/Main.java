@@ -278,8 +278,8 @@ public class Main extends JavaPlugin {
 					saveConfig();
 				}
 			}
-			else{
-				System.out.println(Main.I + "No Valid Disguise Plugins found... disabling Disguise Support");
+			if(Disguiser == null){
+				System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
 				getConfig().set("Disguise Support.Enabled", false);
 				saveConfig();
 			}
@@ -365,12 +365,8 @@ public class Main extends JavaPlugin {
 		// Make sure the Infected's CB is the same as the server's CB
 		if (!currentBukkitVersion.equalsIgnoreCase(Main.bVersion))
 		{
-			System.out.println("==========================================================");
-			System.out.println("");
 			System.out.println("Your Bukkit Version: |" + currentBukkitVersion + "|");
 			System.out.println("Versions do not match so I am not responsible for any errors on your server!");
-			System.out.println("");
-			System.out.println("==========================================================");
 		}
 
 		// Setup the scoreboards
