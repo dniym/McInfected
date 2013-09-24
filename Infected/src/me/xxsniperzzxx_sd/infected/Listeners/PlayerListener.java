@@ -4,9 +4,12 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 import java.util.ArrayList;
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.Game;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -218,7 +221,7 @@ public class PlayerListener implements Listener {
 					System.out.println("Leave: Leaving, wellin lobby, no timers active");
 
 				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-				Methods.resetp(e.getPlayer());
+				Reset.resetp(e.getPlayer());
 				for (Player players : Bukkit.getOnlinePlayers())
 				{
 					if (Infected.isPlayerInGame(players))
@@ -239,19 +242,19 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: Before Voting(Triggered)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				} else
 				{
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
@@ -277,19 +280,19 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena Before Infected(Triggered)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				} else
 				{
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
@@ -314,16 +317,16 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				}
 
 				// If Not Enough zombies remain
@@ -334,7 +337,7 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					Random r = new Random();
 					int alpha = r.nextInt(Main.inGame.size());
 					String name = Main.inGame.get(alpha);
@@ -357,7 +360,7 @@ public class PlayerListener implements Listener {
 					}
 					Methods.zombifyPlayer(zombie);
 					zombie.setHealth(20);
-					Methods.equipZombies(zombie);
+					Equip.equipZombies(zombie);
 
 					// Inform humans of infected, prepare them
 					for (Player online : Bukkit.getServer().getOnlinePlayers())
@@ -385,19 +388,19 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				} else
 				{
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
@@ -429,7 +432,7 @@ public class PlayerListener implements Listener {
 					System.out.println("Leave: Leaving, wellin lobby, no timers active");
 
 				e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-				Methods.resetp(e.getPlayer());
+				Reset.resetp(e.getPlayer());
 				for (Player players : Bukkit.getOnlinePlayers())
 				{
 					if (Infected.isPlayerInGame(players))
@@ -450,19 +453,19 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: Before Voting(Triggered)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				} else
 				{
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
@@ -488,19 +491,19 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena Before Infected(Triggered)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				} else
 				{
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
@@ -525,16 +528,16 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				}
 
 				// If Not Enough zombies remain
@@ -545,7 +548,7 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					Random r = new Random();
 					int alpha = r.nextInt(Main.inGame.size());
 					String name = Main.inGame.get(alpha);
@@ -568,7 +571,7 @@ public class PlayerListener implements Listener {
 					}
 					Methods.zombifyPlayer(zombie);
 					zombie.setHealth(20);
-					Methods.equipZombies(zombie);
+					Equip.equipZombies(zombie);
 
 					// Inform humans of infected, prepare them
 					for (Player online : Bukkit.getServer().getOnlinePlayers())
@@ -596,19 +599,19 @@ public class PlayerListener implements Listener {
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 					}
 					e.getPlayer().sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
 							players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null, null));
-							Methods.tp2LobbyAfter(players);
+							Reset.tp2LobbyAfter(players);
 						}
 					}
-					Methods.resetInf();
+					Reset.resetInf();
 				} else
 				{
-					Methods.resetp(e.getPlayer());
+					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
@@ -783,7 +786,7 @@ public class PlayerListener implements Listener {
 								
 								//If it was enough to kill the player
 								if(victim.getHealth() - e.getDamage() <= 0){
-									Methods.playerDies(killer, victim);
+									Deaths.playerDies(killer, victim);
 									e.setDamage(0);
 								}
 							}
@@ -824,7 +827,7 @@ public class PlayerListener implements Listener {
 							Game.endGame(false);
 						} else
 						{
-							Methods.equipZombies(victim);
+							Equip.equipZombies(victim);
 							Methods.zombifyPlayer(victim);
 						}
 					}
@@ -917,7 +920,7 @@ public class PlayerListener implements Listener {
 								
 								//If it was enough to kill the player
 								if(victim.getHealth() - e.getDamage() <= 0){
-									Methods.playerDies(killer, victim);
+									Deaths.playerDies(killer, victim);
 									e.setDamage(0);
 								}
 							}

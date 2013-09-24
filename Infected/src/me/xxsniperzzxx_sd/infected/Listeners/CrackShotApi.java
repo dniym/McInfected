@@ -3,8 +3,8 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,7 +65,7 @@ public class CrackShotApi implements Listener {
 						//If it was enough to kill the player
 						if(victim.getHealth() - e.getDamage() <= 0){
 							e.setDamage(0);
-							Methods.playerDies(killer, victim);
+							Deaths.playerDies(killer, victim);
 						}
 						
 					}

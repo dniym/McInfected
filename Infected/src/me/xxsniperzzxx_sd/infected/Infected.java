@@ -1,8 +1,11 @@
 package me.xxsniperzzxx_sd.infected;
 
 import java.util.ArrayList;
+
+import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -449,13 +452,41 @@ public class Infected
     }
     public static void resetPlayer(Player player)
     {
-        Methods.resetp(player);
+        Reset.resetp(player);
     }
     public static void resetPlugin()
     {
-        Methods.reset();
+       Reset.reset();
     }
-    
+
+    public static void playersetLastHumanClass(Player player, String className)
+    {
+    	filesGetPlayers().set("Players." + player.getName().toLowerCase()+".Last Class.Human.", className);
+    	filesSavePlayers();
+    }
+
+    public static String playergetLastHumanClass(Player player)
+    {
+    	if(filesGetPlayers().getString("Players." + player.getName().toLowerCase()+".Last Class.Human") == null)
+    		return "None";
+    	else
+    		return filesGetPlayers().getString("Players." + player.getName().toLowerCase()+".Last Class.Human");
+    }
+
+    public static void playersetLastZombieClass(Player player, String className)
+    {
+    	filesGetPlayers().set("Players." + player.getName().toLowerCase()+".Last Class.Zombie.", className);
+    	filesSavePlayers();
+    }
+
+    public static String playergetLastZombieClass(Player player)
+    {
+    	if(filesGetPlayers().getString("Players." + player.getName().toLowerCase()+".Last Class.Zombie") == null)
+    		return "None";
+    	else
+			return filesGetPlayers().getString("Players." + player.getName().toLowerCase() + ".Last Class.Zombie");
+    }
+
     
     public static String playerGetLastDamage(Player player)
     {

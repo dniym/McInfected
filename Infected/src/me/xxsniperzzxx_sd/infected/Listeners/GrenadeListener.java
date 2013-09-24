@@ -6,6 +6,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -93,7 +94,7 @@ public class GrenadeListener implements Listener {
 									ppl.playEffect(EntityEffect.HURT);
 									if (ppl.getHealth() - Methods.grenadeGetDamage(Integer.valueOf(ItemId)) <= 0)
 									{
-										Methods.playerDies(player, ppl);
+										Deaths.playerDies(player, ppl);
 									} else
 									{
 										ppl.setHealth(ppl.getHealth() - Methods.grenadeGetDamage(Integer.valueOf(ItemId)));

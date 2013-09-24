@@ -32,10 +32,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-
 import de.robingrether.idisguise.api.DisguiseAPI;
 
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
@@ -111,11 +107,6 @@ public class Main extends JavaPlugin {
 
 
 	// Scoreboard
-	private ScoreboardManager manager;
-	public static Scoreboard voteBoard;
-	public static Scoreboard playingBoard;
-	public static Objective voteList;
-	public static Objective playingList;
 	
 
 	// Plugin Addons
@@ -132,14 +123,7 @@ public class Main extends JavaPlugin {
 		System.out.println("===== Infected =====");
 		
 		// Setup the scoreboard
-		if (getConfig().getBoolean("ScoreBoard Support"))
-		{
-			manager = Bukkit.getScoreboardManager();
-			Main.voteBoard = manager.getNewScoreboard();
-			Main.playingBoard = manager.getNewScoreboard();
-			Main.playingList = Main.playingBoard.registerNewObjective("playing", "dummy");
-			Main.voteList = Main.voteBoard.registerNewObjective("votes", "dummy");
-		}
+	
 
 		// Create Configs and files
 		Infected.filesGetArenas().options().copyDefaults(true);
@@ -369,19 +353,7 @@ public class Main extends JavaPlugin {
 			System.out.println("Versions do not match so I am not responsible for any errors on your server!");
 		}
 
-		// Setup the scoreboards
-		if (getConfig().getBoolean("ScoreBoard Support"))
-		{
-
-			// Votes
-			Main.voteList.setDisplaySlot(DisplaySlot.SIDEBAR);
-			Main.voteList.setDisplayName(ChatColor.RED+ "" + ChatColor.BOLD + "Votes");
-
-			// Playing
-			Main.playingList.setDisplaySlot(DisplaySlot.SIDEBAR);
-			Main.playingList.setDisplayName(ChatColor.RED+ "" + ChatColor.BOLD + "Playing");
-
-		}
+		
 		System.out.println("====================");
 	}
 

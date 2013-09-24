@@ -1,3 +1,4 @@
+
 package me.xxsniperzzxx_sd.infected;
 
 import java.util.Collections;
@@ -6,27 +7,22 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
-import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
+import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Tools.ItemSerialization;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Score;
-import org.kitteh.tag.TagAPI;
+
 
 public class Methods {
 
@@ -151,7 +147,7 @@ public class Methods {
 		{
 			applyAbilities(player);
 		}
-		if(Main.config.getBoolean("Disguise Support.Enabled"))
+		if (Main.config.getBoolean("Disguise Support.Enabled"))
 			DisguisePlayer.disguisePlayer(player);
 
 	}
@@ -181,7 +177,7 @@ public class Methods {
 	}
 
 	public static boolean grenadeDamageSelf(Integer id) {
-		return Files.getGrenades().getBoolean(id + ".Damage Self"); 
+		return Files.getGrenades().getBoolean(id + ".Damage Self");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -203,66 +199,6 @@ public class Methods {
 
 	}
 
-	public static void playerDies(Player Killer, Player Killed) {
-		
-		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(Killer, Killed, Infected.playerGetGroup(Killed), Infected.isPlayerHuman(Killed) ? true : false));
-		
-		Methods.stats(Killer, 1, 0);
-		Methods.stats(Killed, 0, 1);
-		
-		Methods.handleKillStreaks(true, Killed);
-		Methods.handleKillStreaks(false, Killer);
-		
-		String kill = getKillType(Infected.playerGetGroup(Killer) + "s", Killer.getName(), Killed.getName());
-		for (Player playing : Bukkit.getServer().getOnlinePlayers())
-			if (Main.inGame.contains(playing.getName()))
-				playing.sendMessage(kill);
-		
-		if(Infected.isPlayerHuman(Killed)){
-			if(Main.config.getBoolean("New Zombies Tp")){
-				Methods.zombifyPlayer(Killed);
-				Methods.respawn(Killed);
-					
-			}else
-				Methods.zombifyPlayer(Killed);	
-
-			
-			Killed.sendMessage(Main.I + "You have become infected!");
-			Killed.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,20, 2));
-			
-			Methods.equipZombies(Killed);
-			Killed.setHealth(20);
-			Killed.setFoodLevel(20);
-		}
-		else{
-			Methods.respawn(Killed);
-			Methods.equipZombies(Killed);
-		}
-			
-		Killed.setFallDistance(0F);
-
-		if (Infected.isPlayerHuman(Killed))
-			Infected.delPlayerHuman(Killed);
-		
-		if (!Infected.isPlayerZombie(Killed))
-			Infected.addPlayerZombie(Killed);
-		
-		if(Main.Lasthit.containsKey(Killed.getName()))
-			Main.Lasthit.remove(Killed.getName());
-
-		if (Main.Winners.contains(Killed.getName()))
-			Main.Winners.remove(Killed.getName());
-		
-		
-		if (Main.humans.size() == 0 && Infected.getGameState() == GameState.STARTED)
-			Game.endGame(false);
-		
-		else
-		{
-			Methods.equipZombies(Killed);
-			Methods.zombifyPlayer(Killed);
-		}
-	}
 
 	public static void saveInventory(Player player, String loc) {
 		String data = ItemSerialization.toBase64(player.getInventory());
@@ -379,7 +315,7 @@ public class Methods {
 			}
 			Methods.zombifyPlayer(zombie);
 			zombie.setHealth(20);
-			Methods.equipZombies(zombie);
+			Equip.equipZombies(zombie);
 			// Inform humans of infected, prepare them
 			for (Player online : Bukkit.getServer().getOnlinePlayers())
 			{
@@ -408,78 +344,11 @@ public class Methods {
 		}
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
-			updateScoreBoard();
+			ScoreBoard.updateScoreBoard();
 		}
 	}
-
-	public static void updateScoreBoard() {
-		if (Main.config.getBoolean("ScoreBoard Support"))
-		{
-			if (Infected.getGameState() == GameState.STARTED)
-			{
-
-				Main.possibleArenas.clear();
-				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
-				{
-					// Check if the string matchs an arena
-
-					if (Main.possibleArenas.contains(parenas))
-					{
-						Main.possibleArenas.remove(parenas);
-					}
-					if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
-					{
-						Main.possibleArenas.remove(parenas);
-					} else if (!parenas.contains("."))
-					{
-						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + ""+ ChatColor.ITALIC + parenas));
-						if(Main.Votes.get(parenas) != null) score.setScore(Main.Votes.get(parenas));
-						else{
-							score.setScore(1);
-							score.setScore(0);
-						}	
-					}
-				}
-
-				Score score = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN +""+ ChatColor.ITALIC + "Humans:"));
-				score.setScore(Main.humans.size());
-				Score score2 = Main.playingList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + ""+ ChatColor.ITALIC +"Zombies:"));
-				score2.setScore(Main.zombies.size());
-
-			} else
-			{
-				Main.possibleArenas.clear();
-				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
-				{
-					// Check if the string matchs an arena
-
-					if (Main.possibleArenas.contains(parenas))
-					{
-						Main.possibleArenas.remove(parenas);
-					}
-					if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
-					{
-						Main.possibleArenas.remove(parenas);
-					} else if (!parenas.contains("."))
-					{
-						Score score = Main.voteList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW +""+ ChatColor.ITALIC + parenas));
-						if(Main.Votes.get(parenas) != null) score.setScore(Main.Votes.get(parenas));
-						else{
-							score.setScore(1);
-							score.setScore(0);
-							}
-						
-					}
-				}
-
-				// Reset Team board
-				Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + ""+ ChatColor.ITALIC +"Humans:"));
-				Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.DARK_RED + ""+ ChatColor.ITALIC +"Zombies:"));
-
-			}
-		}
-	}
-
+	
+	
 	@SuppressWarnings("deprecation")
 	public static void joinInfectHuman(Player player) {
 		Player newzombie = player;
@@ -489,7 +358,7 @@ public class Methods {
 		if (!Main.KillStreaks.containsKey(newzombie.getName()))
 			Main.KillStreaks.put(newzombie.getName(), Integer.valueOf("0"));
 		newzombie.sendMessage(Main.I + "You have became infected!");
-		Methods.equipZombies(newzombie);
+		Equip.equipZombies(newzombie);
 		newzombie.setHealth(20);
 		newzombie.setFoodLevel(20);
 		Main.KillStreaks.remove(newzombie.getName());
@@ -508,7 +377,7 @@ public class Methods {
 		newzombie.playEffect(newzombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 2);
 		Methods.zombifyPlayer(newzombie);
 		newzombie.setHealth(20);
-		Methods.equipZombies(newzombie);
+		Equip.equipZombies(newzombie);
 	}
 
 	public static Double KD(Player player) {
@@ -621,125 +490,10 @@ public class Methods {
 		Main.Lasthit.remove(player.getName());
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
-			updateScoreBoard();
+			ScoreBoard.updateScoreBoard();
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void equipHumans(Player human) {
-		if (Main.config.getBoolean("Default Classes.Use"))
-			Main.humanClasses.put(human.getName(), Main.config.getString("Default Classes.Human"));
-
-		if (Main.config.getBoolean("TagAPI Support.Enable"))
-			TagAPI.refreshPlayer(human);
-		if (Main.humanClasses.containsKey(human.getName()))
-		{
-			for (String s : Infected.filesGetClasses().getStringList("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Items"))
-			{
-				human.getInventory().addItem(ItemHandler.getItemStack(s));
-				human.updateInventory();
-			}
-			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head") != null)
-				human.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head")));
-			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest") != null)
-				human.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest")));
-			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs") != null)
-				human.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs")));
-			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet") != null)
-				human.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet")));
-		} else
-		{
-			for (String s : Main.config.getStringList("Armor.Human.Items"))
-			{
-				human.getInventory().addItem(ItemHandler.getItemStack(s));
-				human.updateInventory();
-			}
-			if (Main.config.getString("Armor.Human.Head") != null)
-				human.getInventory().setHelmet(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Head")));
-			if (Main.config.getString("Armor.Human.Chest") != null)
-				human.getInventory().setChestplate(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Chest")));
-			if (Main.config.getString("Armor.Human.Legs") != null)
-				human.getInventory().setLeggings(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Legs")));
-			if (Main.config.getString("Armor.Human.Feet") != null)
-				human.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Feet")));
-		}
-		human.updateInventory();
-		applyClassAbility(human);
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void equipZombies(Player zombie) {
-
-		if (Main.config.getBoolean("Default Classes.Use"))
-			Main.zombieClasses.put(zombie.getName(), Main.config.getString("Default Classes.Zombie"));
-
-		updateScoreBoard();
-		if (Main.config.getBoolean("TagAPI Support.Enable"))
-			TagAPI.refreshPlayer(zombie);
-		// Give infected their armor
-
-		// Take away humans items
-		for (String s : Main.config.getStringList("Armor.Human.Items"))
-		{
-			if (zombie.getInventory().contains(ItemHandler.getItem(s).getType()))
-			{
-				zombie.getInventory().remove(ItemHandler.getItem(s).getType());
-			}
-		}
-		// Take away any items from their human class
-		if (Main.humanClasses.containsKey(zombie.getName()))
-		{
-			for (String s : Infected.filesGetClasses().getStringList("Classes.Human." + Main.humanClasses.get(zombie.getName()) + ".Items"))
-			{
-				if (zombie.getInventory().contains(ItemHandler.getItem(s).getType()))
-				{
-					zombie.getInventory().remove(ItemHandler.getItem(s).getType());
-				}
-			}
-		}
-		for (ItemStack armor : zombie.getInventory().getArmorContents())
-		{
-			if (!(armor == null || armor.getType() == Material.AIR) && (armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Head")) || armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Chest")) || armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Legs")) || armor == ItemHandler.getItem(Main.config.getString("Armor.Zombie.Feet"))))
-			{
-				zombie.getInventory().addItem(armor);
-			}
-		}
-
-		// Add armor from the zombie class
-		if (Main.zombieClasses.containsKey(zombie.getName()))
-		{
-			for (String s : Infected.filesGetClasses().getStringList("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Items"))
-			{
-				if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
-					zombie.getInventory().addItem(ItemHandler.getItemStack(s));
-				zombie.updateInventory();
-			}
-			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head") != null)
-				zombie.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head")));
-			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest") != null)
-				zombie.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest")));
-			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs") != null)
-				zombie.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs")));
-			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet") != null)
-				zombie.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet")));
-		} else
-		{
-			for (String s : Main.config.getStringList("Armor.Zombie.Items"))
-			{
-				if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
-					zombie.getInventory().addItem(ItemHandler.getItemStack(s));
-			}
-			if (Main.config.getString("Armor.Zombie.Head") != null)
-				zombie.getInventory().setHelmet(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Head")));
-			if (Main.config.getString("Armor.Zombie.Chest") != null)
-				zombie.getInventory().setChestplate(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Chest")));
-			if (Main.config.getString("Armor.Zombie.Legs") != null)
-				zombie.getInventory().setLeggings(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Legs")));
-			if (Main.config.getString("Armor.Zombie.Feet") != null)
-				zombie.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Feet")));
-		}
-		zombie.updateInventory();
-	}
 
 	public static String sendMessage(String message, Player player, String Time, String List) {
 		String msg = String.valueOf(Files.getMessages().getString(message));
@@ -762,63 +516,51 @@ public class Methods {
 		String newMsg = Main.I + msg1;
 		return newMsg;
 	}
-
-	public static String getKillType(String group, String human, String zombie) {
-		Random r = new Random();
-		int i = r.nextInt(Files.getKills().getStringList(group).size());
-		String killtype = ChatColor.GRAY + Files.getKills().getStringList(group).get(i);
-		String msg = null;
-		msg = killtype.replaceAll("<zombie>", ChatColor.RED + zombie).replaceAll("<human>", ChatColor.GREEN + human);
-		String cmsg = ChatColor.translateAlternateColorCodes('&', msg);
-		return cmsg;
+	
+	public static String getLocationToString(Location loc) {
+		int ix = (int) loc.getX();
+		int iy = (int) loc.getY();
+		int iz = (int) loc.getZ();
+		World world = loc.getWorld();
+		String s = world.getName() + "," + ix + "," + iy + "," + iz;
+		return s;
 	}
 
+	public static Location getLocationFromString(String loc) {
+		if (loc.contains(","))
+		{
+			String[] floc = loc.split(",");
+			World world = Bukkit.getServer().getWorld(floc[0]);
+			Location Loc = new Location(world, Integer.valueOf(floc[1]),
+					Integer.valueOf(floc[2]), Integer.valueOf(floc[3]));
+			return Loc;
+		} else
+			return null;
+	}
 
-	 public static String getLocationToString(Location loc)
-	 {
-		 int ix = (int) loc.getX();
-		 int iy = (int) loc.getY();
-		 int iz = (int) loc.getZ();
-		 World world = loc.getWorld();
-		 String s = world.getName() + "," + ix + "," + iy + "," + iz;
-		 return s;
-	 }
-	 
-	 public static Location getLocationFromString(String loc)
-	 {
-		 if(loc.contains(",")){
-			 String[] floc = loc.split(",");
-			 World world = Bukkit.getServer().getWorld(floc[0]);
-			 Location Loc = new Location(world, Integer.valueOf(floc[1]), Integer.valueOf(floc[2]), Integer.valueOf(floc[3]));
-			 return Loc;
-		 }
-		 else
-			 return null;
-	 }
-	
-	
-	
-	public static void handleKillStreaks(boolean killed, Player player){
-		if(killed){
-			if(!Main.KillStreaks.containsKey(player.getName()))
+	public static void handleKillStreaks(boolean killed, Player player) {
+		if (killed)
+		{
+			if (!Main.KillStreaks.containsKey(player.getName()))
 				Main.KillStreaks.put(player.getName(), 0);
-			
-			if(Main.KillStreaks.get(player.getName()) > Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".KillStreak")){
+
+			if (Main.KillStreaks.get(player.getName()) > Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".KillStreak"))
+			{
 				Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(player.getName()));
 				Files.savePlayers();
 			}
-			
+
 			Main.KillStreaks.put(player.getName(), 0);
-		}else{
-			if(!Main.KillStreaks.containsKey(player.getName()))
+		} else
+		{
+			if (!Main.KillStreaks.containsKey(player.getName()))
 				Main.KillStreaks.put(player.getName(), 0);
-			Main.KillStreaks.put(player.getName(), Main.KillStreaks.get(player.getName())+1);
+			Main.KillStreaks.put(player.getName(), Main.KillStreaks.get(player.getName()) + 1);
 
 			if (Main.KillStreaks.get(player.getName()) >= 3)
 				for (Player playing : Bukkit.getServer().getOnlinePlayers())
 					if (Main.inGame.contains(playing.getName()))
-						playing.sendMessage(Main.I + (Infected.isPlayerHuman(player) ?  ChatColor.RED + player.getName() : ChatColor.GREEN + player.getName()) + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(player.getName()));
-
+						playing.sendMessage(Main.I + (Infected.isPlayerHuman(player) ? ChatColor.RED + player.getName() : ChatColor.GREEN + player.getName()) + ChatColor.GOLD + " has a killstreak of " + ChatColor.YELLOW + Main.KillStreaks.get(player.getName()));
 
 			if ((Infected.filesGetKillTypes().contains("KillSteaks." + String.valueOf(Main.KillStreaks.get(player.getName())))))
 			{
@@ -826,178 +568,26 @@ public class Methods {
 				command = String.valueOf(Infected.filesGetKillTypes().getInt("KillSteaks." + Main.KillStreaks.get(player.getName()))).replaceAll("<player>", player.getName());
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 			}
-			if(Infected.isPlayerHuman(player))
+			if (Infected.isPlayerHuman(player))
 				Methods.rewardPointsAndScore(player, "Kill");
 
-			else{
+			else
+			{
 				Methods.rewardPointsAndScore(player, "Kill");
 
-				for(String playing : Infected.listInGame()){
-					if(Infected.isPlayerHuman(Bukkit.getPlayer(playing)))
+				for (String playing : Infected.listInGame())
+				{
+					if (Infected.isPlayerHuman(Bukkit.getPlayer(playing)))
 						Methods.rewardPointsAndScore(Bukkit.getPlayer(playing), "Survive");
-					
-					else if(Infected.isPlayerZombie(Bukkit.getPlayer(playing)))
+
+					else if (Infected.isPlayerZombie(Bukkit.getPlayer(playing)))
 						Methods.rewardPointsAndScore(Bukkit.getPlayer(playing), "Zombies Infected");
 				}
-				
+
 			}
 
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void tp2LobbyAfter(Player player) {
-		
-		Infected.arenaReset();
-		
-		if (Main.config.getBoolean("ScoreBoard Support"))
-		{
-			player.setScoreboard(Main.voteBoard);
-			Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Humans:"));
-			Main.playingBoard.resetScores(Bukkit.getOfflinePlayer(ChatColor.DARK_RED + "Zombies:"));
-		}
-		player.teleport(Methods.getLocation(Main.config.getString("Lobby")));
-		resetPlayersInventory(player);
-		if (Infected.filesGetShop().getBoolean("Save Items"))
-			player.getInventory().setContents(Infected.playerGetShopInventory(player));
-		Main.Lasthit.remove(player.getName());
-		Main.humanClasses.remove(player.getName());
-		Main.zombieClasses.remove(player.getName());
-		player.setGameMode(GameMode.ADVENTURE);
-		player.updateInventory();
-		player.setLevel(0);
-		Main.Votes.clear();
-		Main.inLobby.add(player.getName());
-		Main.zombies.clear();
-		Main.humans.clear();
-		player.setFireTicks(0);
-		player.setHealth(20.0);
-		player.setFoodLevel(20);
-		Main.KillStreaks.remove(player.getName());
-		Infected.setGameState(GameState.INLOBBY);
-		Main.Voted4.clear();
-		Bukkit.getServer().getScheduler().cancelTask(Main.timestart);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
-		Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
-		if (Main.config.getBoolean("Disguise Support.Enabled"))
-			if (DisguisePlayer.isPlayerDisguised(player))
-				DisguisePlayer.unDisguisePlayer(player);
-
-		if (Main.inGame.size() == 0)
-			Main.Winners.clear();
-
-	}
-
-	public static void resetInf() {
-		Infected.setGameState(GameState.INLOBBY);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timestart);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
-		Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
-		Main.Winners.clear();
-		Main.humans.clear();
-		Main.zombies.clear();
-		Main.KillStreaks.clear();
-		Infected.arenaReset();
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void resetp(Player player) {
-
-		if (Main.config.getBoolean("ScoreBoard Support"))
-		{
-			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-		}
-		player.setHealth(20.0);
-		player.setFoodLevel(20);
-		for (PotionEffect reffect : player.getActivePotionEffects())
-		{
-			player.removePotionEffect(reffect.getType());
-		}
-		resetPlayersInventory(player);
-		player.updateInventory();
-		if (GameMode.valueOf(Main.gamemode.get(player.getName())) == null)
-			player.setGameMode(GameMode.SURVIVAL);
-		else
-			player.setGameMode(GameMode.valueOf(Main.gamemode.get(player.getName())));
-		Main.Lasthit.remove(player.getName());
-		if (Main.Inventory.containsKey(player.getName()))
-			player.getInventory().setContents(Main.Inventory.get(player.getName()));
-		if (Main.Armor.containsKey(player.getName()))
-			player.getInventory().setArmorContents(Main.Armor.get(player.getName()));
-		player.updateInventory();
-		player.setExp(Main.Exp.get(player.getName()));
-		player.setLevel(Main.Levels.get(player.getName()));
-		if (Main.Spot.containsKey(player.getName()))
-			player.teleport(Main.Spot.get(player.getName()));
-		if (Main.Food.containsKey(player.getName()))
-			player.setFoodLevel(Main.Food.get(player.getName()));
-		if (Main.Health.containsKey(player.getName()))
-			player.setHealth(Main.Health.get(player.getName()));
-		Main.humanClasses.remove(player.getName());
-		Main.zombieClasses.remove(player.getName());
-		Main.inLobby.remove(player.getName());
-		Main.zombies.remove(player.getName());
-		Main.humans.remove(player.getName());
-		Main.inGame.remove(player.getName());
-		Main.Creating.remove(player.getName());
-		Main.Health.remove(player.getName());
-		Main.Food.remove(player.getName());
-		Main.Armor.remove(player.getName());
-		Main.Inventory.remove(player.getName());
-		Main.Spot.remove(player.getName());
-		Main.Winners.remove(player.getName());
-		if (Infected.isPlayerInGame(player) && Main.config.getBoolean("Disguise Support.Enabled"))
-			if (DisguisePlayer.isPlayerDisguised(player))
-				DisguisePlayer.unDisguisePlayer(player);
-
-		if (Main.Voted4.containsKey(player.getName()))
-		{
-			if (Main.Votes.containsKey(Main.Voted4.get(player.getName())))
-				Main.Votes.put(Main.Voted4.get(player.getName()).toString(), Main.Votes.get(Main.Voted4.get(player.getName())) - 1);
-			Main.Voted4.remove(player.getName());
-
-		}
-	}
-
-	// Reset the game(Method)
-	public static void reset() {
-		for (Player players : Bukkit.getOnlinePlayers())
-		{
-			if (Infected.isPlayerInGame(players))
-			{
-				Infected.resetPlayer(players);
-				if (Main.config.getBoolean("ScoreBoard Support"))
-				{
-					updateScoreBoard();
-				}
-			}
-		}
-		Infected.arenaReset();
-		
-		Main.KillStreaks.clear();
-		Main.possibleArenas.clear();
-		Main.inLobby.clear();
-		Main.zombieClasses.clear();
-		Main.humanClasses.clear();
-		Main.Winners.clear();
-		Main.zombies.clear();
-		Main.humans.clear();
-		Main.inGame.clear();
-		Main.Voted4.clear();
-		Main.Votes.clear();
-		Main.Health.clear();
-		Main.Food.clear();
-		Main.Inventory.clear();
-		Main.Spot.clear();
-		Main.Armor.clear();
-		Infected.setGameState(GameState.INLOBBY);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timestart);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timeLimit);
-		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
-		Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
-		resetInf();
-	}
 
 }

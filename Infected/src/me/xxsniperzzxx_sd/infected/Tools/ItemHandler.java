@@ -11,8 +11,12 @@ public class ItemHandler {
 
 
 	public static ItemStack getItemStack(String Path) {
-		ItemStack is = new ItemStack(getItem(Path));
-		is.setDurability(getItemData(Path));
+		ItemStack is;
+		if(getItem(Path) != null){
+			is = new ItemStack(getItem(Path));
+			is.setDurability(getItemData(Path));
+		}else
+			is = new ItemStack(Material.AIR);
 		return is;
 	}
 

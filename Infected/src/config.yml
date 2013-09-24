@@ -135,7 +135,8 @@
 # Default Classes:
 #   Use: false
 #   Human: Knight
-#   Zombie: Assassin
+# You can either state a class name or put None
+#   Zombie: None
 # #
 # # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
 # Armor:
@@ -253,7 +254,7 @@ Score:
 Default Classes:
   Use: false
   Human: Knight
-  Zombie: Assassin
+  Zombie: None
   
 Armor:
   Human:

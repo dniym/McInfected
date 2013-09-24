@@ -8,7 +8,7 @@
 #    Infected.Class.Zombie
 #       Infected.Class.Zombie.<ClassName>
 # Classes:
-#   Human: []
+#   Human: 
 #     Knight:
 #       Head: '306'
 #       Chest: '299'
@@ -46,7 +46,7 @@
 #       - '262,10'
 #       Potion Effects:
 #         - "1:1:1"
-#   Zombie: []
+#   Zombie: 
 #     Hunter:
 #       Disguise: Enderman
 #       Head: '298'

@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.Tools;
+package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -6,7 +6,8 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
-
+import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
+import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -161,7 +162,7 @@ public class Menus {
 								}
 							if (Main.config.getBoolean("ScoreBoard Support"))
 							{
-								Methods.updateScoreBoard();
+								ScoreBoard.updateScoreBoard();
 							}
 						} else
 						{
@@ -180,7 +181,7 @@ public class Menus {
 								}
 							if (Main.config.getBoolean("ScoreBoard Support"))
 							{
-								Methods.updateScoreBoard();
+								ScoreBoard.updateScoreBoard();
 							}
 						}
 					}

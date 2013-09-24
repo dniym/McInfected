@@ -1,7 +1,10 @@
-package me.xxsniperzzxx_sd.infected;
+package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import java.util.Random;
 
+import me.xxsniperzzxx_sd.infected.Infected;
+import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
@@ -32,8 +35,7 @@ public class Game {
 
 				if (Main.config.getBoolean("ScoreBoard Support"))
 				{
-					playing.setScoreboard(Main.voteBoard);
-					Methods.updateScoreBoard();
+					ScoreBoard.updateScoreBoard();
 				}
 				playing.sendMessage(Methods.sendMessage("Vote_Time", null, Methods.getTime(Long.valueOf(Main.voteTime)), null));
 				playing.sendMessage(Methods.sendMessage("Vote_HowToVote", null, null, null));
@@ -75,7 +77,7 @@ public class Game {
 				playing.sendMessage(Main.I + ChatColor.DARK_RED + "Possible Arenas: " + ChatColor.GOLD + possible.toString());
 				playing.sendMessage(Main.I + ChatColor.YELLOW + "Or you could just vote for \"/Inf Vote Random\"");
 				Main.Winners.add(playing.getName());
-				Methods.updateScoreBoard();
+				ScoreBoard.updateScoreBoard();
 			}
 
 		// VOTEING TIME
@@ -102,7 +104,7 @@ public class Game {
 							for (Player playing : Bukkit.getServer().getOnlinePlayers())
 								if (Main.inGame.contains(playing.getName()))
 								{
-									playing.playSound(playing.getLocation(), Sound.CREEPER_HISS, 1, 1);
+									playing.playSound(playing.getLocation(), Sound.ORB_PICKUP, 1, 1);
 									playing.sendMessage(Methods.sendMessage("Vote_TimeLeft", null, Methods.getTime(Long.valueOf(timeleft)), null));
 								}
 						}
@@ -113,14 +115,28 @@ public class Game {
 					for (Player playing : Bukkit.getServer().getOnlinePlayers())
 						if (Main.inGame.contains(playing.getName()))
 							playing.setLevel(timeleft);
-					
-					if (timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2 || timeleft == 1)
+
+					if (timeleft == 5 || timeleft == 4 || timeleft == 3 || timeleft == 2|| timeleft == 1)
 					{
 						for (Player playing : Bukkit.getServer().getOnlinePlayers())
 						{
 							if (Main.inGame.contains(playing.getName()))
 							{
+								playing.playSound(playing.getLocation(), Sound.NOTE_STICKS, 1, 1);
+								playing.playSound(playing.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 								playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+							}
+						}
+					}
+					if (timeleft == 0)
+					{
+						for (Player playing : Bukkit.getServer().getOnlinePlayers())
+						{
+							if (Main.inGame.contains(playing.getName()))
+							{
+								playing.playSound(playing.getLocation(), Sound.NOTE_STICKS, 1, 5);
+								playing.playSound(playing.getLocation(), Sound.NOTE_BASS_DRUM, 1, 5);
+								playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 5);
 							}
 						}
 					}
@@ -201,7 +217,7 @@ public class Game {
 									if (Main.inGame.contains(p.getName()))
 									{
 										p.sendMessage(Main.I + " The arena's location was unable to be found. Please get an admin to reset it.");
-										Methods.tp2LobbyAfter(p);
+										Reset.tp2LobbyAfter(p);
 									}
 
 								}
@@ -230,11 +246,10 @@ public class Game {
 											p.sendMessage(Methods.sendMessage("Game_FirstInfectedIn", null, Methods.getTime(Long.valueOf(Main.Wait)), null));
 											if (Main.config.getBoolean("ScoreBoard Support"))
 											{
-												p.setScoreboard(Main.playingBoard);
-												Methods.updateScoreBoard();
+												ScoreBoard.updateScoreBoard();
 											}
 											Methods.respawn(p);
-											Methods.equipHumans(p);
+											Equip.equipHumans(p);
 											if (Main.config.getBoolean("Allow Breaking Certain Blocks"))
 												p.setGameMode(GameMode.SURVIVAL);
 											else
@@ -266,6 +281,20 @@ public class Game {
 													{
 														if (Main.inGame.contains(playing.getName()))
 														{
+															playing.playSound(playing.getLocation(), Sound.NOTE_STICKS, 1, 1);
+															playing.playSound(playing.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
+															playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+														}
+													}
+												}
+												if (timeleft == 0)
+												{
+													for (Player playing : Bukkit.getServer().getOnlinePlayers())
+													{
+														if (Main.inGame.contains(playing.getName()))
+														{
+															playing.playSound(playing.getLocation(), Sound.ZOMBIE_INFECT, 1, 5);
+															playing.playSound(playing.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 															playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
 														}
 													}
@@ -338,7 +367,20 @@ public class Game {
 																	{
 																		if (Main.inGame.contains(playing.getName()))
 																		{
+																			playing.playSound(playing.getLocation(), Sound.NOTE_STICKS, 1, 1);
+																			playing.playSound(playing.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 																			playing.playSound(playing.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+																		}
+																	}
+																}
+																if (timeleft == 0)
+																{
+																	for (Player playing : Bukkit.getServer().getOnlinePlayers())
+																	{
+																		if (Main.inGame.contains(playing.getName()))
+																		{
+																			playing.playSound(playing.getLocation(), Sound.ORB_PICKUP, 1, 5);
+																			playing.playSound(playing.getLocation(), Sound.LEVEL_UP, 1, 5);
 																		}
 																	}
 																}
@@ -464,7 +506,7 @@ public class Game {
 						{
 							@Override
 							public void run() {
-								Methods.tp2LobbyAfter(players);
+								Reset.tp2LobbyAfter(players);
 							}
 						}, 100L);
 					}
@@ -495,12 +537,12 @@ public class Game {
 						{
 							@Override
 							public void run() {
-								Methods.tp2LobbyAfter(players);
+								Reset.tp2LobbyAfter(players);
 							}
 						}, 100L);
 					}
 			}
-			Methods.updateScoreBoard();
+			ScoreBoard.updateScoreBoard();
 			Main.Winners.clear();
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 			{

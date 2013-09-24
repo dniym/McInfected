@@ -1,3 +1,4 @@
+
 package me.xxsniperzzxx_sd.infected;
 
 import java.util.ArrayList;
@@ -7,8 +8,12 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Menus;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
+import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.Menus;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,7 +33,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+
 public class Commands implements CommandExecutor {
+
 	Main plugin;
 
 	// public NamedItemStack NIS;
@@ -46,15 +53,17 @@ public class Commands implements CommandExecutor {
 			String creating = plugin.Creating.get(sender.getName());
 			if (sender.getName().equalsIgnoreCase("xXSniperzzXx_SD") && args.length >= 1 && args[0].equalsIgnoreCase("Test"))
 			{
-				System.out.println(DisguisePlayer.isPlayerDisguised((Player)sender));
-				if(args.length == 2){
-					DisguisePlayer.disguisePlayer((Player)sender);
-					Methods.tp2LobbyAfter((Player)sender);
-					System.out.println(DisguisePlayer.isPlayerDisguised((Player)sender));
+				System.out.println(DisguisePlayer.isPlayerDisguised((Player) sender));
+				if (args.length == 2)
+				{
+					DisguisePlayer.disguisePlayer((Player) sender);
+					Reset.tp2LobbyAfter((Player) sender);
+					System.out.println(DisguisePlayer.isPlayerDisguised((Player) sender));
 				}
-				if(args.length == 3){
-					DisguisePlayer.unDisguisePlayer((Player)sender);
-					System.out.println(DisguisePlayer.isPlayerDisguised((Player)sender));
+				if (args.length == 3)
+				{
+					DisguisePlayer.unDisguisePlayer((Player) sender);
+					System.out.println(DisguisePlayer.isPlayerDisguised((Player) sender));
 				}
 				// TESTING STUFF
 			}
@@ -73,23 +82,22 @@ public class Commands implements CommandExecutor {
 				{
 					player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
 					return true;
-				}  
-				else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || Infected.getGameState() != GameState.STARTED)
+				} else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || Infected.getGameState() != GameState.STARTED)
 				{
 					player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
 					return true;
-				}
-				else if (args.length == 1)
+				} else if (args.length == 1)
 				{
-					if(!plugin.infectedChat.contains(player.getName())){
+					if (!plugin.infectedChat.contains(player.getName()))
+					{
 						plugin.infectedChat.add(player.getName());
 						player.sendMessage(plugin.I + "Toggled " + ChatColor.GREEN + "in " + ChatColor.GRAY + "to Infected's Chat");
-					}
-					else if(plugin.infectedChat.contains(player.getName())){
+					} else if (plugin.infectedChat.contains(player.getName()))
+					{
 						player.sendMessage(plugin.I + "Toggled " + ChatColor.RED + "out " + ChatColor.GRAY + "of Infected's Chat");
 						plugin.infectedChat.remove(player.getName());
 					}
-					
+
 					return true;
 				}
 				StringBuilder message = new StringBuilder(args[1]);
@@ -222,11 +230,6 @@ public class Commands implements CommandExecutor {
 						}
 					}
 
-					if (Main.config.getBoolean("ScoreBoard Support"))
-					{
-						player.setScoreboard(Main.voteBoard);
-						Methods.updateScoreBoard();
-					}
 					// Safe player's stats/stuff
 					Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerJoinEvent(
 							player,
@@ -244,12 +247,16 @@ public class Commands implements CommandExecutor {
 					plugin.Winners.clear();
 					plugin.inLobby.add(player.getName());
 					plugin.gamemode.put(player.getName(), player.getGameMode().toString());
-					Methods.updateScoreBoard();
+
+					if (Main.config.getBoolean("ScoreBoard Support"))
+					{
+						ScoreBoard.updateScoreBoard();
+					}
+
 					if (Main.config.getBoolean("Disguise Support.Enabled"))
 						if (DisguisePlayer.isPlayerDisguised(player))
 							DisguisePlayer.unDisguisePlayer(player);
 
-					
 					// Prepare player
 					player.setMaxHealth(20.0);
 					player.setHealth(20.0);
@@ -264,8 +271,13 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(Methods.sendMessage("Lobby_JoinLobby", null, null, null));
 					player.setGameMode(GameMode.ADVENTURE);
 					player.setFlying(false);
+
+					Main.humanClasses.put(player.getName(), Infected.playergetLastHumanClass(player));
+					Main.zombieClasses.put(player.getName(), Infected.playergetLastZombieClass(player));
+
 					if (!plugin.KillStreaks.containsKey(player.getName()))
 						plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
+
 					if (plugin.inGame.size() >= plugin.getConfig().getInt("Automatic Start.Minimum Players") && Infected.getGameState() == GameState.INLOBBY && plugin.getConfig().getBoolean("Automatic Start.Use"))
 					{
 						Game.START();
@@ -275,11 +287,6 @@ public class Commands implements CommandExecutor {
 					{
 						player.sendMessage(Methods.sendMessage("Vote_HowToVote", null, null, null));
 						player.performCommand("Infected Arenas");
-						if (Main.config.getBoolean("ScoreBoard Support"))
-						{
-							player.setScoreboard(Main.voteBoard);
-							Methods.updateScoreBoard();
-						}
 						return true;
 					}
 					if (Infected.getGameState() == GameState.STARTED)
@@ -287,11 +294,6 @@ public class Commands implements CommandExecutor {
 						player.setGameMode(GameMode.SURVIVAL);
 						Methods.joinInfectHuman(player);
 						Infected.delPlayerInLobby(player);
-						if (Main.config.getBoolean("ScoreBoard Support"))
-						{
-							player.setScoreboard(Main.playingBoard);
-							Methods.updateScoreBoard();
-						}
 						return true;
 					}
 					if (Infected.getGameState() == GameState.BEFOREINFECTED)
@@ -299,8 +301,7 @@ public class Commands implements CommandExecutor {
 						if (Main.config.getBoolean("ScoreBoard Support"))
 						{
 							player.setGameMode(GameMode.SURVIVAL);
-							player.setScoreboard(Main.playingBoard);
-							Methods.updateScoreBoard();
+							ScoreBoard.updateScoreBoard();
 						}
 						Methods.respawn(player);
 						if (!Main.Winners.contains(player.getName()))
@@ -313,7 +314,7 @@ public class Commands implements CommandExecutor {
 						player.setHealth(20.0);
 						player.setFoodLevel(20);
 						player.playEffect(player.getLocation(), Effect.SMOKE, BlockFace.UP);
-						Methods.equipHumans(player);
+						Equip.equipHumans(player);
 						Infected.delPlayerInLobby(player);
 						return true;
 					}
@@ -398,7 +399,7 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(plugin.I + "You have become infected!");
 						player.addPotionEffect(new PotionEffect(
 								PotionEffectType.CONFUSION, 20, 2));
-						Methods.equipZombies(player);
+						Equip.equipZombies(player);
 						player.setHealth(20.0);
 						player.setFoodLevel(20);
 						Methods.stats(player, 0, 1);
@@ -472,7 +473,8 @@ public class Commands implements CommandExecutor {
 								if (grenades.matches("[0-9]+"))
 								{
 									gname = Infected.filesGetGrenades().getString(grenades + ".Name");
-									if(player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades." + gname)){
+									if (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades." + gname))
+									{
 										gcost = Infected.filesGetGrenades().getInt(grenades + ".Cost");
 										player.sendMessage(ChatColor.GRAY + String.valueOf(i) + ". " + ChatColor.DARK_AQUA + gname + ChatColor.DARK_GRAY + " - " + ChatColor.AQUA + gcost);
 										i++;
@@ -529,9 +531,10 @@ public class Commands implements CommandExecutor {
 					// LEAVE
 				} else if (args[0].equalsIgnoreCase("Leave"))
 				{
-					if(plugin.getConfig().getBoolean("Force Join.Enable")){
-						 if(plugin.getConfig().getBoolean("Force Join.Disable Leave Command"))
-							 return true;
+					if (plugin.getConfig().getBoolean("Force Join.Enable"))
+					{
+						if (plugin.getConfig().getBoolean("Force Join.Disable Leave Command"))
+							return true;
 					}
 					if (!(sender instanceof Player))
 					{
@@ -546,7 +549,7 @@ public class Commands implements CommandExecutor {
 					} else if (plugin.inGame.contains(player.getName()) || plugin.inLobby.contains(player.getName()))
 					{
 
-						Methods.updateScoreBoard();
+						ScoreBoard.updateScoreBoard();
 
 						// If a player logs out well playing, make sure it
 						// doesn't effect the game, end the game if it does
@@ -559,7 +562,7 @@ public class Commands implements CommandExecutor {
 								System.out.println("Leave: Leaving, wellin lobby, no timers active");
 							}
 							player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-							Methods.resetp(player);
+							Reset.resetp(player);
 							for (Player players : Bukkit.getOnlinePlayers())
 							{
 								if (Infected.isPlayerInGame(players))
@@ -580,20 +583,20 @@ public class Commands implements CommandExecutor {
 									System.out.println("Leave: Before Voting(Triggered)");
 								}
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
 										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
-										Methods.tp2LobbyAfter(players);
+										Reset.tp2LobbyAfter(players);
 									}
 								}
-								Methods.resetInf();
+								Reset.resetInf();
 							} else
 							{
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
@@ -617,20 +620,20 @@ public class Commands implements CommandExecutor {
 									System.out.println("Leave: In Arena Before Infected(Triggered)");
 								}
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
 										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
-										Methods.tp2LobbyAfter(players);
+										Reset.tp2LobbyAfter(players);
 									}
 								}
-								Methods.resetInf();
+								Reset.resetInf();
 							} else
 							{
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
@@ -654,16 +657,16 @@ public class Commands implements CommandExecutor {
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 								}
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
 										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
-										Methods.tp2LobbyAfter(players);
+										Reset.tp2LobbyAfter(players);
 									}
 								}
-								Methods.resetInf();
+								Reset.resetInf();
 							}
 							// If Not Enough zombies remain
 							else if (Main.zombies.size() == 1 && Infected.isPlayerZombie(player))
@@ -673,7 +676,7 @@ public class Commands implements CommandExecutor {
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 								}
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								Methods.newZombieSetUpEveryOne();
 							}
 							// Not enough humans left
@@ -684,20 +687,20 @@ public class Commands implements CommandExecutor {
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 								}
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
 										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
-										Methods.tp2LobbyAfter(players);
+										Reset.tp2LobbyAfter(players);
 									}
 								}
-								Methods.resetInf();
+								Reset.resetInf();
 							} else
 							{
 								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
-								Methods.resetp(player);
+								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
@@ -868,7 +871,7 @@ public class Commands implements CommandExecutor {
 									DisguisePlayer.unDisguisePlayer(players);
 
 							// Give player's all their stuff/stats back
-							Methods.resetp(players);
+							Reset.resetp(players);
 							players.sendMessage(Methods.sendMessage("Game_ForcedToStop", null, null, null));
 							for (PotionEffect reffect : players.getActivePotionEffects())
 							{
@@ -877,7 +880,7 @@ public class Commands implements CommandExecutor {
 						}
 					}
 					// reset lists, hashmaps and arena
-					Methods.reset();
+					Reset.reset();
 				}
 
 				// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1624,7 +1627,7 @@ public class Commands implements CommandExecutor {
 								}
 							if (Main.config.getBoolean("ScoreBoard Support"))
 							{
-								Methods.updateScoreBoard();
+								ScoreBoard.updateScoreBoard();
 							}
 						}
 
