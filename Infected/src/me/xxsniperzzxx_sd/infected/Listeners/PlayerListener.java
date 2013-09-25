@@ -895,16 +895,7 @@ public class PlayerListener implements Listener {
 					
 					//Before a zombie is chosen
 					else if(Infected.getGameState() == GameState.BEFOREINFECTED){
-						if(victim.getHealth() - e.getDamage() <= 0){
-							e.setDamage(0);
-							victim.sendMessage(plugin.I + "You almost died before the game even started!");
-							victim.setHealth(20);
-							victim.setFoodLevel(20);
-							Methods.handleKillStreaks(true, victim);
-							victim.setFoodLevel(20);
-							Methods.respawn(victim);
-							victim.setFallDistance(0F);
-						}
+						e.setCancelled(true);
 					}
 					
 					//If the game has fully started

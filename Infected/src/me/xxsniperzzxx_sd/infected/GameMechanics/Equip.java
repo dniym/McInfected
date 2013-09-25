@@ -20,25 +20,27 @@ public class Equip {
 
 		if (Main.config.getBoolean("TagAPI Support.Enable"))
 			TagAPI.refreshPlayer(human);
+		
+		if (Main.humanClasses.containsKey(human.getName()))
+			if (Main.humanClasses.get(human.getName()).equalsIgnoreCase("None"))
+				Main.humanClasses.remove(human.getName());
+		
 		if (Main.humanClasses.containsKey(human.getName()))
 		{
-			if (!Main.humanClasses.get(human.getName()).equalsIgnoreCase("None"))
+			for (String s : Infected.filesGetClasses().getStringList("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Items"))
 			{
-				for (String s : Infected.filesGetClasses().getStringList("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Items"))
-				{
-					human.getInventory().addItem(ItemHandler.getItemStack(s));
-					human.updateInventory();
-				}
-				if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head") != null)
-					human.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head")));
-				if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest") != null)
-					human.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest")));
-				if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs") != null)
-					human.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs")));
-				if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet") != null)
-					human.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet")));
-			} else
-				Main.humanClasses.remove(human.getName());
+				human.getInventory().addItem(ItemHandler.getItemStack(s));
+				human.updateInventory();
+			}
+			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head") != null)
+				human.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Head")));
+			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest") != null)
+				human.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Chest")));
+			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs") != null)
+				human.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Legs")));
+			if (Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet") != null)
+				human.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Human." + Main.humanClasses.get(human.getName()) + ".Feet")));
+			
 		} else
 		{
 			for (String s : Main.config.getStringList("Armor.Human.Items"))
@@ -98,26 +100,28 @@ public class Equip {
 		}
 
 		// Add armor from the zombie class
+
+		if (Main.zombieClasses.containsKey(zombie.getName()))
+			if (!Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None"))
+				Main.zombieClasses.remove(zombie.getName());
+		
 		if (Main.zombieClasses.containsKey(zombie.getName()))
 		{
-			if (!Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None"))
+			for (String s : Infected.filesGetClasses().getStringList("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Items"))
 			{
-				for (String s : Infected.filesGetClasses().getStringList("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Items"))
-				{
-					if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
-						zombie.getInventory().addItem(ItemHandler.getItemStack(s));
-					zombie.updateInventory();
-				}
-				if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head") != null)
-					zombie.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head")));
-				if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest") != null)
-					zombie.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest")));
-				if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs") != null)
-					zombie.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs")));
-				if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet") != null)
-					zombie.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet")));
-			} else
-				Main.zombieClasses.remove(zombie.getName());
+				if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
+					zombie.getInventory().addItem(ItemHandler.getItemStack(s));
+				zombie.updateInventory();
+			}
+			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head") != null)
+				zombie.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head")));
+			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest") != null)
+				zombie.getInventory().setChestplate(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Chest")));
+			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs") != null)
+				zombie.getInventory().setLeggings(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Legs")));
+			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet") != null)
+				zombie.getInventory().setBoots(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Feet")));
+				
 		} else
 		{
 			for (String s : Main.config.getStringList("Armor.Zombie.Items"))

@@ -1,7 +1,6 @@
 package me.xxsniperzzxx_sd.infected;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +10,6 @@ import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import net.milkbowl.vault.economy.Economy;
@@ -213,12 +211,12 @@ public class Main extends JavaPlugin {
 		}else
 			System.out.println("CrackShot Support is Disabled");
 
+		
 		// Check if the plugin addons are there
 		if (getConfig().getBoolean("TagAPI Support.Enable"))
 		{
 			if (getServer().getPluginManager().getPlugin("TagAPI") == null)
 			{
-
 				System.out.println(Main.I + "TagApi wasn't found on this server, disabling TagApi Support");
 				getConfig().set("TagAPI Support.Enable", false);
 				saveConfig();
@@ -277,16 +275,7 @@ public class Main extends JavaPlugin {
 		Main.Wait = getConfig().getInt("Time.Alpha Zombie Infection");
 		Main.GtimeLimit = getConfig().getInt("Time.Game Time Limit");
 
-		// Setup metrics
-		try
-		{
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-		} catch (IOException e)
-		{
-			System.out.println("Error getting metrics!");
-		}
-
+		
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
 		PlayerListener PlayerListener = new PlayerListener(this);

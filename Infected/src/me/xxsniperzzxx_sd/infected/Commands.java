@@ -38,7 +38,6 @@ public class Commands implements CommandExecutor {
 
 	Main plugin;
 
-	// public NamedItemStack NIS;
 	public Commands(Main plugin)
 	{
 		this.plugin = plugin;
@@ -51,25 +50,13 @@ public class Commands implements CommandExecutor {
 		{
 			// Set the basics
 			String creating = plugin.Creating.get(sender.getName());
-			if (sender.getName().equalsIgnoreCase("xXSniperzzXx_SD") && args.length >= 1 && args[0].equalsIgnoreCase("Test"))
+			/*if (sender.getName().equalsIgnoreCase("xXSniperzzXx_SD") && args.length >= 1 && args[0].equalsIgnoreCase("Test"))
 			{
-				System.out.println(DisguisePlayer.isPlayerDisguised((Player) sender));
-				if (args.length == 2)
-				{
-					DisguisePlayer.disguisePlayer((Player) sender);
-					Reset.tp2LobbyAfter((Player) sender);
-					System.out.println(DisguisePlayer.isPlayerDisguised((Player) sender));
-				}
-				if (args.length == 3)
-				{
-					DisguisePlayer.unDisguisePlayer((Player) sender);
-					System.out.println(DisguisePlayer.isPlayerDisguised((Player) sender));
-				}
 				// TESTING STUFF
-			}
+			}*/
 			// /////////////////////////////////////////////////////////////////////////////////////////////////
 			// CHAT
-			else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+			 if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 			{
 				// Is the sender a player
 				if (!(sender instanceof Player))
