@@ -423,7 +423,7 @@ public class SignListener implements Listener {
 			if (Files.getShop().getBoolean("Use"))
 			{
 				Player player = event.getPlayer();
-				if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class"))
+				if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class"))
 				{
 					if (!player.hasPermission("Infected.Setup"))
 					{

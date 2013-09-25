@@ -1888,7 +1888,11 @@ public class Commands implements CommandExecutor {
 				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))
+					player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enabled") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + ChatColor.GREEN + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+				if (player.hasPermission("Infected.SetUp"))
+					player.sendMessage(plugin.I + ChatColor.GRAY + "TagAPI Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("TagAPI Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Vault Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Vault Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 				if (player.hasPermission("Infected.SetUp"))

@@ -18,12 +18,15 @@ public class Equip {
 		if (Main.config.getBoolean("Default Classes.Use"))
 			Main.humanClasses.put(human.getName(), Main.config.getString("Default Classes.Human"));
 
+
+		if(Main.humanClasses.containsKey(human.getName()) && Main.humanClasses.get(human.getName()).equalsIgnoreCase("None")){
+			Infected.playersetLastHumanClass(human);
+			Main.humanClasses.remove(human.getName());
+		}
+		
+		
 		if (Main.config.getBoolean("TagAPI Support.Enable"))
 			TagAPI.refreshPlayer(human);
-		
-		if (Main.humanClasses.containsKey(human.getName()))
-			if (Main.humanClasses.get(human.getName()).equalsIgnoreCase("None"))
-				Main.humanClasses.remove(human.getName());
 		
 		if (Main.humanClasses.containsKey(human.getName()))
 		{
@@ -70,8 +73,12 @@ public class Equip {
 		ScoreBoard.updateScoreBoard();
 		if (Main.config.getBoolean("TagAPI Support.Enable"))
 			TagAPI.refreshPlayer(zombie);
-		// Give infected their armor
-
+		
+		if(Main.zombieClasses.containsKey(zombie.getName()) && Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None")){
+			Infected.playersetLastZombieClass(zombie);
+			Main.zombieClasses.remove(zombie.getName());
+		}
+		
 		// Take away humans items
 		for (String s : Main.config.getStringList("Armor.Human.Items"))
 		{
@@ -101,9 +108,9 @@ public class Equip {
 
 		// Add armor from the zombie class
 
-		if (Main.zombieClasses.containsKey(zombie.getName()))
-			if (!Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None"))
-				Main.zombieClasses.remove(zombie.getName());
+		//if (Main.zombieClasses.containsKey(zombie.getName()))
+		//	if (!Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None"))
+		//		Main.zombieClasses.remove(zombie.getName());
 		
 		if (Main.zombieClasses.containsKey(zombie.getName()))
 		{
@@ -139,5 +146,6 @@ public class Equip {
 				zombie.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Feet")));
 		}
 		zombie.updateInventory();
+		Methods.applyClassAbility(zombie);
 	}
 }
