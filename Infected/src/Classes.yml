@@ -1,7 +1,16 @@
 # Default Classes.yml, Last Edited in v1.9.4
-# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
-# Infected's Potion Effect Codes ----  PotionID:Durtaion:Power
-# If class is purely for humans put Disguise: Nothing (Humans won't be disguised no matter what this says) It just won't disguise the zombies
+# #
+# For more help with ids go here: 
+# Item/Block Ids - Minecraftinfo.com/IDList.htm
+# Enchantment Ids - www.minecraftwiki.net/wiki/Enchanting
+# Potion Effect Ids - www.minecraftwiki.net/wiki/Potion_effects
+# #
+# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
+# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
+# #
+# If class is for humans don't bother with a disguise
+# As humans won't get the chance to be disguise anyways
+# #
 # Infected.Classes
 #    Infected.Class.Human
 #       Infected.Class.Human.<ClassName>

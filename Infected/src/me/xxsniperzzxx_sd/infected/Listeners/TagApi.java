@@ -28,11 +28,20 @@ public class TagApi implements Listener {
 		{
 			if (Infected.isPlayerHuman(e.getNamedPlayer()))
 			{
-				e.setTag(ChatColor.GREEN + e.getNamedPlayer().getName());
-			} else
+				String string = ChatColor.GREEN + e.getNamedPlayer().getName();
+				String s = string.substring(0, Math.min(string.length(), 16));
+				e.setTag(s);
+			}
+			else if(Infected.isPlayerZombie(e.getNamedPlayer()))
 			{
-				if (!plugin.getConfig().getBoolean("DisguiseCraft Support"))
-					e.setTag(ChatColor.DARK_RED + e.getNamedPlayer().getName());
+					String string = ChatColor.DARK_RED + e.getNamedPlayer().getName();
+					String s = string.substring(0, Math.min(string.length(), 16));
+					e.setTag(s);
+			} else
+				if (!plugin.getConfig().getBoolean("DisguiseCraft Support")){
+					String string = ChatColor.GOLD + e.getNamedPlayer().getName();
+					String s = string.substring(0, Math.min(string.length(), 16));
+					e.setTag(s);
 			}
 		}
 	}

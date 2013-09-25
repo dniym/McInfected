@@ -1,5 +1,13 @@
-# # Default Shop.yml, Last Edited in v1.9.1
-# # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
+# # Default Shop.yml, Last Edited in v1.9.4
+# #
+# For more help with ids go here: 
+# Item/Block Ids - Minecraftinfo.com/IDList.htm
+# Enchantment Ids - www.minecraftwiki.net/wiki/Enchanting
+# Potion Effect Ids - www.minecraftwiki.net/wiki/Potion_effects
+# #
+# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
+# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
+# #
 # # Should we save EVERY item a play buys from shop signs
 # Save Items: false
 # # These items will be saved regardless of the option above

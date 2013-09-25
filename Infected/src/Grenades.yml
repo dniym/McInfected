@@ -1,4 +1,13 @@
 # # Default Grenades.yml, Last Edited in v1.9.4
+# #
+# For more help with ids go here: 
+# Item/Block Ids - Minecraftinfo.com/IDList.htm
+# Enchantment Ids - www.minecraftwiki.net/wiki/Enchanting
+# Potion Effect Ids - www.minecraftwiki.net/wiki/Potion_effects
+# #
+# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
+# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
+# #
 # # Any grenades not set up like the following examples will cause errors!
 # # Modify what item the grenade should be.
 # 341:
