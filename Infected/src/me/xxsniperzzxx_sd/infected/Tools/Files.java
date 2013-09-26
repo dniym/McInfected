@@ -38,16 +38,16 @@ public class Files {
 	// Reload Kills File
 	public static void reloadKills() {
 		if (killTFile == null)
-			killTFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Kills.yml");
+			killTFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),"Kills.yml");
+		
 		killT = YamlConfiguration.loadConfiguration(killTFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Kills.yml");
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			killT.setDefaults(defConfig);
+			if(!killTFile.exists())
+				killT.setDefaults(defConfig);
 		}
 	}
 
@@ -84,7 +84,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			abilities.setDefaults(defConfig);
+			if(!abilitiesFile.exists())
+				abilities.setDefaults(defConfig);
 		}
 	}
 
@@ -121,7 +122,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			classes.setDefaults(defConfig);
+			if(!classesFile.exists())
+				classes.setDefaults(defConfig);
 		}
 	}
 
@@ -158,7 +160,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			arenas.setDefaults(defConfig);
+			if(!arenasFile.exists())
+				arenas.setDefaults(defConfig);
 		}
 	}
 
@@ -194,7 +197,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			grenades.setDefaults(defConfig);
+			if(!grenadesFile.exists())
+				grenades.setDefaults(defConfig);
 		}
 	}
 
@@ -232,7 +236,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			shop.setDefaults(defConfig);
+			if(!shopFile.exists())
+				shop.setDefaults(defConfig);
 		}
 	}
 
@@ -271,7 +276,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			messages.setDefaults(defConfig);
+			if(!messagesFile.exists())
+				messages.setDefaults(defConfig);
 		}
 	}
 
@@ -308,7 +314,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			playerF.setDefaults(defConfig);
+			if(!playerFile.exists())
+				playerF.setDefaults(defConfig);
 		}
 	}
 
@@ -351,7 +358,8 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			signs.setDefaults(defConfig);
+			if(!signsFile.exists())
+				signs.setDefaults(defConfig);
 		}
 	}
 

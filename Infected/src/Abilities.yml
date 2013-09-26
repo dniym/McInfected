@@ -1,4 +1,4 @@
-# Default Abilities.yml, Last Edited in v1.9.1
+# Default Abilities.yml, Last Edited in v1.9.4
 # Regular is the default zombie, it applies an effect for 1 second
 # PotionID:Durtaion:Power
 # #
@@ -19,33 +19,30 @@
 # If its >130 and <161 they'll be a Runner zombie
 # If its >160 and <181 they'll be a Ghost zombie
 # And so on...
-# #
-# Abilities:
-#    Regular:
-#       Chance: 100
-#       Potion Effects:
-#       - "1:1:1"
-#    Tank:
-#       Chance: 30
-#       Potion Effects:
-#      - "11:300:2"
-#    Runner:
-#       Chance: 30
-#       Potion Effects:
-#       - "1:300:2"
-#    Hunter:
-#       Chance: 15
-#       Potion Effects:
-#       - "14:300:2"
-#       - "8:300:1"
-#    Ghost:
-#       Chance: 20
-#       Potion Effects:
-#       - "14:300:1"
-#    Demon:
-#       Chance: 20
-#       Potion Effects:
-#       - "5:300:1"
-# +======================================================+ #
-
-Abilities: []
+# # ==============================================  #
+Abilities:
+  Regular:
+    Chance: 100
+    Potion Effects:
+    - "1:1:1"
+  Tank:
+    Chance: 30
+    Potion Effects:
+    - "11:300:2"
+  Runner:
+    Chance: 30
+    Potion Effects:
+    - "1:300:2"
+  Hunter:
+    Chance: 15
+    Potion Effects:
+    - "14:300:2"
+    - "8:300:1"
+  Ghost:
+    Chance: 20
+    Potion Effects:
+    - "14:300:1"
+  Demon:
+    Chance: 20
+    Potion Effects:
+    - "5:300:1"

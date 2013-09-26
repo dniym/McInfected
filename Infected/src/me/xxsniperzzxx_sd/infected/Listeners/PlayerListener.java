@@ -792,7 +792,19 @@ public class PlayerListener implements Listener {
 							}
 						}else{
 
-							if (Main.humans.contains(victim))
+							if(victim.getHealth() - e.getDamage() <= 0){
+								if (Main.humans.contains(victim))
+								{
+									for (Player playing : Bukkit.getServer().getOnlinePlayers())
+									{
+										if (Infected.isPlayerInGame(playing))
+										{
+											playing.sendMessage(Methods.sendMessage("Game_GotInfected", victim, null, null));
+										}
+									}
+								}
+	
+							if (Infected.isPlayerHuman(victim))
 							{
 								for (Player playing : Bukkit.getServer().getOnlinePlayers())
 								{
@@ -802,33 +814,23 @@ public class PlayerListener implements Listener {
 									}
 								}
 							}
-
-						if (Infected.isPlayerHuman(victim))
-						{
-							for (Player playing : Bukkit.getServer().getOnlinePlayers())
+							victim.setHealth(20);
+							victim.setFallDistance(0F);
+							victim.setFoodLevel(20);
+							Methods.respawn(victim);
+							victim.setFallDistance(0F);
+							e.setDamage(0);
+							Main.humans.remove(victim.getName());
+							Main.Lasthit.remove(victim.getName());
+							Main.Winners.remove(victim.getName());
+							if (Infected.listHumans().size() == 0)
 							{
-								if (Infected.isPlayerInGame(playing))
-								{
-									playing.sendMessage(Methods.sendMessage("Game_GotInfected", victim, null, null));
-								}
+								Game.endGame(false);
+							} else
+							{
+								Equip.equipZombies(victim);
+								Methods.zombifyPlayer(victim);
 							}
-						}
-						victim.setHealth(20);
-						victim.setFallDistance(0F);
-						victim.setFoodLevel(20);
-						Methods.respawn(victim);
-						victim.setFallDistance(0F);
-						e.setDamage(0);
-						Main.humans.remove(victim.getName());
-						Main.Lasthit.remove(victim.getName());
-						Main.Winners.remove(victim.getName());
-						if (Infected.listHumans().size() == 0)
-						{
-							Game.endGame(false);
-						} else
-						{
-							Equip.equipZombies(victim);
-							Methods.zombifyPlayer(victim);
 						}
 					}
 				}

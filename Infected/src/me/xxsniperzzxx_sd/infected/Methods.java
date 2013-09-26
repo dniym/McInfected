@@ -313,9 +313,9 @@ public class Methods {
 				zombie.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,
 						2000, 1), true);
 			}
-			Methods.zombifyPlayer(zombie);
 			zombie.setHealth(20);
 			Equip.equipZombies(zombie);
+			Methods.zombifyPlayer(zombie);
 			// Inform humans of infected, prepare them
 			for (Player online : Bukkit.getServer().getOnlinePlayers())
 			{

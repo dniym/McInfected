@@ -19,10 +19,10 @@ public class DisguiseIDisguise {
 		{
 			if (!Main.idAPI.isDisguised(player))
 			{
-				if (!(DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise")) == null))
+				if (DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise").toUpperCase()) != null)
 				{
 					Main.idAPI.disguiseToAll(player, new MobDisguise(
-							DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise")),
+							DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise").toUpperCase()),
 							true));
 				} else
 					Main.idAPI.disguiseToAll(player, new MobDisguise(

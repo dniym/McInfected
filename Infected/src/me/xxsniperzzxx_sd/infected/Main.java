@@ -163,8 +163,6 @@ public class Main extends JavaPlugin {
 			if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
 				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))
 					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4))))
-						if(!(String.valueOf(updater.getVersion().charAt(6))).equalsIgnoreCase("B"))
-							if(!(String.valueOf(updater.getVersion().charAt(6))).equalsIgnoreCase("C"))
 									Main.update = false;
 
 		}

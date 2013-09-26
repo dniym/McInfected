@@ -19,7 +19,7 @@ public class DisguiseDisguiseCraft {
 		{
 			if (!Main.dcAPI.isDisguised(player))
 			{
-				if (!(DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise")) == null))
+				if (DisguiseType.fromString(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise")) != null)
 				{
 					Main.dcAPI.disguisePlayer(player, new Disguise(
 							Main.dcAPI.newEntityID(),
