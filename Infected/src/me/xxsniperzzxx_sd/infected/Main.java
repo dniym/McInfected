@@ -4,7 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Listeners.CrackShotApi;
+import me.xxsniperzzxx_sd.infected.Listeners.DamageEvents;
+import me.xxsniperzzxx_sd.infected.Listeners.DeathEvent;
 import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
 import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
@@ -30,10 +33,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
-import de.robingrether.idisguise.api.DisguiseAPI;
-
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
-import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
 public class Main extends JavaPlugin {
 
@@ -108,8 +107,6 @@ public class Main extends JavaPlugin {
 	
 
 	// Plugin Addons
-	public static DisguiseCraftAPI dcAPI;
-	public static DisguiseAPI idAPI;
 	public static Plugin Disguiser;
 	public static Economy economy = null;
 
@@ -159,11 +156,11 @@ public class Main extends JavaPlugin {
 			Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			Main.name = updater.getLatestVersionString();
 			updateBukkitVersion = updater.updateBukkitVersion;
-
+			
 			if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
 				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))
 					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4))))
-									Main.update = false;
+						Main.update = false;
 
 		}
 
@@ -227,48 +224,7 @@ public class Main extends JavaPlugin {
 			}
 		}else
 			System.out.println("TagAPI Support is Disabled");
-		
-		//If disguises are a go
-		if (getConfig().getBoolean("Disguise Support.Enabled"))
-		{
-			//If we're looking for disguisecraft
-			if(getConfig().getBoolean("Disguise Support.DisguiseCraft")){
-				if (!(getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
-				{
-					Main.dcAPI = DisguiseCraft.getAPI();
-					Disguiser = getServer().getPluginManager().getPlugin("DisguiseCraft");
-				}
-				else
-				{
-					System.out.println("DisguiseCraft wasn't found on this server, disabling DisguiseCraft Support");
-					getConfig().set("Disguise Support.DisguiseCraft", false);
-					saveConfig();
-				}
-			
-			}//If were looking for iDisguise
-			if(getConfig().getBoolean("Disguise Support.iDisguise")){
-
-				if (!(getServer().getPluginManager().getPlugin("iDisguise") == null))
-				{
-					idAPI = getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
-					Disguiser = getServer().getPluginManager().getPlugin("iDisguise");
-				} else
-				{
-					System.out.println("iDisguise wasn't found on this server, disabling iDisguise Support");
-					getConfig().set("Disguise Support.iDisguise", false);
-					saveConfig();
-				}
-			}
-			if(Disguiser == null){
-				System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
-				getConfig().set("Disguise Support.Enabled", false);
-				saveConfig();
-			}
-			if(Disguiser != null)
-				System.out.println("For Disguise Support we're using " + Disguiser);
-		}else
-			System.out.println("Disguise Support is Disabled");
-
+		Disguises.getDisguisePlugin();
 		// On enable set the times form the config
 		Main.voteTime = getConfig().getInt("Time.Voting Time");
 		Main.Wait = getConfig().getInt("Time.Alpha Zombie Infection");
@@ -280,6 +236,15 @@ public class Main extends JavaPlugin {
 		PlayerListener PlayerListener = new PlayerListener(this);
 		SignListener SignListener = new SignListener(this);
 		TeleportFix TeleportFix = new TeleportFix(this);
+		if(getConfig().getBoolean("Use Death Event Instead of Damage Event"))
+		{
+			DeathEvent DeathEvents = new DeathEvent(this);
+			pm.registerEvents(DeathEvents, this);	
+		}
+		else
+		{	DamageEvents DamageEvents = new DamageEvents(this);
+			pm.registerEvents(DamageEvents, this);
+		}
 		GrenadeListener GrenadeListener = new GrenadeListener(this);
 		pm.registerEvents(PlayerListener, this);
 		pm.registerEvents(GrenadeListener, this);

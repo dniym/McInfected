@@ -5,7 +5,7 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
-import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
@@ -495,8 +495,8 @@ public class Game {
 						Methods.SetOnlineTime(players);
 						Files.savePlayers();
 						if (Main.config.getBoolean("Disguise Support.Enabled"))
-							if (DisguisePlayer.isPlayerDisguised(players))
-								DisguisePlayer.unDisguisePlayer(players);
+							if (Disguises.isPlayerDisguised(players))
+								Disguises.unDisguisePlayer(players);
 
 						for (PotionEffect reffect : players.getActivePotionEffects())
 						{

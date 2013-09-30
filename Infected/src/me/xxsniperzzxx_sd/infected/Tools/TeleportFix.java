@@ -5,7 +5,7 @@ import java.util.List;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -65,15 +65,15 @@ public class TeleportFix implements Listener {
 				{
 					if (visible)
 					{
-						if (!DisguisePlayer.isPlayerDisguised(player))
+						if (!Disguises.isPlayerDisguised(player))
 							tpedPlayer.showPlayer(player);
-						if (!DisguisePlayer.isPlayerDisguised(tpedPlayer))
+						if (!Disguises.isPlayerDisguised(tpedPlayer))
 							player.showPlayer(tpedPlayer);
 					} else
 					{
-						if (!DisguisePlayer.isPlayerDisguised(player))
+						if (!Disguises.isPlayerDisguised(player))
 							tpedPlayer.hidePlayer(player);
-						if (!DisguisePlayer.isPlayerDisguised(player))
+						if (!Disguises.isPlayerDisguised(player))
 							player.hidePlayer(tpedPlayer);
 					}
 				} else

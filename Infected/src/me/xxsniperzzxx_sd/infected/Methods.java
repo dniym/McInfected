@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
-import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -148,7 +148,7 @@ public class Methods {
 			applyAbilities(player);
 		}
 		if (Main.config.getBoolean("Disguise Support.Enabled"))
-			DisguisePlayer.disguisePlayer(player);
+			Disguises.disguisePlayer(player);
 
 	}
 
@@ -291,20 +291,26 @@ public class Methods {
 			Infected.resetPlugin();
 		} else
 		{
+			Main.zombies.clear();
+			Main.humans.clear();
 			for (Player online : Bukkit.getServer().getOnlinePlayers())
 				if (Infected.isPlayerInGame(online) && Main.config.getBoolean("Disguise Support.Enabled"))
-					if (DisguisePlayer.isPlayerDisguised(online))
-						DisguisePlayer.unDisguisePlayer(online);
+					if (Disguises.isPlayerDisguised(online))
+						Disguises.unDisguisePlayer(online);
+			int alphazombies = 1;
+			if(Main.config.getBoolean("Percent to Infected.Enable"))
+					alphazombies = Main.inGame.size()/Main.config.getInt("Percent to Infect");
+			int temp;
+			for(temp = 0; temp != alphazombies && Main.zombies.size() != alphazombies; temp ++){
 			int alpha = r.nextInt(Main.inGame.size());
 			String name = Main.inGame.get(alpha);
 			Player zombie = Bukkit.getServer().getPlayer(name);
 			zombie.sendMessage(Methods.sendMessage("Game_YouAreFirstInfected", null, null, null));
-			Main.zombies.clear();
-			Main.humans.clear();
 			Main.zombies.add(zombie.getName());
 			Main.Winners.remove(zombie.getName());
 			if (Main.config.getBoolean("New Zombie Tp"))
 				Methods.respawn(zombie);
+
 			zombie.playEffect(zombie.getLocation(), Effect.MOBSPAWNER_FLAMES, 5);
 			if (Main.config.getBoolean("Zombie Abilities") == true)
 			{
@@ -316,6 +322,11 @@ public class Methods {
 			zombie.setHealth(20);
 			Equip.equipZombies(zombie);
 			Methods.zombifyPlayer(zombie);
+			for (Player online : Bukkit.getServer().getOnlinePlayers())
+				if (Main.inGame.contains(online.getName()) && (!(Main.zombies.contains(online.getName()))))
+						online.sendMessage(Methods.sendMessage("Game_FirstInfected", zombie, null, null));
+			
+			}
 			// Inform humans of infected, prepare them
 			for (Player online : Bukkit.getServer().getOnlinePlayers())
 			{
@@ -334,7 +345,6 @@ public class Methods {
 						{
 							Main.Winners.add(online.getName());
 						}
-						online.sendMessage(Methods.sendMessage("Game_FirstInfected", zombie, null, null));
 						online.setHealth(20);
 						online.playEffect(online.getLocation(), Effect.SMOKE, 2);
 

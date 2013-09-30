@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 1.9.3
+# Default Infected Config, Last edited in 1.9.7
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -28,6 +28,7 @@
 # # Enable what you use and disable what you dont
 #   DisguiseCraft: true
 #   iDisguise: true
+#   LibsDisguises: true
 # #
 # Zombie Abilities: false
 # #
@@ -62,6 +63,15 @@
 # # Want to prevent players from leaving the game
 #   Disable Leave Command: true
 # #
+# # When the alpha zombies are chosen what percent of the players become infected
+# Percent to infect:
+# # Are we going to use this option?
+#   Enable: true
+# What percentage? (0% - 100%)
+#   Percent: 20
+# #
+# # Should Infected use death events instead of the damage events(Still a WIP)
+# Use Death Event Instead of Damage Event: false
 # # Use books for Infecteds commands
 # Book For Help: true
 # #
@@ -227,6 +237,12 @@ Time:
   Voting Time: 30
   Alpha Zombie Infection: 20
   Game Time Limit: 480
+
+Percent to infect:
+  Enable: true
+  Percent: 20
+  
+Use Death Event Instead of Damage Event: false
 
 Allowed Commands:
 - /list

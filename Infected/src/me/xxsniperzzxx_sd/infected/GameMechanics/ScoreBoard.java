@@ -23,17 +23,10 @@ public class ScoreBoard {
 		{
 
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			;
 			Scoreboard infectedBoard = manager.getNewScoreboard();
-			;
+			
 			Objective infectedList = infectedBoard.registerNewObjective("InfectedBoard", "dummy");
 			infectedList.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-			for (String s : Infected.listInGame())
-			{
-				Player player = Bukkit.getPlayer(s);
-				player.setScoreboard(infectedBoard);
-			}
 
 			if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.BEFOREINFECTED || Infected.getGameState() == GameState.GAMEOVER)
 			{
@@ -85,6 +78,12 @@ public class ScoreBoard {
 				}
 
 			}
+			for (String s : Infected.listInGame())
+			{
+				Player player = Bukkit.getPlayer(s);
+				player.setScoreboard(infectedBoard);
+			}
+
 		}
 	}
 

@@ -29,7 +29,7 @@ public class Deaths {
 
 		Methods.handleKillStreaks(true, Killed);
 		Methods.handleKillStreaks(false, Killer);
-
+		
 		String kill = getKillType(Infected.playerGetGroup(Killer) + "s", Killer.getName(), Killed.getName());
 		for (Player playing : Bukkit.getServer().getOnlinePlayers())
 			if (Main.inGame.contains(playing.getName()))
@@ -38,12 +38,9 @@ public class Deaths {
 		if (Infected.isPlayerHuman(Killed))
 		{
 			if (Main.config.getBoolean("New Zombies Tp"))
-			{
-				Methods.zombifyPlayer(Killed);
 				Methods.respawn(Killed);
-
-			} else
-				Methods.zombifyPlayer(Killed);
+			
+			Methods.zombifyPlayer(Killed);
 
 			Killed.sendMessage(Main.I + "You have become infected!");
 			Killed.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,
@@ -88,12 +85,17 @@ public class Deaths {
 	
 	
 
-	public static String getKillType(String group, String human, String zombie) {
+	public static String getKillType(String group, String killer, String killed) {
 		Random r = new Random();
 		int i = r.nextInt(Files.getKills().getStringList(group).size());
 		String killtype = ChatColor.GRAY + Files.getKills().getStringList(group).get(i);
 		String msg = null;
-		msg = killtype.replaceAll("<zombie>", ChatColor.RED + zombie).replaceAll("<human>", ChatColor.GREEN + human);
+		
+		if(group.equalsIgnoreCase("Zombies"))
+			msg = killtype.replaceAll("<zombie>", ChatColor.RED + killer).replaceAll("<human>", ChatColor.GREEN + killed);
+		else
+			msg = killtype.replaceAll("<zombie>", ChatColor.RED + killed).replaceAll("<human>", ChatColor.GREEN + killer);
+		
 		String cmsg = ChatColor.translateAlternateColorCodes('&', msg);
 		return cmsg;
 	}

@@ -3,7 +3,7 @@ package me.xxsniperzzxx_sd.infected.GameMechanics;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
-import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 
 import org.bukkit.Bukkit;
@@ -57,8 +57,8 @@ public class Reset {
 		Bukkit.getServer().getScheduler().cancelTask(Main.timeVote);
 		Bukkit.getServer().getScheduler().cancelTask(Main.queuedtpback);
 		if (Main.config.getBoolean("Disguise Support.Enabled"))
-			if (DisguisePlayer.isPlayerDisguised(player))
-				DisguisePlayer.unDisguisePlayer(player);
+			if (Disguises.isPlayerDisguised(player))
+				Disguises.unDisguisePlayer(player);
 
 		if (Main.inGame.size() == 0)
 			Main.Winners.clear();
@@ -124,9 +124,10 @@ public class Reset {
 		Main.Inventory.remove(player.getName());
 		Main.Spot.remove(player.getName());
 		Main.Winners.remove(player.getName());
-		if (Infected.isPlayerInGame(player) && Main.config.getBoolean("Disguise Support.Enabled"))
-			if (DisguisePlayer.isPlayerDisguised(player))
-				DisguisePlayer.unDisguisePlayer(player);
+		
+		if (Main.config.getBoolean("Disguise Support.Enabled"))
+			if (Disguises.isPlayerDisguised(player))
+				Disguises.unDisguisePlayer(player);
 
 		if (Main.Voted4.containsKey(player.getName()))
 		{

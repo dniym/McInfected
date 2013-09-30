@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Main.GameState;
-import me.xxsniperzzxx_sd.infected.Disguise.DisguisePlayer;
+import me.xxsniperzzxx_sd.infected.Listeners.CrackShotApi;
+import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
@@ -14,6 +16,7 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Menus;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -220,7 +224,7 @@ public class Commands implements CommandExecutor {
 					// Safe player's stats/stuff
 					Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerJoinEvent(
 							player,
-							Main.inLobby,
+							plugin.inLobby,
 							plugin.getConfig().getInt("Automatic Start.Minimum Players")));
 					plugin.inGame.add(player.getName());
 					plugin.Spot.put(player.getName(), player.getLocation());
@@ -235,14 +239,14 @@ public class Commands implements CommandExecutor {
 					plugin.inLobby.add(player.getName());
 					plugin.gamemode.put(player.getName(), player.getGameMode().toString());
 
-					if (Main.config.getBoolean("ScoreBoard Support"))
+					if (plugin.config.getBoolean("ScoreBoard Support"))
 					{
 						ScoreBoard.updateScoreBoard();
 					}
 
-					if (Main.config.getBoolean("Disguise Support.Enabled"))
-						if (DisguisePlayer.isPlayerDisguised(player))
-							DisguisePlayer.unDisguisePlayer(player);
+					if (plugin.config.getBoolean("Disguise Support.Enabled"))
+						if (Disguises.isPlayerDisguised(player))
+							Disguises.unDisguisePlayer(player);
 
 					// Prepare player
 					player.setMaxHealth(20.0);
@@ -256,11 +260,15 @@ public class Commands implements CommandExecutor {
 					if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
 						player.getInventory().setContents(Infected.playerGetShopInventory(player));
 					player.sendMessage(Methods.sendMessage("Lobby_JoinLobby", null, null, null));
+					
 					player.setGameMode(GameMode.ADVENTURE);
 					player.setFlying(false);
 
-					Main.humanClasses.put(player.getName(), Infected.playergetLastHumanClass(player));
-					Main.zombieClasses.put(player.getName(), Infected.playergetLastZombieClass(player));
+					if(!Infected.playergetLastHumanClass(player).equalsIgnoreCase("None"))
+						plugin.humanClasses.put(player.getName(), Infected.playergetLastHumanClass(player));
+					
+					if(!Infected.playergetLastZombieClass(player).equalsIgnoreCase("None"))
+						plugin.zombieClasses.put(player.getName(), Infected.playergetLastZombieClass(player));
 
 					if (!plugin.KillStreaks.containsKey(player.getName()))
 						plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
@@ -285,17 +293,17 @@ public class Commands implements CommandExecutor {
 					}
 					if (Infected.getGameState() == GameState.BEFOREINFECTED)
 					{
-						if (Main.config.getBoolean("ScoreBoard Support"))
+						if (plugin.config.getBoolean("ScoreBoard Support"))
 						{
 							player.setGameMode(GameMode.SURVIVAL);
 							ScoreBoard.updateScoreBoard();
 						}
 						Methods.respawn(player);
-						if (!Main.Winners.contains(player.getName()))
+						if (!plugin.Winners.contains(player.getName()))
 						{
-							Main.Winners.add(player.getName());
+							plugin.Winners.add(player.getName());
 						}
-						Main.Timein.put(player.getName(), System.currentTimeMillis() / 1000);
+						plugin.Timein.put(player.getName(), System.currentTimeMillis() / 1000);
 						if (!plugin.KillStreaks.containsKey(player.getName()))
 							plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
 						player.setHealth(20.0);
@@ -372,17 +380,17 @@ public class Commands implements CommandExecutor {
 
 					if (plugin.inGame.contains(player.getName()) && Infected.getGameState() == GameState.STARTED)
 					{
-						if (Main.humans.contains(player))
+						if (plugin.humans.contains(player))
 							for (Player playing : Bukkit.getServer().getOnlinePlayers())
 							{
-								if ((!(playing == player)) && Main.inGame.contains(playing.getName()))
+								if ((!(playing == player)) && plugin.inGame.contains(playing.getName()))
 									playing.sendMessage(Methods.sendMessage("Game_GotInfected", player, null, null));
 							}
 						plugin.humans.remove(player.getName());
 						if (!plugin.zombies.contains(player.getName()))
 							plugin.zombies.add(player.getName());
 						plugin.Winners.remove(player.getName());
-						Main.Lasthit.remove(player.getName());
+						plugin.Lasthit.remove(player.getName());
 						player.sendMessage(plugin.I + "You have become infected!");
 						player.addPotionEffect(new PotionEffect(
 								PotionEffectType.CONFUSION, 20, 2));
@@ -544,7 +552,7 @@ public class Commands implements CommandExecutor {
 						// Leave well everyones in the lobby
 						if (Infected.getGameState() == GameState.INLOBBY)
 						{
-							if (Main.config.getBoolean("Debug"))
+							if (plugin.config.getBoolean("Debug"))
 							{
 								System.out.println("Leave: Leaving, wellin lobby, no timers active");
 							}
@@ -559,13 +567,13 @@ public class Commands implements CommandExecutor {
 						// Voting has started, less then 2 people left
 						else if (Infected.getGameState() == GameState.VOTING)
 						{
-							if (Main.config.getBoolean("Debug"))
+							if (plugin.config.getBoolean("Debug"))
 							{
 								System.out.println("Leave: Before Voting");
 							}
-							if (Main.inGame.size() == 1)
+							if (plugin.inGame.size() == 1)
 							{
-								if (Main.config.getBoolean("Debug"))
+								if (plugin.config.getBoolean("Debug"))
 								{
 									System.out.println("Leave: Before Voting(Triggered)");
 								}
@@ -596,13 +604,13 @@ public class Commands implements CommandExecutor {
 						// In Arena, before first Infected
 						else if (Infected.getGameState() == GameState.BEFOREINFECTED)
 						{
-							if (Main.config.getBoolean("Debug"))
+							if (plugin.config.getBoolean("Debug"))
 							{
 								System.out.println("Leave: In Arena Before Infected");
 							}
-							if (Main.inGame.size() == 1)
+							if (plugin.inGame.size() == 1)
 							{
-								if (Main.config.getBoolean("Debug"))
+								if (plugin.config.getBoolean("Debug"))
 								{
 									System.out.println("Leave: In Arena Before Infected(Triggered)");
 								}
@@ -633,13 +641,13 @@ public class Commands implements CommandExecutor {
 						// In Arena, Game has started
 						else if (Infected.getGameState() == GameState.STARTED)
 						{
-							if (Main.config.getBoolean("Debug"))
+							if (plugin.config.getBoolean("Debug"))
 							{
 								System.out.println("Leave: In Arena, Game Has Started");
 							}
-							if (Main.inGame.size() == 1)
+							if (plugin.inGame.size() == 1)
 							{
-								if (Main.config.getBoolean("Debug"))
+								if (plugin.config.getBoolean("Debug"))
 								{
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 								}
@@ -656,9 +664,9 @@ public class Commands implements CommandExecutor {
 								Reset.resetInf();
 							}
 							// If Not Enough zombies remain
-							else if (Main.zombies.size() == 1 && Infected.isPlayerZombie(player))
+							else if (plugin.zombies.size() == 1 && Infected.isPlayerZombie(player))
 							{
-								if (Main.config.getBoolean("Debug"))
+								if (plugin.config.getBoolean("Debug"))
 								{
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 								}
@@ -667,9 +675,9 @@ public class Commands implements CommandExecutor {
 								Methods.newZombieSetUpEveryOne();
 							}
 							// Not enough humans left
-							else if (Main.humans.size() == 1 && plugin.humans.contains(player.getName()))
+							else if (plugin.humans.size() == 1 && plugin.humans.contains(player.getName()))
 							{
-								if (Main.config.getBoolean("Debug"))
+								if (plugin.config.getBoolean("Debug"))
 								{
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 								}
@@ -853,9 +861,9 @@ public class Commands implements CommandExecutor {
 					{
 						if (plugin.inGame.contains(players.getName()))
 						{
-							if (Main.config.getBoolean("Disguise Support.Enabled"))
-								if (DisguisePlayer.isPlayerDisguised(players))
-									DisguisePlayer.unDisguisePlayer(players);
+							if (plugin.config.getBoolean("Disguise Support.Enabled"))
+								if (Disguises.isPlayerDisguised(players))
+									Disguises.unDisguisePlayer(players);
 
 							// Give player's all their stuff/stats back
 							Reset.resetp(players);
@@ -1050,8 +1058,8 @@ public class Commands implements CommandExecutor {
 						sender.sendMessage(plugin.I + ChatColor.RED + "You don't have an arena selected!");
 						return true;
 					}
-					List<String> list = Infected.filesGetArenas().getStringList("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns");
-					sender.sendMessage(plugin.I + Main.Creating.get(sender.getName()) + " has " + ChatColor.DARK_GRAY + list.size() + ChatColor.GRAY + " spawns.");
+					List<String> list = Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns");
+					sender.sendMessage(plugin.I + plugin.Creating.get(sender.getName()) + " has " + ChatColor.DARK_GRAY + list.size() + ChatColor.GRAY + " spawns.");
 				}
 				// ///////////////////////////////////////////////////////////////////////////////////////////////////
 				// SETSPAWN
@@ -1081,20 +1089,20 @@ public class Commands implements CommandExecutor {
 					float yaw = l.getYaw();
 					float pitch = l.getPitch();
 					String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
-					if (Infected.filesGetArenas().getStringList("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns") == null)
+					if (Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns") == null)
 					{
 						String[] list = { s };
-						Infected.filesGetArenas().set("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns", list);
+						Infected.filesGetArenas().set("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns", list);
 					} else
 					{
-						List<String> list = Infected.filesGetArenas().getStringList("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns");
+						List<String> list = Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns");
 						list.add(s);
-						Infected.filesGetArenas().set("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns", list);
+						Infected.filesGetArenas().set("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns", list);
 						Infected.filesSaveArenas();
 					}
 					Infected.filesSaveArenas();
 					Infected.filesReloadArenas();
-					player.sendMessage(plugin.I + creating + " spawn #" + ChatColor.YELLOW + Infected.filesGetArenas().getStringList("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns").size() + ChatColor.GRAY + " set at your location!");
+					player.sendMessage(plugin.I + creating + " spawn #" + ChatColor.YELLOW + Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns").size() + ChatColor.GRAY + " set at your location!");
 					return true;
 				}
 				// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1260,7 +1268,7 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 					Player player = (Player) sender;
-					List<String> list = Infected.filesGetArenas().getStringList("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns");
+					List<String> list = Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns");
 					int i = Integer.valueOf(args[1]) - 1;
 					if (i < list.size())
 					{
@@ -1293,12 +1301,12 @@ public class Commands implements CommandExecutor {
 						sender.sendMessage(plugin.I + ChatColor.RED + "You don't have an arena selected!");
 						return true;
 					}
-					List<String> list = Infected.filesGetArenas().getStringList("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns");
+					List<String> list = Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns");
 					int i = Integer.valueOf(args[1]) - 1;
 					if (!(list.get(i) == null))
 					{
 						list.remove(i);
-						Infected.filesGetArenas().set("Arenas." + Main.Creating.get(sender.getName()) + ".Spawns", list);
+						Infected.filesGetArenas().set("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns", list);
 						Infected.filesSaveArenas();
 						sender.sendMessage(plugin.I + ChatColor.RED + "You have removed spawn number " + i + 1 + ".");
 					} else
@@ -1414,7 +1422,7 @@ public class Commands implements CommandExecutor {
 							player.sendMessage(plugin.I + ChatColor.RED + " No Grenades were found...");
 							return true;
 						}
-						Main.Grenades.clear();
+						plugin.Grenades.clear();
 						for (String grenades : Infected.filesGetGrenades().getKeys(true))
 						{
 							// Check if the string matchs an arena
@@ -1422,26 +1430,26 @@ public class Commands implements CommandExecutor {
 							{
 								if (grenades.matches("[0-9]+"))
 								{
-									Main.Grenades.add(Integer.valueOf(grenades));
+									plugin.Grenades.add(Integer.valueOf(grenades));
 								}
 							}
 						}
 						if (args[1].matches("[0-9]+"))
 						{
 							int gi = Integer.parseInt(args[1]);
-							if (Integer.valueOf(args[1]) <= (Main.Grenades.size() - 1))
+							if (Integer.valueOf(args[1]) <= (plugin.Grenades.size() - 1))
 							{
-								if (Infected.playerGetPoints(player) > Infected.filesGetGrenades().getInt(Main.Grenades.get(gi) + ".Cost"))
+								if (Infected.playerGetPoints(player) > Infected.filesGetGrenades().getInt(plugin.Grenades.get(gi) + ".Cost"))
 								{
 									ItemStack itemstack = new ItemStack(
-											Material.getMaterial(Main.Grenades.get(gi)),
+											Material.getMaterial(plugin.Grenades.get(gi)),
 											1);
 									ItemMeta im = itemstack.getItemMeta();
-									im.setDisplayName("§e" + Infected.filesGetGrenades().getString(Main.Grenades.get(gi) + ".Name"));
+									im.setDisplayName("§e" + Infected.filesGetGrenades().getString(plugin.Grenades.get(gi) + ".Name"));
 									itemstack.setItemMeta(im);
 									player.getInventory().addItem(itemstack);
-									Infected.playerSetPoints(player, Infected.playerGetPoints(player), Infected.filesGetGrenades().getInt(Main.Grenades.get(gi) + ".Cost"));
-									player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "You have just bought a " + ChatColor.AQUA + Infected.filesGetGrenades().getString(Main.Grenades.get(gi) + ".Name"));
+									Infected.playerSetPoints(player, Infected.playerGetPoints(player), Infected.filesGetGrenades().getInt(plugin.Grenades.get(gi) + ".Cost"));
+									player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "You have just bought a " + ChatColor.AQUA + Infected.filesGetGrenades().getString(plugin.Grenades.get(gi) + ".Name"));
 								} else
 									player.sendMessage(plugin.I + ChatColor.RED + "You don't have enough points to make this purchase!");
 							} else
@@ -1584,8 +1592,8 @@ public class Commands implements CommandExecutor {
 						{
 
 							Random r = new Random();
-							int i = r.nextInt(Main.possibleArenas.size());
-							voted4 = Main.possibleArenas.get(i);
+							int i = r.nextInt(plugin.possibleArenas.size());
+							voted4 = plugin.possibleArenas.get(i);
 						}
 						if (!voted4.equals("random") && !Infected.filesGetArenas().contains("Arenas." + voted4 + ".Spawns"))
 						{
@@ -1612,7 +1620,7 @@ public class Commands implements CommandExecutor {
 								{
 									players.sendMessage(plugin.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + voted4);
 								}
-							if (Main.config.getBoolean("ScoreBoard Support"))
+							if (plugin.config.getBoolean("ScoreBoard Support"))
 							{
 								ScoreBoard.updateScoreBoard();
 							}
@@ -1702,9 +1710,73 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
 						return true;
 					}
+					System.out.println("===== Infected =====");
 					Infected.filesReloadAllButConfig();
 					plugin.reloadConfig();
-					player.sendMessage(Main.I + "Infecteds Files have been reloaded");
+
+					if (plugin.getConfig().getBoolean("Vault Support.Enable"))
+					{
+						if (!(Bukkit.getServer().getPluginManager().getPlugin("Vault") == null))
+						{
+							System.out.println("Vault support has been enabled!");
+						
+							RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+							if (economyProvider != null)
+							{
+								plugin.economy = economyProvider.getProvider();
+							}
+							
+						} 
+						else
+						{
+							System.out.println(plugin.I + "Vault wasn't found on this server, Disabling Vault Support");
+							plugin.getConfig().set("Vault Support.Enable", false);
+							plugin.saveConfig();
+
+						}
+					}else
+						System.out.println("Vault Support is Disabled");
+
+					// Check if the plugin addons are there
+					if (plugin.getConfig().getBoolean("CrackShot Support.Enable"))
+					{
+						if (plugin.getServer().getPluginManager().getPlugin("CrackShot") == null)
+						{
+
+							System.out.println(plugin.I + "CrackShot wasn't found on this server, disabling CrackShot Support");
+							plugin.getConfig().set("CrackShot Support.Enable", false);
+							plugin.saveConfig();
+						} else
+						{
+						CrackShotApi CSApi = new CrackShotApi(plugin);
+						Bukkit.getPluginManager().registerEvents(CSApi, plugin);
+						System.out.println("CrackShot support has been enabled!");
+						}
+					}else
+						System.out.println("CrackShot Support is Disabled");
+
+					
+					// Check if the plugin addons are there
+					if (plugin.getConfig().getBoolean("TagAPI Support.Enable"))
+					{
+						if (plugin.getServer().getPluginManager().getPlugin("TagAPI") == null)
+						{
+							System.out.println(plugin.I + "TagApi wasn't found on this server, disabling TagApi Support");
+							plugin.getConfig().set("TagAPI Support.Enable", false);
+							plugin.saveConfig();
+						} else
+						{
+							TagApi TagApi = new TagApi(plugin);
+							Bukkit.getPluginManager().registerEvents(TagApi, plugin);
+							System.out.println("TagApi support has been enabled!");
+						}
+					}else
+						System.out.println("TagAPI Support is Disabled");
+					
+					Disguises.getDisguisePlugin();
+					System.out.println("====================");
+
+					player.sendMessage(plugin.I + "Infecteds Files have been reloaded");
 				}
 				// ///////////////////////////////////////////////////////////////////////////////////////////////////
 				// LIST
@@ -1885,22 +1957,16 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(plugin.I + ChatColor.GRAY + "Author:" + ChatColor.GREEN + " xXSniperzzXx_SD");
 				player.sendMessage(plugin.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + plugin.v);
 				player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev:" + ChatColor.GREEN + " http://bit.ly/QN6Xg5");
-				if (player.hasPermission("Infected.SetUp"))
+				if (player.hasPermission("Infected.SetUp")){
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
-					player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enabled") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
+					player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + ChatColor.GREEN + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "TagAPI Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("TagAPI Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Vault Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Vault Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "ScoreBoard Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("ScoreBoard Support") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Grenades: " + ChatColor.GREEN + "" + (Infected.filesGetGrenades().getBoolean("Use") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
-				if (player.hasPermission("Infected.SetUp"))
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Shop: " + ChatColor.GREEN + "" + (Infected.filesGetShop().getBoolean("Use") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+				}
 				player.sendMessage(plugin.I + ChatColor.YELLOW + "For Help type: /Infected Help");
 				player.sendMessage("");
 				return true;

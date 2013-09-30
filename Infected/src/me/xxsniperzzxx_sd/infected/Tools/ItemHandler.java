@@ -45,7 +45,13 @@ public class ItemHandler {
 			itemid = ss[0];
 		} else
 			itemid = string;
-		int i = Integer.valueOf(itemid);
+		int i = 0;
+		try {
+			i = Integer.valueOf(itemid);
+		}
+		catch (NumberFormatException nfe){
+			i = 0;
+		}
 		return i;
 	}
 
@@ -76,7 +82,13 @@ public class ItemHandler {
 
 		} else
 			itemdata = "0";
-		Short s = Short.valueOf(itemdata);
+		Short s = 0;
+		try {
+			s = Short.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe){
+			s = 0;
+		}
 		return s;
 	}
 
@@ -102,7 +114,14 @@ public class ItemHandler {
 				itemdata = s[1];
 		} else
 			itemdata = "1";
-		return Integer.valueOf(itemdata);
+		int i = 1;
+		try {
+			i = Integer.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe){
+			i = 1;
+		}
+		return i;
 	}
 
 	private static int getItemEnchant(String Path) {
@@ -125,7 +144,14 @@ public class ItemHandler {
 			}
 		} else
 			itemdata = "0";
-		return Integer.valueOf(itemdata);
+		int i = 1;
+		try {
+			i = Integer.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe){
+			i = 1;
+		}
+		return i;
 	}
 
 	private static int getItemEnchantLvl(String Path) {
@@ -148,7 +174,14 @@ public class ItemHandler {
 			}
 		} else
 			itemdata = "1";
-		return Integer.valueOf(itemdata);
+		int i = 1;
+			try {
+				i = Integer.valueOf(itemdata);
+			}
+			catch (NumberFormatException nfe){
+				i = 1;
+			}
+			return i;
 	}
 
 	private static String getItemName(String Path) {
@@ -182,19 +215,21 @@ public class ItemHandler {
 			im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
 			is.setItemMeta(im);
 		}
-		if (location.contains("-"))
-		{
-			int i;
-			String enchants[] = location.split("-");
-			for (i = 1; i != enchants.length; i++)
+		if(is.getType() != Material.AIR)
+			if (location.contains("-"))
 			{
-				if (enchants[i] != null)
+				int i;
+				String enchants[] = location.split("-");
+				for (i = 1; i != enchants.length; i++)
 				{
-					enchants[i] = "-" + enchants[i];
-					is.addUnsafeEnchantment(Enchantment.getById(getItemEnchant(enchants[i])), getItemEnchantLvl(enchants[i]));
-				}
+					if (enchants[i] != null)
+					{
+						enchants[i] = "-" + enchants[i];
+						
+						is.addUnsafeEnchantment(Enchantment.getById(getItemEnchant(enchants[i])), getItemEnchantLvl(enchants[i]));	
+					}
+				}	
 			}
-		}
 		return is;
 	}
 	
