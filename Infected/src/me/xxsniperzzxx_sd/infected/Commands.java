@@ -16,6 +16,7 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Menus;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -257,8 +258,11 @@ public class Commands implements CommandExecutor {
 						player.removePotionEffect(reffect.getType());
 					}
 					Methods.resetPlayersInventory(player);
-					if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
-						player.getInventory().setContents(Infected.playerGetShopInventory(player));
+					Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+					if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+						if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
+							player.getInventory().setContents(Infected.playerGetShopInventory(player));
+					}
 					player.sendMessage(Methods.sendMessage("Lobby_JoinLobby", null, null, null));
 					
 					player.setGameMode(GameMode.ADVENTURE);

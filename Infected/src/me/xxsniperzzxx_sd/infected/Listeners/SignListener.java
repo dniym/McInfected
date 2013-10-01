@@ -10,6 +10,7 @@ import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Main.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -182,7 +183,10 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(stack);
 													if (Files.getShop().getBoolean("Save Items"))
 													{
-														Infected.playerAddToShopInventory(player, stack);
+														Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+														if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+															Infected.playerAddToShopInventory(player, stack);
+														}
 													}
 												} else
 												{
@@ -192,7 +196,10 @@ public class SignListener implements Listener {
 												player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + item);
 												if (Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(item.getId()))
 												{
-													Infected.playerSaveShopInventory(player);
+													Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+													if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+														Infected.playerSaveShopInventory(player);
+													}
 												}
 											} else
 											{
@@ -231,7 +238,10 @@ public class SignListener implements Listener {
 														player.getInventory().addItem(is);
 														if ((Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(is.getTypeId())) && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 														{
-															Infected.playerSaveShopInventory(player);
+															Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+															if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+																Infected.playerSaveShopInventory(player);
+															}
 														}
 													} else
 													{
@@ -242,7 +252,10 @@ public class SignListener implements Listener {
 													player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + itemname);
 													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 													{
-														Infected.playerSaveShopInventory(player);
+														Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+														if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+															Infected.playerSaveShopInventory(player);
+														}
 													}
 												}
 											} else
@@ -283,7 +296,10 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(stack);
 													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
 													{
-														Infected.playerSaveShopInventory(player);
+														Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+														if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+															Infected.playerSaveShopInventory(player);
+														}
 													}
 												} else
 												{
@@ -293,7 +309,10 @@ public class SignListener implements Listener {
 												player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + item);
 												if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
 												{
-													Infected.playerSaveShopInventory(player);
+													Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
+													if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+														Infected.playerSaveShopInventory(player);
+													}
 												}
 
 											} else
