@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Infected {
 
-	public static void filesSafeAllButConfig() {
+	public static void filesSafeAll() {
 		filesSaveArenas();
 		filesSavePlayers();
 		filesSaveKillTypes();
@@ -27,9 +27,10 @@ public class Infected {
 		filesSaveAbilities();
 		filesSaveClasses();
 		filesSaveSigns();
+		Main.me.saveConfig();
 	}
 
-	public static void filesReloadAllButConfig() {
+	public static void filesReloadAll() {
 		filesReloadArenas();
 		filesReloadPlayers();
 		filesReloadKillTypes();
@@ -39,6 +40,7 @@ public class Infected {
 		filesReloadAbilities();
 		filesReloadClasses();
 		filesReloadSigns();
+		Main.me.reloadConfig();
 	}
 
 	public static void playerSaveShopInventory(Player player) {

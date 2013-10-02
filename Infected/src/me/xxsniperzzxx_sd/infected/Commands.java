@@ -1715,8 +1715,7 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 					System.out.println("===== Infected =====");
-					Infected.filesReloadAllButConfig();
-					plugin.reloadConfig();
+					Infected.filesReloadAll();
 
 					if (plugin.getConfig().getBoolean("Vault Support.Enable"))
 					{

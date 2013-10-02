@@ -11,6 +11,7 @@ import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -37,6 +38,7 @@ public class Deaths {
 
 		if (Infected.isPlayerHuman(Killed))
 		{
+			Killed.playSound(Killed.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
 			if (Main.config.getBoolean("New Zombies Tp"))
 				Methods.respawn(Killed);
 			
@@ -51,6 +53,7 @@ public class Deaths {
 			Killed.setFoodLevel(20);
 		} else
 		{
+			Killed.playSound(Killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
 			Methods.respawn(Killed);
 			Equip.equipZombies(Killed);
 		}

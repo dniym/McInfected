@@ -6,6 +6,7 @@ import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.kitteh.tag.TagAPI;
@@ -15,6 +16,7 @@ public class Equip {
 
 	@SuppressWarnings("deprecation")
 	public static void equipHumans(Player human) {
+		human.playSound(human.getLocation(), Sound.ANVIL_USE, 1, 1);
 		if (Main.config.getBoolean("Default Classes.Use"))
 			Main.humanClasses.put(human.getName(), Main.config.getString("Default Classes.Human"));
 
@@ -67,10 +69,12 @@ public class Equip {
 	@SuppressWarnings("deprecation")
 	public static void equipZombies(Player zombie) {
 
+		zombie.playSound(zombie.getLocation(), Sound.ANVIL_USE, 1, 1);
 		if (Main.config.getBoolean("Default Classes.Use"))
 			Main.zombieClasses.put(zombie.getName(), Main.config.getString("Default Classes.Zombie"));
 
 		ScoreBoard.updateScoreBoard();
+		
 		if (Main.config.getBoolean("TagAPI Support.Enable"))
 			TagAPI.refreshPlayer(zombie);
 		
@@ -79,7 +83,6 @@ public class Equip {
 			Main.zombieClasses.remove(zombie.getName());
 		}
 		
-		// Take away humans items
 		for (String s : Main.config.getStringList("Armor.Human.Items"))
 		{
 			if (zombie.getInventory().contains(ItemHandler.getItem(s).getType()))
@@ -87,6 +90,7 @@ public class Equip {
 				zombie.getInventory().remove(ItemHandler.getItem(s).getType());
 			}
 		}
+		
 		// Take away any items from their human class
 		if (Main.humanClasses.containsKey(zombie.getName()))
 		{
@@ -106,19 +110,12 @@ public class Equip {
 			}
 		}
 
-		// Add armor from the zombie class
-
-		//if (Main.zombieClasses.containsKey(zombie.getName()))
-		//	if (!Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None"))
-		//		Main.zombieClasses.remove(zombie.getName());
-		
 		if (Main.zombieClasses.containsKey(zombie.getName()))
 		{
 			for (String s : Infected.filesGetClasses().getStringList("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Items"))
 			{
 				if (!zombie.getInventory().contains(ItemHandler.getItem(s)))
 					zombie.getInventory().addItem(ItemHandler.getItemStack(s));
-				zombie.updateInventory();
 			}
 			if (Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head") != null)
 				zombie.getInventory().setHelmet(ItemHandler.getItemStack(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(zombie.getName()) + ".Head")));

@@ -9,6 +9,7 @@ import me.xxsniperzzxx_sd.infected.Tools.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -18,7 +19,7 @@ public class Reset {
 
 	@SuppressWarnings("deprecation")
 	public static void tp2LobbyAfter(Player player) {
-
+		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
 		Infected.arenaReset();
 
 		if (Main.config.getBoolean("ScoreBoard Support"))

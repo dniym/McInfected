@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 1.9.7
+# Default Infected Config, Last edited in 1.9.8
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -28,7 +28,6 @@
 # # Enable what you use and disable what you dont
 #   DisguiseCraft: true
 #   iDisguise: true
-#   LibsDisguises: true
 # #
 # Zombie Abilities: false
 # #
@@ -186,6 +185,12 @@
 # #
 # # The command triggered for each player when a player wins Infected
 # Command Reward: tell <player> you have won!
+# # +======================================================+ #
+# # +======================================================+ #
+# #
+# I Apoligize for the way the config looks but i do this so i don't 
+# have to reset it every version.
+# # 
 # # +======================================================+ #
 
 

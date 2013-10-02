@@ -21,11 +21,6 @@ public class Disguises {
 		{
 			DisguiseIDisguise.disguisePlayer(player);
 		}
-
-		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-		{
-			DisguiseLibsDisguises.disguisePlayer(player);
-		}
 	}
 	
 	
@@ -39,11 +34,6 @@ public class Disguises {
 		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
 		{
 			DisguiseIDisguise.unDisguisePlayer(player);
-		}
-
-		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-		{
-			DisguiseLibsDisguises.unDisguisePlayer(player);
 		}
 	}
 	
@@ -61,10 +51,6 @@ public class Disguises {
 			disguised = DisguiseIDisguise.isPlayerDisguised(player);
 		}
 		
-		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-		{
-			disguised = DisguiseLibsDisguises.isPlayerDisguised(player);
-		}
 		return disguised;
 	}
 	
@@ -103,19 +89,6 @@ public class Disguises {
 					Main.me.saveConfig();
 				}
 			}
-			if(Main.config.getBoolean("Disguise Support.LibsDisguises")){
-
-				if (!(Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") == null))
-				{
-					DisguiseLibsDisguises.setup();
-				} else
-				{
-					System.out.println("LibsDisguises wasn't found on this server, disabling LibsDisguises Support");
-					Main.config.set("Disguise Support.LibsDisguises", false);
-					Main.me.saveConfig();
-				}
-			}
-
 			if(Main.Disguiser == null){
 				System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
 				Main.config.set("Disguise Support.Enabled", false);

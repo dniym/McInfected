@@ -28,7 +28,6 @@ public class Methods {
 
 	private static HashMap<String, Integer> Stats = new HashMap<String, Integer>();
 
-	// ===============================================================================
 	public static void rewardPointsAndScore(Player player, String PointsCause) {
 		if (Main.config.getBoolean("Points.Use"))
 		{

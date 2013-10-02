@@ -1,6 +1,7 @@
 package me.xxsniperzzxx_sd.infected;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,6 +14,7 @@ import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import net.milkbowl.vault.economy.Economy;
@@ -114,16 +116,18 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
 		System.out.println("===== Infected =====");
-		
-		// Setup the scoreboard
-	
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+			System.out.println("Metrics was unable to start...");
+		}
 
 		// Create Configs and files
+		getConfig().options().copyDefaults(true);
 		Infected.filesGetArenas().options().copyDefaults(true);
 		Infected.filesGetKillTypes().options().copyDefaults(true);
-		getConfig().options().copyDefaults(true);
 		Infected.filesGetShop().options().copyDefaults(true);
 		Infected.filesGetPlayers().options().copyDefaults(true);
 		Infected.filesGetMessages().options().copyDefaults(true);
@@ -131,8 +135,7 @@ public class Main extends JavaPlugin {
 		Infected.filesGetAbilities().options().copyDefaults(true);
 		Infected.filesGetClasses().options().copyDefaults(true);
 		Infected.filesGetSigns().options().copyDefaults(true);
-		Infected.filesSafeAllButConfig();
-		saveConfig();
+		Infected.filesSafeAll();
 
 		
 		PluginManager pm = getServer().getPluginManager();
@@ -163,8 +166,6 @@ public class Main extends JavaPlugin {
 						Main.update = false;
 
 		}
-
-		// Check if the plugin addons are there
 		// Check if the plugin addons are there
 		if (getConfig().getBoolean("Vault Support.Enable"))
 		{
@@ -189,7 +190,7 @@ public class Main extends JavaPlugin {
 		}else
 			System.out.println("Vault Support is Disabled");
 
-		// Check if the plugin addons are there
+
 		if (getConfig().getBoolean("CrackShot Support.Enable"))
 		{
 			if (getServer().getPluginManager().getPlugin("CrackShot") == null)
@@ -224,7 +225,9 @@ public class Main extends JavaPlugin {
 			}
 		}else
 			System.out.println("TagAPI Support is Disabled");
+		
 		Disguises.getDisguisePlugin();
+		
 		// On enable set the times form the config
 		Main.voteTime = getConfig().getInt("Time.Voting Time");
 		Main.Wait = getConfig().getInt("Time.Alpha Zombie Infection");
@@ -281,7 +284,7 @@ public class Main extends JavaPlugin {
 							}
 
 							int time = Main.currentTime;
-							if (Files.getSigns().getStringList("Info Signs").contains(loc))
+							if (Files.getSigns().getBoolean("Info Signs.Enabled") && Files.getSigns().getStringList("Info Signs").contains(loc))
 							{
 								Location location = Methods.getLocationFromString(loc);
 								if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
