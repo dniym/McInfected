@@ -41,11 +41,23 @@
 #   Symbol: C
 # #
 # # Want to use Crack Shot?
+# # Enabling this will let infected check for when a player gets shot by a crackshot gun
 # CrackShot Support:
 #   Enable: true
 # #
 # # Want to use TagApi?
+# # Enabling this will make the humans and in lobby players get special colored tags
 # TagAPI Support:
+#   Enable: true
+# #
+# # Do you want to use Faction support?
+# # Enabling this will allow allied and truced factions to pvp
+# Factions Support:
+#   Enable: true
+# #
+# # Do you want to use mcMMO support?
+# # Enabling this will prevent mcMMO from changing damage done during the game
+# mcMMO Support:
 #   Enable: true
 # #
 # ScoreBoard Support: true
@@ -215,6 +227,12 @@ CrackShot Support:
   Enable: true
   
 TagAPI Support:
+  Enable: true
+  
+Factions Support:
+  Enable: true
+  
+mcMMO Support:
   Enable: true
   
 ScoreBoard Support: true

@@ -5,14 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
-import me.xxsniperzzxx_sd.infected.Listeners.CrackShotApi;
 import me.xxsniperzzxx_sd.infected.Listeners.DamageEvents;
 import me.xxsniperzzxx_sd.infected.Listeners.DeathEvent;
 import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
 import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
-import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
+import me.xxsniperzzxx_sd.infected.Tools.AddonManager;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
@@ -31,13 +29,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
 
+import de.robingrether.idisguise.api.DisguiseAPI;
+
+import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
+
 public class Main extends JavaPlugin {
 
+	
 	// Initialize all the variables
 	public static String bVersion = "1.6.4";
 	public static int currentTime = 0;
@@ -109,6 +111,9 @@ public class Main extends JavaPlugin {
 	
 
 	// Plugin Addons
+	public static AddonManager addon;
+	public static DisguiseCraftAPI dcAPI;
+	public static DisguiseAPI idAPI;
 	public static Plugin Disguiser;
 	public static Economy economy = null;
 
@@ -116,6 +121,13 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		PluginManager pm = getServer().getPluginManager();
+		pm = getServer().getPluginManager();
+		Main.me = this;
+		Main.file = getFile();
+		Configuration getconfig = getConfig();
+		Main.config = getconfig;
+		
 		System.out.println("===== Infected =====");
 		try {
 		    Metrics metrics = new Metrics(this);
@@ -138,12 +150,6 @@ public class Main extends JavaPlugin {
 		Infected.filesSafeAll();
 
 		
-		PluginManager pm = getServer().getPluginManager();
-		pm = getServer().getPluginManager();
-		Main.me = this;
-		Main.file = getFile();
-		Configuration getconfig = getConfig();
-		Main.config = getconfig;
 
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
@@ -166,67 +172,9 @@ public class Main extends JavaPlugin {
 						Main.update = false;
 
 		}
-		// Check if the plugin addons are there
-		if (getConfig().getBoolean("Vault Support.Enable"))
-		{
-			if (!(getServer().getPluginManager().getPlugin("Vault") == null))
-			{
-				System.out.println("Vault support has been enabled!");
-			
-				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-				if (economyProvider != null)
-				{
-					Main.economy = economyProvider.getProvider();
-				}
-				
-			} 
-			else
-			{
-				System.out.println(Main.I + "Vault wasn't found on this server, Disabling Vault Support");
-				getConfig().set("Vault Support.Enable", false);
-				saveConfig();
-
-			}
-		}else
-			System.out.println("Vault Support is Disabled");
-
-
-		if (getConfig().getBoolean("CrackShot Support.Enable"))
-		{
-			if (getServer().getPluginManager().getPlugin("CrackShot") == null)
-			{
-
-				System.out.println(Main.I + "CrackShot wasn't found on this server, disabling CrackShot Support");
-				getConfig().set("CrackShot Support.Enable", false);
-				saveConfig();
-			} else
-			{
-			CrackShotApi CSApi = new CrackShotApi(this);
-			pm.registerEvents(CSApi, this);
-			System.out.println("CrackShot support has been enabled!");
-			}
-		}else
-			System.out.println("CrackShot Support is Disabled");
-
-		
-		// Check if the plugin addons are there
-		if (getConfig().getBoolean("TagAPI Support.Enable"))
-		{
-			if (getServer().getPluginManager().getPlugin("TagAPI") == null)
-			{
-				System.out.println(Main.I + "TagApi wasn't found on this server, disabling TagApi Support");
-				getConfig().set("TagAPI Support.Enable", false);
-				saveConfig();
-			} else
-			{
-				TagApi TagApi = new TagApi(this);
-				pm.registerEvents(TagApi, this);
-				System.out.println("TagApi support has been enabled!");
-			}
-		}else
-			System.out.println("TagAPI Support is Disabled");
-		
-		Disguises.getDisguisePlugin();
+		//Get Plugin addons
+		addon = new AddonManager(this);
+		addon.getAddons();
 		
 		// On enable set the times form the config
 		Main.voteTime = getConfig().getInt("Time.Voting Time");
@@ -284,19 +232,21 @@ public class Main extends JavaPlugin {
 							}
 
 							int time = Main.currentTime;
-							if (Files.getSigns().getBoolean("Info Signs.Enabled") && Files.getSigns().getStringList("Info Signs").contains(loc))
+							
+							Location location = Methods.getLocationFromString(loc);
+							if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
 							{
-								Location location = Methods.getLocationFromString(loc);
-								if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
-								{
-									Sign sign = (Sign) location.getBlock().getState();
-									sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
-									sign.setLine(2, ChatColor.GOLD + status);
+								Sign sign = (Sign) location.getBlock().getState();
+								sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
+								sign.setLine(2, ChatColor.GOLD + status);
+								if(Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.VOTING)
 									sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
-									sign.update();
+								else
+									sign.setLine(3, "");
+								sign.update();
 								}
 							}
-						}
+						
 					}
 				}
 			}, 100L, getConfig().getInt("Info Signs.Refresh Time") * 20);

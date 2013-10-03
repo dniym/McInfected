@@ -519,6 +519,7 @@ public class Methods {
 		if (msg.contains("<humansize>")) /**/
 			msg1 = msg1.replaceAll("<humansize>", String.valueOf(Main.humans.size())).replaceAll("<zombiesize>", String.valueOf(Main.zombies.size())).replaceAll("<map>", Main.playingin);
 
+		
 		if (msg.contains("&")) /**/
 			msg1 = ChatColor.translateAlternateColorCodes('&', msg1);
 

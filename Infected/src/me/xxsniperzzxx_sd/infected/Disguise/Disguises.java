@@ -5,6 +5,10 @@ import me.xxsniperzzxx_sd.infected.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
+
+import de.robingrether.idisguise.api.DisguiseAPI;
+
 
 
 
@@ -64,10 +68,10 @@ public class Disguises {
 		{
 			//If we're looking for disguisecraft
 			if(Main.config.getBoolean("Disguise Support.DisguiseCraft")){
-				if (!(Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") == null))
+				if (Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") != null)
 				{
-					DisguiseDisguiseCraft.setup();
-
+					Main.dcAPI = DisguiseCraft.getAPI();
+					Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft");
 				}
 				else
 				{
@@ -79,10 +83,12 @@ public class Disguises {
 			}//If were looking for iDisguise
 			if(Main.config.getBoolean("Disguise Support.iDisguise")){
 
-				if (!(Bukkit.getServer().getPluginManager().getPlugin("iDisguise") == null))
+				if (Bukkit.getServer().getPluginManager().getPlugin("iDisguise") != null)
 				{
-					DisguiseIDisguise.setup();
-				} else
+					Main.idAPI = Bukkit.getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
+					Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("iDisguise");
+				}
+				else
 				{
 					System.out.println("iDisguise wasn't found on this server, disabling iDisguise Support");
 					Main.config.set("Disguise Support.iDisguise", false);

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Main.GameState;
-import me.xxsniperzzxx_sd.infected.Listeners.CrackShotApi;
-import me.xxsniperzzxx_sd.infected.Listeners.TagApi;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
@@ -17,8 +15,6 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -34,7 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -1716,67 +1711,7 @@ public class Commands implements CommandExecutor {
 					}
 					System.out.println("===== Infected =====");
 					Infected.filesReloadAll();
-
-					if (plugin.getConfig().getBoolean("Vault Support.Enable"))
-					{
-						if (!(Bukkit.getServer().getPluginManager().getPlugin("Vault") == null))
-						{
-							System.out.println("Vault support has been enabled!");
-						
-							RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-							if (economyProvider != null)
-							{
-								plugin.economy = economyProvider.getProvider();
-							}
-							
-						} 
-						else
-						{
-							System.out.println(plugin.I + "Vault wasn't found on this server, Disabling Vault Support");
-							plugin.getConfig().set("Vault Support.Enable", false);
-							plugin.saveConfig();
-
-						}
-					}else
-						System.out.println("Vault Support is Disabled");
-
-					// Check if the plugin addons are there
-					if (plugin.getConfig().getBoolean("CrackShot Support.Enable"))
-					{
-						if (plugin.getServer().getPluginManager().getPlugin("CrackShot") == null)
-						{
-
-							System.out.println(plugin.I + "CrackShot wasn't found on this server, disabling CrackShot Support");
-							plugin.getConfig().set("CrackShot Support.Enable", false);
-							plugin.saveConfig();
-						} else
-						{
-						CrackShotApi CSApi = new CrackShotApi(plugin);
-						Bukkit.getPluginManager().registerEvents(CSApi, plugin);
-						System.out.println("CrackShot support has been enabled!");
-						}
-					}else
-						System.out.println("CrackShot Support is Disabled");
-
-					
-					// Check if the plugin addons are there
-					if (plugin.getConfig().getBoolean("TagAPI Support.Enable"))
-					{
-						if (plugin.getServer().getPluginManager().getPlugin("TagAPI") == null)
-						{
-							System.out.println(plugin.I + "TagApi wasn't found on this server, disabling TagApi Support");
-							plugin.getConfig().set("TagAPI Support.Enable", false);
-							plugin.saveConfig();
-						} else
-						{
-							TagApi TagApi = new TagApi(plugin);
-							Bukkit.getPluginManager().registerEvents(TagApi, plugin);
-							System.out.println("TagApi support has been enabled!");
-						}
-					}else
-						System.out.println("TagAPI Support is Disabled");
-					
-					Disguises.getDisguisePlugin();
+					plugin.addon.getAddons();
 					System.out.println("====================");
 
 					player.sendMessage(plugin.I + "Infecteds Files have been reloaded");
@@ -1954,9 +1889,8 @@ public class Commands implements CommandExecutor {
 				player.sendMessage("");
 				player.sendMessage(plugin.I + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
 				if (plugin.update && player.isOp())
-				{
 					player.sendMessage(plugin.I + ChatColor.RED + "Update Available: " + ChatColor.WHITE + plugin.name);
-				}
+				
 				player.sendMessage(plugin.I + ChatColor.GRAY + "Author:" + ChatColor.GREEN + " xXSniperzzXx_SD");
 				player.sendMessage(plugin.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + plugin.v);
 				player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev:" + ChatColor.GREEN + " http://bit.ly/QN6Xg5");
@@ -1965,6 +1899,8 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + ChatColor.GREEN + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "TagAPI Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("TagAPI Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Factions Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Factions Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "mcMMO Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("mcMMO Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Vault Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("Vault Support.Enable") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "ScoreBoard Support:" + ChatColor.GREEN + " " + (plugin.getConfig().getBoolean("ScoreBoard Support") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Grenades: " + ChatColor.GREEN + "" + (Infected.filesGetGrenades().getBoolean("Use") ? (ChatColor.GREEN + "Enabled") : (ChatColor.RED + "Disabled")));
@@ -1974,10 +1910,7 @@ public class Commands implements CommandExecutor {
 				player.sendMessage("");
 				return true;
 			}
-			plugin.saveConfig();
-			Infected.filesSaveArenas();
-			Infected.filesSaveGrenades();
-			Infected.filesSavePlayers();
+			 Infected.filesSafeAll();
 		}
 		return true;
 	}
