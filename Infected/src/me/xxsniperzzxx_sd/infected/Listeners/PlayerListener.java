@@ -8,7 +8,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;

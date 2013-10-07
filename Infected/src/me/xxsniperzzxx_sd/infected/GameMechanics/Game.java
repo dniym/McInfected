@@ -8,7 +8,7 @@ import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 

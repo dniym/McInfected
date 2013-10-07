@@ -2,7 +2,7 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
@@ -208,8 +208,11 @@ public class DeathEvent implements Listener{
 							e.setDamage(0);
 							e.setCancelled(true);
 						}
-						else
+						else{
 							Main.Lasthit.put(victim.getName(), killer.getName());
+							if(Infected.playerhasHumanClass(killer) || Infected.playerhasZombieClass(killer))
+								Methods.addEffectOnContact(killer, victim);
+						}
 					}
 				}
 			}

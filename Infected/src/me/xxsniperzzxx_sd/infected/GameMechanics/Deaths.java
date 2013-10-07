@@ -6,7 +6,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;

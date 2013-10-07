@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 

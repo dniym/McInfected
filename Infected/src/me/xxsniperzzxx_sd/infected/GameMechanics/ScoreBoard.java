@@ -2,7 +2,7 @@ package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

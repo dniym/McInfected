@@ -4,7 +4,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 
 import org.bukkit.Bukkit;
@@ -26,8 +26,8 @@ public class Reset {
 		{
 			ScoreBoard.updateScoreBoard();
 		}
-		player.teleport(Methods.getLocation(Main.config.getString("Lobby")));
 		Methods.resetPlayersInventory(player);
+		player.teleport(Methods.getLocation(Main.config.getString("Lobby")));
 
 		Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
 		if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){

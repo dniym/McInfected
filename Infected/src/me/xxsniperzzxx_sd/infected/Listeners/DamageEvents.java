@@ -3,11 +3,10 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Methods;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
@@ -212,7 +211,10 @@ public class DamageEvents implements Listener {
 								if(victim.getHealth() - e.getDamage() <= 0){
 									e.setDamage(0);
 									Deaths.playerDies(killer, victim);
-								}
+								}else
+									if(Infected.playerhasHumanClass(killer) || Infected.playerhasZombieClass(killer))
+										Methods.addEffectOnContact(killer, victim);
+								
 							}
 						}
 					}else{

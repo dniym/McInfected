@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Listeners.DamageEvents;
 import me.xxsniperzzxx_sd.infected.Listeners.DeathEvent;
 import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
@@ -44,9 +45,7 @@ public class Main extends JavaPlugin {
 	public static String bVersion = "1.6.4";
 	public static int currentTime = 0;
 	public static String v = null;
-	public static enum GameState {INLOBBY, VOTING, BEFOREINFECTED, STARTED, GAMEOVER, DISABLED}; 
 	public static GameState gameState = GameState.INLOBBY;
-
 	// Lists, Strings and Integers Infected needs
 	public static int arenaNumber = 0;
 	public static ArrayList<String> infectedChat = new ArrayList<String>();

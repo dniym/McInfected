@@ -197,6 +197,27 @@ public class Methods {
 		}
 
 	}
+	@SuppressWarnings("deprecation")
+	public static void addEffectOnContact(Player attacker, Player victim) {
+		Integer id = 0;
+		Integer time = 0;
+		Integer power = 0;
+		String Class = Infected.playergetZombieClass(attacker);
+		if(Infected.playerGetGroup(attacker).equalsIgnoreCase("Human"))
+			Class = Infected.playergetHumanClass(attacker);
+		int max = Infected.filesGetClasses().getStringList(Infected.playerGetGroup(attacker) +"." + Class + ".Effects on Contact").size();
+		for (int x = 0; x < max; x = x + 1)
+		{
+			String path = Infected.filesGetClasses().getStringList(Infected.playerGetGroup(attacker) +"." + Class + ".Effects on Contact").get(x);
+			String[] strings = path.split(":");
+			id = Integer.valueOf(strings[0]);
+			time = Integer.valueOf(strings[1]) * 20;
+			power = Integer.valueOf(strings[2]);
+			victim.addPotionEffect(new PotionEffect(
+					PotionEffectType.getById(id), time, power));
+		}
+
+	}
 
 
 	public static void saveInventory(Player player, String loc) {

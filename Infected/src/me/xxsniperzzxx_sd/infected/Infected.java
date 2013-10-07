@@ -4,7 +4,7 @@ package me.xxsniperzzxx_sd.infected;
 import java.util.ArrayList;
 
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
-import me.xxsniperzzxx_sd.infected.Main.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Location;
@@ -495,6 +495,19 @@ public class Infected {
 
 	public static boolean playerHasLastDamage(Player player) {
 		return Main.Lasthit.containsKey(player.getName());
+	}
+
+	public static String playergetHumanClass(Player player){
+		return Main.humanClasses.get(player.getName());
+	}
+	public static String playergetZombieClass(Player player){
+		return Main.zombieClasses.get(player.getName());
+	}
+	public static boolean playerhasHumanClass(Player player){
+		return Main.humanClasses.containsKey(player.getName());
+	}
+	public static boolean playerhasZombieClass(Player player){
+		return Main.zombieClasses.containsKey(player.getName());
 	}
 
 	public static void arenaReset() {
