@@ -31,6 +31,9 @@ public class Messages {
 		if(msg.contains("<class>"))
 			msg1 = msg1.replaceAll("<class>", string);
 
+		if(msg.contains("<item>"))
+			msg1 = msg1.replaceAll("<item>", string);
+
 		if(msg.contains("<votedfor>"))
 			msg1 = msg1.replaceAll("<votedfor>", string);
 		

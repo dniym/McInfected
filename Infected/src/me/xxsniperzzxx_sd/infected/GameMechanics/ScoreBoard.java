@@ -30,7 +30,7 @@ public class ScoreBoard {
 
 			if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.BEFOREINFECTED || Infected.getGameState() == GameState.GAMEOVER)
 			{
-				infectedList.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Playing");
+				infectedList.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
 				Score score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
 				if (Main.humans.size() != 0)
 					score.setScore(Main.humans.size());
@@ -50,7 +50,7 @@ public class ScoreBoard {
 
 			} else
 			{
-				infectedList.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote for an Arena");
+				infectedList.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Votes");
 				Main.possibleArenas.clear();
 				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
 				{
@@ -65,7 +65,7 @@ public class ScoreBoard {
 						Main.possibleArenas.remove(parenas);
 					} else if (!parenas.contains("."))
 					{
-						Score score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + "" + ChatColor.ITALIC + parenas));
+						Score score = infectedList.getScore(Bukkit.getOfflinePlayer(""+ChatColor.YELLOW + ChatColor.ITALIC + parenas));
 						if (Main.Votes.get(parenas) != null)
 							score.setScore(Main.Votes.get(parenas));
 						else

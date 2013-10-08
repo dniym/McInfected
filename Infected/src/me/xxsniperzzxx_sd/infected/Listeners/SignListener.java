@@ -87,7 +87,7 @@ public class SignListener implements Listener {
 
 										} else
 										{
-											player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
+											player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 										}
 									} else if (sign.getLine(3).contains("Zombie"))
 									{
@@ -102,7 +102,7 @@ public class SignListener implements Listener {
 
 										} else
 										{
-											player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
+											player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 										}
 									}
 								}
@@ -149,19 +149,8 @@ public class SignListener implements Listener {
 										price = Integer.valueOf(prices);
 
 									String itemstring = ChatColor.stripColor(sign.getLine(1));
-									String itemname = null;
-									short itemdata = 0;
-									String s = itemstring;
-									if (s.contains(":"))
-									{
-										String[] s1 = s.split(":");
-										itemname = s1[0];
-										itemdata = Short.valueOf(s1[1]);
-									} else
-									{
-										itemname = s;
-										itemdata = 0;
-									}
+									String itemname = ItemHandler.getItemStack(itemstring).getType().name();
+									
 									Material im = null;
 									for (Material item : Material.values())
 										if (item.toString().equalsIgnoreCase(itemname))
@@ -177,9 +166,7 @@ public class SignListener implements Listener {
 											if (price <= points)
 											{
 												Infected.playerSetPoints(player.getName(), points, price);
-												ItemStack stack = new ItemStack(
-														item);
-												stack.setDurability(itemdata);
+												ItemStack stack = ItemHandler.getItemStack(itemstring);
 												if (!player.getInventory().contains(stack))
 												{
 													player.getInventory().addItem(stack);
@@ -201,7 +188,7 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(new ItemStack(
 															item, +1));
 												}
-												player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + item);
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
 												if (Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(item.getId()))
 												{
 													Updater updater = new Updater(
@@ -217,14 +204,14 @@ public class SignListener implements Listener {
 												}
 											} else
 											{
-												player.sendMessage(Main.I + "Not enough points!");
-												player.sendMessage(Main.I + "You need " + (price - points) + " more points");
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_INVALIDPOINTS, player, null));
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price - points)));
 											}
 											Files.savePlayers();
 											player.updateInventory();
 										} else
 										{
-											player.sendMessage(Main.I + ChatColor.RED + "You don't have permission to buy this item!");
+											player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 										}
 									} else
 									{
@@ -269,7 +256,8 @@ public class SignListener implements Listener {
 														is.setItemMeta(i);
 														player.getInventory().addItem(is);
 													}
-													player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + itemname);
+
+													player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
 													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 													{
 														Updater updater = new Updater(
@@ -283,11 +271,12 @@ public class SignListener implements Listener {
 															Infected.playerSaveShopInventory(player);
 														}
 													}
-												}
+												}else
+													player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 											} else
 											{
-												player.sendMessage(Main.I + "Not enough points!");
-												player.sendMessage(Main.I + "You need " + (price - points) + " more points");
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_INVALIDPOINTS, player, null));
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price - points)));
 											}
 											Files.savePlayers();
 											player.updateInventory();
@@ -298,25 +287,12 @@ public class SignListener implements Listener {
 										{
 
 											String i = Files.getSigns().getString("Shop Signs." + LocationHandler.getLocationToString(loc));
-											String itemi = null;
-											short itemd = 0;
-											if (i.contains(":"))
-											{
-												String[] i1 = i.split(":");
-												itemi = i1[0];
-												itemdata = Short.valueOf(i1[1]);
-											} else
-											{
-												itemi = i;
-												itemd = 0;
-											}
-											Material item = Material.getMaterial(Integer.valueOf(itemi));
+											int itemi = ItemHandler.getItemID(i);
+											Material item = Material.getMaterial(itemi);
 											if (price < points + 1)
 											{
 												Infected.playerSetPoints(player.getName(), points, price);
-												ItemStack stack = new ItemStack(
-														Material.getMaterial(Integer.valueOf(itemi)));
-												stack.setDurability(itemd);
+												ItemStack stack = ItemHandler.getItemStack(i);
 												if (!player.getInventory().contains(stack))
 												{
 													player.getInventory().addItem(stack);
@@ -338,7 +314,7 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(new ItemStack(
 															item, +1));
 												}
-												player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + item);
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
 												if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
 												{
 													Updater updater = new Updater(
@@ -355,7 +331,8 @@ public class SignListener implements Listener {
 
 											} else
 											{
-												player.sendMessage(Main.I + "Not enough points!");
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_INVALIDPOINTS, player, null));
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price-points)));
 											}
 											Files.savePlayers();
 											player.updateInventory();
@@ -556,20 +533,8 @@ public class SignListener implements Listener {
 								return;
 							}
 							Material im = null;
-							String itemid = null;
-							String itemdata = null;
-							String s = event.getLine(1);
-
-							if (s.contains(":"))
-							{
-								String[] s1 = s.split(":");
-								itemid = s1[0];
-								itemdata = s1[1];
-							} else
-							{
-								itemid = s;
-								itemdata = "";
-							}
+							String itemid = String.valueOf(ItemHandler.getItemID(event.getLine(1)));
+							String itemdata = String.valueOf(ItemHandler.getItemStack(event.getLine(1)).getDurability());
 							for (Material item : Material.values())
 								if (item.getId() == Integer.valueOf(itemid))
 								{
@@ -631,7 +596,7 @@ public class SignListener implements Listener {
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Main.I + "Invalid Permissions.");
+					player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 					event.setCancelled(true);
 				}
 				if (event.getLine(1).isEmpty())
@@ -645,7 +610,7 @@ public class SignListener implements Listener {
 					{
 						if (!player.hasPermission("Infected.Setup"))
 						{
-							player.sendMessage(Main.I + "Invalid Permissions.");
+							player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 							event.setCancelled(true);
 						}
 						event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
@@ -662,7 +627,10 @@ public class SignListener implements Listener {
 						int time = Main.currentTime;
 						event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
 						event.setLine(2, ChatColor.GOLD + status);
-						event.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
+						if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.VOTING)
+							event.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
+						else
+							event.setLine(3, "");
 
 						if (Files.getSigns().getStringList("Info Signs") == null)
 						{
@@ -693,7 +661,7 @@ public class SignListener implements Listener {
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Main.I + "Invalid Permissions.");
+					player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 					event.setCancelled(true);
 				}
 				if (event.getLine(1).isEmpty())
@@ -722,7 +690,7 @@ public class SignListener implements Listener {
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Main.I + "Invalid Permissions.");
+					player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 					event.setCancelled(true);
 				}
 				if (!plugin.getConfig().getBoolean("Class Support"))
