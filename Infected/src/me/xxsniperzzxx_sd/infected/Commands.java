@@ -13,8 +13,12 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Menus;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -67,11 +71,11 @@ public class Commands implements CommandExecutor {
 				Player player = (Player) sender;
 				if (!player.hasPermission("Infected.Chat"))
 				{
-					player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+					player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 					return true;
 				} else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || Infected.getGameState() != GameState.STARTED)
 				{
-					player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
+					player.sendMessage(Messages.sendMessage("Error_NotInGame", player, null));
 					return true;
 				} else if (args.length == 1)
 				{
@@ -114,17 +118,17 @@ public class Commands implements CommandExecutor {
 				Player player = (Player) sender;
 				if (Infected.getGameState() == GameState.STARTED)
 				{
-					player.sendMessage(Methods.sendMessage("Error_GameStarted", player, null, null));
+					player.sendMessage(Messages.sendMessage("Error_GameStarted", player, null));
 					return true;
 				}
 				if (!Infected.isPlayerInLobby(player))
 				{
-					player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
+					player.sendMessage(Messages.sendMessage("Error_NotInGame", player, null));
 					return true;
 				}
 				if (!plugin.getConfig().getBoolean("Class Support"))
 				{
-					player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
+					player.sendMessage(Messages.sendMessage("Error_NoClassSupport", player, null));
 					return true;
 				} else if (args.length == 2)
 				{
@@ -158,19 +162,19 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (Infected.getGameState() == GameState.DISABLED)
 					{
-						player.sendMessage(Methods.sendMessage("Error_InfectedDisabled", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_InfectedDisabled", null, null));
 						return true;
 					} else if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else if (plugin.inLobby.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Error_AlreadyInGame", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_AlreadyInGame", null, null));
 						return true;
 					} else if (plugin.inGame.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Error_AlreadyInGame", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_AlreadyInGame", null, null));
 						return true;
 					} else if (!plugin.getConfig().contains("Lobby"))
 					{
@@ -205,7 +209,7 @@ public class Commands implements CommandExecutor {
 					{
 						if (Infected.getGameState() == GameState.STARTED)
 						{
-							player.sendMessage(Methods.sendMessage("Error_JoinWellStartedBlocked", null, null, null));
+							player.sendMessage(Messages.sendMessage("Error_JoinWellStartedBlocked", null, null));
 							return true;
 						}
 					}
@@ -213,7 +217,7 @@ public class Commands implements CommandExecutor {
 					{
 						if (plugin.inGame.contains(all.getName()))
 						{
-							all.sendMessage(Methods.sendMessage("Lobby_OtherJoinedLobby", player, null, null));
+							all.sendMessage(Messages.sendMessage("Lobby_OtherJoinedLobby", player, null));
 						}
 					}
 
@@ -226,7 +230,7 @@ public class Commands implements CommandExecutor {
 					plugin.Spot.put(player.getName(), player.getLocation());
 					plugin.Health.put(player.getName(), player.getHealth());
 					plugin.Food.put(player.getName(), player.getFoodLevel());
-					player.teleport(Methods.getLocation(plugin.getConfig().getString("Lobby")));
+					player.teleport(LocationHandler.getLocation(plugin.getConfig().getString("Lobby")));
 					plugin.Levels.put(player.getName(), player.getLevel());
 					plugin.Exp.put(player.getName(), player.getExp());
 					plugin.Inventory.put(player.getName(), player.getInventory().getContents());
@@ -252,13 +256,13 @@ public class Commands implements CommandExecutor {
 					{
 						player.removePotionEffect(reffect.getType());
 					}
-					Methods.resetPlayersInventory(player);
+					Reset.resetPlayersInventory(player);
 					Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
 					if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
 						if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
 							player.getInventory().setContents(Infected.playerGetShopInventory(player));
 					}
-					player.sendMessage(Methods.sendMessage("Lobby_JoinLobby", null, null, null));
+					player.sendMessage(Messages.sendMessage("Lobby_JoinLobby", null, null));
 					
 					player.setGameMode(GameMode.ADVENTURE);
 					player.setFlying(false);
@@ -279,14 +283,14 @@ public class Commands implements CommandExecutor {
 					}
 					if (Infected.getGameState() == GameState.VOTING)
 					{
-						player.sendMessage(Methods.sendMessage("Vote_HowToVote", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_HowToVote", null, null));
 						player.performCommand("Infected Arenas");
 						return true;
 					}
 					if (Infected.getGameState() == GameState.STARTED)
 					{
 						player.setGameMode(GameMode.SURVIVAL);
-						Methods.joinInfectHuman(player);
+						Zombify.joinInfectHuman(player);
 						Infected.delPlayerInLobby(player);
 						return true;
 					}
@@ -297,7 +301,7 @@ public class Commands implements CommandExecutor {
 							player.setGameMode(GameMode.SURVIVAL);
 							ScoreBoard.updateScoreBoard();
 						}
-						Methods.respawn(player);
+						LocationHandler.respawn(player);
 						if (!plugin.Winners.contains(player.getName()))
 						{
 							plugin.Winners.add(player.getName());
@@ -322,7 +326,7 @@ public class Commands implements CommandExecutor {
 
 					if (!sender.hasPermission("Infected.Refresh"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					for (Player playing : Bukkit.getOnlinePlayers())
@@ -340,7 +344,7 @@ public class Commands implements CommandExecutor {
 
 					if (!sender.hasPermission("Infected.Info"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 
@@ -372,7 +376,7 @@ public class Commands implements CommandExecutor {
 						return true;
 					} else if (!sender.hasPermission("Infected.Suicide"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					Player player = (Player) sender;
@@ -383,7 +387,7 @@ public class Commands implements CommandExecutor {
 							for (Player playing : Bukkit.getServer().getOnlinePlayers())
 							{
 								if ((!(playing == player)) && plugin.inGame.contains(playing.getName()))
-									playing.sendMessage(Methods.sendMessage("Game_GotInfected", player, null, null));
+									playing.sendMessage(Messages.sendMessage("Game_GotInfected", player, null));
 							}
 						plugin.humans.remove(player.getName());
 						if (!plugin.zombies.contains(player.getName()))
@@ -396,7 +400,7 @@ public class Commands implements CommandExecutor {
 						Equip.equipZombies(player);
 						player.setHealth(20.0);
 						player.setFoodLevel(20);
-						Methods.stats(player, 0, 1);
+						Stats.setStats(player, 0, 1);
 						if (plugin.KillStreaks.get(player.getName()) > Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".KillStreak"))
 						{
 							Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(player.getName()));
@@ -411,15 +415,15 @@ public class Commands implements CommandExecutor {
 						} else
 						{
 							player.setFallDistance(0F);
-							Methods.respawn(player);
+							LocationHandler.respawn(player);
 							player.setFallDistance(0F);
 						}
-						Methods.zombifyPlayer(player);
+						Zombify.zombifyPlayer(player);
 					} else
 					{
 						// If the player tries to suicide and they arnt in the
 						// lobby
-						player.sendMessage(Methods.sendMessage("Error_NotInGame", player, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NotInGame", player, null));
 						return true;
 					}
 				}
@@ -434,18 +438,18 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!Infected.filesGetGrenades().getBoolean("Use"))
 					{
-						player.sendMessage(Methods.sendMessage("Grenade_Disabled", null, null, null));
+						player.sendMessage(Messages.sendMessage("Grenade_Disabled", null, null));
 					} else if (!plugin.inGame.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Grenade_OnlyBuyInGame", null, null, null));
+						player.sendMessage(Messages.sendMessage("Grenade_OnlyBuyInGame", null, null));
 						return true;
 					} else if (!player.hasPermission("Infected.Grenades"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else if (plugin.getConfig().getBoolean("Grenades.Only Humans Can Use") && plugin.zombies.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Grenades_NoZombies", null, null, null));
+						player.sendMessage(Messages.sendMessage("Grenades_NoZombies", null, null));
 						return true;
 					} else
 					{
@@ -491,7 +495,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.setup"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// Set Lobby's Warp
@@ -514,7 +518,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// List possible lists
@@ -538,7 +542,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else if (plugin.inGame.contains(player.getName()) || plugin.inLobby.contains(player.getName()))
 					{
@@ -555,12 +559,12 @@ public class Commands implements CommandExecutor {
 							{
 								System.out.println("Leave: Leaving, wellin lobby, no timers active");
 							}
-							player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+							player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 							Reset.resetp(player);
 							for (Player players : Bukkit.getOnlinePlayers())
 							{
 								if (Infected.isPlayerInGame(players))
-									players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
+									players.sendMessage(Messages.sendMessage("Leave_NoEffect", player, null));
 							}
 						}
 						// Voting has started, less then 2 people left
@@ -576,26 +580,26 @@ public class Commands implements CommandExecutor {
 								{
 									System.out.println("Leave: Before Voting(Triggered)");
 								}
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", player, null));
 										Reset.tp2LobbyAfter(players);
 									}
 								}
 								Reset.resetInf();
 							} else
 							{
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NoEffect", player, null));
 									}
 								}
 							}
@@ -613,26 +617,26 @@ public class Commands implements CommandExecutor {
 								{
 									System.out.println("Leave: In Arena Before Infected(Triggered)");
 								}
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", player, null));
 										Reset.tp2LobbyAfter(players);
 									}
 								}
 								Reset.resetInf();
 							} else
 							{
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NoEffect", player, null));
 									}
 								}
 							}
@@ -650,13 +654,13 @@ public class Commands implements CommandExecutor {
 								{
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 								}
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", player, null));
 										Reset.tp2LobbyAfter(players);
 									}
 								}
@@ -669,9 +673,9 @@ public class Commands implements CommandExecutor {
 								{
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 								}
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
-								Methods.newZombieSetUpEveryOne();
+								Zombify.newZombieSetUpEveryOne();
 							}
 							// Not enough humans left
 							else if (plugin.humans.size() == 1 && plugin.humans.contains(player.getName()))
@@ -680,26 +684,26 @@ public class Commands implements CommandExecutor {
 								{
 									System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 								}
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NotEnoughPlayers", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", player, null));
 										Reset.tp2LobbyAfter(players);
 									}
 								}
 								Reset.resetInf();
 							} else
 							{
-								player.sendMessage(Methods.sendMessage("Leave_YouHaveLeft", null, null, null));
+								player.sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
 								Reset.resetp(player);
 								for (Player players : Bukkit.getOnlinePlayers())
 								{
 									if (Infected.isPlayerInGame(players))
 									{
-										players.sendMessage(Methods.sendMessage("Leave_NoEffect", player, null, null));
+										players.sendMessage(Messages.sendMessage("Leave_NoEffect", player, null));
 									}
 								}
 							}
@@ -719,7 +723,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else
 					{
@@ -781,28 +785,28 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else if (!plugin.inGame.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NotInGame", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NotInGame", null, null));
 						return true;
 					} else if (Infected.getGameState() != GameState.INLOBBY && Infected.getGameState() != GameState.VOTING)
 					{
-						player.sendMessage(Methods.sendMessage("Vote_GameAlreadyStarted", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_GameAlreadyStarted", null, null));
 						return true;
 					} else if (plugin.Voted4.containsKey(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Vote_AlreadyVoted", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_AlreadyVoted", null, null));
 						return true;
 					} else if (!plugin.getConfig().getBoolean("Allow Votes"))
 					{
-						player.sendMessage(Methods.sendMessage("Vote_VotesNotAllowed", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_VotesNotAllowed", null, null));
 						return true;
 					} else
 					{
@@ -823,7 +827,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Admin"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null) + " to manual start Infected.");
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						player.sendMessage(plugin.I + plugin.inGame.size() + "/" + plugin.getConfig().getInt("Automatic Start.Minimum Players") + " Players till an automatic start.");
 						return true;
 					}
@@ -838,7 +842,7 @@ public class Commands implements CommandExecutor {
 					// If the game already started
 					if (Infected.getGameState() != GameState.INLOBBY)
 					{
-						player.sendMessage(Methods.sendMessage("Error_GameStarted", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_GameStarted", null, null));
 						return true;
 					} else
 					{
@@ -852,7 +856,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Admin"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// End the game
@@ -866,7 +870,7 @@ public class Commands implements CommandExecutor {
 
 							// Give player's all their stuff/stats back
 							Reset.resetp(players);
-							players.sendMessage(Methods.sendMessage("Game_ForcedToStop", null, null, null));
+							players.sendMessage(Messages.sendMessage("Game_ForcedToStop", null, null));
 							for (PotionEffect reffect : players.getActivePotionEffects())
 							{
 								players.removePotionEffect(reffect.getType());
@@ -884,7 +888,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Arenas"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					player.sendMessage(plugin.I + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>[" + ChatColor.YELLOW + ChatColor.BOLD + "Arenas" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<");
@@ -946,7 +950,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Admin"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "------= Admin Menu =------");
@@ -971,7 +975,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.Stats"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					String user = player.getName().toLowerCase();
@@ -980,19 +984,12 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(plugin.I + "You have never played infected!");
 						return true;
 					}
-					if (Bukkit.getServer().getPlayer(user) != null)
-					{
-						user = Bukkit.getServer().getPlayer(user).getName();
-					}
-					if (Bukkit.getServer().getOfflinePlayer(user) != null)
-					{
-						user = Bukkit.getServer().getOfflinePlayer(user).getName();
-					}
+					
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "------= " + user + " =------");
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(Bukkit.getPlayer(user)) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Methods.getOnlineTime(user.toLowerCase()));
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Methods.KD(Bukkit.getPlayer(user)));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Infected.playerGetTime(user));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Stats.KD(Bukkit.getPlayer(user)));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".KillStreak"));
 					player.sendMessage("");
 				}
@@ -1002,7 +999,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.SetUp"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					sender.sendMessage(plugin.I + ChatColor.RED + "/Inf TpSpawn <ID>");
@@ -1013,7 +1010,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.SetUp"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (!(sender instanceof Player))
@@ -1038,7 +1035,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.SetUp"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					sender.sendMessage(plugin.I + ChatColor.RED + "/Inf DelSpawn <ID>");
@@ -1049,7 +1046,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.SetUp"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (!plugin.Creating.containsKey(sender.getName()))
@@ -1072,7 +1069,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.SetUp"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (!plugin.Creating.containsKey(player.getName()))
@@ -1111,7 +1108,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.SetUp"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else
 					{
@@ -1125,7 +1122,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Top"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else
 					{
@@ -1144,7 +1141,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.SetUp"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else
 					{
@@ -1210,7 +1207,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.Top"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					String user = sender.getName().toLowerCase();
@@ -1225,10 +1222,10 @@ public class Commands implements CommandExecutor {
 					Stat = new String(stringArray);
 					if (!Infected.filesGetPlayers().contains("Players." + user + "." + Stat))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NotAStat", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NotAStat", null, null));
 						return true;
 					}
-					String[] top = Methods.getTop5(Stat);
+					String[] top = Stats.getTop5(Stat);
 					int stat1 = Infected.filesGetPlayers().getInt("Players." + top[0] + "." + Stat);
 					int stat2 = Infected.filesGetPlayers().getInt("Players." + top[1] + "." + Stat);
 					int stat3 = Infected.filesGetPlayers().getInt("Players." + top[2] + "." + Stat);
@@ -1253,7 +1250,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.SetUp"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (!(sender instanceof Player))
@@ -1292,7 +1289,7 @@ public class Commands implements CommandExecutor {
 				{
 					if (!sender.hasPermission("Infected.SetUp"))
 					{
-						sender.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						sender.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (!plugin.Creating.containsKey(sender.getName()))
@@ -1323,7 +1320,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.SetUp"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// Set args[1] as the creating
@@ -1358,11 +1355,12 @@ public class Commands implements CommandExecutor {
 					{
 						player.sendMessage(plugin.I + "Arena '" + arena + "' created.");
 						Infected.filesGetArenas().set("Arenas." + arena + ".World", player.getWorld().getName());
-						Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
 						String[] list = { "55", "20" };
 						Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 						Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 						Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
+						Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
+						Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
 						Infected.filesSaveArenas();
 						plugin.Creating.put(player.getName(), arena);
 						return true;
@@ -1382,6 +1380,7 @@ public class Commands implements CommandExecutor {
 						Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 						Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 						Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
+						Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
 						Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
 						Infected.filesSaveArenas();
 						plugin.Creating.put(player.getName(), arena);
@@ -1400,18 +1399,18 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!Infected.filesGetGrenades().getBoolean("Use"))
 					{
-						player.sendMessage(Methods.sendMessage("Grenade_Disabled", null, null, null));
+						player.sendMessage(Messages.sendMessage("Grenade_Disabled", null, null));
 					} else if (!player.hasPermission("Infected.Grenades"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else if (!plugin.inGame.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Grenade_OnlyBuyInGame", null, null, null));
+						player.sendMessage(Messages.sendMessage("Grenade_OnlyBuyInGame", null, null));
 						return true;
 					} else if (plugin.getConfig().getBoolean("Grenades.Only Humans Can Use") && plugin.zombies.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Grenade_NoZombies", null, null, null));
+						player.sendMessage(Messages.sendMessage("Grenade_NoZombies", null, null));
 						return true;
 					} else
 					{
@@ -1438,7 +1437,7 @@ public class Commands implements CommandExecutor {
 							int gi = Integer.parseInt(args[1]);
 							if (Integer.valueOf(args[1]) <= (plugin.Grenades.size() - 1))
 							{
-								if (Infected.playerGetPoints(player) > Infected.filesGetGrenades().getInt(plugin.Grenades.get(gi) + ".Cost"))
+								if (Infected.playerGetPoints(player.getName()) > Infected.filesGetGrenades().getInt(plugin.Grenades.get(gi) + ".Cost"))
 								{
 									ItemStack itemstack = new ItemStack(
 											Material.getMaterial(plugin.Grenades.get(gi)),
@@ -1447,7 +1446,7 @@ public class Commands implements CommandExecutor {
 									im.setDisplayName("§e" + Infected.filesGetGrenades().getString(plugin.Grenades.get(gi) + ".Name"));
 									itemstack.setItemMeta(im);
 									player.getInventory().addItem(itemstack);
-									Infected.playerSetPoints(player, Infected.playerGetPoints(player), Infected.filesGetGrenades().getInt(plugin.Grenades.get(gi) + ".Cost"));
+									Infected.playerSetPoints(player.getName(), Infected.playerGetPoints(player.getName()), Infected.filesGetGrenades().getInt(plugin.Grenades.get(gi) + ".Cost"));
 									player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "You have just bought a " + ChatColor.AQUA + Infected.filesGetGrenades().getString(plugin.Grenades.get(gi) + ".Name"));
 								} else
 									player.sendMessage(plugin.I + ChatColor.RED + "You don't have enough points to make this purchase!");
@@ -1464,7 +1463,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Stats.Other"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					String user = args[1].toLowerCase();
@@ -1473,19 +1472,11 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(plugin.I + "That user isn't online!");
 						return true;
 					}
-					if (Bukkit.getServer().getPlayer(user) != null)
-					{
-						user = Bukkit.getServer().getPlayer(user).getName();
-					}
-					if (Bukkit.getServer().getOfflinePlayer(user) != null)
-					{
-						user = Bukkit.getServer().getOfflinePlayer(user).getName();
-					}
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "------= " + user + " =------");
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(Bukkit.getPlayer(user)) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Methods.getOnlineTime(user.toLowerCase()));
-					player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Methods.KD(Bukkit.getPlayer(user)));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Infected.playerGetTime(user));
+					player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Stats.KD(Bukkit.getPlayer(user)));
 					player.sendMessage(plugin.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".KillStreak"));
 					player.sendMessage("");
 				}
@@ -1496,7 +1487,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.SetUp"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// Set args[1] as the creating
@@ -1545,23 +1536,23 @@ public class Commands implements CommandExecutor {
 					// trying anything fancy
 					if (!player.hasPermission("Infected.Join"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					} else if (!plugin.inGame.contains(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NotInGame", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NotInGame", null, null));
 						return true;
 					} else if (Infected.getGameState() != GameState.INLOBBY && Infected.getGameState() != GameState.VOTING)
 					{
-						player.sendMessage(Methods.sendMessage("Vote_GameAlreadyStarted", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_GameAlreadyStarted", null, null));
 						return true;
 					} else if (plugin.Voted4.containsKey(player.getName()))
 					{
-						player.sendMessage(Methods.sendMessage("Vote_AlreadyVoted", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_AlreadyVoted", null, null));
 						return true;
 					} else if (!plugin.getConfig().getBoolean("Allow Votes"))
 					{
-						player.sendMessage(Methods.sendMessage("Vote_VotesNotAllowed", null, null, null));
+						player.sendMessage(Messages.sendMessage("Vote_VotesNotAllowed", null, null));
 						return true;
 					} else
 					{
@@ -1640,7 +1631,7 @@ public class Commands implements CommandExecutor {
 					Player player = (Player) sender;
 					if (!player.hasPermission("Infected.SetUp"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// Set args[1] as the creating
@@ -1688,7 +1679,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Admin"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					if (Infected.getGameState() != GameState.DISABLED)
@@ -1706,7 +1697,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.Admin"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					System.out.println("===== Infected =====");
@@ -1723,7 +1714,7 @@ public class Commands implements CommandExecutor {
 					CommandSender player = sender;
 					if (!player.hasPermission("Infected.List"))
 					{
-						player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+						player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						return true;
 					}
 					// List everyone in the playing
@@ -1809,34 +1800,30 @@ public class Commands implements CommandExecutor {
 				CommandSender player = sender;
 				if (!player.hasPermission("Infected.Admin"))
 				{
-					player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+					player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 					return true;
 				}
 				if (args.length == 4)
 				{
-					Player user = Bukkit.getPlayer(args[2]);
-					if (user == null)
-					{
-						player.sendMessage(plugin.I + ChatColor.RED + "The player must be online");
-						return true;
-					}
+					String user = args[2];
+					
 					int i = Integer.parseInt(args[3]);
 					if (args[1].equalsIgnoreCase("Points"))
 					{
 						Infected.playerSetPoints(user, Infected.playerGetPoints(user) + i, 0);
-						player.sendMessage(plugin.I + user.getName() + "'s new points is: " + Infected.playerGetPoints(user));
+						player.sendMessage(plugin.I + user + "'s new points is: " + Infected.playerGetPoints(user));
 					} else if (args[1].equalsIgnoreCase("Score"))
 					{
 						Infected.playerSetScore(user, Infected.playerGetScore(user) + i);
-						player.sendMessage(plugin.I + user.getName() + "'s new score is: " + Infected.playerGetScore(user));
+						player.sendMessage(plugin.I + user + "'s new score is: " + Infected.playerGetScore(user));
 					} else if (args[1].equalsIgnoreCase("kStats"))
 					{
 						Infected.playerSetKills(user, Infected.playerGetKills(user) + i);
-						player.sendMessage(plugin.I + user.getName() + "'s new kill count is: " + Infected.playerGetKills(user));
+						player.sendMessage(plugin.I + user + "'s new kill count is: " + Infected.playerGetKills(user));
 					} else if (args[1].equalsIgnoreCase("DStats"))
 					{
 						Infected.playerSetDeaths(user, Infected.playerGetDeaths(user) + i);
-						player.sendMessage(plugin.I + user.getName() + "'s new death count is: " + Infected.playerGetDeaths(user));
+						player.sendMessage(plugin.I + user + "'s new death count is: " + Infected.playerGetDeaths(user));
 					} else
 					{
 						player.sendMessage(plugin.I + ChatColor.RED + "Thats an invalid command");
@@ -1852,21 +1839,14 @@ public class Commands implements CommandExecutor {
 						} else
 						{
 							user.performCommand("Infected Leave");
-							user.sendMessage(Methods.sendMessage("Admin_YouAreKicked", null, null, null));
+							user.sendMessage(Messages.sendMessage("Admin_YouAreKicked", null, null));
 							player.sendMessage(plugin.I + "You have kicked " + user.getName() + " from Infected");
 						}
 					} else if (args[1].equalsIgnoreCase("Reset"))
 					{
-						Player user = Bukkit.getPlayer(args[2]);
-						if (user == null)
-						{
-							player.sendMessage(plugin.I + ChatColor.RED + "The player must be online");
-							return true;
-						} else
-						{
-							Infected.filesGetPlayers().set("Players." + user.getName().toLowerCase(), null);
-							player.sendMessage(plugin.I + user.getName() + "'s now reset!");
-						}
+						String name = args[2];
+						Infected.filesGetPlayers().set("Players." + name.toLowerCase(), null);
+						player.sendMessage(plugin.I + name + "'s now reset!");
 					}
 				} else
 				{

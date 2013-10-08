@@ -1,3 +1,4 @@
+
 package me.xxsniperzzxx_sd.infected;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -38,9 +40,9 @@ import de.robingrether.idisguise.api.DisguiseAPI;
 
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
+
 public class Main extends JavaPlugin {
 
-	
 	// Initialize all the variables
 	public static String bVersion = "1.6.4";
 	public static int currentTime = 0;
@@ -67,7 +69,7 @@ public class Main extends JavaPlugin {
 	public static HashMap<String, String> Creating = new HashMap<String, String>();
 	public static HashMap<String, Integer> Votes = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> KillStreaks = new HashMap<String, Integer>();
-	
+
 	public static HashMap<String, String> gamemode = new HashMap<String, String>();
 	public static HashMap<String, Integer> Levels = new HashMap<String, Integer>();
 	public static HashMap<String, Float> Exp = new HashMap<String, Float>();
@@ -79,9 +81,9 @@ public class Main extends JavaPlugin {
 
 	public static HashMap<Location, Material> Blocks = new HashMap<Location, Material>();
 	public static HashMap<Location, ItemStack[]> Chests = new HashMap<Location, ItemStack[]>();
-	
+
 	public static String I = ChatColor.DARK_RED + "" + "«†" + ChatColor.RESET + ChatColor.DARK_RED + "Infected" + ChatColor.DARK_RED + "†»" + ChatColor.RESET + ChatColor.GRAY + " ";
-	
+
 	public static String playingin = null;
 	public static int timestart;
 	public static int queuedtpback;
@@ -105,9 +107,7 @@ public class Main extends JavaPlugin {
 	public String currentBukkitVersion = null;
 	public String updateBukkitVersion = null;
 
-
 	// Scoreboard
-	
 
 	// Plugin Addons
 	public static AddonManager addon;
@@ -126,12 +126,14 @@ public class Main extends JavaPlugin {
 		Main.file = getFile();
 		Configuration getconfig = getConfig();
 		Main.config = getconfig;
-		
+
 		System.out.println("===== Infected =====");
-		try {
-		    Metrics metrics = new Metrics(this);
-		    metrics.start();
-		} catch (IOException e) {
+		try
+		{
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e)
+		{
 			System.out.println("Metrics was unable to start...");
 		}
 
@@ -148,8 +150,6 @@ public class Main extends JavaPlugin {
 		Infected.filesGetSigns().options().copyDefaults(true);
 		Infected.filesSafeAll();
 
-		
-
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
 		Main.v = pdf.getVersion();
@@ -157,42 +157,45 @@ public class Main extends JavaPlugin {
 		currentBukkitVersion = s[0];
 		if (getConfig().getBoolean("Check For Updates.Enable"))
 		{
+			try
+			{
+				Updater updater = new Updater(this, "Infected-Core", getFile(),
+						Updater.UpdateType.NO_DOWNLOAD, false);
 
-			Updater updater = new Updater(this, "Infected-Core", getFile(),
-					Updater.UpdateType.NO_DOWNLOAD, false);
+				Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				Main.name = updater.getLatestVersionString();
+				updateBukkitVersion = updater.updateBukkitVersion;
 
-			Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			Main.name = updater.getLatestVersionString();
-			updateBukkitVersion = updater.updateBukkitVersion;
-			
-			if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
-				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))
-					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4))))
-						Main.update = false;
-
+				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
+					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))
+						if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4))))
+							Main.update = false;
+			} catch (Exception ex)
+			{
+				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
+			}
 		}
-		//Get Plugin addons
+		// Get Plugin addons
 		addon = new AddonManager(this);
 		addon.getAddons();
-		
+
 		// On enable set the times form the config
 		Main.voteTime = getConfig().getInt("Time.Voting Time");
 		Main.Wait = getConfig().getInt("Time.Alpha Zombie Infection");
 		Main.GtimeLimit = getConfig().getInt("Time.Game Time Limit");
 
-		
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
 		PlayerListener PlayerListener = new PlayerListener(this);
 		SignListener SignListener = new SignListener(this);
 		TeleportFix TeleportFix = new TeleportFix(this);
-		if(getConfig().getBoolean("Use Death Event Instead of Damage Event"))
+		if (getConfig().getBoolean("Use Death Event Instead of Damage Event"))
 		{
 			DeathEvent DeathEvents = new DeathEvent(this);
-			pm.registerEvents(DeathEvents, this);	
-		}
-		else
-		{	DamageEvents DamageEvents = new DamageEvents(this);
+			pm.registerEvents(DeathEvents, this);
+		} else
+		{
+			DamageEvents DamageEvents = new DamageEvents(this);
 			pm.registerEvents(DamageEvents, this);
 		}
 		GrenadeListener GrenadeListener = new GrenadeListener(this);
@@ -206,6 +209,7 @@ public class Main extends JavaPlugin {
 		{
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
 			{
+
 				@Override
 				public void run() {
 					if (!Files.getSigns().getStringList("Info Signs").isEmpty())
@@ -231,21 +235,21 @@ public class Main extends JavaPlugin {
 							}
 
 							int time = Main.currentTime;
-							
-							Location location = Methods.getLocationFromString(loc);
+
+							Location location = LocationHandler.getLocationFromString(loc);
 							if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
 							{
 								Sign sign = (Sign) location.getBlock().getState();
 								sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
 								sign.setLine(2, ChatColor.GOLD + status);
-								if(Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.VOTING)
+								if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.VOTING)
 									sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
 								else
 									sign.setLine(3, "");
 								sign.update();
-								}
 							}
-						
+						}
+
 					}
 				}
 			}, 100L, getConfig().getInt("Info Signs.Refresh Time") * 20);
@@ -258,7 +262,6 @@ public class Main extends JavaPlugin {
 			System.out.println("Versions do not match so I am not responsible for any errors on your server!");
 		}
 
-		
 		System.out.println("====================");
 	}
 

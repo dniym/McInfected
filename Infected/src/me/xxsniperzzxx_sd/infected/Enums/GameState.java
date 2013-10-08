@@ -7,7 +7,7 @@ public enum GameState {INLOBBY("inlobby"), VOTING("voting"), BEFOREINFECTED("bef
 	private GameState(String s) {
 		name = s;
 	}
-	public String getTeam() {
+	public String getStatus() {
 		return name;
 	}	
 }; 

@@ -2,10 +2,10 @@ package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -18,6 +18,16 @@ import org.bukkit.scoreboard.DisplaySlot;
 public class Reset {
 
 	@SuppressWarnings("deprecation")
+	public static void resetPlayersInventory(Player player) {
+		player.getInventory().clear();
+		player.getInventory().setHelmet(null);
+		player.getInventory().setChestplate(null);
+		player.getInventory().setLeggings(null);
+		player.getInventory().setBoots(null);
+		player.updateInventory();
+	}
+	
+	@SuppressWarnings("deprecation")
 	public static void tp2LobbyAfter(Player player) {
 		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
 		Infected.arenaReset();
@@ -26,8 +36,8 @@ public class Reset {
 		{
 			ScoreBoard.updateScoreBoard();
 		}
-		Methods.resetPlayersInventory(player);
-		player.teleport(Methods.getLocation(Main.config.getString("Lobby")));
+		resetPlayersInventory(player);
+		player.teleport(LocationHandler.getLocation(Main.config.getString("Lobby")));
 
 		Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
 		if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
@@ -97,7 +107,7 @@ public class Reset {
 		{
 			player.removePotionEffect(reffect.getType());
 		}
-		Methods.resetPlayersInventory(player);
+		resetPlayersInventory(player);
 		player.updateInventory();
 		if (GameMode.valueOf(Main.gamemode.get(player.getName())) == null)
 			player.setGameMode(GameMode.SURVIVAL);

@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.Tools;
+package me.xxsniperzzxx_sd.infected.Tools.Handlers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

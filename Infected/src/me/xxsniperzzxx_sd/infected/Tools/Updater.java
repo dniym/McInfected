@@ -660,10 +660,10 @@ public class Updater {
 	private InputStream read() {
 		try
 		{
-			return url.openStream();
+			InputStream stream = url.openStream();
+			return stream;
 		} catch (IOException e)
 		{
-			System.out.println("Bukkits down... Can't check for an update!");
 			System.out.println("Bukkits down... Can't check for an update!");
 			throw new RuntimeException(e);
 		}

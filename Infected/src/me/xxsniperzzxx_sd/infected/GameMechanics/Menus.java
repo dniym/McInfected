@@ -5,9 +5,10 @@ import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Methods;
+import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
-import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,7 +46,7 @@ public class Menus {
 							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your human class is: " + event.getName());
 						} else
 						{
-							player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+							player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						}
 					}
 				}, Main.me);
@@ -92,7 +93,7 @@ public class Menus {
 							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your zombie class is: " + event.getName());
 						} else
 						{
-							player.sendMessage(Methods.sendMessage("Error_NoPermission", null, null, null));
+							player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
 						}
 					}
 				}, Main.me);

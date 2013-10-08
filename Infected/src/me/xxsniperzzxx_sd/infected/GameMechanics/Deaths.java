@@ -1,13 +1,15 @@
+
 package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Methods;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,12 +27,12 @@ public class Deaths {
 				Killer, Killed, Infected.playerGetGroup(Killed),
 				Infected.isPlayerHuman(Killed) ? true : false));
 
-		Methods.stats(Killer, 1, 0);
-		Methods.stats(Killed, 0, 1);
+		Stats.setStats(Killer, 1, 0);
+		Stats.setStats(Killed, 0, 1);
 
-		Methods.handleKillStreaks(true, Killed);
-		Methods.handleKillStreaks(false, Killer);
-		
+		Stats.handleKillStreaks(true, Killed);
+		Stats.handleKillStreaks(false, Killer);
+
 		String kill = getKillType(Infected.playerGetGroup(Killer) + "s", Killer.getName(), Killed.getName());
 		for (Player playing : Bukkit.getServer().getOnlinePlayers())
 			if (Main.inGame.contains(playing.getName()))
@@ -40,9 +42,9 @@ public class Deaths {
 		{
 			Killed.playSound(Killed.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
 			if (Main.config.getBoolean("New Zombies Tp"))
-				Methods.respawn(Killed);
-			
-			Methods.zombifyPlayer(Killed);
+				LocationHandler.respawn(Killed);
+
+			Zombify.zombifyPlayer(Killed);
 
 			Killed.sendMessage(Main.I + "You have become infected!");
 			Killed.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,
@@ -54,7 +56,7 @@ public class Deaths {
 		} else
 		{
 			Killed.playSound(Killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
-			Methods.respawn(Killed);
+			LocationHandler.respawn(Killed);
 			Equip.equipZombies(Killed);
 		}
 
@@ -78,27 +80,21 @@ public class Deaths {
 		else
 		{
 			Equip.equipZombies(Killed);
-			Methods.zombifyPlayer(Killed);
+			Zombify.zombifyPlayer(Killed);
 		}
 	}
-	
-	
-	
-	
-	
-	
 
 	public static String getKillType(String group, String killer, String killed) {
 		Random r = new Random();
 		int i = r.nextInt(Files.getKills().getStringList(group).size());
 		String killtype = ChatColor.GRAY + Files.getKills().getStringList(group).get(i);
 		String msg = null;
-		
-		if(group.equalsIgnoreCase("Zombies"))
+
+		if (group.equalsIgnoreCase("Zombies"))
 			msg = killtype.replaceAll("<zombie>", ChatColor.RED + killer).replaceAll("<human>", ChatColor.GREEN + killed);
 		else
 			msg = killtype.replaceAll("<zombie>", ChatColor.RED + killed).replaceAll("<human>", ChatColor.GREEN + killer);
-		
+
 		String cmsg = ChatColor.translateAlternateColorCodes('&', msg);
 		return cmsg;
 	}

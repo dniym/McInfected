@@ -1,6 +1,8 @@
 # Default Arena.yml, Last Edited in v1.9.1
 # # Arena Name
 #  test:
+#    # Whos the creater of this map
+#    Creator: Unkown
 #    # Are humans not allowed to attack zombies(Making them have to only run)
 #    Plain Zombie Survival: false
 #    # Are mobs allowed to break blocks

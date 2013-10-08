@@ -6,11 +6,12 @@ import java.util.List;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Methods;
+import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,7 +69,7 @@ public class SignListener implements Listener {
 
 								if (!plugin.getConfig().getBoolean("Class Support"))
 								{
-									player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
+									player.sendMessage(Messages.sendMessage("Error_NoClassSupport", player, null));
 								} else
 								{
 									String className = ChatColor.stripColor(sign.getLine(2));
@@ -139,7 +140,7 @@ public class SignListener implements Listener {
 								{
 									String prices = ChatColor.stripColor(sign.getLine(3).replaceAll("Cost: ", ""));
 									int price;
-									int points = Infected.playerGetPoints(player);
+									int points = Infected.playerGetPoints(player.getName());
 
 									if (prices.contains(plugin.getConfig().getString("Vault Support.Symbol")) && plugin.getConfig().getBoolean("Vault Support.Enable"))
 										price = Integer.valueOf(prices.replace(plugin.getConfig().getString("Vault Support.Symbol"), ""));
@@ -174,7 +175,7 @@ public class SignListener implements Listener {
 										{
 											if (price <= points)
 											{
-												Infected.playerSetPoints(player, points, price);
+												Infected.playerSetPoints(player.getName(), points, price);
 												ItemStack stack = new ItemStack(
 														item);
 												stack.setDurability(itemdata);
@@ -183,8 +184,14 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(stack);
 													if (Files.getShop().getBoolean("Save Items"))
 													{
-														Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-														if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+														Updater updater = new Updater(
+																Main.me,
+																"Infected-Core",
+																Main.file,
+																Updater.UpdateType.NO_DOWNLOAD,
+																false);
+														if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+														{
 															Infected.playerAddToShopInventory(player, stack);
 														}
 													}
@@ -196,8 +203,14 @@ public class SignListener implements Listener {
 												player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + item);
 												if (Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(item.getId()))
 												{
-													Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-													if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+													Updater updater = new Updater(
+															Main.me,
+															"Infected-Core",
+															Main.file,
+															Updater.UpdateType.NO_DOWNLOAD,
+															false);
+													if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+													{
 														Infected.playerSaveShopInventory(player);
 													}
 												}
@@ -229,7 +242,7 @@ public class SignListener implements Listener {
 											{
 												if (player.hasPermission("Infected.Shop") || player.hasPermission("Infected.Shop." + itemname))
 												{
-													Infected.playerSetPoints(player, points, price);
+													Infected.playerSetPoints(player.getName(), points, price);
 													ItemMeta i = is.getItemMeta();
 													if (!player.getInventory().contains(is))
 													{
@@ -238,8 +251,14 @@ public class SignListener implements Listener {
 														player.getInventory().addItem(is);
 														if ((Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(is.getTypeId())) && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 														{
-															Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-															if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+															Updater updater = new Updater(
+																	Main.me,
+																	"Infected-Core",
+																	Main.file,
+																	Updater.UpdateType.NO_DOWNLOAD,
+																	false);
+															if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+															{
 																Infected.playerSaveShopInventory(player);
 															}
 														}
@@ -252,8 +271,14 @@ public class SignListener implements Listener {
 													player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + itemname);
 													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 													{
-														Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-														if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+														Updater updater = new Updater(
+																Main.me,
+																"Infected-Core",
+																Main.file,
+																Updater.UpdateType.NO_DOWNLOAD,
+																false);
+														if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+														{
 															Infected.playerSaveShopInventory(player);
 														}
 													}
@@ -271,7 +296,7 @@ public class SignListener implements Listener {
 										if (loc.getBlock().getType() == Material.SIGN_POST || loc.getBlock().getType() == Material.WALL_SIGN)
 										{
 
-											String i = Files.getSigns().getString("Shop Signs." + Methods.getLocationToString(loc));
+											String i = Files.getSigns().getString("Shop Signs." + LocationHandler.getLocationToString(loc));
 											String itemi = null;
 											short itemd = 0;
 											if (i.contains(":"))
@@ -287,7 +312,7 @@ public class SignListener implements Listener {
 											Material item = Material.getMaterial(Integer.valueOf(itemi));
 											if (price < points + 1)
 											{
-												Infected.playerSetPoints(player, points, price);
+												Infected.playerSetPoints(player.getName(), points, price);
 												ItemStack stack = new ItemStack(
 														Material.getMaterial(Integer.valueOf(itemi)));
 												stack.setDurability(itemd);
@@ -296,8 +321,14 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(stack);
 													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
 													{
-														Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-														if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+														Updater updater = new Updater(
+																Main.me,
+																"Infected-Core",
+																Main.file,
+																Updater.UpdateType.NO_DOWNLOAD,
+																false);
+														if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+														{
 															Infected.playerSaveShopInventory(player);
 														}
 													}
@@ -309,8 +340,14 @@ public class SignListener implements Listener {
 												player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You have bought a " + item);
 												if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
 												{
-													Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-													if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+													Updater updater = new Updater(
+															Main.me,
+															"Infected-Core",
+															Main.file,
+															Updater.UpdateType.NO_DOWNLOAD,
+															false);
+													if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+													{
 														Infected.playerSaveShopInventory(player);
 													}
 												}
@@ -394,7 +431,7 @@ public class SignListener implements Listener {
 							{
 								String prices = ChatColor.stripColor(sign.getLine(3).replaceAll("Cost: ", ""));
 								int price;
-								int points = Infected.playerGetPoints(player);
+								int points = Infected.playerGetPoints(player.getName());
 
 								if (prices.contains(plugin.getConfig().getString("Vault Support.Symbol")) && plugin.getConfig().getBoolean("Vault Support.Enable"))
 									price = Integer.valueOf(prices.replace(plugin.getConfig().getString("Vault Support.Symbol"), ""));
@@ -407,7 +444,7 @@ public class SignListener implements Listener {
 								{
 									if (price <= points)
 									{
-										Infected.playerSetPoints(player, points, price);
+										Infected.playerSetPoints(player.getName(), points, price);
 
 										for (String row : Infected.filesGetSigns().getStringList("Command Sets." + cmdset))
 										{
@@ -573,7 +610,7 @@ public class SignListener implements Listener {
 
 								Location loc = event.getBlock().getLocation();
 
-								Infected.filesGetSigns().set("Shop Signs." + Methods.getLocationToString(loc), itemid + ":" + Integer.valueOf(itemdata));
+								Infected.filesGetSigns().set("Shop Signs." + LocationHandler.getLocationToString(loc), itemid + ":" + Integer.valueOf(itemdata));
 								Infected.filesSaveSigns();
 							}
 						}
@@ -628,13 +665,13 @@ public class SignListener implements Listener {
 
 						if (Files.getSigns().getStringList("Info Signs") == null)
 						{
-							String[] list = { Methods.getLocationToString(event.getBlock().getLocation()) };
+							String[] list = { LocationHandler.getLocationToString(event.getBlock().getLocation()) };
 							Files.getSigns().set("Info Signs", list);
 							Files.saveSigns();
 						} else
 						{
 							List<String> list = Files.getSigns().getStringList("Info Signs");
-							list.add(Methods.getLocationToString(event.getBlock().getLocation()));
+							list.add(LocationHandler.getLocationToString(event.getBlock().getLocation()));
 							Files.getSigns().set("Info Signs", list);
 							Files.saveSigns();
 						}
@@ -689,7 +726,7 @@ public class SignListener implements Listener {
 				}
 				if (!plugin.getConfig().getBoolean("Class Support"))
 				{
-					player.sendMessage(Methods.sendMessage("Error_NoClassSupport", player, null, null));
+					player.sendMessage(Messages.sendMessage("Error_NoClassSupport", player, null));
 				} else
 				{
 					if (event.getLine(3).equalsIgnoreCase("Zombie"))

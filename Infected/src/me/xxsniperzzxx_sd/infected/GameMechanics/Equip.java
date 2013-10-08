@@ -2,8 +2,7 @@ package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Methods;
-import me.xxsniperzzxx_sd.infected.Tools.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -63,7 +62,7 @@ public class Equip {
 				human.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Feet")));
 		}
 		human.updateInventory();
-		Methods.applyClassAbility(human);
+		Abilities.applyClassAbility(human);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -143,6 +142,6 @@ public class Equip {
 				zombie.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Feet")));
 		}
 		zombie.updateInventory();
-		Methods.applyClassAbility(zombie);
+		Abilities.applyClassAbility(zombie);
 	}
 }

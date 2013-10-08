@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.InventoryHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.TimeHandler;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,15 +46,15 @@ public class Infected {
 	}
 
 	public static void playerSaveShopInventory(Player player) {
-		Methods.saveInventory(player, "Shop Inventory");
+		InventoryHandler.saveInventory(player, "Shop Inventory");
 	}
 
 	public static void playerAddToShopInventory(Player player, ItemStack items) {
-		Methods.addItemToInventory(player, "Shop Inventory", items);
+		InventoryHandler.addItemToInventory(player, "Shop Inventory", items);
 	}
 
 	public static ItemStack[] playerGetShopInventory(Player player) {
-		return Methods.getInventory(player, "Shop Inventory");
+		return InventoryHandler.getInventory(player, "Shop Inventory");
 	}
 
 	public static String playerGetGroup(Player player) {
@@ -180,82 +182,82 @@ public class Infected {
 		Main.Winners.add(player.getName());
 	}
 
-	public static boolean playerHasPlayed(Player player) {
-		return Files.getPlayers().contains(player.getName().toLowerCase());
+	public static boolean playerHasPlayed(String name) {
+		return Files.getPlayers().contains(name.toLowerCase());
 	}
 
-	public static void playerSetTime(Player player) {
-		Methods.SetOnlineTime(player);
+	public static void playerSetTime(String name) {
+		TimeHandler.SetOnlineTime(name);
 	}
 
-	public static String playerGetTime(Player player) {
-		return Methods.getOnlineTime(player.getName().toLowerCase());
+	public static String playerGetTime(String name) {
+		return TimeHandler.getOnlineTime(name.toLowerCase());
 	}
 
-	public static void playerDelTime(Player player) {
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Time", null);
+	public static void playerDelTime(String name) {
+		Files.getPlayers().set("Players." + name.toLowerCase() + ".Time", null);
 	}
 
-	public static void playerSetKills(Player player, Integer kills) {
-		Files.getPlayers().set("Players." + "Players." + player.getName().toLowerCase() + ".Kills", kills);
+	public static void playerSetKills(String name, Integer kills) {
+		Files.getPlayers().set("Players." + "Players." + name.toLowerCase() + ".Kills", kills);
 		Files.savePlayers();
 	}
 
-	public static int playerGetKills(Player player) {
-		return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Kills");
+	public static int playerGetKills(String name) {
+		return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Kills");
 	}
 
-	public static void playerDelKills(Player player) {
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Kills", null);
+	public static void playerDelKills(String name) {
+		Files.getPlayers().set("Players." + name.toLowerCase() + ".Kills", null);
 	}
 
-	public static void playerSetDeaths(Player player, Integer deaths) {
-		Files.getPlayers().set("Players." + "Players." + player.getName().toLowerCase() + ".Deaths", deaths);
+	public static void playerSetDeaths(String name, Integer deaths) {
+		Files.getPlayers().set("Players." + "Players." + name.toLowerCase() + ".Deaths", deaths);
 		Files.savePlayers();
 	}
 
-	public static int playerGetDeaths(Player player) {
-		return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Deaths");
+	public static int playerGetDeaths(String name) {
+		return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Deaths");
 	}
 
-	public static void playerDelDeaths(Player player) {
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Deaths", null);
+	public static void playerDelDeaths(String name) {
+		Files.getPlayers().set("Players." + name.toLowerCase() + ".Deaths", null);
 	}
 
-	public static void playerSetPoints(Player player, Integer points, Integer price) {
+	public static void playerSetPoints(String name, Integer points, Integer price) {
 		if (Main.config.getBoolean("Vault Support.Enable"))
 		{
-			Main.economy.withdrawPlayer(player.getName(), price);
+			Main.economy.withdrawPlayer(name, price);
 		} else
 		{
-			Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", points - price);
+			Files.getPlayers().set("Players." + name.toLowerCase() + ".Points", points - price);
 			Files.savePlayers();
 		}
 	}
 
-	public static int playerGetPoints(Player player) {
+	public static int playerGetPoints(String name) {
 		if (Main.config.getBoolean("Vault Support.Enable"))
-			return (int) Main.economy.getBalance(player.getName());
+			return (int) Main.economy.getBalance(name);
 		else
-			return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Points");
+			return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Points");
 	}
 
-	public static void playerDelPoints(Player player) {
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Points", null);
+	public static void playerDelPoints(String name) {
+		Files.getPlayers().set("Players." + name.toLowerCase() + ".Points", null);
 		Files.savePlayers();
 	}
 
-	public static void playerSetScore(Player player, Integer score) {
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Score", score);
+	public static void playerSetScore(String name, Integer score) {
+		Files.getPlayers().set("Players." + name.toLowerCase() + ".Score", score);
 		Files.savePlayers();
 	}
 
-	public static int playerGetScore(Player player) {
-		return Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Score");
+	public static int playerGetScore(String name) {
+		return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Score");
 	}
 
-	public static void playerDelScore(Player player) {
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Score", null);
+	public static void playerDelScore(String name) {
+		Files.getPlayers().set("Players." + name.toLowerCase() + ".Score", null);
 		Files.savePlayers();
 	}
 
