@@ -8,6 +8,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
@@ -69,7 +70,7 @@ public class SignListener implements Listener {
 
 								if (!plugin.getConfig().getBoolean("Class Support"))
 								{
-									player.sendMessage(Messages.sendMessage("Error_NoClassSupport", player, null));
+									player.sendMessage(Messages.sendMessage(Msgs.CLASSES_DISABLED, player, null));
 								} else
 								{
 									String className = ChatColor.stripColor(sign.getLine(2));
@@ -78,11 +79,11 @@ public class SignListener implements Listener {
 										if (className.equalsIgnoreCase("None"))
 										{
 											Main.humanClasses.remove(player.getName());
-											player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You no longer have a selected human class");
+											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 										} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + className))
 										{
 											Main.humanClasses.put(player.getName(), className);
-											player.sendMessage(Main.I + ChatColor.DARK_AQUA + "Your current human class is: " + sign.getLine(2));
+											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, className));
 
 										} else
 										{
@@ -93,11 +94,11 @@ public class SignListener implements Listener {
 										if (className.equalsIgnoreCase("None"))
 										{
 											Main.zombieClasses.remove(player.getName());
-											player.sendMessage(Main.I + ChatColor.DARK_AQUA + "You no longer have a selected zombie class");
+											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 										} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + className))
 										{
 											Main.zombieClasses.put(player.getName(), className);
-											player.sendMessage(Main.I + ChatColor.DARK_AQUA + "Your current zombie class is: " + sign.getLine(2));
+											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, className));
 
 										} else
 										{
@@ -726,7 +727,7 @@ public class SignListener implements Listener {
 				}
 				if (!plugin.getConfig().getBoolean("Class Support"))
 				{
-					player.sendMessage(Messages.sendMessage("Error_NoClassSupport", player, null));
+					player.sendMessage(Messages.sendMessage(Msgs.CLASSES_DISABLED, player, null));
 				} else
 				{
 					if (event.getLine(3).equalsIgnoreCase("Zombie"))

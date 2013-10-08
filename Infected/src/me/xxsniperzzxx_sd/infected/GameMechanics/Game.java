@@ -9,6 +9,7 @@ import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.PointsAndScores;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -43,14 +44,14 @@ public class Game {
 					ScoreBoard.updateScoreBoard();
 				}
 				playing.sendMessage("");
-				playing.sendMessage(Messages.sendMessage("Format_Line", null, null));
+				playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 				playing.sendMessage("");
-				playing.sendMessage(Messages.sendMessage("Vote_Time", null, TimeHandler.getTime(Long.valueOf(Main.voteTime))));
-				playing.sendMessage(Messages.sendMessage("Vote_HowToVote", null, null));
+				playing.sendMessage(Messages.sendMessage(Msgs.VOTE_VOTETIME, null, TimeHandler.getTime(Long.valueOf(Main.voteTime))));
+				playing.sendMessage(Messages.sendMessage(Msgs.VOTE_HOWTOVOTE, null, null));
 				playing.sendMessage("");
 				playing.sendMessage(Main.I + ChatColor.YELLOW + ChatColor.BOLD + "Arenas: " + ChatColor.WHITE + ChatColor.ITALIC + MapHandler.getPossibleMaps() + " random");
 				playing.sendMessage("");
-				playing.sendMessage(Messages.sendMessage("Format_Line", null, null));
+				playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 			
 				Main.Winners.add(playing.getName());
 				ScoreBoard.updateScoreBoard();
@@ -82,7 +83,7 @@ public class Game {
 								{
 									playing.playSound(playing.getLocation(), Sound.ORB_PICKUP, 1, 1);
 									playing.sendMessage("");
-									playing.sendMessage(Messages.sendMessage("Vote_TimeLeft", null, TimeHandler.getTime(Long.valueOf(timeleft))));
+									playing.sendMessage(Messages.sendMessage(Msgs.VOTE_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 								}
 						}
 						
@@ -123,7 +124,7 @@ public class Game {
 							if (Main.inGame.contains(playing.getName()))
 							{
 								playing.sendMessage("");
-								playing.sendMessage(Messages.sendMessage("Vote_TimeLeft", null, TimeHandler.getTime(Long.valueOf(timeleft))));
+								playing.sendMessage(Messages.sendMessage(Msgs.VOTE_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 							}
 
 					} else if (timeleft == -1)
@@ -158,7 +159,7 @@ public class Game {
 								playing.sendMessage("");
 								playing.sendMessage(Main.I + "Game Starting in 5 Seconds.");
 								playing.sendMessage("");
-								playing.sendMessage(Messages.sendMessage("Game_Map", null, null));
+								playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
 								}
 						for (String loc : Infected.filesGetArenas().getStringList("Arenas." + Main.playingin + ".Spawns"))
 						{
@@ -201,7 +202,7 @@ public class Game {
 											playing.setHealth(20);
 											playing.setFoodLevel(20);
 											playing.sendMessage("");
-											playing.sendMessage(Messages.sendMessage("Game_FirstInfectedIn", null, TimeHandler.getTime(Long.valueOf(Main.Wait))));
+											playing.sendMessage(Messages.sendMessage(Msgs.GAME_FIRSTINFECTEDIN, null, TimeHandler.getTime(Long.valueOf(Main.Wait))));
 											playing.sendMessage("");
 											if (Main.config.getBoolean("ScoreBoard Support"))
 											{
@@ -265,7 +266,7 @@ public class Game {
 														if (Main.inGame.contains(playing.getName()))
 														{
 															playing.sendMessage("");
-															playing.sendMessage(Messages.sendMessage("Game_InfectionTimer", null, TimeHandler.getTime(Long.valueOf(timeleft))));
+															playing.sendMessage(Messages.sendMessage(Msgs.GAME_INFECTIONTIMER, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 															playing.sendMessage("");
 															}
 													}
@@ -352,12 +353,12 @@ public class Game {
 																			if (timeleft > 61)
 																			{
 																				playing.sendMessage("");
-																				playing.sendMessage(Messages.sendMessage("Game_TimeLeft", null, TimeHandler.getTime(Long.valueOf(timeleft))));
-																				playing.sendMessage(Messages.sendMessage("Game_Teams", null, null));
+																				playing.sendMessage(Messages.sendMessage(Msgs.GAME_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
+																				playing.sendMessage(Messages.sendMessage(Msgs.GAME_TEAMS, null, null));
 																			} else
 																			{
 																				playing.sendMessage("");
-																				playing.sendMessage(Messages.sendMessage("Game_TimeLeft", null, TimeHandler.getTime(Long.valueOf(timeleft))));
+																				playing.sendMessage(Messages.sendMessage(Msgs.GAME_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 																			}
 																	}
 																} else if (timeleft == -1)
@@ -446,9 +447,9 @@ public class Game {
 					{
 						PointsAndScores.rewardPointsAndScore(playing, "Game Over");
 						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage("Format_Line", null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage("AfterGame_HumansWin", null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.AFTERGAME_HUMANSWIN, null, null));
 						StringBuilder winners = new StringBuilder();
 						for (Object o : Main.Winners)
 						{
@@ -457,9 +458,9 @@ public class Game {
 						}
 						playing.sendMessage(Main.I + "Winners: " + winners.toString());
 						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage("Game_Map", null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
 						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage("Format_Line", null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 						Infected.playerSetTime(playing.getName());
 						Files.savePlayers();
 						if (Main.config.getBoolean("Disguise Support.Enabled"))
@@ -490,11 +491,11 @@ public class Game {
 						Files.savePlayers();
 
 						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage("Format_Line", null, null));
-						playing.sendMessage(Messages.sendMessage("AfterGame_ZombiesWin", null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.AFTERGAME_ZOMBESWIN, null, null));
 						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage("Game_Map", null, null));
-						playing.sendMessage(Messages.sendMessage("Format_Line", null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
+						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 						for (PotionEffect reffect : playing.getActivePotionEffects())
 							playing.removePotionEffect(reffect.getType());
 	

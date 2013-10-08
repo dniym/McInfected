@@ -7,6 +7,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
+import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.TimeHandler;
 
@@ -55,7 +56,7 @@ public class Zombify {
 				int alpha = r.nextInt(Main.inGame.size());
 				String name = Main.inGame.get(alpha);
 				Player zombie = Bukkit.getServer().getPlayer(name);
-				zombie.sendMessage(Messages.sendMessage("Game_YouAreFirstInfected", null, null));
+				zombie.sendMessage(Messages.sendMessage(Msgs.GAME_YOURAREFIRSTINFECTED, null, null));
 				Main.zombies.add(zombie.getName());
 				Main.Winners.remove(zombie.getName());
 				if (Main.config.getBoolean("New Zombie Tp"))
@@ -74,7 +75,7 @@ public class Zombify {
 				zombifyPlayer(zombie);
 				for (Player online : Bukkit.getServer().getOnlinePlayers())
 					if (Main.inGame.contains(online.getName()) && (!(Main.zombies.contains(online.getName()))))
-						online.sendMessage(Messages.sendMessage("Game_FirstInfected", zombie, null));
+						online.sendMessage(Messages.sendMessage(Msgs.GAME_FIRSTINFECTED, zombie, null));
 
 			}
 			// Inform humans of infected, prepare them
@@ -124,7 +125,7 @@ public class Zombify {
 		for (Player playing : Bukkit.getServer().getOnlinePlayers())
 		{
 			if ((!(playing == newzombie)) && Main.inGame.contains(playing.getName()))
-				playing.sendMessage(Messages.sendMessage("Game_GotInfected", newzombie, null));
+				playing.sendMessage(Messages.sendMessage(Msgs.GAME_GOTINFECTED, newzombie, null));
 		}
 		newzombie.setFallDistance(0F);
 		LocationHandler.respawn(newzombie);

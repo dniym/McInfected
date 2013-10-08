@@ -11,6 +11,7 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
@@ -104,7 +105,7 @@ public class PlayerListener implements Listener {
 			if (!(Infected.getGameState() == GameState.STARTED) && (!e.getInventory().getTitle().contains("Class") && !e.getInventory().getTitle().contains("Vote")))
 			{
 				Player player = (Player) e.getViewers().get(0);
-				player.sendMessage(Messages.sendMessage("Error_CantEditInventoryYet", null, null));
+				player.sendMessage(Messages.sendMessage(Msgs.ERROR_CANTEDITINVENTORYYET, null, null));
 				e.setCancelled(true);
 			}
 	}
@@ -213,12 +214,12 @@ public class PlayerListener implements Listener {
 				if (plugin.getConfig().getBoolean("Debug"))
 					System.out.println("Leave: Leaving, wellin lobby, no timers active");
 
-				e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+				e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 				Reset.resetp(e.getPlayer());
 				for (Player players : Bukkit.getOnlinePlayers())
 				{
 					if (Infected.isPlayerInGame(players))
-						players.sendMessage(Messages.sendMessage("Leave_InLobby", e.getPlayer(), null));
+						players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 				}
 			}
 
@@ -234,13 +235,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: Before Voting(Triggered)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -252,7 +253,7 @@ public class PlayerListener implements Listener {
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NoEffect", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 						}
 					}
 				}
@@ -272,13 +273,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena Before Infected(Triggered)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -290,7 +291,7 @@ public class PlayerListener implements Listener {
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NoEffect", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 						}
 					}
 				}
@@ -309,13 +310,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -329,7 +330,7 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					Random r = new Random();
 					int alpha = r.nextInt(Main.inGame.size());
@@ -380,13 +381,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -398,7 +399,7 @@ public class PlayerListener implements Listener {
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NoEffect", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 						}
 					}
 				}
@@ -424,12 +425,12 @@ public class PlayerListener implements Listener {
 				if (plugin.getConfig().getBoolean("Debug"))
 					System.out.println("Leave: Leaving, wellin lobby, no timers active");
 
-				e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+				e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 				Reset.resetp(e.getPlayer());
 				for (Player players : Bukkit.getOnlinePlayers())
 				{
 					if (Infected.isPlayerInGame(players))
-						players.sendMessage(Messages.sendMessage("Leave_InLobby", e.getPlayer(), null));
+						players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 				}
 			}
 
@@ -445,13 +446,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: Before Voting(Triggered)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -463,7 +464,7 @@ public class PlayerListener implements Listener {
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NoEffect", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 						}
 					}
 				}
@@ -483,13 +484,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena Before Infected(Triggered)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -501,7 +502,7 @@ public class PlayerListener implements Listener {
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NoEffect", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 						}
 					}
 				}
@@ -520,13 +521,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -540,7 +541,7 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					Random r = new Random();
 					int alpha = r.nextInt(Main.inGame.size());
@@ -591,13 +592,13 @@ public class PlayerListener implements Listener {
 					{
 						System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
 					}
-					e.getPlayer().sendMessage(Messages.sendMessage("Leave_YouHaveLeft", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 					Reset.resetp(e.getPlayer());
 					for (Player players : Bukkit.getOnlinePlayers())
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NotEnoughPlayers", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, e.getPlayer(), null));
 							Reset.tp2LobbyAfter(players);
 						}
 					}
@@ -609,7 +610,7 @@ public class PlayerListener implements Listener {
 					{
 						if (Infected.isPlayerInGame(players))
 						{
-							players.sendMessage(Messages.sendMessage("Leave_NoEffect", e.getPlayer(), null));
+							players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, e.getPlayer(), null));
 						}
 					}
 				}
@@ -638,11 +639,11 @@ public class PlayerListener implements Listener {
 				// that aren't /inf
 				if (plugin.getConfig().getStringList("Blocked Commands").contains(msg.toLowerCase()))
 				{
-					e.getPlayer().sendMessage(Messages.sendMessage("Error_CantUseCommand", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.ERROR_CANTUSECOMMAND, null, null));
 					e.setCancelled(true);
 				} else if (!(plugin.getConfig().getStringList("Allowed Commands").contains(msg.toLowerCase()) || e.getMessage().toLowerCase().contains("inf")))
 				{
-					e.getPlayer().sendMessage(Messages.sendMessage("Error_CantUseCommand", null, null));
+					e.getPlayer().sendMessage(Messages.sendMessage(Msgs.ERROR_CANTUSECOMMAND, null, null));
 					e.setCancelled(true);
 				}
 			}

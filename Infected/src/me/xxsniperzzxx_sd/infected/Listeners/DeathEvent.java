@@ -5,6 +5,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Abilities;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
@@ -107,7 +108,7 @@ public class DeathEvent implements Listener {
 					{
 						if (Infected.isPlayerInGame(playing))
 						{
-							playing.sendMessage(Messages.sendMessage("Game_GotInfected", victim, null));
+							playing.sendMessage(Messages.sendMessage(Msgs.GAME_GOTINFECTED, victim, null));
 						}
 					}
 				}

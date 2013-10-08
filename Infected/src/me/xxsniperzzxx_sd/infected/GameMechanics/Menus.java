@@ -6,6 +6,7 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
+import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
 
@@ -30,7 +31,7 @@ public class Menus {
 			}
 		}
 		IconMenu menu = new IconMenu(
-				ChatColor.GREEN + player.getName() + " - Human Class",
+				ChatColor.GREEN + player.getName() + " - Humans",
 				((classList.size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -39,14 +40,15 @@ public class Menus {
 						if (event.getName().equalsIgnoreCase("None"))
 						{
 							Main.humanClasses.remove(player.getName());
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a human class");
+							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 						} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + event.getName()))
 						{
 							Main.humanClasses.put(player.getName(), classList.get(event.getPosition()));
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your human class is: " + event.getName());
+
+							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, classList.get(event.getPosition())));
 						} else
 						{
-							player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
+							player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
 						}
 					}
 				}, Main.me);
@@ -77,7 +79,7 @@ public class Menus {
 			}
 		}
 		IconMenu menu = new IconMenu(
-				ChatColor.DARK_RED + player.getName() + " - Zombie Class",
+				ChatColor.DARK_RED + player.getName() + " - Zombies",
 				((classList.size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -86,14 +88,14 @@ public class Menus {
 						if (event.getName().equalsIgnoreCase("None"))
 						{
 							Main.zombieClasses.remove(player.getName());
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "You no longer have a zombie class");
+							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 						} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + event.getName()))
 						{
 							Main.zombieClasses.put(player.getName(), classList.get(event.getPosition()));
-							event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "Your zombie class is: " + event.getName());
+							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, classList.get(event.getPosition())));
 						} else
 						{
-							player.sendMessage(Messages.sendMessage("Error_NoPermission", null, null));
+							player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
 						}
 					}
 				}, Main.me);
@@ -159,7 +161,7 @@ public class Menus {
 							for (Player players : Bukkit.getServer().getOnlinePlayers())
 								if (Main.inGame.contains(players.getName()))
 								{
-									players.sendMessage(Main.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + voted4);
+									players.sendMessage(Messages.sendMessage(Msgs.VOTE_VOTEDFOR, player, voted4));
 								}
 							if (Main.config.getBoolean("ScoreBoard Support"))
 							{
@@ -178,7 +180,7 @@ public class Menus {
 							for (Player players : Bukkit.getServer().getOnlinePlayers())
 								if (Main.inGame.contains(players.getName()))
 								{
-									players.sendMessage(Main.I + ChatColor.GRAY + player.getName() + " has voted for: " + ChatColor.YELLOW + event.getName());
+									players.sendMessage(Messages.sendMessage(Msgs.VOTE_VOTEDFOR, player, event.getName()));
 								}
 							if (Main.config.getBoolean("ScoreBoard Support"))
 							{
