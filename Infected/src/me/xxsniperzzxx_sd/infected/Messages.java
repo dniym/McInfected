@@ -13,10 +13,10 @@ public class Messages {
 	public static String sendMessage(Msgs message, Player player, String string) {
 		String msg = String.valueOf(Files.getMessages().getString(message.getStatus()));
 		String msg1 = msg;
-		if (msg1.contains("<player>") && !(player == null)) 
+		if (msg.contains("<player>") && !(player == null)) 
 			msg1 = msg1.replaceAll("<player>", player.getName());
 
-		if (msg1.contains("<timeleft>") && !(string == null)) 
+		if (msg.contains("<timeleft>") && !(string == null)) 
 			msg1 = msg1.replaceAll("<timeleft>", String.valueOf(string));
 
 		if (msg.contains("<humans>")) 
@@ -43,7 +43,11 @@ public class Messages {
 		if (msg.contains("&")) 
 			msg1 = ChatColor.translateAlternateColorCodes('&', msg1);
 
-		String newMsg = Main.I + msg1;
+		String newMsg = msg1;
+		
+		if(!message.getStatus().contains("Format"))
+			newMsg = Main.I + newMsg;
+		
 		return newMsg;
 	}
 }

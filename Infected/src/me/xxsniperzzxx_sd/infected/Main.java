@@ -77,12 +77,12 @@ public class Main extends JavaPlugin {
 	public static HashMap<String, Integer> Food = new HashMap<String, Integer>();
 	public static HashMap<String, ItemStack[]> Armor = new HashMap<String, ItemStack[]>();
 	public static HashMap<String, ItemStack[]> Inventory = new HashMap<String, ItemStack[]>();
-	public static HashMap<String, Location> Spot = new HashMap<String, Location>();
+	public static HashMap<String, String> Spot = new HashMap<String, String>();
 
 	public static HashMap<Location, Material> Blocks = new HashMap<Location, Material>();
 	public static HashMap<Location, ItemStack[]> Chests = new HashMap<Location, ItemStack[]>();
 
-	public static String I = ChatColor.DARK_RED + "" + "«†" + ChatColor.RESET + ChatColor.DARK_RED + "Infected" + ChatColor.DARK_RED + "†»" + ChatColor.RESET + ChatColor.GRAY + " ";
+	public static String I = "" + ChatColor.DARK_RED + ChatColor.BOLD + "«" + ChatColor.RESET + ChatColor.DARK_GRAY + ChatColor.BOLD +"Infected" + ChatColor.DARK_RED + ChatColor.BOLD + "»" + ChatColor.RESET + ChatColor.GRAY + " ";
 
 	public static String playingin = null;
 	public static int timestart;
@@ -236,7 +236,7 @@ public class Main extends JavaPlugin {
 
 							int time = Main.currentTime;
 
-							Location location = LocationHandler.getLocationFromString(loc);
+							Location location = LocationHandler.getObjectLocation(loc);
 							if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
 							{
 								Sign sign = (Sign) location.getBlock().getState();
@@ -297,7 +297,7 @@ public class Main extends JavaPlugin {
 					player.setLevel(Main.Levels.get(player.getName()));
 					if (Main.Spot.containsKey(player.getName()))
 					{
-						player.teleport(Main.Spot.get(player.getName()));
+						player.teleport(LocationHandler.getPlayerLocation(Main.Spot.get(player.getName())));
 					}
 					if (Main.Food.containsKey(player.getName()))
 					{

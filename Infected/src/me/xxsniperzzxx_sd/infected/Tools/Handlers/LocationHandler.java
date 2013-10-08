@@ -15,14 +15,23 @@ import org.bukkit.entity.Player;
 
 public class LocationHandler {
 
-	public static Location getLocation(String loc) {
+	
+	public static Location getObjectLocation(String loc) {
 		String[] floc = loc.split(",");
 		World world = Bukkit.getServer().getWorld(floc[0]);
-		Location Loc = new Location(world, Integer.valueOf(floc[1]) + .5,
-				Integer.valueOf(floc[2]) + .5, Integer.valueOf(floc[3]) + .5,
+		Location Loc = new Location(world, Double.valueOf(floc[1]),
+				Double.valueOf(floc[2]), Double.valueOf(floc[3]));
+		return Loc;
+	}
+	public static Location getPlayerLocation(String loc) {
+		String[] floc = loc.split(",");
+		World world = Bukkit.getServer().getWorld(floc[0]);
+		Location Loc = new Location(world, Double.valueOf(floc[1]),
+				Double.valueOf(floc[2])+.5, Double.valueOf(floc[3]),
 				Float.valueOf(floc[4]), Float.valueOf(floc[5]));
 		return Loc;
 	}
+	
 
 	public static void respawn(Player player) {
 		player.setHealth(20.0);
@@ -31,12 +40,8 @@ public class LocationHandler {
 		Random r = new Random();
 		int i = r.nextInt(Files.getArenas().getStringList("Arenas." + Main.playingin + ".Spawns").size());
 		String loc = Files.getArenas().getStringList("Arenas." + Main.playingin + ".Spawns").get(i);
-		String[] floc = loc.split(",");
-		World world = Bukkit.getServer().getWorld(floc[0]);
-		Location Loc = new Location(world, Integer.valueOf(floc[1]) + .5,
-				Integer.valueOf(floc[2]) + .5, Integer.valueOf(floc[3]) + .5,
-				Float.valueOf(floc[4]), Float.valueOf(floc[5]));
-		player.teleport(Loc);
+		
+		player.teleport(getPlayerLocation(loc));
 		Main.Lasthit.remove(player.getName());
 		if (Main.config.getBoolean("ScoreBoard Support"))
 		{
@@ -49,21 +54,12 @@ public class LocationHandler {
 		double iy = loc.getY();
 		double iz = loc.getZ();
 		World world = loc.getWorld();
-		String s = world.getName() + "," + ix + "," + iy + "," + iz;
+		float yaw = loc.getYaw();
+		float pitch = loc.getPitch();
+		String s = world.getName() + "," + ix + "," + iy + "," + iz+ "," + yaw+ "," + pitch;
 		return s;
 	}
 
-	public static Location getLocationFromString(String loc) {
-		if (loc.contains(","))
-		{
-			String[] floc = loc.split(",");
-			World world = Bukkit.getServer().getWorld(floc[0]);
-			Location Loc = new Location(world, Double.valueOf(floc[1]),
-					Double.valueOf(floc[2]), Double.valueOf(floc[3]));
-			return Loc;
-		} else
-			return null;
-	}
 
 	public static void saveLocation(Location loc, String saveto) {
 		double ix = loc.getX();

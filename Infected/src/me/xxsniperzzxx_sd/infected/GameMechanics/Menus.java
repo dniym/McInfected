@@ -31,7 +31,7 @@ public class Menus {
 			}
 		}
 		IconMenu menu = new IconMenu(
-				ChatColor.GREEN + player.getName() + " - Humans",
+				ChatColor.GREEN + player.getName() + "-Human Classes",
 				((classList.size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -79,7 +79,7 @@ public class Menus {
 			}
 		}
 		IconMenu menu = new IconMenu(
-				ChatColor.DARK_RED + player.getName() + " - Zombies",
+				ChatColor.DARK_RED + player.getName() + "-Zombie Classes",
 				((classList.size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{

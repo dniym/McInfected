@@ -37,7 +37,7 @@ public class Reset {
 			ScoreBoard.updateScoreBoard();
 		}
 		resetPlayersInventory(player);
-		player.teleport(LocationHandler.getLocation(Main.config.getString("Lobby")));
+		player.teleport(LocationHandler.getPlayerLocation(Main.config.getString("Lobby")));
 
 		Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
 		if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
@@ -122,7 +122,7 @@ public class Reset {
 		player.setExp(Main.Exp.get(player.getName()));
 		player.setLevel(Main.Levels.get(player.getName()));
 		if (Main.Spot.containsKey(player.getName()))
-			player.teleport(Main.Spot.get(player.getName()));
+			player.teleport(LocationHandler.getPlayerLocation(Main.Spot.get(player.getName())));
 		if (Main.Food.containsKey(player.getName()))
 			player.setFoodLevel(Main.Food.get(player.getName()));
 		if (Main.Health.containsKey(player.getName()))

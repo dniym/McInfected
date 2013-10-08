@@ -7,6 +7,7 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.InventoryHandler;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.TimeHandler;
 
 import org.bukkit.Location;
@@ -330,7 +331,7 @@ public class Infected {
 	}
 
 	public static void playerSetLastLocation(Player player) {
-		Main.Spot.put(player.getName(), player.getLocation());
+		Main.Spot.put(player.getName(), LocationHandler.getLocationToString(player.getLocation()));
 	}
 
 	public static void playerDelLastLocation(Player player) {
