@@ -1,12 +1,13 @@
 package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
+import me.xxsniperzzxx_sd.infected.Enums.Teams;
+import me.xxsniperzzxx_sd.infected.Events.InfectedClassSelectEvent;
 import me.xxsniperzzxx_sd.infected.Tools.IconMenu;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
 
@@ -43,9 +44,14 @@ public class Menus {
 							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 						} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + event.getName()))
 						{
-							Main.humanClasses.put(player.getName(), classList.get(event.getPosition()));
+							InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(player, Teams.Human, classList.get((event.getPosition())));
+							Bukkit.getServer().getPluginManager().callEvent(classEvent);
+							if (!classEvent.isCancelled())
+							{
+								Main.humanClasses.put(player.getName(), classList.get(event.getPosition()));
 
-							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, classList.get(event.getPosition())));
+								event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, classList.get(event.getPosition())));
+							}
 						} else
 						{
 							player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
@@ -91,8 +97,13 @@ public class Menus {
 							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 						} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + event.getName()))
 						{
-							Main.zombieClasses.put(player.getName(), classList.get(event.getPosition()));
-							event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, classList.get(event.getPosition())));
+							InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(player, Teams.Zombie, classList.get((event.getPosition())));
+							Bukkit.getServer().getPluginManager().callEvent(classEvent);
+							if (!classEvent.isCancelled())
+							{
+								Main.zombieClasses.put(player.getName(), classList.get(event.getPosition()));
+								event.getPlayer().sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, classList.get(event.getPosition())));
+							}
 						} else
 						{
 							player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
@@ -144,49 +155,7 @@ public class Menus {
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 
-						if (event.getName().equalsIgnoreCase("Random"))
-						{
-							Random r = new Random();
-							int i = r.nextInt(Main.possibleArenas.size());
-							String voted4 = Main.possibleArenas.get(i);
-
-							if (Main.Votes.containsKey(voted4))
-							{
-								Main.Votes.put(voted4, Main.Votes.get(voted4) + 1);
-							} else
-							{
-								Main.Votes.put(voted4, 1);
-							}
-							Main.Voted4.put(player.getName(), voted4);
-							for (Player players : Bukkit.getServer().getOnlinePlayers())
-								if (Main.inGame.contains(players.getName()))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.VOTE_VOTEDFOR, player, voted4));
-								}
-							if (Main.config.getBoolean("ScoreBoard Support"))
-							{
-								ScoreBoard.updateScoreBoard();
-							}
-						} else
-						{
-							if (Main.Votes.containsKey(event.getName()))
-							{
-								Main.Votes.put(event.getName(), Main.Votes.get(event.getName()) + 1);
-							} else
-							{
-								Main.Votes.put(event.getName(), 1);
-							}
-							Main.Voted4.put(player.getName(), event.getName());
-							for (Player players : Bukkit.getServer().getOnlinePlayers())
-								if (Main.inGame.contains(players.getName()))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.VOTE_VOTEDFOR, player, event.getName()));
-								}
-							if (Main.config.getBoolean("ScoreBoard Support"))
-							{
-								ScoreBoard.updateScoreBoard();
-							}
-						}
+						Vote.voteFor(player, event.getName());
 					}
 				}, Main.me);
 		int i = 0;

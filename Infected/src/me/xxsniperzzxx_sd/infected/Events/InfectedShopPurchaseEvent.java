@@ -1,47 +1,41 @@
 
 package me.xxsniperzzxx_sd.infected.Events;
 
-import java.util.ArrayList;
-
-import me.xxsniperzzxx_sd.infected.Infected;
-import me.xxsniperzzxx_sd.infected.Enums.Teams;
-
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 
 
-public class InfectedPlayerLeaveEvent extends Event implements Cancellable{
+public class InfectedShopPurchaseEvent extends Event implements Cancellable{
 
 	boolean cancelled = false;
-	
 	Player player;
-	ArrayList<String> playersInLobby;
-	Teams team;
-	boolean command = false;
+	Sign sign;
+	ItemStack item;
+	int price;
 
-	public InfectedPlayerLeaveEvent(Player player, ArrayList<String> inLobby, Teams team, boolean command)
+	public InfectedShopPurchaseEvent(Player player, Sign sign, ItemStack item, int price)
 	{
-		this.command = command;
 		this.player = player;
-		this.playersInLobby = inLobby;
-		this.team = team;
+		this.sign = sign;
+		this.item = item;
+		this.price = price;
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
-	public boolean isCommand() {
-		return command;
+	public int getPrice(){
+		return price;
 	}
-
-	public Teams getTeam() {
-		return Infected.playerGetGroup(player);
+	public Sign getSign() {
+		return sign;
 	}
-	
-	public ArrayList<String> getPlayersInLobby() {
-		return playersInLobby;
+	public ItemStack getItemStack(){
+		return item;
 	}
 
 	private static final HandlerList handlers = new HandlerList();
@@ -53,7 +47,6 @@ public class InfectedPlayerLeaveEvent extends Event implements Cancellable{
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
-
 	public boolean isCancelled() {
 		return cancelled;
 	}

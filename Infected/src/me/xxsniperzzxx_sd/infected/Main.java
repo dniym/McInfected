@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.GameMechanics.UpdateInfoSigns;
 import me.xxsniperzzxx_sd.infected.Listeners.DamageEvents;
 import me.xxsniperzzxx_sd.infected.Listeners.DeathEvent;
 import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
 import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Tools.AddonManager;
-import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
@@ -25,7 +25,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -207,52 +206,7 @@ public class Main extends JavaPlugin {
 		// Do the info signs (Updating the info)
 		if (getConfig().getBoolean("Info Signs.Enabled"))
 		{
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
-			{
-
-				@Override
-				public void run() {
-					if (!Files.getSigns().getStringList("Info Signs").isEmpty())
-					{
-						for (String loc : Files.getSigns().getStringList("Info Signs"))
-						{
-							String status;
-
-							if (Infected.getGameState() == GameState.VOTING)
-							{
-								status = "Voting";
-							}
-							if (Infected.getGameState() == GameState.BEFOREINFECTED)
-							{
-								status = "B4 Infected";
-							}
-							if (Infected.getGameState() == GameState.STARTED)
-							{
-								status = "Started";
-							} else
-							{
-								status = "In Lobby";
-							}
-
-							int time = Main.currentTime;
-
-							Location location = LocationHandler.getObjectLocation(loc);
-							if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
-							{
-								Sign sign = (Sign) location.getBlock().getState();
-								sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
-								sign.setLine(2, ChatColor.GOLD + status);
-								if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.VOTING)
-									sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
-								else
-									sign.setLine(3, "");
-								sign.update();
-							}
-						}
-
-					}
-				}
-			}, 100L, getConfig().getInt("Info Signs.Refresh Time") * 20);
+			UpdateInfoSigns.update();
 		}
 
 		// Make sure the Infected's CB is the same as the server's CB

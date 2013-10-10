@@ -9,6 +9,9 @@ import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
+import me.xxsniperzzxx_sd.infected.Enums.Teams;
+import me.xxsniperzzxx_sd.infected.Events.InfectedClassSelectEvent;
+import me.xxsniperzzxx_sd.infected.Events.InfectedShopPurchaseEvent;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
@@ -82,9 +85,13 @@ public class SignListener implements Listener {
 											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 										} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + className))
 										{
-											Main.humanClasses.put(player.getName(), className);
-											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, className));
-
+											InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(player, Teams.Human, className);
+											Bukkit.getServer().getPluginManager().callEvent(classEvent);
+											if (!classEvent.isCancelled())
+											{
+												Main.humanClasses.put(player.getName(), className);
+												player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, className));
+											}
 										} else
 										{
 											player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
@@ -97,9 +104,13 @@ public class SignListener implements Listener {
 											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 										} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + className))
 										{
-											Main.zombieClasses.put(player.getName(), className);
-											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, className));
-
+											InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(player, Teams.Zombie, className);
+											Bukkit.getServer().getPluginManager().callEvent(classEvent);
+											if (!classEvent.isCancelled())
+											{
+												Main.zombieClasses.put(player.getName(), className);
+												player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, className));
+											}
 										} else
 										{
 											player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
@@ -165,12 +176,36 @@ public class SignListener implements Listener {
 										{
 											if (price <= points)
 											{
-												Infected.playerSetPoints(player.getName(), points, price);
+
 												ItemStack stack = ItemHandler.getItemStack(itemstring);
-												if (!player.getInventory().contains(stack))
+												InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(player, sign, stack, price);
+												Bukkit.getServer().getPluginManager().callEvent(shopEvent);
+												if (!shopEvent.isCancelled())
 												{
-													player.getInventory().addItem(stack);
-													if (Files.getShop().getBoolean("Save Items"))
+													Infected.playerSetPoints(player.getName(), points, price);
+													if (!player.getInventory().contains(stack))
+													{
+														player.getInventory().addItem(stack);
+														if (Files.getShop().getBoolean("Save Items"))
+														{
+															Updater updater = new Updater(
+																	Main.me,
+																	"Infected-Core",
+																	Main.file,
+																	Updater.UpdateType.NO_DOWNLOAD,
+																	false);
+															if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+															{
+																Infected.playerAddToShopInventory(player, stack);
+															}
+														}
+													} else
+													{
+														player.getInventory().addItem(new ItemStack(
+																item, +1));
+													}
+													player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
+													if (Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(item.getId()))
 													{
 														Updater updater = new Updater(
 																Main.me,
@@ -180,26 +215,8 @@ public class SignListener implements Listener {
 																false);
 														if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
 														{
-															Infected.playerAddToShopInventory(player, stack);
+															Infected.playerSaveShopInventory(player);
 														}
-													}
-												} else
-												{
-													player.getInventory().addItem(new ItemStack(
-															item, +1));
-												}
-												player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
-												if (Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(item.getId()))
-												{
-													Updater updater = new Updater(
-															Main.me,
-															"Infected-Core",
-															Main.file,
-															Updater.UpdateType.NO_DOWNLOAD,
-															false);
-													if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
-													{
-														Infected.playerSaveShopInventory(player);
 													}
 												}
 											} else
@@ -230,14 +247,39 @@ public class SignListener implements Listener {
 											{
 												if (player.hasPermission("Infected.Shop") || player.hasPermission("Infected.Shop." + itemname))
 												{
-													Infected.playerSetPoints(player.getName(), points, price);
-													ItemMeta i = is.getItemMeta();
-													if (!player.getInventory().contains(is))
+													InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(player, sign, is, price);
+													Bukkit.getServer().getPluginManager().callEvent(shopEvent);
+													if (!shopEvent.isCancelled())
 													{
-														i.setDisplayName("§e" + itemname);
-														is.setItemMeta(i);
-														player.getInventory().addItem(is);
-														if ((Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(is.getTypeId())) && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
+														Infected.playerSetPoints(player.getName(), points, price);
+														ItemMeta i = is.getItemMeta();
+														if (!player.getInventory().contains(is))
+														{
+															i.setDisplayName("§e" + itemname);
+															is.setItemMeta(i);
+															player.getInventory().addItem(is);
+															if ((Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(is.getTypeId())) && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
+															{
+																Updater updater = new Updater(
+																		Main.me,
+																		"Infected-Core",
+																		Main.file,
+																		Updater.UpdateType.NO_DOWNLOAD,
+																		false);
+																if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+																{
+																	Infected.playerSaveShopInventory(player);
+																}
+															}
+														} else
+														{
+															i.setDisplayName("§e" + itemname);
+															is.setItemMeta(i);
+															player.getInventory().addItem(is);
+														}
+	
+														player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
+														if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 														{
 															Updater updater = new Updater(
 																	Main.me,
@@ -249,26 +291,6 @@ public class SignListener implements Listener {
 															{
 																Infected.playerSaveShopInventory(player);
 															}
-														}
-													} else
-													{
-														i.setDisplayName("§e" + itemname);
-														is.setItemMeta(i);
-														player.getInventory().addItem(is);
-													}
-
-													player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
-													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
-													{
-														Updater updater = new Updater(
-																Main.me,
-																"Infected-Core",
-																Main.file,
-																Updater.UpdateType.NO_DOWNLOAD,
-																false);
-														if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
-														{
-															Infected.playerSaveShopInventory(player);
 														}
 													}
 												}else

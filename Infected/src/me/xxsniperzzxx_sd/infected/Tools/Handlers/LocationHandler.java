@@ -29,6 +29,9 @@ public class LocationHandler {
 		Location Loc = new Location(world, Double.valueOf(floc[1]),
 				Double.valueOf(floc[2])+.5, Double.valueOf(floc[3]),
 				Float.valueOf(floc[4]), Float.valueOf(floc[5]));
+		
+		if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded())
+			Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
 		return Loc;
 	}
 	

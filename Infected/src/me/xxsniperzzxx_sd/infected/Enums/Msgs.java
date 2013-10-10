@@ -1,6 +1,7 @@
 package me.xxsniperzzxx_sd.infected.Enums;
 
-public enum Msgs {FORMAT_LINE("Format_Line"), 
+public enum Msgs {
+		FORMAT_LINE("Format_Line"), 
 		ERROR_NOPERMISSION("Error_NoPermission"),
 		ERROR_CANTUSECOMMAND("Error_CantUseCommand"), 
 		ERROR_GAMESTARTED("Error_GameStarted"), 

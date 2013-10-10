@@ -168,7 +168,7 @@ public class Reset {
 			}
 		}
 		Infected.arenaReset();
-
+		Main.playingin = "";
 		Main.KillStreaks.clear();
 		Main.possibleArenas.clear();
 		Main.inLobby.clear();

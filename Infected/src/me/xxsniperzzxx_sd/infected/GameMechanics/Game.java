@@ -40,9 +40,8 @@ public class Game {
 			{
 
 				if (Main.config.getBoolean("ScoreBoard Support"))
-				{
 					ScoreBoard.updateScoreBoard();
-				}
+				
 				playing.sendMessage("");
 				playing.sendMessage("");
 				playing.sendMessage("");
@@ -187,7 +186,10 @@ public class Game {
 								playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
 								playing.sendMessage("");
 								playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
-								}
+							}
+						if (Main.config.getBoolean("ScoreBoard Support"))
+							ScoreBoard.updateScoreBoard();
+						
 						for (String loc : Infected.filesGetArenas().getStringList("Arenas." + Main.playingin + ".Spawns"))
 						{
 							String[] floc = loc.split(",");
@@ -229,10 +231,7 @@ public class Game {
 											playing.setHealth(20);
 											playing.setFoodLevel(20);
 											playing.sendMessage(Messages.sendMessage(Msgs.GAME_FIRSTINFECTEDIN, null, TimeHandler.getTime(Long.valueOf(Main.Wait))));
-											if (Main.config.getBoolean("ScoreBoard Support"))
-											{
-												ScoreBoard.updateScoreBoard();
-											}
+										
 											LocationHandler.respawn(playing);
 											Equip.equipHumans(playing);
 											if (Main.config.getBoolean("Allow Breaking Certain Blocks"))
@@ -246,6 +245,10 @@ public class Game {
 									Main.Voted4.clear();
 									Main.Votes.clear();
 									Infected.setGameState(GameState.BEFOREINFECTED);
+									if (Main.config.getBoolean("ScoreBoard Support"))
+									{
+										ScoreBoard.updateScoreBoard();
+									}
 									Main.timestart = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
 									{
 										int timeleft = Main.Wait;
@@ -384,9 +387,9 @@ public class Game {
 																	}
 																} else if (timeleft == -1)
 																{
-																	if(Infected.getGameState() == GameState.STARTED)
+																	if(Infected.getGameState() == GameState.STARTED){
 																		endGame(true);
-
+																	}
 																}
 															}
 														}
@@ -409,7 +412,8 @@ public class Game {
 	public static void endGame(Boolean DidHumansWin) {
 		if(Infected.getGameState() == GameState.STARTED){
 			Infected.setGameState(GameState.GAMEOVER);
-			
+
+			ScoreBoard.updateScoreBoard();
 			for (Player playing : Bukkit.getServer().getOnlinePlayers())
 			{
 				if (Infected.isPlayerInGame(playing))
@@ -532,7 +536,7 @@ public class Game {
 						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 						for (PotionEffect reffect : playing.getActivePotionEffects())
 							playing.removePotionEffect(reffect.getType());
-	
+
 						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 						{
 							@Override
@@ -543,6 +547,7 @@ public class Game {
 					}
 			}
 			ScoreBoard.updateScoreBoard();
+			Main.playingin = "";
 			Main.Winners.clear();
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 			{

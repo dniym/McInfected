@@ -78,9 +78,16 @@
 # # Use books for Infecteds commands
 # Book For Help: true
 # #
-# # Should we use a GUI well voting for a map?
-# Vote with a GUI: true
-# #
+# Votes:
+# # Are we going to allow players to vote for a map?
+#   Allow: true
+# # Should we allow players to use a GUI to choose their map
+#   Use GUI: true
+# # This will make a players votes worth more with the permission node Infected.vote.<extra votes name> 
+#   Extra Votes:
+#     vip:2
+#     staff:3
+# #    
 # # Info signs
 # Info Signs:
 #   Enabled: true
@@ -115,9 +122,6 @@
 # Disable Hunger: true
 # Disable Enchanting: true
 # Allow Interacting: true
-# #
-# # Are players allowed to vote. If not the maps will cycle through the finished maps
-# Allow Votes: true
 # #
 # # When a player becomes a zombie are they respawned?
 # New Zombie Tp: false
@@ -197,7 +201,6 @@
 # # 
 # # +======================================================+ #
 
-
 Check For Updates:
   Enable: true
 
@@ -231,8 +234,14 @@ ScoreBoard Support: true
 
 Book For Help: true
 
-Vote with a GUI: true
 
+Votes:
+  Allow: true
+  Use a GUI: true
+  Extra Votes:
+    vip: 2
+    staff: 3
+    
 Info Signs:
   Enabled: true
   Refresh Time: 2
@@ -265,8 +274,6 @@ Use Zombie Movement Effects: true
 Disable Hunger: true
 Disable Enchanting: true
 Allow Interacting: true
-
-Allow Votes: true
 
 New Zombie Tp: false
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.Enums.Teams;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.InventoryHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
@@ -58,13 +59,13 @@ public class Infected {
 		return InventoryHandler.getInventory(player, "Shop Inventory");
 	}
 
-	public static String playerGetGroup(Player player) {
-		String group = null;
+	public static Teams playerGetGroup(Player player) {
+		Teams teams = Teams.Other;
 		if (isPlayerHuman(player))
-			group = "Human";
+			teams = Teams.Human;
 		else if (isPlayerZombie(player))
-			group = "Zombie";
-		return group;
+			teams = Teams.Zombie;
+		return teams;
 	}
 
 	public static void clearZombie() {

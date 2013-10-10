@@ -30,9 +30,15 @@ public class Leave {
 			player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
 			Reset.resetp(player);
 	
+			//Is there anyone left in the lobby?
+			if(Infected.listInGame().size() == 0){
+
+				//Reset all the timers, lists, etc(Not including the ones for people in Infected)
+				Reset.resetInf();
+			}
+			
 			// If nothing has started yet, just inform players they left
-	
-			if (Infected.getGameState() == GameState.INLOBBY)
+			else if (Infected.getGameState() == GameState.INLOBBY)
 			{
 				for (String name : Infected.listInGame())
 				{
@@ -53,7 +59,7 @@ public class Leave {
 						user.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, player, null));
 						Reset.tp2LobbyAfter(user);
 					}
-	
+
 					//Reset all the timers, lists, etc(Not including the ones for people in Infected)
 					Reset.resetInf();
 				}

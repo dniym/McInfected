@@ -1,9 +1,6 @@
 
 package me.xxsniperzzxx_sd.infected.Events;
 
-import java.util.ArrayList;
-
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Enums.Teams;
 
 import org.bukkit.entity.Player;
@@ -12,36 +9,28 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 
-public class InfectedPlayerLeaveEvent extends Event implements Cancellable{
+public class InfectedClassSelectEvent extends Event implements Cancellable{
 
 	boolean cancelled = false;
-	
 	Player player;
-	ArrayList<String> playersInLobby;
 	Teams team;
-	boolean command = false;
+	String classname;
 
-	public InfectedPlayerLeaveEvent(Player player, ArrayList<String> inLobby, Teams team, boolean command)
+	public InfectedClassSelectEvent(Player player, Teams team, String classname)
 	{
-		this.command = command;
 		this.player = player;
-		this.playersInLobby = inLobby;
 		this.team = team;
+		this.classname = classname;
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
-	public boolean isCommand() {
-		return command;
+	public String getClassName(){
+		return classname;
 	}
-
-	public Teams getTeam() {
-		return Infected.playerGetGroup(player);
-	}
-	
-	public ArrayList<String> getPlayersInLobby() {
-		return playersInLobby;
+	public Teams getTeam(){
+		return team;
 	}
 
 	private static final HandlerList handlers = new HandlerList();
@@ -53,7 +42,6 @@ public class InfectedPlayerLeaveEvent extends Event implements Cancellable{
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
-
 	public boolean isCancelled() {
 		return cancelled;
 	}

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Enums.Teams;
 
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -90,7 +91,7 @@ public class Abilities {
 		Integer time = 0;
 		Integer power = 0;
 		String Class = Infected.playergetZombieClass(attacker);
-		if(Infected.playerGetGroup(attacker).equalsIgnoreCase("Human"))
+		if(Infected.playerGetGroup(attacker) == Teams.Human)
 			Class = Infected.playergetHumanClass(attacker);
 		int max = Infected.filesGetClasses().getStringList(Infected.playerGetGroup(attacker) +"." + Class + ".Effects on Contact").size();
 		for (int x = 0; x < max; x = x + 1)

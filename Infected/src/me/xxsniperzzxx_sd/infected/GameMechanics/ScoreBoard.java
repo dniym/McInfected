@@ -28,9 +28,9 @@ public class ScoreBoard {
 			Objective infectedList = infectedBoard.registerNewObjective("InfectedBoard", "dummy");
 			infectedList.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-			if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.BEFOREINFECTED || Infected.getGameState() == GameState.GAMEOVER)
+			if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.BEFOREINFECTED)
 			{
-				infectedList.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
+				infectedList.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
 				Score score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
 				if (Main.humans.size() != 0)
 					score.setScore(Main.humans.size());
@@ -47,10 +47,11 @@ public class ScoreBoard {
 					score2.setScore(1);
 					score2.setScore(0);
 				}
-
-			} else
+				
+			} 
+			else if(Infected.getGameState() == GameState.INLOBBY || Infected.getGameState() == GameState.VOTING)
 			{
-				infectedList.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Votes");
+				infectedList.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote for your map!");
 				Main.possibleArenas.clear();
 				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
 				{
@@ -65,7 +66,13 @@ public class ScoreBoard {
 						Main.possibleArenas.remove(parenas);
 					} else if (!parenas.contains("."))
 					{
-						Score score = infectedList.getScore(Bukkit.getOfflinePlayer(""+ChatColor.YELLOW + ChatColor.ITALIC + parenas));
+						Score score;
+						if(parenas.equalsIgnoreCase(Main.playingin))
+							score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD +">"+ parenas));
+						else
+							score = infectedList.getScore(Bukkit.getOfflinePlayer(""+ChatColor.YELLOW + ChatColor.ITALIC + parenas));
+						
+							
 						if (Main.Votes.get(parenas) != null)
 							score.setScore(Main.Votes.get(parenas));
 						else
@@ -76,7 +83,6 @@ public class ScoreBoard {
 
 					}
 				}
-
 			}
 			for (String s : Infected.listInGame())
 			{
