@@ -4,6 +4,7 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
+import me.xxsniperzzxx_sd.infected.Enums.DeathTypes;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Abilities;
@@ -89,7 +90,7 @@ public class DamageEvents implements Listener {
 								// If it was enough to kill the player
 								if (victim.getHealth() - e.getDamage() <= 0)
 								{
-									Deaths.playerDies(killer, victim);
+									Deaths.playerDies(DeathTypes.Other, killer, victim);
 									e.setDamage(0);
 								}
 							}
@@ -155,6 +156,7 @@ public class DamageEvents implements Listener {
 			// If they're in the game
 			if (Infected.isPlayerInGame(victim))
 			{
+				DeathTypes death = DeathTypes.Melee;
 
 				// Get the attacker
 				if (e.getDamager() instanceof Player)
@@ -167,6 +169,7 @@ public class DamageEvents implements Listener {
 
 					if (arrow.getShooter() instanceof Player)
 						killer = (Player) arrow.getShooter();
+					death = DeathTypes.Arrow;
 				}
 
 				else if (e.getDamager() instanceof Snowball)
@@ -176,6 +179,7 @@ public class DamageEvents implements Listener {
 
 					if (ball.getShooter() instanceof Player)
 						killer = (Player) ball.getShooter();
+					death = DeathTypes.Snowball;
 				}
 
 				else if (e.getDamager() instanceof Egg)
@@ -185,6 +189,8 @@ public class DamageEvents implements Listener {
 
 					if (ball.getShooter() instanceof Player)
 						killer = (Player) ball.getShooter();
+
+					death = DeathTypes.Egg;
 				}
 				if (killer instanceof Player)
 				{
@@ -238,7 +244,7 @@ public class DamageEvents implements Listener {
 									if (victim.getHealth() - e.getDamage() <= 0)
 									{
 										e.setDamage(0);
-										Deaths.playerDies(killer, victim);
+										Deaths.playerDies(death, killer, victim);
 									} else if (Infected.playerhasHumanClass(killer) || Infected.playerhasZombieClass(killer))
 										Abilities.addEffectOnContact(killer, victim);
 

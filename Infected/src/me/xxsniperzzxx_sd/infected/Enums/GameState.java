@@ -1,6 +1,12 @@
 package me.xxsniperzzxx_sd.infected.Enums;
 
-public enum GameState {INLOBBY("inlobby"), VOTING("voting"), BEFOREINFECTED("beforeinfected"), STARTED("started"), GAMEOVER("gameover"), DISABLED("disabled");
+public enum GameState {
+	INLOBBY("InLobby"), 
+	VOTING("Voting"), 
+	BEFOREINFECTED("BeforeInfected"), 
+	STARTED("Started"), 
+	GAMEOVER("GameOver"), 
+	DISABLED("Disabled");
 
 	private String name;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Enums.DeathTypes;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -95,7 +96,10 @@ public class GrenadeListener implements Listener {
 									ppl.playEffect(EntityEffect.HURT);
 									if (ppl.getHealth() - Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Damage") <= 0)
 									{
-										Deaths.playerDies(player, ppl);
+										if(ppl == player)
+											Deaths.playerDies(DeathTypes.Other, player, ppl);
+										else	
+											Deaths.playerDies(DeathTypes.Grenade, player, ppl);
 									} else
 									{
 										ppl.setHealth(ppl.getHealth() - Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Damage"));

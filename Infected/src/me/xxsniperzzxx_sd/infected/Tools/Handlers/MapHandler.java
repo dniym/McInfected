@@ -9,7 +9,10 @@ public class MapHandler {
 	
 
 	public static String getMapCreator(String map){
-		return Infected.filesGetArenas().getString("Arenas." + map + ".Creator");
+		if(Infected.filesGetArenas().getString("Arenas." + map + ".Creator") != null)
+			return Infected.filesGetArenas().getString("Arenas." + map + ".Creator");
+		else 
+			return "Unkown";
 	}
 
 	

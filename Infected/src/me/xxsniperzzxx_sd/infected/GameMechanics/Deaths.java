@@ -6,6 +6,7 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
+import me.xxsniperzzxx_sd.infected.Enums.DeathTypes;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -21,73 +22,84 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Deaths {
 
-	public static void playerDies(Player Killer, Player Killed) {
+	public static void playerDies(DeathTypes death, Player killer, Player killed) {
 
-		Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerDieEvent(
-				Killer, Killed, Infected.playerGetGroup(Killed),
-				Infected.isPlayerHuman(Killed) ? true : false));
-
-		Stats.setStats(Killer, 1, 0);
-		Stats.setStats(Killed, 0, 1);
-
-		Stats.handleKillStreaks(true, Killed);
-		Stats.handleKillStreaks(false, Killer);
-
-		String kill = getKillType(Infected.playerGetGroup(Killer) + "s", Killer.getName(), Killed.getName());
-		for (Player playing : Bukkit.getServer().getOnlinePlayers())
-			if (Main.inGame.contains(playing.getName()))
-				playing.sendMessage(kill);
-
-		if (Infected.isPlayerHuman(Killed))
+		String kill;
+		if (getKillType(Infected.playerGetGroup(killer) + "s", Infected.playerGetGroup(killer) + "s." +death.toString(), killer.getName(), killed.getName()) == null)
 		{
-			Killed.playSound(Killed.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-			if (Main.config.getBoolean("New Zombies Tp"))
-				LocationHandler.respawn(Killed);
-
-			Zombify.zombifyPlayer(Killed);
-
-			Killed.sendMessage(Main.I + "You have become infected!");
-			Killed.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,
-					20, 2));
-
-			Equip.equipZombies(Killed);
-			Killed.setHealth(20);
-			Killed.setFoodLevel(20);
+			killer.sendMessage(Main.I + ChatColor.DARK_RED + "Please tell your server Admins to delete the Kills.yml for Infected! It now does kill messages differently.");
+			killed.sendMessage(Main.I + ChatColor.DARK_RED + "Please tell your server Admins to delete the Kills.yml for Infected! It now does kill messages differently.");
+			kill = getKillType(Infected.playerGetGroup(killer) + "s", Infected.playerGetGroup(killer) + "s." +death.toString(), killer.getName(), killed.getName());
 		} else
+			kill = getKillType(Infected.playerGetGroup(killer) + "s", Infected.playerGetGroup(killer) + "s." +death.toString(), killer.getName(), killed.getName());
+
+		InfectedPlayerDieEvent dieEvent = new InfectedPlayerDieEvent(killer,
+				killed, Infected.isPlayerHuman(killed) ? true : false, death,
+				kill);
+		Bukkit.getServer().getPluginManager().callEvent(dieEvent);
+		if (!dieEvent.isCancelled())
 		{
-			Killed.playSound(Killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
-			LocationHandler.respawn(Killed);
-			Equip.equipZombies(Killed);
-		}
 
-		Killed.setFallDistance(0F);
+			Stats.setStats(killer, 1, 0);
+			Stats.setStats(killed, 0, 1);
 
-		if (Infected.isPlayerHuman(Killed))
-			Infected.delPlayerHuman(Killed);
+			Stats.handleKillStreaks(true, killed);
+			Stats.handleKillStreaks(false, killer);
+			for (Player playing : Bukkit.getServer().getOnlinePlayers())
+				if (Main.inGame.contains(playing.getName()))
+					playing.sendMessage(dieEvent.getDeathMsg());
 
-		if (!Infected.isPlayerZombie(Killed))
-			Infected.addPlayerZombie(Killed);
+			if (Infected.isPlayerHuman(killed))
+			{
+				killed.playSound(killed.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
+				if (Main.config.getBoolean("New Zombies Tp"))
+					LocationHandler.respawn(killed);
 
-		if (Main.Lasthit.containsKey(Killed.getName()))
-			Main.Lasthit.remove(Killed.getName());
+				Zombify.zombifyPlayer(killed);
 
-		if (Main.Winners.contains(Killed.getName()))
-			Main.Winners.remove(Killed.getName());
+				killed.sendMessage(Main.I + "You have become infected!");
+				killed.addPotionEffect(new PotionEffect(
+						PotionEffectType.CONFUSION, 20, 2));
 
-		if (Main.humans.size() == 0 && Infected.getGameState() == GameState.STARTED)
-			Game.endGame(false);
+				Equip.equipZombies(killed);
+				killed.setHealth(20);
+				killed.setFoodLevel(20);
+			} else
+			{
+				killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
+				LocationHandler.respawn(killed);
+				Equip.equipZombies(killed);
+			}
 
-		else
-		{
-			Equip.equipZombies(Killed);
-			Zombify.zombifyPlayer(Killed);
+			killed.setFallDistance(0F);
+
+			if (Infected.isPlayerHuman(killed))
+				Infected.delPlayerHuman(killed);
+
+			if (!Infected.isPlayerZombie(killed))
+				Infected.addPlayerZombie(killed);
+
+			if (Main.Lasthit.containsKey(killed.getName()))
+				Main.Lasthit.remove(killed.getName());
+
+			if (Main.Winners.contains(killed.getName()))
+				Main.Winners.remove(killed.getName());
+
+			if (Main.humans.size() == 0 && Infected.getGameState() == GameState.STARTED)
+				Game.endGame(false);
+
+			else
+			{
+				Equip.equipZombies(killed);
+				Zombify.zombifyPlayer(killed);
+			}
 		}
 	}
 
-	public static String getKillType(String group, String killer, String killed) {
+	public static String getKillType(String group, String path, String killer, String killed) {
 		Random r = new Random();
-		int i = r.nextInt(Files.getKills().getStringList(group).size());
-		String killtype = ChatColor.GRAY + Files.getKills().getStringList(group).get(i);
+		int i = r.nextInt(Files.getKills().getStringList(path).size());
+		String killtype = ChatColor.GRAY + Files.getKills().getStringList(path).get(i);
 		String msg = null;
 
 		if (group.equalsIgnoreCase("Zombies"))

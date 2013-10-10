@@ -53,43 +53,47 @@ public class Updater {
 							// updates
 	private boolean announce; // Whether to announce file downloads
 	private URL url; // Connecting to RSS
-	public String updateBukkitVersion; // Gets the updated plugin's bukkit
+	public String updateBukkitVersion = "0.0.0"; // Gets the updated plugin's bukkit
 										// version
 	public String infectedVersion;
-	private static final String DBOUrl = "http://dev.bukkit.org/bukkit-plugins/"; // Slugs
-																					// will
-																					// be
-																					// appended
-																					// to
-																					// this
-																					// to
-																					// get
-																					// to
-																					// the
-																					// project's
-																					// RSS
-																					// feed
-	private String[] noUpdateTag = { "-DEV", "-CB", "-PRE" }; // If the version
-																// number
-																// contains one
-																// of these,
-																// don't update.
+	private static final String DBOUrl = "http://dev.bukkit.org/bukkit-plugins/";
+	// Slugs
+	// will
+	// be
+	// appended
+	// to
+	// this
+	// to
+	// get
+	// to
+	// the
+	// project's
+	// RSS
+	// feed
+	private String[] noUpdateTag = { "-DEV", "-CB", "-PRE", "Addon" };
+	// If the version
+	// number
+	// contains one
+	// of these,
+	// don't update.
 	private static final int BYTE_SIZE = 1024; // Used for downloading files
 	private String updateFolder = YamlConfiguration.loadConfiguration(new File(
-			"bukkit.yml")).getString("settings.update-folder"); // The folder
-																// that
-																// downloads
-																// will be
-																// placed in
-	private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used
-																		// for
-																		// determining
-																		// the
-																		// outcome
-																		// of
-																		// the
-																		// update
-																		// process
+			"bukkit.yml")).getString("settings.update-folder");
+	// The folder
+	// that
+	// downloads
+	// will be
+	// placed in
+	private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
+	// Used
+	// for
+	// determining
+	// the
+	// outcome
+	// of
+	// the
+	// update
+	// process
 	// Strings for reading RSS
 	private static final String TITLE = "title";
 	private static final String LINK = "link";
@@ -562,12 +566,13 @@ public class Updater {
 			}
 			if (title.split("v").length == 2)
 			{
-				String remoteVersion = title.split("v")[1].split(" ")[0]; // Get
-																			// the
-																			// newest
-																			// file's
-																			// version
-																			// number
+				String remoteVersion = title.split("v")[1].split(" ")[0];
+				// Get
+				// the
+				// newest
+				// file's
+				// version
+				// number
 				if (hasTag(version) || version.equalsIgnoreCase(remoteVersion))
 				{
 					// We already have the latest version, or this build is
@@ -650,7 +655,7 @@ public class Updater {
 			}
 		} catch (XMLStreamException e)
 		{
-			throw new RuntimeException(e);
+			
 		}
 	}
 
@@ -664,7 +669,6 @@ public class Updater {
 			return stream;
 		} catch (IOException e)
 		{
-			System.out.println("Bukkits down... Can't check for an update!");
 			throw new RuntimeException(e);
 		}
 	}

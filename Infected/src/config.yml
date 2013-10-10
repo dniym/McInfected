@@ -66,14 +66,6 @@
 # # |                   Game Settings                      | #
 # # +======================================================+ #
 # #
-# # The force join options(Used on automated servers)
-# Force Join:
-#   Enable: false
-# # Want to hide the <Player> has joined the server
-#   Hide Join Messages: true
-# # Want to prevent players from leaving the game
-#   Disable Leave Command: true
-# #
 # # When the alpha zombies are chosen what percent of the players become infected
 # Percent to infect:
 # # Are we going to use this option?
@@ -236,11 +228,6 @@ mcMMO Support:
   Enable: true
   
 ScoreBoard Support: true
-
-Force Join:
-  Enable: false
-  Hide Join Messages: true
-  Disable Leave Command: true
 
 Book For Help: true
 

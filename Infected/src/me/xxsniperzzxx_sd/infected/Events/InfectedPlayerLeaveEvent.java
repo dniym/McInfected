@@ -2,34 +2,42 @@
 package me.xxsniperzzxx_sd.infected.Events;
 
 import java.util.ArrayList;
+
+import me.xxsniperzzxx_sd.infected.Infected;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 
-public class InfectedPlayerJoinEvent extends Event implements Cancellable{
+public class InfectedPlayerLeaveEvent extends Event implements Cancellable{
 
 	boolean cancelled = false;
+	
 	Player player;
 	ArrayList<String> playersInLobby;
-	int requiredPlayers;
+	String team;
+	boolean command = false;
 
-	public InfectedPlayerJoinEvent(Player player, ArrayList<String> inLobby, int requiredPlayers)
+	public InfectedPlayerLeaveEvent(Player player, ArrayList<String> inLobby, String team, boolean command)
 	{
+		this.command = command;
 		this.player = player;
 		this.playersInLobby = inLobby;
-		this.requiredPlayers = requiredPlayers;
+		this.team = team;
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
-
-	public int getPRequiredPlayersForAutoStart() {
-		return requiredPlayers;
+	public boolean isCommand() {
+		return command;
 	}
 
+	public String getTeam() {
+		return Infected.playerGetGroup(player);
+	}
+	
 	public ArrayList<String> getPlayersInLobby() {
 		return playersInLobby;
 	}
@@ -43,6 +51,7 @@ public class InfectedPlayerJoinEvent extends Event implements Cancellable{
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 	public boolean isCancelled() {
 		return cancelled;
 	}

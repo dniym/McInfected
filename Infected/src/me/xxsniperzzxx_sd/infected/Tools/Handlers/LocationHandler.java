@@ -70,6 +70,7 @@ public class LocationHandler {
 		float pitch = loc.getPitch();
 		String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
 		Main.config.set(saveto, s);
+		Main.me.saveConfig();
 	}
 
 }

@@ -8,25 +8,22 @@ import java.util.Random;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
-import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Join;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Leave;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Menus;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
 import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -197,118 +194,14 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(plugin.I + ChatColor.RED + " Missing an arena with spawn points!");
 					return true;
 				}
-				if (plugin.getConfig().getBoolean("Prevent Joining During Game"))
+				else if (plugin.getConfig().getBoolean("Prevent Joining During Game"))
 				{
 					if (Infected.getGameState() == GameState.STARTED)
 					{
 						player.sendMessage(Messages.sendMessage(Msgs.ERROR_JOINWELLSTARTEDBLOCKED, null, null));
-						return true;
 					}
-				}
-				for (Player all : Bukkit.getServer().getOnlinePlayers())
-				{
-					if (plugin.inGame.contains(all.getName()))
-					{
-						all.sendMessage(Messages.sendMessage(Msgs.LOBBY_OTHERJOINEDLOBBY, player, null));
-					}
-				}
-
-				// Safe player's stats/stuff
-				Bukkit.getServer().getPluginManager().callEvent(new InfectedPlayerJoinEvent(
-						player,
-						plugin.inLobby,
-						plugin.getConfig().getInt("Automatic Start.Minimum Players")));
-				plugin.inGame.add(player.getName());
-				plugin.Spot.put(player.getName(), LocationHandler.getLocationToString(player.getLocation()));
-				plugin.Health.put(player.getName(), player.getHealth());
-				plugin.Food.put(player.getName(), player.getFoodLevel());
-				player.teleport(LocationHandler.getPlayerLocation(plugin.getConfig().getString("Lobby")));
-				plugin.Levels.put(player.getName(), player.getLevel());
-				plugin.Exp.put(player.getName(), player.getExp());
-				plugin.Inventory.put(player.getName(), player.getInventory().getContents());
-				plugin.Armor.put(player.getName(), player.getInventory().getArmorContents());
-				plugin.Winners.clear();
-				plugin.inLobby.add(player.getName());
-				plugin.gamemode.put(player.getName(), player.getGameMode().toString());
-
-				if (plugin.config.getBoolean("ScoreBoard Support"))
-				{
-					ScoreBoard.updateScoreBoard();
-				}
-
-				if (plugin.config.getBoolean("Disguise Support.Enabled"))
-					if (Disguises.isPlayerDisguised(player))
-						Disguises.unDisguisePlayer(player);
-
-				// Prepare player
-				player.setMaxHealth(20.0);
-				player.setHealth(20.0);
-				player.setFoodLevel(20);
-				for (PotionEffect reffect : player.getActivePotionEffects())
-				{
-					player.removePotionEffect(reffect.getType());
-				}
-				Reset.resetPlayersInventory(player);
-				Updater updater = new Updater(Main.me, "Infected-Core",
-						Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-				if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
-				{
-					if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
-						player.getInventory().setContents(Infected.playerGetShopInventory(player));
-				}
-				player.sendMessage(Messages.sendMessage(Msgs.LOBBY_JOINLOBBY, null, null));
-
-				player.setGameMode(GameMode.ADVENTURE);
-				player.setFlying(false);
-
-				if (!Infected.playergetLastHumanClass(player).equalsIgnoreCase("None"))
-					plugin.humanClasses.put(player.getName(), Infected.playergetLastHumanClass(player));
-
-				if (!Infected.playergetLastZombieClass(player).equalsIgnoreCase("None"))
-					plugin.zombieClasses.put(player.getName(), Infected.playergetLastZombieClass(player));
-
-				if (!plugin.KillStreaks.containsKey(player.getName()))
-					plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
-
-				if (plugin.inGame.size() >= plugin.getConfig().getInt("Automatic Start.Minimum Players") && Infected.getGameState() == GameState.INLOBBY && plugin.getConfig().getBoolean("Automatic Start.Use"))
-				{
-					Game.START();
-					return true;
-				}
-				if (Infected.getGameState() == GameState.VOTING)
-				{
-					player.sendMessage(Messages.sendMessage(Msgs.VOTE_HOWTOVOTE, null, null));
-					player.performCommand("Infected Arenas");
-					return true;
-				}
-				if (Infected.getGameState() == GameState.STARTED)
-				{
-					player.setGameMode(GameMode.SURVIVAL);
-					Zombify.joinInfectHuman(player);
-					Infected.delPlayerInLobby(player);
-					return true;
-				}
-				if (Infected.getGameState() == GameState.BEFOREINFECTED)
-				{
-					if (plugin.config.getBoolean("ScoreBoard Support"))
-					{
-						player.setGameMode(GameMode.SURVIVAL);
-						ScoreBoard.updateScoreBoard();
-					}
-					LocationHandler.respawn(player);
-					if (!plugin.Winners.contains(player.getName()))
-					{
-						plugin.Winners.add(player.getName());
-					}
-					plugin.Timein.put(player.getName(), System.currentTimeMillis() / 1000);
-					if (!plugin.KillStreaks.containsKey(player.getName()))
-						plugin.KillStreaks.put(player.getName(), Integer.valueOf("0"));
-					player.setHealth(20.0);
-					player.setFoodLevel(20);
-					player.playEffect(player.getLocation(), Effect.SMOKE, BlockFace.UP);
-					Equip.equipHumans(player);
-					Infected.delPlayerInLobby(player);
-					return true;
+				}else{
+					Join.joinGame(player);
 				}
 
 			}
@@ -496,7 +389,7 @@ public class Commands implements CommandExecutor {
 							player.performCommand("Infected Grenades");
 					} else
 					{
-						player.sendMessage(""+ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD +"======" + ChatColor.GOLD + " Infected's Grenades Shop " + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======");
+						player.sendMessage(plugin.I+ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD +"======" + ChatColor.GOLD + " Infected's Grenades Shop " + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======");
 
 						String gname = null;
 						int gcost = 0;
@@ -512,7 +405,7 @@ public class Commands implements CommandExecutor {
 									if (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades." + gname))
 									{
 										gcost = Infected.filesGetGrenades().getInt(grenades + ".Cost");
-										player.sendMessage(ChatColor.GREEN + ">  " + ChatColor.GRAY + String.valueOf(i) + ". " + ChatColor.DARK_AQUA + ChatColor.BOLD+ gname + ChatColor.DARK_GRAY + " - " + ChatColor.AQUA + ChatColor.ITALIC + gcost);
+										player.sendMessage(plugin.I+ChatColor.GREEN + ">  " + ChatColor.GRAY + String.valueOf(i) + ". " + ChatColor.DARK_AQUA + ChatColor.BOLD+ gname + ChatColor.DARK_GRAY + " - " + ChatColor.AQUA + ChatColor.ITALIC + gcost);
 										i++;
 									}
 								}
@@ -659,168 +552,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				} else if (plugin.inGame.contains(player.getName()) || plugin.inLobby.contains(player.getName()))
 				{
-
-					ScoreBoard.updateScoreBoard();
-
-					// If a player logs out well playing, make sure it
-					// doesn't effect the game, end the game if it does
-					plugin.inGame.remove(player.getName());
-					// Leave well everyones in the lobby
-					if (Infected.getGameState() == GameState.INLOBBY)
-					{
-						if (plugin.config.getBoolean("Debug"))
-						{
-							System.out.println("Leave: Leaving, wellin lobby, no timers active");
-						}
-						player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-						Reset.resetp(player);
-						for (Player players : Bukkit.getOnlinePlayers())
-						{
-							if (Infected.isPlayerInGame(players))
-								players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, player, null));
-						}
-					}
-					// Voting has started, less then 2 people left
-					else if (Infected.getGameState() == GameState.VOTING)
-					{
-						if (plugin.config.getBoolean("Debug"))
-						{
-							System.out.println("Leave: Before Voting");
-						}
-						if (plugin.inGame.size() == 1)
-						{
-							if (plugin.config.getBoolean("Debug"))
-							{
-								System.out.println("Leave: Before Voting(Triggered)");
-							}
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, player, null));
-									Reset.tp2LobbyAfter(players);
-								}
-							}
-							Reset.resetInf();
-						} else
-						{
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, player, null));
-								}
-							}
-						}
-					}
-					// In Arena, before first Infected
-					else if (Infected.getGameState() == GameState.BEFOREINFECTED)
-					{
-						if (plugin.config.getBoolean("Debug"))
-						{
-							System.out.println("Leave: In Arena Before Infected");
-						}
-						if (plugin.inGame.size() == 1)
-						{
-							if (plugin.config.getBoolean("Debug"))
-							{
-								System.out.println("Leave: In Arena Before Infected(Triggered)");
-							}
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, player, null));
-									Reset.tp2LobbyAfter(players);
-								}
-							}
-							Reset.resetInf();
-						} else
-						{
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, player, null));
-								}
-							}
-						}
-					}
-					// In Arena, Game has started
-					else if (Infected.getGameState() == GameState.STARTED)
-					{
-						if (plugin.config.getBoolean("Debug"))
-						{
-							System.out.println("Leave: In Arena, Game Has Started");
-						}
-						if (plugin.inGame.size() == 1)
-						{
-							if (plugin.config.getBoolean("Debug"))
-							{
-								System.out.println("Leave: In Arena, Game Has Started (Not Enough Players)");
-							}
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, player, null));
-									Reset.tp2LobbyAfter(players);
-								}
-							}
-							Reset.resetInf();
-						}
-						// If Not Enough zombies remain
-						else if (plugin.zombies.size() == 1 && Infected.isPlayerZombie(player))
-						{
-							if (plugin.config.getBoolean("Debug"))
-							{
-								System.out.println("Leave: In Arena, Game Has Started (Not Enough Zombies)");
-							}
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							Zombify.newZombieSetUpEveryOne();
-						}
-						// Not enough humans left
-						else if (plugin.humans.size() == 1 && plugin.humans.contains(player.getName()))
-						{
-							if (plugin.config.getBoolean("Debug"))
-							{
-								System.out.println("Leave: In Arena, Game Has Started (Not Enough Humans)");
-							}
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOTENOUGHPLAYERS, player, null));
-									Reset.tp2LobbyAfter(players);
-								}
-							}
-							Reset.resetInf();
-						} else
-						{
-							player.sendMessage(Messages.sendMessage(Msgs.LEAVE_YOUHAVELEFT, null, null));
-							Reset.resetp(player);
-							for (Player players : Bukkit.getOnlinePlayers())
-							{
-								if (Infected.isPlayerInGame(players))
-								{
-									players.sendMessage(Messages.sendMessage(Msgs.LEAVE_NOEFFECT, player, null));
-								}
-							}
-						}
-					}
+					Leave.leaveGame(player, false);
 				} else
 				{
 					// If the player tries to leave
@@ -1495,6 +1227,11 @@ public class Commands implements CommandExecutor {
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
+							if(args[2] != null)
+								Infected.filesGetArenas().set("Arenas." + arena + ".Creator", args[2]);
+							else
+								Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
+							
 							Infected.filesSaveArenas();
 							plugin.Creating.put(player.getName(), arena);
 							return true;
@@ -1516,8 +1253,12 @@ public class Commands implements CommandExecutor {
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
-							Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
 							Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
+							if(args[2] != null)
+								Infected.filesGetArenas().set("Arenas." + arena + ".Creator", args[2]);
+							else
+								Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
+							
 							Infected.filesSaveArenas();
 							plugin.Creating.put(player.getName(), arena);
 							return true;
@@ -1537,15 +1278,19 @@ public class Commands implements CommandExecutor {
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 							Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
-							Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
 							Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
+							if(args[2] != null)
+								Infected.filesGetArenas().set("Arenas." + arena + ".Creator", args[2]);
+							else
+								Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
+							
 							Infected.filesSaveArenas();
 							plugin.Creating.put(player.getName(), arena);
 							return true;
 						}
 					} else
 					{
-						player.sendMessage(plugin.I + ChatColor.RED + "/Infected Create <Arena Name>");
+						player.sendMessage(plugin.I + ChatColor.RED + "/Infected Create <Arena Name> [Creator]");
 					}
 				}
 			}

@@ -3,6 +3,7 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Enums.DeathTypes;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 
@@ -65,7 +66,7 @@ public class CrackShotApi implements Listener {
 						//If it was enough to kill the player
 						if(victim.getHealth() - e.getDamage() <= 0){
 							e.setDamage(0);
-							Deaths.playerDies(killer, victim);
+							Deaths.playerDies(DeathTypes.Gun, killer, victim);
 						}
 						
 					}

@@ -65,15 +65,15 @@ public class TeleportFix implements Listener {
 				{
 					if (visible)
 					{
-						if (!Disguises.isPlayerDisguised(player))
+						if (!Disguises.isPlayerDisguised(player) || !Infected.isPlayerZombie(player))
 							tpedPlayer.showPlayer(player);
-						if (!Disguises.isPlayerDisguised(tpedPlayer))
+						if (!Disguises.isPlayerDisguised(tpedPlayer) || !Infected.isPlayerZombie(player))
 							player.showPlayer(tpedPlayer);
 					} else
 					{
-						if (!Disguises.isPlayerDisguised(player))
+						if (!Disguises.isPlayerDisguised(player) || !Infected.isPlayerZombie(player))
 							tpedPlayer.hidePlayer(player);
-						if (!Disguises.isPlayerDisguised(player))
+						if (!Disguises.isPlayerDisguised(player) || !Infected.isPlayerZombie(player))
 							player.hidePlayer(tpedPlayer);
 					}
 				} else

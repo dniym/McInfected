@@ -44,12 +44,22 @@ public class Game {
 					ScoreBoard.updateScoreBoard();
 				}
 				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
+				playing.sendMessage("");
 				playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 				playing.sendMessage("");
 				playing.sendMessage(Messages.sendMessage(Msgs.VOTE_VOTETIME, null, TimeHandler.getTime(Long.valueOf(Main.voteTime))));
 				playing.sendMessage(Messages.sendMessage(Msgs.VOTE_HOWTOVOTE, null, null));
 				playing.sendMessage("");
-				playing.sendMessage(Main.I + ChatColor.YELLOW + ChatColor.BOLD + "Arenas: " + ChatColor.WHITE + ChatColor.ITALIC + MapHandler.getPossibleMaps() + " random");
+				playing.sendMessage(Main.I + ChatColor.YELLOW + ChatColor.BOLD + "Arenas: " + ChatColor.WHITE + ChatColor.ITALIC + MapHandler.getPossibleMaps() + ", random");
 				playing.sendMessage("");
 				playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 			
@@ -123,7 +133,6 @@ public class Game {
 						for (Player playing : Bukkit.getServer().getOnlinePlayers())
 							if (Main.inGame.contains(playing.getName()))
 							{
-								playing.sendMessage("");
 								playing.sendMessage(Messages.sendMessage(Msgs.VOTE_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 							}
 
@@ -157,17 +166,35 @@ public class Game {
 							if (Main.inGame.contains(playing.getName()))
 							{
 								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage("");
+								playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+								playing.sendMessage("");
 								playing.sendMessage(Main.I + "Game Starting in 5 Seconds.");
 								playing.sendMessage("");
 								playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
+								playing.sendMessage("");
+								playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 								}
 						for (String loc : Infected.filesGetArenas().getStringList("Arenas." + Main.playingin + ".Spawns"))
 						{
 							String[] floc = loc.split(",");
 							World world = Bukkit.getServer().getWorld(floc[0]);
-							if (new Location(world, Integer.valueOf(floc[1]),
-									Integer.valueOf(floc[2]),
-									Integer.valueOf(floc[3])) == null)
+							if (new Location(world, Double.valueOf(floc[1]),
+									Double.valueOf(floc[2]),
+									Double.valueOf(floc[3])) == null)
 							{
 								
 								for (Player playing: Bukkit.getServer().getOnlinePlayers())
@@ -182,9 +209,9 @@ public class Game {
 							} else
 							{
 								Location Loc = new Location(world,
-										Integer.valueOf(floc[1]),
-										Integer.valueOf(floc[2]),
-										Integer.valueOf(floc[3]));
+										Double.valueOf(floc[1]),
+										Double.valueOf(floc[2]),
+										Double.valueOf(floc[3]));
 								if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded())
 									Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
 							}
@@ -201,9 +228,7 @@ public class Game {
 										{
 											playing.setHealth(20);
 											playing.setFoodLevel(20);
-											playing.sendMessage("");
 											playing.sendMessage(Messages.sendMessage(Msgs.GAME_FIRSTINFECTEDIN, null, TimeHandler.getTime(Long.valueOf(Main.Wait))));
-											playing.sendMessage("");
 											if (Main.config.getBoolean("ScoreBoard Support"))
 											{
 												ScoreBoard.updateScoreBoard();
@@ -265,9 +290,7 @@ public class Game {
 													{
 														if (Main.inGame.contains(playing.getName()))
 														{
-															playing.sendMessage("");
 															playing.sendMessage(Messages.sendMessage(Msgs.GAME_INFECTIONTIMER, null, TimeHandler.getTime(Long.valueOf(timeleft))));
-															playing.sendMessage("");
 															}
 													}
 												} 
@@ -352,12 +375,10 @@ public class Game {
 																		if (Main.inGame.contains(playing.getName()))
 																			if (timeleft > 61)
 																			{
-																				playing.sendMessage("");
 																				playing.sendMessage(Messages.sendMessage(Msgs.GAME_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 																				playing.sendMessage(Messages.sendMessage(Msgs.GAME_TEAMS, null, null));
 																			} else
 																			{
-																				playing.sendMessage("");
 																				playing.sendMessage(Messages.sendMessage(Msgs.GAME_TIMELEFT, null, TimeHandler.getTime(Long.valueOf(timeleft))));
 																			}
 																	}
@@ -447,6 +468,12 @@ public class Game {
 					{
 						PointsAndScores.rewardPointsAndScore(playing, "Game Over");
 						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
 						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 						playing.sendMessage("");
 						playing.sendMessage(Messages.sendMessage(Msgs.AFTERGAME_HUMANSWIN, null, null));
@@ -490,6 +517,13 @@ public class Game {
 						
 						Files.savePlayers();
 
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
+						playing.sendMessage("");
 						playing.sendMessage("");
 						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 						playing.sendMessage(Messages.sendMessage(Msgs.AFTERGAME_ZOMBESWIN, null, null));

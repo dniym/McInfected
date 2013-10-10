@@ -1,0 +1,6 @@
+name: InfectedAddon-DedicatedServer
+description: A template plugin
+main: me.sniperzciinema.infectedaddon.dedicatedserver.Main
+version: 0.1
+author: xXSniperzzXx_SD
+depend: [Infected]

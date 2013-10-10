@@ -46,7 +46,6 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!killTFile.exists())
 				killT.setDefaults(defConfig);
 		}
 	}
@@ -276,7 +275,6 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!messagesFile.exists())
 				messages.setDefaults(defConfig);
 		}
 	}

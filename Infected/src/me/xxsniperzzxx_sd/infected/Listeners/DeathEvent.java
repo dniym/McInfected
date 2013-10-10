@@ -4,6 +4,7 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
+import me.xxsniperzzxx_sd.infected.Enums.DeathTypes;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Abilities;
@@ -46,7 +47,8 @@ public class DeathEvent implements Listener {
 		// If they're in the game
 		if (Infected.isPlayerInGame(player))
 		{
-
+			DeathTypes death = DeathTypes.Melee;
+			
 			for (ItemStack is : event.getDrops())
 			{
 				is.setType(Material.AIR);
@@ -69,6 +71,8 @@ public class DeathEvent implements Listener {
 
 				if (arrow.getShooter() instanceof Player)
 					killer = (Player) arrow.getShooter();
+
+				death = DeathTypes.Arrow;
 			}
 
 			else if (event.getEntity().getKiller() instanceof Snowball)
@@ -77,6 +81,8 @@ public class DeathEvent implements Listener {
 
 				if (ball.getShooter() instanceof Player)
 					killer = (Player) ball.getShooter();
+
+				death = DeathTypes.Snowball;
 			}
 
 			else if (event.getEntity().getKiller() instanceof Egg)
@@ -85,17 +91,20 @@ public class DeathEvent implements Listener {
 
 				if (ball.getShooter() instanceof Player)
 					killer = (Player) ball.getShooter();
+
+				death = DeathTypes.Egg;
 			}
 			if ((victim != null) && (killer != null))
 			{
 				final Player k = killer;
 				final Player v = victim;
+				final DeathTypes deaths = death;
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 				{
 
 					@Override
 					public void run() {
-						Deaths.playerDies(k, v);
+						Deaths.playerDies(deaths, k, v);
 					}
 				}, 10L);
 
