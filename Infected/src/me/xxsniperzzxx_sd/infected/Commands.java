@@ -19,7 +19,6 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Vote;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
-import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
@@ -255,9 +254,8 @@ public class Commands implements CommandExecutor {
 								player.removePotionEffect(reffect.getType());
 							}
 							Reset.resetPlayersInventory(player);
-							Updater updater = new Updater(Main.me, "Infected-Core",
-									Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-							if (Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion))
+							
+							if (Main.bVersion.equalsIgnoreCase(plugin.updateBukkitVersion))
 							{
 								if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
 									player.getInventory().setContents(Infected.playerGetShopInventory(player));
@@ -998,7 +996,7 @@ public class Commands implements CommandExecutor {
 						if (plugin.possibleArenas.size() > 1)
 							possible.append(", ");
 					}
-					player.sendMessage(plugin.I + ChatColor.GRAY + "Arenas: " + ChatColor.GREEN + possible.toString() + ChatColor.DARK_GRAY + possibleU.toString());
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Arenas: " + ChatColor.GREEN + possible.toString() + " - "+ChatColor.DARK_GRAY + possibleU.toString());
 					plugin.possibleArenasU.clear();
 					return true;
 				}
@@ -1226,9 +1224,9 @@ public class Commands implements CommandExecutor {
 							list.remove(i);
 							Infected.filesGetArenas().set("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns", list);
 							Infected.filesSaveArenas();
-							sender.sendMessage(plugin.I + ChatColor.RED + "You have removed spawn number " + i + 1 + ".");
+							sender.sendMessage(plugin.I + ChatColor.RED + "You have removed spawn number " + (i + 1) + ".");
 						} else
-							sender.sendMessage(plugin.I + ChatColor.RED + "Infected doesn't know where your tying to go, check how many spawns this arena has again!");
+							sender.sendMessage(plugin.I + ChatColor.RED + "Check how many spawns this arena has again!");
 					} else
 					{
 						sender.sendMessage(plugin.I + ChatColor.RED + "/Inf DelSpawn <ID>");
@@ -1322,7 +1320,7 @@ public class Commands implements CommandExecutor {
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
-								if (args[2] != null)
+								if (args.length == 3)
 									Infected.filesGetArenas().set("Arenas." + arena + ".Creator", args[2]);
 								else
 									Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
@@ -1343,13 +1341,14 @@ public class Commands implements CommandExecutor {
 							if (plugin.possibleArenas.isEmpty())
 							{
 								player.sendMessage(plugin.I + "Arena '" + arena + "' created.");
+								player.sendMessage(plugin.I + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.GRAY + " to finish the arena!");
 								Infected.filesGetArenas().set("Arenas." + arena + ".World", player.getWorld().getName());
 								String[] list = { "55", "20" };
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
 								Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
-								if (args[2] != null)
+								if (args.length == 3)
 									Infected.filesGetArenas().set("Arenas." + arena + ".Creator", args[2]);
 								else
 									Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
@@ -1374,7 +1373,7 @@ public class Commands implements CommandExecutor {
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
 								Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
-								if (args[2] != null)
+								if (args.length == 3)
 									Infected.filesGetArenas().set("Arenas." + arena + ".Creator", args[2]);
 								else
 									Infected.filesGetArenas().set("Arenas." + arena + ".Creator", "Unkown");
@@ -1587,8 +1586,9 @@ public class Commands implements CommandExecutor {
 
 					return true;
 				}
-				Infected.filesSafeAll();
+				
 			}
+			Infected.filesSafeAll();
 		}
 		return true;
 	}

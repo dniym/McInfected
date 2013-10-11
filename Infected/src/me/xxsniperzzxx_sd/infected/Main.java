@@ -104,7 +104,7 @@ public class Main extends JavaPlugin {
 
 	public static Configuration config = null;
 	public String currentBukkitVersion = null;
-	public String updateBukkitVersion = null;
+	public static String updateBukkitVersion = "0.0.0";
 
 	// Scoreboard
 
@@ -163,7 +163,6 @@ public class Main extends JavaPlugin {
 
 				Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				Main.name = updater.getLatestVersionString();
-				updateBukkitVersion = updater.updateBukkitVersion;
 
 				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
 					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))

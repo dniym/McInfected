@@ -4,7 +4,6 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
@@ -39,8 +38,7 @@ public class Reset {
 		resetPlayersInventory(player);
 		player.teleport(LocationHandler.getPlayerLocation(Main.config.getString("Lobby")));
 
-		Updater updater = new Updater(Main.me, "Infected-Core", Main.file, Updater.UpdateType.NO_DOWNLOAD, false);
-		if(Main.bVersion.equalsIgnoreCase(updater.updateBukkitVersion)){
+		if(Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion)){
 			if (Infected.filesGetShop().getBoolean("Save Items"))
 				player.getInventory().setContents(Infected.playerGetShopInventory(player));
 		}

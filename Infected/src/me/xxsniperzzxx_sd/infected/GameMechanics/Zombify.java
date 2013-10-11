@@ -21,11 +21,10 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Zombify {
 
-
 	public static void zombifyPlayer(Player player) {
 		if (Main.zombieClasses.containsKey(player.getName()))
 		{
-			Abilities.applyClassAbility(player);
+			Abilities.applyClassEffects(player);
 		} else if (Main.config.getBoolean("Zombie Abilities") == true)
 		{
 			Abilities.applyAbilities(player);
@@ -33,6 +32,7 @@ public class Zombify {
 		if (Main.config.getBoolean("Disguise Support.Enabled"))
 			Disguises.disguisePlayer(player);
 	}
+
 	@SuppressWarnings("deprecation")
 	public static void newZombieSetUpEveryOne() {
 		Random r = new Random();
@@ -83,9 +83,9 @@ public class Zombify {
 			{
 				if (Infected.isPlayerInGame(online))
 				{
-					if (Main.config.getBoolean("ScoreBoard Support"))
-						if (!Main.KillStreaks.containsKey(online.getName()))
-							Main.KillStreaks.put(online.getName(), Integer.valueOf("0"));
+					if (!Main.KillStreaks.containsKey(online.getName()))
+						Main.KillStreaks.put(online.getName(), Integer.valueOf("0"));
+
 					int timeleft = Main.GtimeLimit;
 					online.sendMessage(Main.I + ChatColor.WHITE + "You have " + ChatColor.YELLOW + TimeHandler.getTime(Long.valueOf(timeleft)) + ChatColor.WHITE + ". Good luck!");
 					if (Main.inGame.contains(online.getName()) && (!(Main.zombies.contains(online.getName()))))

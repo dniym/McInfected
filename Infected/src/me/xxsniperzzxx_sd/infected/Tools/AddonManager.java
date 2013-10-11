@@ -37,7 +37,7 @@ public class AddonManager {
 		} 
 		else
 		{
-			System.out.println(Main.I + "Vault wasn't found on plugin server, Disabling Vault Support");
+			System.out.println("Vault wasn't found on plugin server, Disabling Vault Support");
 			plugin.getConfig().set("Vault Support.Enable", false);
 			plugin.saveConfig();
 
@@ -51,7 +51,7 @@ public class AddonManager {
 		if (Bukkit.getServer().getPluginManager().getPlugin("CrackShot") == null)
 		{
 
-			System.out.println(Main.I + "CrackShot wasn't found on plugin server, disabling CrackShot Support");
+			System.out.println( "CrackShot wasn't found on plugin server, disabling CrackShot Support");
 			plugin.getConfig().set("CrackShot Support.Enable", false);
 			plugin.saveConfig();
 		} else
@@ -68,7 +68,7 @@ public class AddonManager {
 	{
 		if (Bukkit.getServer().getPluginManager().getPlugin("Factions") == null)
 		{
-			System.out.println(Main.I + "Factions wasn't found on plugin server, disabling Factions Support");
+			System.out.println( "Factions wasn't found on plugin server, disabling Factions Support");
 			plugin.getConfig().set("Factions Support.Enable", false);
 			plugin.saveConfig();
 		} else
@@ -85,7 +85,7 @@ public class AddonManager {
 	{
 		if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") == null)
 		{
-			System.out.println(Main.I + "mcMMO wasn't found on plugin server, disabling mcMMO Support");
+			System.out.println( "mcMMO wasn't found on plugin server, disabling mcMMO Support");
 			plugin.getConfig().set("mcMMO Support.Enable", false);
 			plugin.saveConfig();
 		} else
@@ -102,7 +102,7 @@ public class AddonManager {
 	{
 		if (Bukkit.getServer().getPluginManager().getPlugin("TagAPI") == null)
 		{
-			System.out.println(Main.I + "TagApi wasn't found on plugin server, disabling TagApi Support");
+			System.out.println( "TagApi wasn't found on plugin server, disabling TagApi Support");
 			plugin.getConfig().set("TagAPI Support.Enable", false);
 			plugin.saveConfig();
 		} else

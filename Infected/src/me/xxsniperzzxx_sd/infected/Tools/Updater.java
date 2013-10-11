@@ -15,6 +15,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
+import me.xxsniperzzxx_sd.infected.Main;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -53,7 +55,6 @@ public class Updater {
 							// updates
 	private boolean announce; // Whether to announce file downloads
 	private URL url; // Connecting to RSS
-	public String updateBukkitVersion = "0.0.0"; // Gets the updated plugin's bukkit
 										// version
 	public String infectedVersion;
 	private static final String DBOUrl = "http://dev.bukkit.org/bukkit-plugins/";
@@ -523,7 +524,7 @@ public class Updater {
 				{
 					String s = line.replaceAll("<dd><ul class=\"comma-separated-list\"><li>CB ", "").replaceAll("</li></ul></dd>", "");
 					String[] s1 = s.split("-");
-					updateBukkitVersion = s1[0];
+					Main.updateBukkitVersion = s1[0];
 				}
 				// Search for size
 				else if (line.contains("<dt>Size</dt>"))

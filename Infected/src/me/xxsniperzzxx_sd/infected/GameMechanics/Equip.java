@@ -62,7 +62,7 @@ public class Equip {
 				human.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Human.Feet")));
 		}
 		human.updateInventory();
-		Abilities.applyClassAbility(human);
+		Abilities.applyClassEffects(human);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -142,6 +142,6 @@ public class Equip {
 				zombie.getInventory().setBoots(ItemHandler.getItemStack(Main.config.getString("Armor.Zombie.Feet")));
 		}
 		zombie.updateInventory();
-		Abilities.applyClassAbility(zombie);
+		Abilities.applyClassEffects(zombie);
 	}
 }
