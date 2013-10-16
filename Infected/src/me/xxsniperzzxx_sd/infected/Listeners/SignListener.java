@@ -84,7 +84,9 @@ public class SignListener implements Listener {
 											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 										} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + className))
 										{
-											InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(player, Teams.Human, className);
+											InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(
+													player, Teams.Human,
+													className);
 											Bukkit.getServer().getPluginManager().callEvent(classEvent);
 											if (!classEvent.isCancelled())
 											{
@@ -103,7 +105,9 @@ public class SignListener implements Listener {
 											player.sendMessage(Messages.sendMessage(Msgs.CLASSES_CHOOSEN, player, "None"));
 										} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + className))
 										{
-											InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(player, Teams.Zombie, className);
+											InfectedClassSelectEvent classEvent = new InfectedClassSelectEvent(
+													player, Teams.Zombie,
+													className);
 											Bukkit.getServer().getPluginManager().callEvent(classEvent);
 											if (!classEvent.isCancelled())
 											{
@@ -158,9 +162,8 @@ public class SignListener implements Listener {
 									else
 										price = Integer.valueOf(prices);
 
-									String itemstring = ChatColor.stripColor(sign.getLine(1));
-									String itemname = ItemHandler.getItemStack(itemstring).getType().name();
-									
+									String itemname = ChatColor.stripColor(sign.getLine(1));
+
 									Material im = null;
 									for (Material item : Material.values())
 										if (item.toString().equalsIgnoreCase(itemname))
@@ -176,8 +179,10 @@ public class SignListener implements Listener {
 											if (price <= points)
 											{
 
-												ItemStack stack = ItemHandler.getItemStack(itemstring);
-												InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(player, sign, stack, price);
+												ItemStack stack = ItemHandler.getItemStack(String.valueOf(Material.valueOf(itemname).getId()));
+												InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(
+														player, sign, stack,
+														price);
 												Bukkit.getServer().getPluginManager().callEvent(shopEvent);
 												if (!shopEvent.isCancelled())
 												{
@@ -234,7 +239,9 @@ public class SignListener implements Listener {
 											{
 												if (player.hasPermission("Infected.Shop") || player.hasPermission("Infected.Shop." + itemname))
 												{
-													InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(player, sign, is, price);
+													InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(
+															player, sign, is,
+															price);
 													Bukkit.getServer().getPluginManager().callEvent(shopEvent);
 													if (!shopEvent.isCancelled())
 													{
@@ -258,7 +265,7 @@ public class SignListener implements Listener {
 															is.setItemMeta(i);
 															player.getInventory().addItem(is);
 														}
-	
+
 														player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
 														if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
 														{
@@ -268,7 +275,7 @@ public class SignListener implements Listener {
 															}
 														}
 													}
-												}else
+												} else
 													player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, player, null));
 											} else
 											{
@@ -278,11 +285,9 @@ public class SignListener implements Listener {
 											Files.savePlayers();
 											player.updateInventory();
 											event.setCancelled(true);
-										}
-										Location loc = event.getClickedBlock().getLocation();
-										if (loc.getBlock().getType() == Material.SIGN_POST || loc.getBlock().getType() == Material.WALL_SIGN)
+										} else
 										{
-
+											Location loc = event.getClickedBlock().getLocation();
 											String i = Files.getSigns().getString("Shop Signs." + LocationHandler.getLocationToString(loc));
 											int itemi = ItemHandler.getItemID(i);
 											Material item = Material.getMaterial(itemi);
@@ -305,26 +310,16 @@ public class SignListener implements Listener {
 													player.getInventory().addItem(new ItemStack(
 															item, +1));
 												}
-												player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
-												if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
-												{
-													
-													if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
-													{
-														Infected.playerSaveShopInventory(player);
-													}
-												}
-
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, item.name()));
 											} else
 											{
 												player.sendMessage(Messages.sendMessage(Msgs.SHOP_INVALIDPOINTS, player, null));
-												player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price-points)));
+												player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price - points)));
 											}
 											Files.savePlayers();
 											player.updateInventory();
 										}
 									}
-
 								} else if ((event.getClickedBlock().getTypeId() == 330 || event.getClickedBlock().getTypeId() == 96 || event.getClickedBlock().getTypeId() == 324 || event.getClickedBlock().getTypeId() == 69 || event.getClickedBlock().getTypeId() == 77 || event.getClickedBlock().getTypeId() == 143 || event.getClickedBlock().getTypeId() == 147 || event.getClickedBlock().getTypeId() == 148 || event.getClickedBlock().getTypeId() == 70 || event.getClickedBlock().getTypeId() == 72) && !Files.getGrenades().contains(String.valueOf(player.getItemInHand().getTypeId())) && !plugin.getConfig().getBoolean("Allow Interacting"))
 								{
 									event.setCancelled(true);
@@ -505,12 +500,11 @@ public class SignListener implements Listener {
 							}
 						} else
 						{
+							int itemid;
+							
 							try
 							{
-								String s = event.getLine(1);
-								String[] s1 = s.split(":");
-								@SuppressWarnings("unused")
-								int itemid = Integer.valueOf(s1[0]);
+								itemid = ItemHandler.getItemID(event.getLine(1));
 							} catch (NumberFormatException nfe)
 							{
 								event.getPlayer().sendMessage(Main.I + ChatColor.RED + "Invalid Item");
@@ -519,8 +513,9 @@ public class SignListener implements Listener {
 								return;
 							}
 							Material im = null;
-							String itemid = String.valueOf(ItemHandler.getItemID(event.getLine(1)));
-							String itemdata = String.valueOf(ItemHandler.getItemStack(event.getLine(1)).getDurability());
+							itemid = ItemHandler.getItemID(event.getLine(1));
+							short itemdata = ItemHandler.getItemData(event.getLine(1));
+							System.out.println(itemdata);
 							for (Material item : Material.values())
 								if (item.getId() == Integer.valueOf(itemid))
 								{
@@ -531,8 +526,10 @@ public class SignListener implements Listener {
 							{
 								boolean vault = false;
 								String price = event.getLine(2);
+							
 								if (plugin.getConfig().getBoolean("Vault Support.Enable") && event.getLine(2).startsWith(plugin.getConfig().getString("Vault Support.Symbol")))
 									vault = true;
+								
 								price = price.replaceAll(plugin.getConfig().getString("Vault Support.Symbol"), "");
 								try
 								{
@@ -545,23 +542,11 @@ public class SignListener implements Listener {
 								}
 								Material item = Material.getMaterial(Integer.valueOf(itemid));
 								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-								event.setLine(1, ChatColor.GRAY + item.name().toUpperCase() + ":" + itemdata);
-								if (itemdata == "")
-								{
-									event.setLine(1, ChatColor.GRAY + item.name().toUpperCase());
-								}
+								event.setLine(1, ChatColor.GRAY + item.name().toUpperCase() + (itemdata == 0 ? "" :":" + itemdata));
 								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								if (vault)
-									event.setLine(3, ChatColor.DARK_RED + "Cost: " + plugin.getConfig().getString("Vault Support.Symbol") + price);
-								else
-									event.setLine(3, ChatColor.DARK_RED + "Cost: " + price);
-								if (itemdata == "")
-								{
-									itemdata = "0";
-								}
-
+								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? plugin.getConfig().getString("Vault Support.Symbol"): "") + price);
+								
 								Location loc = event.getBlock().getLocation();
-
 								Infected.filesGetSigns().set("Shop Signs." + LocationHandler.getLocationToString(loc), itemid + ":" + Integer.valueOf(itemdata));
 								Infected.filesSaveSigns();
 							}

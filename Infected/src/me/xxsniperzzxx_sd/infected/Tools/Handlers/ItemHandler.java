@@ -55,7 +55,7 @@ public class ItemHandler {
 		return i;
 	}
 
-	private static Short getItemData(String Path) {
+	public static Short getItemData(String Path) {
 		String itemdata = null;
 		String string = Path;
 		if (string.contains(":"))
@@ -78,7 +78,7 @@ public class ItemHandler {
 				String[] ss = s[1].split("%");
 				itemdata = ss[0];
 			} else
-				itemdata = "0";
+				itemdata = s[1];
 
 		} else
 			itemdata = "0";
@@ -92,7 +92,7 @@ public class ItemHandler {
 		return s;
 	}
 
-	private static Integer getItemAmount(String Path) {
+	public static Integer getItemAmount(String Path) {
 		String itemdata = null;
 		String string = Path;
 		if (string.contains(","))
@@ -124,7 +124,7 @@ public class ItemHandler {
 		return i;
 	}
 
-	private static int getItemEnchant(String Path) {
+	public static int getItemEnchant(String Path) {
 		String itemdata = null;
 		String string = Path;
 		if (string.contains("-"))
@@ -154,7 +154,7 @@ public class ItemHandler {
 		return i;
 	}
 
-	private static int getItemEnchantLvl(String Path) {
+	public static int getItemEnchantLvl(String Path) {
 		String itemdata = null;
 		String string = Path;
 		if (string.contains("@"))
@@ -184,7 +184,7 @@ public class ItemHandler {
 			return i;
 	}
 
-	private static String getItemName(String Path) {
+	public static String getItemName(String Path) {
 		String itemName = null;
 		if (Path.contains("%"))
 		{
