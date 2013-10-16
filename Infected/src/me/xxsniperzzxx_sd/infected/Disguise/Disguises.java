@@ -5,10 +5,6 @@ import me.xxsniperzzxx_sd.infected.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
-
-import de.robingrether.idisguise.api.DisguiseAPI;
-
 
 
 
@@ -25,6 +21,11 @@ public class Disguises {
 		{
 			DisguiseIDisguise.disguisePlayer(player);
 		}
+		
+		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+		{
+			DisguiseLibsDisguises.disguisePlayer(player);
+		}
 	}
 	
 	
@@ -39,6 +40,11 @@ public class Disguises {
 		{
 			DisguiseIDisguise.unDisguisePlayer(player);
 		}
+		
+		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+		{
+			DisguiseLibsDisguises.unDisguisePlayer(player);
+		}
 	}
 	
 	
@@ -49,10 +55,15 @@ public class Disguises {
 		{
 			disguised = DisguiseDisguiseCraft.isPlayerDisguised(player);
 		}
-		
+
 		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
 		{
 			disguised = DisguiseIDisguise.isPlayerDisguised(player);
+		}
+
+		else if(Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+		{
+			disguised = DisguiseLibsDisguises.isPlayerDisguised(player);
 		}
 		
 		return disguised;
@@ -70,7 +81,7 @@ public class Disguises {
 			if(Main.config.getBoolean("Disguise Support.DisguiseCraft")){
 				if (Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") != null)
 				{
-					Main.dcAPI = DisguiseCraft.getAPI();
+					
 					Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft");
 				}
 				else
@@ -80,18 +91,34 @@ public class Disguises {
 					Main.me.saveConfig();
 				}
 			
-			}//If were looking for iDisguise
+			}
+			//If were looking for iDisguise
 			if(Main.config.getBoolean("Disguise Support.iDisguise")){
 
 				if (Bukkit.getServer().getPluginManager().getPlugin("iDisguise") != null)
 				{
-					Main.idAPI = Bukkit.getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
+					
 					Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("iDisguise");
 				}
 				else
 				{
 					System.out.println("iDisguise wasn't found on this server, disabling iDisguise Support");
 					Main.config.set("Disguise Support.iDisguise", false);
+					Main.me.saveConfig();
+				}
+			}
+			//If were looking for LibsDisguises
+			if(Main.config.getBoolean("Disguise Support.LibsDisguises")){
+
+				if (Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") != null)
+				{
+					
+					Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises");
+				}
+				else
+				{
+					System.out.println("LibsDisguises wasn't found on this server, disabling LibsDisguises Support");
+					Main.config.set("Disguise Support.LibsDisguises", false);
 					Main.me.saveConfig();
 				}
 			}

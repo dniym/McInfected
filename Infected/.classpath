@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/DisguiseCraft (4).jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Factions (2).jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/mcMMO.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Essentials.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/LibsDisguises.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

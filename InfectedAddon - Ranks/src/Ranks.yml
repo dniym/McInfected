@@ -1,0 +1,19 @@
+Ranks:
+  Default:
+    Prefix: ''
+    Needed Score: 0
+    Rank Permissions: []
+  Slayer:
+    Prefix: '&2Slayer'
+    Needed Score: 100
+    Rank Permissions:
+    - infected.classes.human.slayor
+    - infected.classes.zombie.slayor
+    - infected.shop.184
+  Killer:
+    Prefix: '&cKiller'
+    Needed Score: 300
+    Rank Permissions:
+    - infected.classes.human.killer
+    - infected.classes.zombie.killer
+    - infected.shop.276

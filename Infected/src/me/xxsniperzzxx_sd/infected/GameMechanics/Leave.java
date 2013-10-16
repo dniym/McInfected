@@ -20,7 +20,7 @@ public class Leave {
 		InfectedPlayerLeaveEvent leaveEvent = new InfectedPlayerLeaveEvent(player, Main.inGame, Infected.playerGetGroup(player), isCommand);
 		Bukkit.getServer().getPluginManager().callEvent(leaveEvent);
 		
-			if(!leaveEvent.isCancelled()){
+		if(!leaveEvent.isCancelled()){
 			// Reset the player to before they joined Infected
 			if (Main.inGame.contains(player.getName()))
 				Main.inGame.remove(player.getName());

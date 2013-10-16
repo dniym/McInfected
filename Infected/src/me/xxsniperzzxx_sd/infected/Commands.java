@@ -1558,31 +1558,40 @@ public class Commands implements CommandExecutor {
 							player.performCommand("Infected arenas");
 						}
 					}
-				} else
+				}
+				else if(args[0].equalsIgnoreCase("Addons")){
+					CommandSender player = sender;
+					player.sendMessage("");
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Plugin:" + "" 
+							+ ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.DisguiseCraft") ? (""+ChatColor.GREEN + ChatColor.ITALIC +"DisguiseCraft") : "") 
+							+ (plugin.getConfig().getBoolean("Disguise Support.iDisguise") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "iDisguise") : "")
+							+ (plugin.getConfig().getBoolean("Disguise Support.LibsDisguises") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "LibsDisguises") : ""));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("TagAPI Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Factions Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("mcMMO Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Vault Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "ScoreBoard Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("ScoreBoard Support") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Grenades: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (Infected.filesGetGrenades().getBoolean("Use") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Shop: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (Infected.filesGetShop().getBoolean("Use") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+					player.sendMessage("");
+				}
+				else
 				{
 					CommandSender player = sender;
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
-					if (plugin.update && player.hasPermission("Infected.SetUp"))
+					if (plugin.update)
 						player.sendMessage(plugin.I + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + plugin.name);
-
-					player.sendMessage(plugin.I + ChatColor.GRAY + "Author:" + ChatColor.GREEN + ChatColor.BOLD + " xXSniperzzXx_SD");
+					player.sendMessage("");
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "xXSniperzzXx_SD");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + plugin.v);
-					player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev:" + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
-					if (player.hasPermission("Infected.SetUp"))
-					{
-						player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("TagAPI Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Factions Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("mcMMO Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Vault Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "ScoreBoard Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("ScoreBoard Support") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "Grenades: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (Infected.filesGetGrenades().getBoolean("Use") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						player.sendMessage(plugin.I + ChatColor.GRAY + "Shop: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (Infected.filesGetShop().getBoolean("Use") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-					}
+					player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
+					
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "For Help type: /Infected Help");
+					player.sendMessage(plugin.I + ChatColor.YELLOW + "For Addons type: /Infected Addons");
 
 					return true;
 				}

@@ -6,6 +6,7 @@ import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Messages;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
+import me.xxsniperzzxx_sd.infected.Events.InfectedGameEndEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
@@ -428,6 +429,8 @@ public class Game {
 					}
 				}
 			}
+			Bukkit.getServer().getPluginManager().callEvent(new InfectedGameEndEvent(Main.inGame, Main.Winners, DidHumansWin));
+
 			if (DidHumansWin)
 			{
 				if (Main.config.getBoolean("Vault Support.Enable"))

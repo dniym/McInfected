@@ -60,6 +60,7 @@ public class Main extends JavaPlugin implements Listener{
 		msg = msg.replaceAll("/remove", "/inf remove");
 		msg = msg.replaceAll("/top", "/inf top");
 		msg = msg.replaceAll("/setarena", "/inf setarena");
+		msg = msg.replaceAll("/rank", "/inf rank");
 		event.setMessage(msg);
 	}
 }

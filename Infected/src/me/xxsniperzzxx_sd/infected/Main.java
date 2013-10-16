@@ -35,11 +35,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
 
-import de.robingrether.idisguise.api.DisguiseAPI;
-
-import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
-
-
 public class Main extends JavaPlugin {
 
 	// Initialize all the variables
@@ -106,12 +101,9 @@ public class Main extends JavaPlugin {
 	public String currentBukkitVersion = null;
 	public static String updateBukkitVersion = "0.0.0";
 
-	// Scoreboard
+	public static AddonManager addon;
 
 	// Plugin Addons
-	public static AddonManager addon;
-	public static DisguiseCraftAPI dcAPI;
-	public static DisguiseAPI idAPI;
 	public static Plugin Disguiser;
 	public static Economy economy = null;
 

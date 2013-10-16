@@ -54,11 +54,11 @@ public class InfectedPlayerLeaveEvent extends Event implements Cancellable{
 		return handlers;
 	}
 
+	public void setCancelled(boolean cancel) {
+		cancelled = cancel;
+	}
 	public boolean isCancelled() {
 		return cancelled;
 	}
 
-	public void setCancelled(boolean cancel) {
-		cancelled = cancel;
-	}
 }

@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 1.9.8
+# Default Infected Config, Last edited in 2.0.0
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -28,6 +28,7 @@
 # # Enable what you use and disable what you dont
 #   DisguiseCraft: true
 #   iDisguise: true
+#   LibsDisguises: true
 # #
 # Zombie Abilities: false
 # #
@@ -197,7 +198,7 @@
 # # +======================================================+ #
 # #
 # I Apoligize for the way the config looks but i do this so i don't 
-# have to reset it every version.
+# have to reset it every version. Because I still add to this config.
 # # 
 # # +======================================================+ #
 
@@ -208,6 +209,7 @@ Disguise Support:
   Enabled: true
   DisguiseCraft: true
   iDisguise: true
+  LibsDisguises: true
   
 Zombie Abilities: false
 
