@@ -61,10 +61,12 @@ public class Main extends JavaPlugin implements Listener {
 			event.setCancelled(true);
 			Player p = (Player) event.getSender();
 			p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+			if(!canRankUp(p)) p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
 			p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rankPrefix(getRank(p)));
-			p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + Infected.playerGetPoints(p.getName()));
-			p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks."+nextRank(p)+".Needed Score") - Infected.playerGetPoints(p.getName())));
-			p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " +ChatColor.GRAY +" Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks."+nextRank(p)+".Needed Score"));
+			p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + Infected.playerGetScore(p.getName()));
+			if(canRankUp(p)) p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks."+nextRank(p)+".Needed Score") - Infected.playerGetScore(p.getName())));
+			if(canRankUp(p)) p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " +ChatColor.GRAY +" Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks."+nextRank(p)+".Needed Score"));
+			if(!canRankUp(p)) p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
 			p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
 		}
 	}
