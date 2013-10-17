@@ -42,11 +42,10 @@ public class Main extends JavaPlugin implements Listener {
 		{
 			perms = permissionProvider.getProvider();
 		}
-		
 
 		getRanks().options().copyDefaults(true);
 		saveRanks();
-		
+
 		saveDefaultConfig();
 		getServer().getPluginManager().registerEvents(this, this);
 	}
@@ -56,43 +55,53 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onInfectedCommand(InfectedCommandEvent event) {
-		if (event.getArgs()[0].equalsIgnoreCase("Rank") && event.getSender() instanceof Player)
+		if (event.getArgs().length >= 1)
 		{
-			event.setCancelled(true);
-			Player p = (Player) event.getSender();
-			p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
-			if(!canRankUp(p)) p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
-			p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rankPrefix(getRank(p)));
-			p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + Infected.playerGetScore(p.getName()));
-			if(canRankUp(p)) p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks."+nextRank(p)+".Needed Score") - Infected.playerGetScore(p.getName())));
-			if(canRankUp(p)) p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " +ChatColor.GRAY +" Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks."+nextRank(p)+".Needed Score"));
-			if(!canRankUp(p)) p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
-			p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+			if (event.getArgs()[0].equalsIgnoreCase("Rank") && event.getSender() instanceof Player)
+			{
+				event.setCancelled(true);
+				Player p = (Player) event.getSender();
+				p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+				if (!canRankUp(p))
+					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
+				p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rankPrefix(getRank(p)));
+				p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + Infected.playerGetScore(p.getName()));
+				if (canRankUp(p))
+					p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score") - Infected.playerGetScore(p.getName())));
+				if (canRankUp(p))
+					p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " + ChatColor.GRAY + " Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score"));
+				if (!canRankUp(p))
+					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
+				p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+			}
 		}
 	}
 
 	@EventHandler
 	public void onInfectedGameEnd(InfectedGameEndEvent event) {
-		for(String s : event.getPlayers()){
-			if(canRankUp(Bukkit.getPlayer(s)))
+		for (String s : event.getPlayers())
+		{
+			if (canRankUp(Bukkit.getPlayer(s)))
 				rankUp(Bukkit.getPlayer(s));
 		}
 	}
 
 	@EventHandler
 	public void onInfectedJoin(InfectedPlayerJoinEvent event) {
-		if (!event.isCancelled()){
-			
+		if (!event.isCancelled())
+		{
+
 			addPermissions(event.getPlayer());
-			if(canRankUp(event.getPlayer()))
+			if (canRankUp(event.getPlayer()))
 				rankUp(event.getPlayer());
 		}
 	}
+
 	@EventHandler
 	public void onInfectedLeave(InfectedPlayerLeaveEvent event) {
 		if (!event.isCancelled())
 			removePermissions(event.getPlayer());
-		if(canRankUp(event.getPlayer()))
+		if (canRankUp(event.getPlayer()))
 			rankUp(event.getPlayer());
 	}
 
@@ -105,44 +114,53 @@ public class Main extends JavaPlugin implements Listener {
 		for (String s : getRanks().getStringList("Ranks." + getRank(p) + ".Permissions"))
 			perms.playerRemove(p, s);
 	}
-	
+
 	public String getRank(Player p) {
-		if(!getConfig().contains("Players." + p.getName())){
-			
+		if (!getConfig().contains("Players." + p.getName()))
+		{
+
 			String rank = "";
-			
-			for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true)){
-				if (!s.contains(".")){
-					if(getRanks().getInt("Ranks."+s+".Needed Score") == 0){
-							rank = s;
+
+			for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
+			{
+				if (!s.contains("."))
+				{
+					if (getRanks().getInt("Ranks." + s + ".Needed Score") == 0)
+					{
+						rank = s;
 					}
 				}
 			}
-			
-		getConfig().set("Players."+p.getName(), rank);
-		saveConfig();
+
+			getConfig().set("Players." + p.getName(), rank);
+			saveConfig();
 		}
 		return getConfig().getString("Players." + p.getName());
 	}
 
-	public String rankPrefix(String rank){
-		return ChatColor.translateAlternateColorCodes('&', getRanks().getString("Ranks."+rank+".Prefix"));
+	public String rankPrefix(String rank) {
+		return ChatColor.translateAlternateColorCodes('&', getRanks().getString("Ranks." + rank + ".Prefix"));
 	}
-	
+
 	public boolean canRankUp(Player p) {
 
 		boolean b = false;
 		String rank = getRank(p);
-		
+
 		int pointsNeed = 0;
-		
+
 		for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
-			if (!s.contains(".")){
-				if(!s.equalsIgnoreCase(rank)){
-					if(getRanks().getInt("Ranks."+s+".Needed Score")>getRanks().getInt("Ranks."+rank+".Needed Score")){
-						if(getRanks().getInt("Ranks."+s+".Needed Score") <= Infected.playerGetScore(p.getName())){
-							if(getRanks().getInt("Ranks."+s+".Needed Score") > pointsNeed){
-								pointsNeed = getRanks().getInt("Ranks."+s+".Needed Score");
+			if (!s.contains("."))
+			{
+				if (!s.equalsIgnoreCase(rank))
+				{
+					if (getRanks().getInt("Ranks." + s + ".Needed Score") > getRanks().getInt("Ranks." + rank + ".Needed Score"))
+					{
+						if (getRanks().getInt("Ranks." + s + ".Needed Score") <= Infected.playerGetScore(p.getName()))
+						{
+							if (getRanks().getInt("Ranks." + s + ".Needed Score") > pointsNeed)
+							{
+								pointsNeed = getRanks().getInt("Ranks." + s + ".Needed Score");
 								b = true;
 							}
 						}
@@ -151,41 +169,47 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		return b;
 	}
-	public String nextRank(Player p){
+
+	public String nextRank(Player p) {
 		String rank = getRank(p);
 
-		//Set the next rank to null
+		// Set the next rank to null
 		String rankto = null;
 		int pointsNeed = 0;
-		
+
 		for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
-			if (!s.contains(".")){
+			if (!s.contains("."))
+			{
 
-				//If the current rank and the rank isnt the same
-				if(!s.equalsIgnoreCase(rank)){
+				// If the current rank and the rank isnt the same
+				if (!s.equalsIgnoreCase(rank))
+				{
 
-					//If the score for the rank is less or equal to that of the players
-					if(getRanks().getInt("Ranks."+s+".Needed Score") <= Infected.playerGetScore(p.getName())){
+					// If the score for the rank is less or equal to that of the
+					// players
+					if (getRanks().getInt("Ranks." + s + ".Needed Score") <= Infected.playerGetScore(p.getName()))
+					{
 
-						//If the score of the rank is more then the previously discovered rank's
-						if(getRanks().getInt("Ranks."+s+".Needed Score") > pointsNeed){
+						// If the score of the rank is more then the previously
+						// discovered rank's
+						if (getRanks().getInt("Ranks." + s + ".Needed Score") > pointsNeed)
+						{
 							rankto = s;
-							pointsNeed = getRanks().getInt("Ranks."+s+".Needed Score");
+							pointsNeed = getRanks().getInt("Ranks." + s + ".Needed Score");
 						}
 					}
 				}
 			}
 		return rankto;
-		
+
 	}
 
 	public void rankUp(Player p) {
 
 		String rankto = nextRank(p);
-		getConfig().set("Players."+p.getName(), rankto);
+		getConfig().set("Players." + p.getName(), rankto);
 		saveConfig();
 	}
-	
 
 	public void reloadRanks() {
 		if (ranksFile == null)
@@ -198,7 +222,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!ranksFile.exists())
+			if (!ranksFile.exists())
 				ranks.setDefaults(defConfig);
 		}
 	}

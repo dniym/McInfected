@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/bukkit-1.6.4-R0.1-20130923.182036-4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/craftbukkit-1.6.4-R0.1-20130923.182200-5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Desktop/Server/plugins/Infected.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Desktop/New folder/plugins/Infected.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

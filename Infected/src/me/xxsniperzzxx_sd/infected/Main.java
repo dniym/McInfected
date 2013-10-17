@@ -123,6 +123,7 @@ public class Main extends JavaPlugin {
 		{
 			Metrics metrics = new Metrics(this);
 			metrics.start();
+			System.out.println("Metrics was started!");
 		} catch (IOException e)
 		{
 			System.out.println("Metrics was unable to start...");
@@ -150,16 +151,25 @@ public class Main extends JavaPlugin {
 		{
 			try
 			{
-				Updater updater = new Updater(this, "Infected-Core", getFile(),
-						Updater.UpdateType.NO_DOWNLOAD, false);
+				Updater updater = new Updater(this, 44622, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 
 				Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				Main.name = updater.getLatestVersionString();
+				Main.name = updater.getLatestName();
 
-				if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(0))) <= Integer.valueOf(String.valueOf(Main.v.charAt(0))))
-					if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(2))) <= Integer.valueOf(String.valueOf(Main.v.charAt(2))))
-						if (Integer.valueOf(String.valueOf(updater.getVersion().charAt(4))) <= Integer.valueOf(String.valueOf(Main.v.charAt(4))))
-							Main.update = false;
+				System.out.println(v.replaceAll(".", ""));
+				System.out.println(updater.getLatestFileVersion().replaceAll(".", ""));
+				
+				int currentVersion = Integer.valueOf(v.replaceAll("\\.", ""));
+				int newVersion = Integer.valueOf(updater.getLatestFileVersion().replaceAll("\\.", ""));
+
+				if(currentVersion >= newVersion){
+					System.out.println("You are running a beta version of Infected!");
+					update = false;
+				}
+				
+				else
+					System.out.println("You need to update Infected to: " + updater.getLatestFileVersion());
+		
 			} catch (Exception ex)
 			{
 				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");

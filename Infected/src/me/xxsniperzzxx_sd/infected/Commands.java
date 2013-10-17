@@ -1559,7 +1559,7 @@ public class Commands implements CommandExecutor {
 						}
 					}
 				}
-				else if(args[0].equalsIgnoreCase("Addons")){
+				else if(args.length > 0 && args[0].equalsIgnoreCase("Addons")){
 					CommandSender player = sender;
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
