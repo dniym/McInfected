@@ -65,9 +65,9 @@ public class Main extends JavaPlugin implements Listener {
 				if (!canRankUp(p))
 					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
 				p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rankPrefix(getRank(p)));
-				p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + Infected.playerGetScore(p.getName()));
+				p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + getStat(p));
 				if (canRankUp(p))
-					p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score") - Infected.playerGetScore(p.getName())));
+					p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score") - getStat(p)));
 				if (canRankUp(p))
 					p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " + ChatColor.GRAY + " Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score"));
 				if (!canRankUp(p))
@@ -90,8 +90,9 @@ public class Main extends JavaPlugin implements Listener {
 	public void onInfectedJoin(InfectedPlayerJoinEvent event) {
 		if (!event.isCancelled())
 		{
-
+			setClasses(event.getPlayer());
 			addPermissions(event.getPlayer());
+
 			if (canRankUp(event.getPlayer()))
 				rankUp(event.getPlayer());
 		}
@@ -103,6 +104,13 @@ public class Main extends JavaPlugin implements Listener {
 			removePermissions(event.getPlayer());
 		if (canRankUp(event.getPlayer()))
 			rankUp(event.getPlayer());
+	}
+
+	public void setClasses(Player p) {
+		if (getConfig().getString("Ranks." + getRank(p) + ".Default Class.Humans") != null)
+			Infected.playersetLastHumanClass(p, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Human"));
+		if (getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombie") != null)
+			Infected.playersetLastHumanClass(p, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombie"));
 	}
 
 	public void addPermissions(Player p) {
@@ -118,9 +126,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String getRank(Player p) {
 		if (!getConfig().contains("Players." + p.getName()))
 		{
-
 			String rank = "";
-
 			for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
 			{
 				if (!s.contains("."))
@@ -156,7 +162,7 @@ public class Main extends JavaPlugin implements Listener {
 				{
 					if (getRanks().getInt("Ranks." + s + ".Needed Score") > getRanks().getInt("Ranks." + rank + ".Needed Score"))
 					{
-						if (getRanks().getInt("Ranks." + s + ".Needed Score") <= Infected.playerGetScore(p.getName()))
+						if (getRanks().getInt("Ranks." + s + ".Needed Score") <= getStat(p))
 						{
 							if (getRanks().getInt("Ranks." + s + ".Needed Score") > pointsNeed)
 							{
@@ -187,7 +193,7 @@ public class Main extends JavaPlugin implements Listener {
 
 					// If the score for the rank is less or equal to that of the
 					// players
-					if (getRanks().getInt("Ranks." + s + ".Needed Score") <= Infected.playerGetScore(p.getName()))
+					if (getRanks().getInt("Ranks." + s + ".Needed Score") <= getStat(p))
 					{
 
 						// If the score of the rank is more then the previously
@@ -209,6 +215,14 @@ public class Main extends JavaPlugin implements Listener {
 		String rankto = nextRank(p);
 		getConfig().set("Players." + p.getName(), rankto);
 		saveConfig();
+	}
+
+	public int getStat(Player p) {
+		if (getConfig().getBoolean("Use Score for ranks"))
+		{
+			return Infected.playerGetScore(p.getName());
+		} else
+			return Infected.playerGetPoints(p.getName());
 	}
 
 	public void reloadRanks() {

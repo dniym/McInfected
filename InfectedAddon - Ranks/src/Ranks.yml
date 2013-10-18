@@ -1,4 +1,4 @@
-# Infected Addon - Ranks Default Config v0.0.1
+# Infected Addon - Ranks Default Config v0.0.2
 # #
 # Being the lazy person i am, there is no way to make players go down ranks, 
 # this will be a feature added in the next version(If i get around to it...)
@@ -11,6 +11,9 @@ Ranks:
   Slayer:
     Prefix: '&2Slayer'
     Needed Score: 100
+    Default Class:
+      Human: Knight
+      Zombie: Assassin
     Rank Permissions:
     - infected.classes.human.slayor
     - infected.classes.zombie.slayor
@@ -18,6 +21,9 @@ Ranks:
   Killer:
     Prefix: '&cKiller'
     Needed Score: 300
+    Default Class:
+      Human: Knight
+      Zombie: Assassin
     Rank Permissions:
     - infected.classes.human.killer
     - infected.classes.zombie.killer
