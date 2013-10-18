@@ -21,7 +21,7 @@ public class Equip {
 
 
 		if(Main.humanClasses.containsKey(human.getName()) && Main.humanClasses.get(human.getName()).equalsIgnoreCase("None")){
-			Infected.playersetLastHumanClass(human);
+			Infected.playersetLastHumanClass(human, Main.humanClasses.get(human.getName()));
 			Main.humanClasses.remove(human.getName());
 		}
 		
@@ -78,7 +78,7 @@ public class Equip {
 			TagAPI.refreshPlayer(zombie);
 		
 		if(Main.zombieClasses.containsKey(zombie.getName()) && Main.zombieClasses.get(zombie.getName()).equalsIgnoreCase("None")){
-			Infected.playersetLastZombieClass(zombie);
+			Infected.playersetLastZombieClass(zombie , Main.zombieClasses.get(zombie.getName()));
 			Main.zombieClasses.remove(zombie.getName());
 		}
 		

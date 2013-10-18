@@ -1,7 +1,7 @@
 name: Infected
 main: me.xxsniperzzxx_sd.infected.Main
 author: xXSniperzzXx_SD
-version: 2.0.0
+version: 2.0.1
 description: MW3 Infected for Minecraft!
 softdepend: [DisguiseCraft, iDisguise, TagAPI, Vault, Factions, mcMMO]
 website: www.Youtube.com/user/SNiPERzCiinema

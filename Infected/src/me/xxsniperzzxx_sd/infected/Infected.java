@@ -459,11 +459,8 @@ public class Infected {
 		Reset.reset();
 	}
 
-	public static void playersetLastHumanClass(Player player) {
-		if (Main.humanClasses.get(player.getName()) == null || Main.humanClasses.get(player.getName()).equalsIgnoreCase("None"))
-			filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Human", "None");
-		else
-			filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Human", Main.humanClasses.get(player.getName()));
+	public static void playersetLastHumanClass(Player player, String classname) {
+		filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Human", classname);
 		filesSavePlayers();
 	}
 
@@ -474,11 +471,8 @@ public class Infected {
 			return filesGetPlayers().getString("Players." + player.getName().toLowerCase() + ".Last Class.Human");
 	}
 
-	public static void playersetLastZombieClass(Player player) {
-		if (Main.zombieClasses.get(player.getName()) == null || Main.zombieClasses.get(player.getName()).equalsIgnoreCase("None"))
-			filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Zombie", "None");
-		else
-			filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Zombie", Main.zombieClasses.get(player.getName()));
+	public static void playersetLastZombieClass(Player player , String classname) {
+		filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Zombie", classname);
 		filesSavePlayers();
 	}
 

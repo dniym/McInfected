@@ -45,9 +45,9 @@ public class Reset {
 		Main.Lasthit.remove(player.getName());
 		
 		if(Main.humanClasses.containsKey(player.getName()))
-			Infected.playersetLastHumanClass(player);
+			Infected.playersetLastHumanClass(player, Main.humanClasses.get(player.getName()));
 		if(Main.zombieClasses.containsKey(player.getName()))
-			Infected.playersetLastZombieClass(player);
+			Infected.playersetLastZombieClass(player, Main.zombieClasses.get(player.getName()));
 		
 		Main.humanClasses.remove(player.getName());
 		Main.zombieClasses.remove(player.getName());
