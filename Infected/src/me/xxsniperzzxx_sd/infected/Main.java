@@ -276,7 +276,10 @@ public class Main extends JavaPlugin {
 						player.setHealth(Main.Health.get(player.getName()));
 					}
 				}
-		MySQL.closeConnection();
+
+		if(getConfig().getBoolean("MySQL.Enable")){
+			MySQL.closeConnection();
+		}
 	}
 
 }
