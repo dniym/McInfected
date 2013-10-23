@@ -14,6 +14,7 @@ public enum Msgs {
 		CLASSES_DISABLED("Classes_Disabled"),
 		CLASSES_CHOOSEN("Classes_Chosen"),
 		SHOP_PURCHASE("Shop_Purchase"),
+		SHOP_GUIONLYINLOBBY("Shop_GuiOnlyInLobby"),
 		SHOP_INVALIDPOINTS("Shop_InvalidPoints"),
 		SHOP_NEEDMOREPOINTS("Shop_NeedMorePoints"),
 		GRENADE_DISABLED("Grenade_Disabled"),

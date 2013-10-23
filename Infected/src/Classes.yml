@@ -1,4 +1,4 @@
-# Default Classes.yml, Last Edited in v1.9.4
+# Default Classes.yml, Last Edited in v2.0.1
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -7,6 +7,7 @@
 # #
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
 # This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
+# You can use "/Infected Admin Code" To return the code for the item in your hand
 # #
 # If class is for humans don't bother with a disguise
 # As humans won't get the chance to be disguise anyways

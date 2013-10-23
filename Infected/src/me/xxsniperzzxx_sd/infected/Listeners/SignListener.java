@@ -224,55 +224,30 @@ public class SignListener implements Listener {
 										}
 									} else
 									{
-										if (Files.getShop().contains(itemname))
+										if (Files.getShop().contains("Custom Items."+itemname+".Item Code"))
 										{
-											ItemStack is = ItemHandler.getItemStack(Files.getShop().getString(itemname));
-											for (Material items : Material.values())
-											{
-												if (items == is.getType())
-												{
-													im = items;
-													break;
-												}
-											}
+											ItemStack is = ItemHandler.getItemStack(Infected.filesGetShop().getString("Custom Items." + itemname + ".Item Code"));
+											ItemMeta meta = is.getItemMeta();
+											meta.setDisplayName(itemname);
+											is.setItemMeta(meta);
 											if (price <= points)
 											{
-												if (player.hasPermission("Infected.Shop") || player.hasPermission("Infected.Shop." + itemname))
+												InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(
+														player, null, is, price);
+												Bukkit.getServer().getPluginManager().callEvent(shopEvent);
+												if (!shopEvent.isCancelled())
 												{
-													InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(
-															player, sign, is,
-															price);
-													Bukkit.getServer().getPluginManager().callEvent(shopEvent);
-													if (!shopEvent.isCancelled())
-													{
-														Infected.playerSetPoints(player.getName(), points, price);
-														ItemMeta i = is.getItemMeta();
-														if (!player.getInventory().contains(is))
-														{
-															i.setDisplayName("§e" + itemname);
-															is.setItemMeta(i);
-															player.getInventory().addItem(is);
-															if ((Files.getShop().getBoolean("Save Items") || Files.getShop().getIntegerList("Save These Items No Matter What").contains(is.getTypeId())) && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
-															{
-																if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
-																{
-																	Infected.playerSaveShopInventory(player);
-																}
-															}
-														} else
-														{
-															i.setDisplayName("§e" + itemname);
-															is.setItemMeta(i);
-															player.getInventory().addItem(is);
-														}
+													Infected.playerSetPoints(player.getName(), points, price);
+													
+														player.getInventory().addItem(is);
+													
 
-														player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
-														if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
+													player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
+													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
+													{
+														if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
 														{
-															if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
-															{
-																Infected.playerSaveShopInventory(player);
-															}
+															Infected.playerSaveShopInventory(player);
 														}
 													}
 												} else
@@ -284,7 +259,7 @@ public class SignListener implements Listener {
 											}
 											Files.savePlayers();
 											player.updateInventory();
-											event.setCancelled(true);
+	
 										} else
 										{
 											Location loc = event.getClickedBlock().getLocation();
@@ -458,9 +433,10 @@ public class SignListener implements Listener {
 						event.setCancelled(true);
 					} else
 					{
-						if (Files.getShop().contains(event.getLine(1)))
+						
+						if (Files.getShop().contains("Custom Items."+event.getLine(1)+".Item Code"))
 						{
-							String s = Files.getShop().getString(event.getLine(1));
+							String s = Files.getShop().getString("Custom Items."+event.getLine(1)+".Item Code");
 							Material im = null;
 							ItemStack is = new ItemStack(ItemHandler.getItem(s));
 							for (Material items : Material.values())
@@ -475,9 +451,9 @@ public class SignListener implements Listener {
 							{
 								String price = event.getLine(2);
 								boolean vault = false;
-								if (plugin.getConfig().getBoolean("Vault Support.Enable") && price.contains("\\"+plugin.getConfig().getString("Vault Support.Symbol")))
+								if (plugin.getConfig().getBoolean("Vault Support.Enable") && price.contains(plugin.getConfig().getString("Vault Support.Symbol")))
 									vault = true;
-								price = price.replaceAll("\\"+plugin.getConfig().getString("Vault Support.Symbol"), "");
+								price = price.replaceAll(plugin.getConfig().getString("Vault Support.Symbol"), "");
 								try
 								{
 									Integer.valueOf(price);
@@ -491,7 +467,7 @@ public class SignListener implements Listener {
 								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 								event.setLine(1, ChatColor.GRAY + event.getLine(1));
 								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? ("\\"+plugin.getConfig().getString("Vault Support.Symbol")): "") + price);
+								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? (plugin.getConfig().getString("Vault Support.Symbol")): "") + price);
 								
 
 							}

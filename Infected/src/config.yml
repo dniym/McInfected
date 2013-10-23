@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 2.0.0
+# Default Infected Config, Last edited in 2.0.1
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -7,6 +7,7 @@
 # #
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
 # This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
+# You can use "/Infected Admin Code" To return the code for the item in your hand
 # #
 # See Infecteds dev page for help
 # http://dev.bukkit.org/server-mods/infected-core

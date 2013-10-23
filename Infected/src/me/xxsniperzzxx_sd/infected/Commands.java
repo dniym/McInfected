@@ -139,14 +139,13 @@ public class Commands implements CommandExecutor {
 								Menus.openHumanMenu(player);
 							} else if (args[1].equalsIgnoreCase("Zombie"))
 							{
-
 								Menus.openZombieMenu(player);
 							} else
 								player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human>");
 						} else
 							player.sendMessage(plugin.I + ChatColor.RED + "No Classes were found...");
 					} else
-						player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human>");
+						Menus.chooseClass(player);
 				}
 
 				// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -426,7 +425,40 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 				}
-
+				// //////////////////////////////////////////////////////////////////////////////
+				// SHOP / STORE
+				else if (args.length > 0 && (args[0].equalsIgnoreCase("Shop") || args[0].equalsIgnoreCase("Store")))
+				{
+					if (!(sender instanceof Player))
+					{
+						sender.sendMessage(plugin.I + ChatColor.RED + "Expected a player!");
+						return true;
+					}
+					Player player = (Player) sender;
+					
+					if (!player.hasPermission("Infected.Shop"))
+					{
+						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
+						return true;
+					}
+					else if (!plugin.inGame.contains(player.getName()))
+					{
+						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOTINGAME, null, null));
+						return true;
+					}
+					else if (Infected.getGameState() == GameState.STARTED)
+					{
+						player.sendMessage(Messages.sendMessage(Msgs.SHOP_GUIONLYINLOBBY, null, null));
+						return true;
+					}
+					else
+					{
+						if (!Infected.filesGetShop().getBoolean("Use GUI"))
+						{
+							Menus.openShopMenu(player);
+						}
+					}
+				}
 				// //////////////////////////////////////////////////////////////////////////////
 				// GRENADES
 				else if (args.length > 0 && (args[0].equalsIgnoreCase("Grenades") || args[0].equalsIgnoreCase("Grenade")))
@@ -461,7 +493,6 @@ public class Commands implements CommandExecutor {
 					{
 						if (args.length != 1)
 						{
-
 							if (Infected.filesGetGrenades().getKeys(true) == null)
 							{
 								player.sendMessage(plugin.I + ChatColor.RED + " No Grenades were found...");
@@ -1092,23 +1123,23 @@ public class Commands implements CommandExecutor {
 					{
 						player.sendMessage(plugin.I + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======" + ChatColor.GOLD + " Admin Menu " + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======");
 						player.sendMessage(plugin.I + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.AQUA + "Add points to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add points to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.BLUE + "Add score to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add score to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "/Inf Admin KStats <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_AQUA + "Add kills to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add kills to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.DARK_BLUE + "/Inf Admin DStats <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_BLUE + "Add deaths to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add deaths to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_GRAY + "Kick a player out of Infected");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Kick a player out of Infected");
 						player.sendMessage(plugin.I + ChatColor.DARK_GREEN + "/Inf Admin Reset <Player>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_GREEN + "Reset a player's stats");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Reset a player's stats");
 						player.sendMessage(plugin.I + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_PURPLE + "Prevent joining Infected");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Prevent joining Infected");
 						player.sendMessage(plugin.I + ChatColor.DARK_RED + "/Inf Admin Reload");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_RED + "Reload the config");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Reload the config");
 						player.sendMessage(plugin.I + ChatColor.GOLD + "/Inf Admin Code");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.GOLD + "See Infected's item code for the item in hand");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"See Infected's item code for the item in hand");
 					}
 				}
 				// ////////////////////////////////////////////
