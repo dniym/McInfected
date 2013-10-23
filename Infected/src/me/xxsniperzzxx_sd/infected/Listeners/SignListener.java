@@ -224,7 +224,7 @@ public class SignListener implements Listener {
 										}
 									} else
 									{
-										if (Files.getShop().contains("Custom Items."+itemname+".Item Code"))
+										if (Files.getShop().contains("Custom Items." + itemname + ".Item Code"))
 										{
 											ItemStack is = ItemHandler.getItemStack(Infected.filesGetShop().getString("Custom Items." + itemname + ".Item Code"));
 											ItemMeta meta = is.getItemMeta();
@@ -238,9 +238,8 @@ public class SignListener implements Listener {
 												if (!shopEvent.isCancelled())
 												{
 													Infected.playerSetPoints(player.getName(), points, price);
-													
-														player.getInventory().addItem(is);
-													
+
+													player.getInventory().addItem(is);
 
 													player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, itemname));
 													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
@@ -259,40 +258,50 @@ public class SignListener implements Listener {
 											}
 											Files.savePlayers();
 											player.updateInventory();
-	
+
 										} else
 										{
-											Location loc = event.getClickedBlock().getLocation();
-											String i = Files.getSigns().getString("Shop Signs." + LocationHandler.getLocationToString(loc));
-											int itemi = ItemHandler.getItemID(i);
-											Material item = Material.getMaterial(itemi);
-											if (price < points + 1)
+											try
 											{
-												Infected.playerSetPoints(player.getName(), points, price);
-												ItemStack stack = ItemHandler.getItemStack(i);
-												if (!player.getInventory().contains(stack))
+												Location loc = event.getClickedBlock().getLocation();
+												String i = Files.getSigns().getString("Shop Signs." + LocationHandler.getLocationToString(loc));
+												int itemi = ItemHandler.getItemID(i);
+												Material item = Material.getMaterial(itemi);
+												if (price < points + 1)
 												{
-													player.getInventory().addItem(stack);
-													if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
+													Infected.playerSetPoints(player.getName(), points, price);
+													ItemStack stack = ItemHandler.getItemStack(i);
+													if (!player.getInventory().contains(stack))
 													{
-														if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
+														player.getInventory().addItem(stack);
+														if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(item.getId()))))
 														{
-															Infected.playerSaveShopInventory(player);
+															if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
+															{
+																Infected.playerSaveShopInventory(player);
+															}
 														}
+													} else
+													{
+														player.getInventory().addItem(new ItemStack(
+																item, +1));
 													}
+													player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, item.name()));
 												} else
 												{
-													player.getInventory().addItem(new ItemStack(
-															item, +1));
+													player.sendMessage(Messages.sendMessage(Msgs.SHOP_INVALIDPOINTS, player, null));
+													player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price - points)));
 												}
-												player.sendMessage(Messages.sendMessage(Msgs.SHOP_PURCHASE, player, item.name()));
-											} else
+												Files.savePlayers();
+												player.updateInventory();
+											} catch (NullPointerException npe)
 											{
-												player.sendMessage(Messages.sendMessage(Msgs.SHOP_INVALIDPOINTS, player, null));
-												player.sendMessage(Messages.sendMessage(Msgs.SHOP_NEEDMOREPOINTS, player, String.valueOf(price - points)));
+												npe.printStackTrace();
+												player.sendMessage(Main.I + ChatColor.RED + "It appears you're still using the old Custom Items, Please delete your current Shops.yml!");
+												System.out.println("");
+												System.out.println("!!!!! It appears you're still using the old Custom Items, Please delete your current Shops.yml !!!!!");
+												System.out.println("");
 											}
-											Files.savePlayers();
-											player.updateInventory();
 										}
 									}
 								} else if ((event.getClickedBlock().getTypeId() == 330 || event.getClickedBlock().getTypeId() == 96 || event.getClickedBlock().getTypeId() == 324 || event.getClickedBlock().getTypeId() == 69 || event.getClickedBlock().getTypeId() == 77 || event.getClickedBlock().getTypeId() == 143 || event.getClickedBlock().getTypeId() == 147 || event.getClickedBlock().getTypeId() == 148 || event.getClickedBlock().getTypeId() == 70 || event.getClickedBlock().getTypeId() == 72) && !Files.getGrenades().contains(String.valueOf(player.getItemInHand().getTypeId())) && !plugin.getConfig().getBoolean("Allow Interacting"))
@@ -433,10 +442,10 @@ public class SignListener implements Listener {
 						event.setCancelled(true);
 					} else
 					{
-						
-						if (Files.getShop().contains("Custom Items."+event.getLine(1)+".Item Code"))
+
+						if (Files.getShop().contains("Custom Items." + event.getLine(1) + ".Item Code"))
 						{
-							String s = Files.getShop().getString("Custom Items."+event.getLine(1)+".Item Code");
+							String s = Files.getShop().getString("Custom Items." + event.getLine(1) + ".Item Code");
 							Material im = null;
 							ItemStack is = new ItemStack(ItemHandler.getItem(s));
 							for (Material items : Material.values())
@@ -467,14 +476,13 @@ public class SignListener implements Listener {
 								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 								event.setLine(1, ChatColor.GRAY + event.getLine(1));
 								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? (plugin.getConfig().getString("Vault Support.Symbol")): "") + price);
-								
+								event.setLine(3, ChatColor.DARK_RED + "Cost: " + (vault ? (plugin.getConfig().getString("Vault Support.Symbol")) : "") + price);
 
 							}
 						} else
 						{
 							int itemid;
-							
+
 							try
 							{
 								itemid = ItemHandler.getItemID(event.getLine(1));
@@ -498,10 +506,10 @@ public class SignListener implements Listener {
 							{
 								boolean vault = false;
 								String price = event.getLine(2);
-							
+
 								if (plugin.getConfig().getBoolean("Vault Support.Enable") && price.contains(plugin.getConfig().getString("Vault Support.Symbol")))
 									vault = true;
-								
+
 								price = price.replaceAll(plugin.getConfig().getString("Vault Support.Symbol"), "");
 								try
 								{
@@ -514,10 +522,10 @@ public class SignListener implements Listener {
 								}
 								Material item = Material.getMaterial(Integer.valueOf(itemid));
 								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-								event.setLine(1, ChatColor.GRAY + item.name().toUpperCase() + (itemdata == 0 ? "" :":" + itemdata));
+								event.setLine(1, ChatColor.GRAY + item.name().toUpperCase() + (itemdata == 0 ? "" : ":" + itemdata));
 								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? (plugin.getConfig().getString("Vault Support.Symbol")): "") + price);
-								
+								event.setLine(3, ChatColor.DARK_RED + "Cost: " + (vault ? (plugin.getConfig().getString("Vault Support.Symbol")) : "") + price);
+
 								Location loc = event.getBlock().getLocation();
 								Infected.filesGetSigns().set("Shop Signs." + LocationHandler.getLocationToString(loc), itemid + ":" + Integer.valueOf(itemdata));
 								Infected.filesSaveSigns();
