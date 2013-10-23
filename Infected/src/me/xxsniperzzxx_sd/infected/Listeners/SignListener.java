@@ -512,7 +512,6 @@ public class SignListener implements Listener {
 							Material im = null;
 							itemid = ItemHandler.getItemID(event.getLine(1));
 							short itemdata = ItemHandler.getItemData(event.getLine(1));
-							System.out.println(itemdata);
 							for (Material item : Material.values())
 								if (item.getId() == Integer.valueOf(itemid))
 								{
@@ -524,10 +523,10 @@ public class SignListener implements Listener {
 								boolean vault = false;
 								String price = event.getLine(2);
 							
-								if (plugin.getConfig().getBoolean("Vault Support.Enable") && price.contains("\\"+plugin.getConfig().getString("Vault Support.Symbol")))
+								if (plugin.getConfig().getBoolean("Vault Support.Enable") && price.contains(plugin.getConfig().getString("Vault Support.Symbol")))
 									vault = true;
 								
-								price = price.replaceAll("\\"+plugin.getConfig().getString("Vault Support.Symbol"), "");
+								price = price.replaceAll(plugin.getConfig().getString("Vault Support.Symbol"), "");
 								try
 								{
 									Integer.valueOf(price);
@@ -541,7 +540,7 @@ public class SignListener implements Listener {
 								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 								event.setLine(1, ChatColor.GRAY + item.name().toUpperCase() + (itemdata == 0 ? "" :":" + itemdata));
 								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? ("\\"+plugin.getConfig().getString("Vault Support.Symbol")): "") + price);
+								event.setLine(3, ChatColor.DARK_RED + "Cost: " +(vault ? (plugin.getConfig().getString("Vault Support.Symbol")): "") + price);
 								
 								Location loc = event.getBlock().getLocation();
 								Infected.filesGetSigns().set("Shop Signs." + LocationHandler.getLocationToString(loc), itemid + ":" + Integer.valueOf(itemdata));

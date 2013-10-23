@@ -19,6 +19,7 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Vote;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Handlers.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 
 import org.bukkit.Bukkit;
@@ -58,7 +59,6 @@ public class Commands implements CommandExecutor {
 			Bukkit.getServer().getPluginManager().callEvent(cmdEvent);
 			if (!cmdEvent.isCancelled())
 			{
-				// CHAT
 				if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 				{
 					// Is the sender a player
@@ -219,10 +219,14 @@ public class Commands implements CommandExecutor {
 
 						// Safe player's stats/stuff
 
-						InfectedPlayerJoinEvent joinEvent = new InfectedPlayerJoinEvent(player, Main.inGame, Main.me.getConfig().getInt("Automatic Start.Minimum Players"));
+						InfectedPlayerJoinEvent joinEvent = new InfectedPlayerJoinEvent(
+								player,
+								Main.inGame,
+								Main.me.getConfig().getInt("Automatic Start.Minimum Players"));
 						Bukkit.getServer().getPluginManager().callEvent(joinEvent);
-						
-						if(!joinEvent.isCancelled()){
+
+						if (!joinEvent.isCancelled())
+						{
 							Main.inGame.add(player.getName());
 							Main.Spot.put(player.getName(), LocationHandler.getLocationToString(player.getLocation()));
 							Main.Health.put(player.getName(), player.getHealth());
@@ -235,16 +239,16 @@ public class Commands implements CommandExecutor {
 							Main.Winners.clear();
 							Main.inLobby.add(player.getName());
 							Main.gamemode.put(player.getName(), player.getGameMode().toString());
-					
+
 							if (Main.config.getBoolean("ScoreBoard Support"))
 							{
 								ScoreBoard.updateScoreBoard();
 							}
-					
+
 							if (Main.config.getBoolean("Disguise Support.Enabled"))
 								if (Disguises.isPlayerDisguised(player))
 									Disguises.unDisguisePlayer(player);
-					
+
 							// Prepare player
 							player.setMaxHealth(20.0);
 							player.setHealth(20.0);
@@ -254,44 +258,41 @@ public class Commands implements CommandExecutor {
 								player.removePotionEffect(reffect.getType());
 							}
 							Reset.resetPlayersInventory(player);
-							
+
 							if (Main.bVersion.equalsIgnoreCase(plugin.updateBukkitVersion))
 							{
 								if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
 									player.getInventory().setContents(Infected.playerGetShopInventory(player));
 							}
 							player.sendMessage(Messages.sendMessage(Msgs.LOBBY_JOINLOBBY, null, null));
-					
+
 							player.setGameMode(GameMode.ADVENTURE);
 							player.setFlying(false);
-					
+
 							if (!Infected.playergetLastHumanClass(player).equalsIgnoreCase("None"))
 								Main.humanClasses.put(player.getName(), Infected.playergetLastHumanClass(player));
-					
+
 							if (!Infected.playergetLastZombieClass(player).equalsIgnoreCase("None"))
 								Main.zombieClasses.put(player.getName(), Infected.playergetLastZombieClass(player));
-					
+
 							if (!Main.KillStreaks.containsKey(player.getName()))
 								Main.KillStreaks.put(player.getName(), Integer.valueOf("0"));
-					
+
 							if (Main.inGame.size() >= Main.me.getConfig().getInt("Automatic Start.Minimum Players") && Infected.getGameState() == GameState.INLOBBY && Main.me.getConfig().getBoolean("Automatic Start.Use"))
 							{
 								Game.START();
-							}
-							else if (Infected.getGameState() == GameState.VOTING)
+							} else if (Infected.getGameState() == GameState.VOTING)
 							{
 								player.sendMessage(Messages.sendMessage(Msgs.VOTE_HOWTOVOTE, null, null));
 								player.performCommand("Infected Arenas");
-								
-							}
-							else if (Infected.getGameState() == GameState.STARTED)
+
+							} else if (Infected.getGameState() == GameState.STARTED)
 							{
 								player.setGameMode(GameMode.SURVIVAL);
 								Zombify.joinInfectHuman(player);
 								Infected.delPlayerInLobby(player);
-								
-							}
-							else if (Infected.getGameState() == GameState.BEFOREINFECTED)
+
+							} else if (Infected.getGameState() == GameState.BEFOREINFECTED)
 							{
 								if (Main.config.getBoolean("ScoreBoard Support"))
 								{
@@ -758,7 +759,7 @@ public class Commands implements CommandExecutor {
 								if (player.hasPermission("Infected.Admin"))
 									pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "       Menu" + "\n\n" + ChatColor.AQUA + "/Inf Admin Points <Player> <#>\n" + ChatColor.BLACK + "/Inf Admin Score <Player> <#>\n" + ChatColor.BLUE + "/Inf Admin KStats <Player> <#>\n" + ChatColor.DARK_AQUA + "/Inf Admin DStats <Player> <#>\n" + ChatColor.DARK_GREEN + "/Inf Admin Kick <Player>\n" + ChatColor.DARK_BLUE + "/Inf Admin Reload\n");
 								if (player.hasPermission("Infected.Admin"))
-									pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "     Menu (2)" + "\n\n" + ChatColor.DARK_PURPLE + "/Inf Admin Reset <Player>\n" + ChatColor.GOLD + "/Inf Admin Shutdown\n");
+									pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "     Menu (2)" + "\n\n" + ChatColor.DARK_PURPLE + "/Inf Admin Reset <Player>\n" + ChatColor.GOLD + "/Inf Admin Shutdown\n" + ChatColor.LIGHT_PURPLE + "/Inf Admin Code\n");
 								if (player.hasPermission("Infected.SetUp"))
 									pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " How To Set Up \n" + "     Infected" + "\n\n" + ChatColor.RED + "1. " + ChatColor.DARK_GRAY + "Build a lobby\n" + ChatColor.RED + "2. " + ChatColor.DARK_GRAY + "Set the lobby spawn point where you're standing using the" + ChatColor.GREEN + " /Inf SetLobby" + ChatColor.DARK_GRAY + " command\n" + ChatColor.RED + "3. " + ChatColor.DARK_GRAY + "Build an arena\n");
 								if (player.hasPermission("Infected.SetUp"))
@@ -996,7 +997,7 @@ public class Commands implements CommandExecutor {
 						if (plugin.possibleArenas.size() > 1)
 							possible.append(", ");
 					}
-					player.sendMessage(plugin.I + ChatColor.GRAY + "Arenas: " + ChatColor.GREEN + possible.toString() + " - "+ChatColor.DARK_GRAY + possibleU.toString());
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Arenas: " + ChatColor.GREEN + possible.toString() + " - " + ChatColor.DARK_GRAY + possibleU.toString());
 					plugin.possibleArenasU.clear();
 					return true;
 				}
@@ -1032,6 +1033,11 @@ public class Commands implements CommandExecutor {
 							System.out.println("====================");
 
 							player.sendMessage(plugin.I + "Infecteds Files have been reloaded");
+						} else if (args[1].equalsIgnoreCase("Code"))
+						{
+							player.sendMessage(plugin.I + "Code: " + ChatColor.WHITE + ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
+							player.sendMessage(plugin.I + "This code has also been sent to your console to allow for copy and paste!");
+							System.out.println(ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
 						} else
 						{
 							player.sendMessage(plugin.I + ChatColor.RED + "Unknown Admin Command, Type /Infected Admin");
@@ -1084,15 +1090,25 @@ public class Commands implements CommandExecutor {
 						}
 					} else
 					{
-						player.sendMessage(plugin.I + ChatColor.YELLOW + "------= Admin Menu =------");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Points <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Score <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin KStats <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin DStats <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Kick <Player>");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Reset <Player>");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Shutdown");
-						player.sendMessage(plugin.I + ChatColor.GRAY + "/Inf Admin Reload");
+						player.sendMessage(plugin.I + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======" + ChatColor.GOLD + " Admin Menu " + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======");
+						player.sendMessage(plugin.I + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.AQUA + "Add points to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.BLUE + "Add score to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "/Inf Admin KStats <Player> <#>");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_AQUA + "Add kills to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.DARK_BLUE + "/Inf Admin DStats <Player> <#>");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_BLUE + "Add deaths to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_GRAY + "Kick a player out of Infected");
+						player.sendMessage(plugin.I + ChatColor.DARK_GREEN + "/Inf Admin Reset <Player>");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_GREEN + "Reset a player's stats");
+						player.sendMessage(plugin.I + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_PURPLE + "Prevent joining Infected");
+						player.sendMessage(plugin.I + ChatColor.DARK_RED + "/Inf Admin Reload");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.DARK_RED + "Reload the config");
+						player.sendMessage(plugin.I + ChatColor.GOLD + "/Inf Admin Code");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.GOLD + "See Infected's item code for the item in hand");
 					}
 				}
 				// ////////////////////////////////////////////
@@ -1286,7 +1302,7 @@ public class Commands implements CommandExecutor {
 					}
 					Infected.filesSaveArenas();
 					Infected.filesReloadArenas();
-					player.sendMessage(plugin.I + plugin.Creating.get(player.getName()) + " spawn #" + ChatColor.YELLOW + Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns").size() + ChatColor.GRAY + " set at your location!");
+					player.sendMessage(plugin.I + plugin.Creating.get(player.getName()) + " spawn #" + ChatColor.YELLOW + Infected.filesGetArenas().getStringList("Arenas." + plugin.Creating.get(sender.getName()) + ".Spawns").size() + ChatColor.LIGHT_PURPLE + " set at your location!");
 					return true;
 				}
 
@@ -1314,7 +1330,9 @@ public class Commands implements CommandExecutor {
 							plugin.possibleArenas.clear();
 							if (Infected.filesGetArenas().getConfigurationSection("Arenas") == null)
 							{
-								player.sendMessage(plugin.I + "Arena '" + arena + "' created.");
+
+								player.sendMessage(plugin.I + "Arena " + ChatColor.WHITE + ChatColor.BOLD + arena + ChatColor.LIGHT_PURPLE + " created.");
+								player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.DARK_AQUA + " to finish the arena!");
 								Infected.filesGetArenas().set("Arenas." + arena + ".Plain Zombie Survival", false);
 								String[] list = { "55", "20" };
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
@@ -1340,8 +1358,9 @@ public class Commands implements CommandExecutor {
 							}
 							if (plugin.possibleArenas.isEmpty())
 							{
-								player.sendMessage(plugin.I + "Arena '" + arena + "' created.");
-								player.sendMessage(plugin.I + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.GRAY + " to finish the arena!");
+
+								player.sendMessage(plugin.I + "Arena " + ChatColor.WHITE + ChatColor.BOLD + arena + ChatColor.GRAY + " created.");
+								player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.DARK_AQUA + " to finish the arena!");
 								Infected.filesGetArenas().set("Arenas." + arena + ".World", player.getWorld().getName());
 								String[] list = { "55", "20" };
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
@@ -1366,8 +1385,8 @@ public class Commands implements CommandExecutor {
 								return true;
 							} else
 							{
-								player.sendMessage(plugin.I + "Arena '" + arena + "' created.");
-								player.sendMessage(plugin.I + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.GRAY + " to finish the arena!");
+								player.sendMessage(plugin.I + "Arena " + ChatColor.WHITE + ChatColor.BOLD + arena + ChatColor.GRAY + " created.");
+								player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.DARK_AQUA + " to finish the arena!");
 								String[] list = { "55", "20" };
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
 								Infected.filesGetArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
@@ -1558,15 +1577,12 @@ public class Commands implements CommandExecutor {
 							player.performCommand("Infected arenas");
 						}
 					}
-				}
-				else if(args.length > 0 && args[0].equalsIgnoreCase("Addons")){
+				} else if (args.length > 0 && args[0].equalsIgnoreCase("Addons"))
+				{
 					CommandSender player = sender;
 					player.sendMessage("");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.Enabled") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Plugin:" + "" 
-							+ ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.DisguiseCraft") ? (""+ChatColor.GREEN + ChatColor.ITALIC +"DisguiseCraft") : "") 
-							+ (plugin.getConfig().getBoolean("Disguise Support.iDisguise") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "iDisguise") : "")
-							+ (plugin.getConfig().getBoolean("Disguise Support.LibsDisguises") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "LibsDisguises") : ""));
+					player.sendMessage(plugin.I + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.DisguiseCraft") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "DisguiseCraft") : "") + (plugin.getConfig().getBoolean("Disguise Support.iDisguise") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "iDisguise") : "") + (plugin.getConfig().getBoolean("Disguise Support.LibsDisguises") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "LibsDisguises") : ""));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("CrackShot Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Zombie Abilities: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("TagAPI Support.Enable") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
@@ -1577,8 +1593,7 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Grenades: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (Infected.filesGetGrenades().getBoolean("Use") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Shop: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (Infected.filesGetShop().getBoolean("Use") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					player.sendMessage("");
-				}
-				else
+				} else
 				{
 					CommandSender player = sender;
 					player.sendMessage("");
@@ -1589,15 +1604,16 @@ public class Commands implements CommandExecutor {
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "xXSniperzzXx_SD");
 					player.sendMessage(plugin.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + plugin.v);
 					player.sendMessage(plugin.I + ChatColor.GRAY + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
-					
+
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "For Help type: /Infected Help");
 					player.sendMessage(plugin.I + ChatColor.YELLOW + "For Addons type: /Infected Addons");
 
 					return true;
 				}
-				
+
 			}
 			Infected.filesSafeAll();
+
 		}
 		return true;
 	}

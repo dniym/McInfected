@@ -10,6 +10,18 @@
 # #
 # See Infecteds dev page for help
 # http://dev.bukkit.org/server-mods/infected-core
+# #   
+# # +======================================================+ #
+# # |                After Game Rewards                    | #
+# # +======================================================+ #
+# # MySQL information, should be self explained for those of you that use it
+# # Restart the server for this to take effect
+# MySQL:
+#   Host: 127.0.0.1
+#   Port: 25565
+#   Database: minecraft
+#   Username: user
+#   Password: pass
 # # +======================================================+ #
 # # |                      Updates                         | #
 # # +======================================================+ #
@@ -201,6 +213,13 @@
 # have to reset it every version. Because I still add to this config.
 # # 
 # # +======================================================+ #
+MySQL:
+  Enable: false
+  Host: 127.0.0.1
+  Port: 25565
+  Database: minecraft
+  Username: user
+  Password: pass
 
 Check For Updates:
   Enable: true

@@ -28,7 +28,7 @@ public class TagApi implements Listener {
 		{
 			if (Infected.isPlayerHuman(e.getNamedPlayer()))
 			{
-				String string = ChatColor.GREEN + e.getNamedPlayer().getName();
+				String string = ChatColor.DARK_GREEN + e.getNamedPlayer().getName();
 				String s = string.substring(0, Math.min(string.length(), 16));
 				e.setTag(s);
 			}
@@ -38,7 +38,7 @@ public class TagApi implements Listener {
 					String s = string.substring(0, Math.min(string.length(), 16));
 					e.setTag(s);
 			} else{
-					String string = ChatColor.GOLD + e.getNamedPlayer().getName();
+					String string = ChatColor.UNDERLINE + e.getNamedPlayer().getName();
 					String s = string.substring(0, Math.min(string.length(), 16));
 					e.setTag(s);
 			}

@@ -3,6 +3,7 @@ package me.xxsniperzzxx_sd.infected;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,6 +21,8 @@ import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import me.xxsniperzzxx_sd.infected.Tools.Handlers.LocationHandler;
 import net.milkbowl.vault.economy.Economy;
 
+import code.husky.mysql.MySQL;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -34,6 +37,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
+
 
 public class Main extends JavaPlugin {
 
@@ -76,7 +80,7 @@ public class Main extends JavaPlugin {
 	public static HashMap<Location, Material> Blocks = new HashMap<Location, Material>();
 	public static HashMap<Location, ItemStack[]> Chests = new HashMap<Location, ItemStack[]>();
 
-	public static String I = "" + ChatColor.DARK_RED + ChatColor.BOLD + "«" + ChatColor.RESET + ChatColor.DARK_GRAY + ChatColor.BOLD +"Infected" + ChatColor.DARK_RED + ChatColor.BOLD + "»" + ChatColor.RESET + ChatColor.GRAY + " ";
+	public static String I = "" + ChatColor.DARK_RED + ChatColor.BOLD + "«" + ChatColor.DARK_GRAY + ChatColor.BOLD + "Infected" + ChatColor.DARK_RED + ChatColor.BOLD + "»" + ChatColor.LIGHT_PURPLE + " ";
 
 	public static String playingin = null;
 	public static int timestart;
@@ -106,6 +110,9 @@ public class Main extends JavaPlugin {
 	// Plugin Addons
 	public static Plugin Disguiser;
 	public static Economy economy = null;
+	
+	public static MySQL MySQL = null;
+	public static Connection c = null;
 
 	// public NamedItemStack NIS;
 
@@ -151,25 +158,27 @@ public class Main extends JavaPlugin {
 		{
 			try
 			{
-				Updater updater = new Updater(this, 44622, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+				Updater updater = new Updater(this, 44622, getFile(),
+						Updater.UpdateType.NO_DOWNLOAD, false);
 
 				Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				Main.name = updater.getLatestName();
 
 				System.out.println(v.replaceAll(".", ""));
 				System.out.println(updater.getLatestFileVersion().replaceAll(".", ""));
-				
+
 				int currentVersion = Integer.valueOf(v.replaceAll("\\.", ""));
 				int newVersion = Integer.valueOf(updater.getLatestFileVersion().replaceAll("\\.", ""));
 
-				if(currentVersion >= newVersion){
+				if (currentVersion >= newVersion)
+				{
 					System.out.println("You are running a beta version of Infected!");
 					update = false;
 				}
-				
+
 				else
 					System.out.println("You need to update Infected to: " + updater.getLatestFileVersion());
-		
+
 			} catch (Exception ex)
 			{
 				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
@@ -216,7 +225,11 @@ public class Main extends JavaPlugin {
 			System.out.println("Your Bukkit Version: |" + currentBukkitVersion + "|");
 			System.out.println("Versions do not match so I am not responsible for any errors on your server!");
 		}
-
+		if(getConfig().getBoolean("MySQL.Enable")){
+			MySQL = new MySQL(this, getConfig().getString("MySQL.Host"), getConfig().getString("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Pass"));
+			c = MySQL.openConnection();
+		}
+		
 		System.out.println("====================");
 	}
 
@@ -263,6 +276,7 @@ public class Main extends JavaPlugin {
 						player.setHealth(Main.Health.get(player.getName()));
 					}
 				}
+		MySQL.closeConnection();
 	}
 
 }

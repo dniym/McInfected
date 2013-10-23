@@ -1,6 +1,9 @@
 
 package me.xxsniperzzxx_sd.infected;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
@@ -201,12 +204,22 @@ public class Infected {
 	}
 
 	public static void playerSetKills(String name, Integer kills) {
-		Files.getPlayers().set("Players." + "Players." + name.toLowerCase() + ".Kills", kills);
-		Files.savePlayers();
+
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			setMySQLStats(name, "Kills", kills);
+		else
+		{
+			Files.getPlayers().set("Players." + "Players." + name.toLowerCase() + ".Kills", kills);
+			Files.savePlayers();
+		}
 	}
 
 	public static int playerGetKills(String name) {
-		return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Kills");
+
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			return Integer.valueOf(getMySQLStats(name, "Kills"));
+		else
+			return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Kills");
 	}
 
 	public static void playerDelKills(String name) {
@@ -214,12 +227,21 @@ public class Infected {
 	}
 
 	public static void playerSetDeaths(String name, Integer deaths) {
-		Files.getPlayers().set("Players." + "Players." + name.toLowerCase() + ".Deaths", deaths);
-		Files.savePlayers();
+
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			setMySQLStats(name, "Deaths", deaths);
+		else
+		{
+			Files.getPlayers().set("Players." + "Players." + name.toLowerCase() + ".Deaths", deaths);
+			Files.savePlayers();
+		}
 	}
 
 	public static int playerGetDeaths(String name) {
-		return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Deaths");
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			return Integer.valueOf(getMySQLStats(name, "Deaths"));
+		else
+			return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Deaths");
 	}
 
 	public static void playerDelDeaths(String name) {
@@ -227,21 +249,32 @@ public class Infected {
 	}
 
 	public static void playerSetPoints(String name, Integer points, Integer price) {
-		if (Main.config.getBoolean("Vault Support.Enable"))
+
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			setMySQLStats(name, "Points", points - price);
+		else
 		{
-			Main.economy.withdrawPlayer(name, price);
-		} else
-		{
-			Files.getPlayers().set("Players." + name.toLowerCase() + ".Points", points - price);
-			Files.savePlayers();
+			if (Main.config.getBoolean("Vault Support.Enable"))
+			{
+				Main.economy.withdrawPlayer(name, price);
+			} else
+			{
+				Files.getPlayers().set("Players." + name.toLowerCase() + ".Points", points - price);
+				Files.savePlayers();
+			}
 		}
 	}
 
 	public static int playerGetPoints(String name) {
-		if (Main.config.getBoolean("Vault Support.Enable"))
-			return (int) Main.economy.getBalance(name);
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			return Integer.valueOf(getMySQLStats(name, "Points"));
 		else
-			return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Points");
+		{
+			if (Main.config.getBoolean("Vault Support.Enable"))
+				return (int) Main.economy.getBalance(name);
+			else
+				return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Points");
+		}
 	}
 
 	public static void playerDelPoints(String name) {
@@ -250,12 +283,21 @@ public class Infected {
 	}
 
 	public static void playerSetScore(String name, Integer score) {
-		Files.getPlayers().set("Players." + name.toLowerCase() + ".Score", score);
-		Files.savePlayers();
+
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			setMySQLStats(name, "Score", score);
+		else
+		{
+			Files.getPlayers().set("Players." + name.toLowerCase() + ".Score", score);
+			Files.savePlayers();
+		}
 	}
 
 	public static int playerGetScore(String name) {
-		return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Score");
+		if (Main.me.getConfig().getBoolean("MySQL.Enable"))
+			return Integer.valueOf(getMySQLStats(name, "Score"));
+		else
+			return Files.getPlayers().getInt("Players." + name.toLowerCase() + ".Score");
 	}
 
 	public static void playerDelScore(String name) {
@@ -471,7 +513,7 @@ public class Infected {
 			return filesGetPlayers().getString("Players." + player.getName().toLowerCase() + ".Last Class.Human");
 	}
 
-	public static void playersetLastZombieClass(Player player , String classname) {
+	public static void playersetLastZombieClass(Player player, String classname) {
 		filesGetPlayers().set("Players." + player.getName().toLowerCase() + ".Last Class.Zombie", classname);
 		filesSavePlayers();
 	}
@@ -495,16 +537,19 @@ public class Infected {
 		return Main.Lasthit.containsKey(player.getName());
 	}
 
-	public static String playergetHumanClass(Player player){
+	public static String playergetHumanClass(Player player) {
 		return Main.humanClasses.get(player.getName());
 	}
-	public static String playergetZombieClass(Player player){
+
+	public static String playergetZombieClass(Player player) {
 		return Main.zombieClasses.get(player.getName());
 	}
-	public static boolean playerhasHumanClass(Player player){
+
+	public static boolean playerhasHumanClass(Player player) {
 		return Main.humanClasses.containsKey(player.getName());
 	}
-	public static boolean playerhasZombieClass(Player player){
+
+	public static boolean playerhasZombieClass(Player player) {
 		return Main.zombieClasses.containsKey(player.getName());
 	}
 
@@ -530,5 +575,49 @@ public class Infected {
 				}
 			}
 		}
+	}
+
+	private static String getMySQLStats(String name, String stat) {
+		String kills = "0";
+
+		Statement statement;
+		try
+		{
+			statement = Main.c.createStatement();
+		
+		ResultSet res;
+
+		res = statement.executeQuery("SELECT * FROM " + stat + " WHERE PlayerName = '" + name + "';");
+
+		res.next();
+
+		if (res.getString("PlayerName") == null)
+		{
+			kills = "0";
+		} else
+		{
+			kills = res.getString("stat");
+		}
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return kills;
+	}
+
+	private static void setMySQLStats(String name, String stat, int value){
+		Statement statement;
+		try
+		{
+			statement = Main.c.createStatement();
+		
+		statement.executeUpdate("INSERT INTO Kills (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
