@@ -4,6 +4,8 @@ package me.xxsniperzzxx_sd.infected;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -228,6 +230,17 @@ public class Main extends JavaPlugin {
 		if(getConfig().getBoolean("MySQL.Enable")){
 			MySQL = new MySQL(this, getConfig().getString("MySQL.Host"), getConfig().getString("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Pass"));
 			c = MySQL.openConnection();
+			 try
+			{
+				 Statement state = c.createStatement();
+			
+				state.executeUpdate("CREATE TABLE IF NOT EXISTS Infected (Player CHAR(16), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10));");
+			} catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	            
 		}
 		
 		System.out.println("====================");
