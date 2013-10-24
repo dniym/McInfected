@@ -612,7 +612,7 @@ public class Infected {
 		{
 			statement = Main.c.createStatement();
 		
-		statement.executeUpdate("INSERT INTO Kills (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
+		statement.executeUpdate("INSERT INTO Infected (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
