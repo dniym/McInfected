@@ -578,41 +578,42 @@ public class Infected {
 	}
 
 	private static String getMySQLStats(String name, String stat) {
-		String kills = "0";
+		String value = "0";
 
 		Statement statement;
 		try
 		{
 			statement = Main.c.createStatement();
-		
-		ResultSet res;
 
-		res = statement.executeQuery("SELECT * FROM " + stat + " WHERE PlayerName = '" + name + "';");
+			ResultSet res;
 
-		res.next();
+			res = statement.executeQuery("SELECT * FROM " + stat + " WHERE PlayerName = '" + name + "';");
 
-		if (res.getString("PlayerName") == null)
-		{
-			kills = "0";
-		} else
-		{
-			kills = res.getString("stat");
-		}
+			res.next();
+
+			if (res.getString("PlayerName") == null)
+			{
+				value = "0";
+			} else
+			{
+				value = res.getString("stat");
+			}
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			value = "0";
 		}
-		return kills;
+		return value;
 	}
 
-	private static void setMySQLStats(String name, String stat, int value){
+	private static void setMySQLStats(String name, String stat, int value) {
 		Statement statement;
 		try
 		{
 			statement = Main.c.createStatement();
-		
-		statement.executeUpdate("INSERT INTO Infected (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
+
+			statement.executeUpdate("INSERT INTO Infected (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
