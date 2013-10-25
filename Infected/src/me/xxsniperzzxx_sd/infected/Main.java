@@ -112,7 +112,7 @@ public class Main extends JavaPlugin {
 	// Plugin Addons
 	public static Plugin Disguiser;
 	public static Economy economy = null;
-	
+
 	public static MySQL MySQL = null;
 	public static Connection c = null;
 
@@ -227,22 +227,29 @@ public class Main extends JavaPlugin {
 			System.out.println("Your Bukkit Version: |" + currentBukkitVersion + "|");
 			System.out.println("Versions do not match so I am not responsible for any errors on your server!");
 		}
-		if(getConfig().getBoolean("MySQL.Enable")){
-			MySQL = new MySQL(this, getConfig().getString("MySQL.Host"), getConfig().getString("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Pass"));
+		if (getConfig().getBoolean("MySQL.Enable"))
+		{
+
+			System.out.println("Attempting to connect to MySQL");
+			MySQL = new MySQL(this, getConfig().getString("MySQL.Host"),
+					getConfig().getString("MySQL.Port"),
+					getConfig().getString("MySQL.Database"),
+					getConfig().getString("MySQL.User"),
+					getConfig().getString("MySQL.Pass"));
 			c = MySQL.openConnection();
-			 try
+			try
 			{
-				 Statement state = c.createStatement();
-			
+				Statement state = c.createStatement();
+
 				state.executeUpdate("CREATE TABLE IF NOT EXISTS Infected (Player CHAR(16), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10));");
 			} catch (SQLException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	            
+
 		}
-		
+
 		System.out.println("====================");
 	}
 
@@ -290,7 +297,8 @@ public class Main extends JavaPlugin {
 					}
 				}
 
-		if(getConfig().getBoolean("MySQL.Enable")){
+		if (getConfig().getBoolean("MySQL.Enable"))
+		{
 			MySQL.closeConnection();
 		}
 	}
