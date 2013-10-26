@@ -19,7 +19,7 @@
 # # Restart the server for this to take effect
 # MySQL:
 #   Host: 127.0.0.1
-#   Port: 25565
+#   Port: 3306
 #   Database: minecraft
 #   Username: user
 #   Password: pass
@@ -217,7 +217,7 @@
 MySQL:
   Enable: false
   Host: 127.0.0.1
-  Port: 25565
+  Port: 3306
   Database: minecraft
   Username: user
   Password: pass
