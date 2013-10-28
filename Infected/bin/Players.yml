@@ -1,0 +1,15 @@
+# Default Players.yml, Last Edited in 1.9.4
+# #
+# Players:
+#   xxsniperzzxx_sd:
+#     Kills: 666
+#     Deaths: 0
+#     Points: 1337
+#     Score: 9999
+#     Time: 9000
+#     KillStreak: 100
+#     Last Class:
+#       Human: Knight
+#       Zombie: None
+# +======================================================+ #
+Players: []
