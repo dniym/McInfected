@@ -3,9 +3,12 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,21 +50,18 @@ public class CrackShotApi implements Listener {
 					e.setCancelled(true);
 				
 				else{
-					//If the attack happened before the game started
-					if(Infected.getGameState() == GameState.VOTING)
-						e.setCancelled(true);
-
-					//Before a zombie is chosen	
-					else if(Infected.getGameState() == GameState.BEFOREINFECTED){
+					Lobby Lobby = Main.Lobby;
+					 if(Lobby.getGameState() != GameState.Started){
 						e.setDamage(0);
 						e.setCancelled(true);
 					}
 				
 					//If the game has fully started
 					else{
+						InfPlayer IPV = InfPlayerManager.getPlayer(victim);
 						
 						//Saves who hit the person last
-						Main.Lasthit.put(victim.getName(), killer.getName());
+						IPV.setLastDamager(killer);
 						
 						//If it was enough to kill the player
 						if(victim.getHealth() - e.getDamage() <= 0){
