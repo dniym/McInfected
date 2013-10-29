@@ -28,6 +28,9 @@ public class GrenadeManager {
 	public static void delThrownGrenade(UUID uuid){
 		thrownGrenades.remove(uuid);
 	}
+	public static boolean isThrownGrenade(UUID uuid){
+		return thrownGrenades.contains(uuid);
+	}
 
 	public static boolean isGrenade(int id) {
 		for(Grenade grenade : grenades){

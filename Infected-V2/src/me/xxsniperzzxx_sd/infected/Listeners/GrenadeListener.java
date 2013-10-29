@@ -1,8 +1,8 @@
+
 package me.xxsniperzzxx_sd.infected.Listeners;
 
 import java.util.ArrayList;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
@@ -10,8 +10,6 @@ import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Handlers.Grenades.Grenade;
 import me.xxsniperzzxx_sd.infected.Handlers.Grenades.GrenadeManager;
-import me.xxsniperzzxx_sd.infected.Tools.Files;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -27,8 +25,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+
 
 public class GrenadeListener implements Listener {
 
@@ -45,70 +42,68 @@ public class GrenadeListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerReThrowEvent(PlayerPickupItemEvent event) {
 		if (!event.isCancelled())
-		{
-			if (Files.getGrenades().getBoolean("Use"))
+			if (GrenadeManager.isThrownGrenade(event.getItem().getUniqueId()))
 				if (event.getPlayer().hasPermission("Infected.Grenades"))
-					if (item.contains(event.getItem().getUniqueId().toString()))
+					if (event.getPlayer().getItemInHand().getType() == Material.AIR)
 					{
-						if (event.getPlayer().getItemInHand().getType() == Material.AIR)
-						{
-							event.getItem().setVelocity(event.getPlayer().getEyeLocation().getDirection());
-						}
+						event.getItem().setVelocity(event.getPlayer().getEyeLocation().getDirection());
 						event.setCancelled(true);
 					}
-		}
 	}
 
 	@SuppressWarnings({ "deprecation", "static-access" })
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowEvent(PlayerInteractEvent event) {
-		final Player player = event.getPlayer();
-		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(player.getItemInHand().getTypeId()))
+		final Player p = event.getPlayer();
+		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(p.getItemInHand().getTypeId()))
 		{
 			final Lobby Lobby = Main.Lobby;
-			if (Lobby.getGameState() == GameState.Started && Lobby.isInGame(player))
+			if (Lobby.getGameState() == GameState.Started && Lobby.isInGame(p))
 			{
-				Grenade grenade = GrenadeManager.getGrenade(player.getItemInHand().getTypeId());
-				
-				if (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades."+grenade.getName()))
+				final Grenade grenade = GrenadeManager.getGrenade(p.getItemInHand().getTypeId());
+
+				if (p.hasPermission("Infected.Grenades") || p.hasPermission("Infected.Grenades." + grenade.getName()))
 				{
-			
-					final Item grenadeItem = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(
+
+					final Item grenadeItem = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(
 							Material.getMaterial(grenade.getId())));
-					
+
 					grenadeItem.setVelocity(event.getPlayer().getEyeLocation().getDirection());
-					
-					player.updateInventory();
+
+					p.updateInventory();
 					GrenadeManager.addThrownGrenade(grenadeItem.getUniqueId());
-					
+
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 					{
+
 						@Override
 						public void run() {
 							grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
-							for(Player u: Lobby.getInGame()))
+							for (Player u : Lobby.getInGame())
 							{
+								if (grenadeItem.getLocation().distance(u.getLocation()) <= grenade.getRange())
 								{
-									
-									ppl.playEffect(EntityEffect.HURT);
-									if (ppl.getHealth() - Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Damage") <= 0)
+
+									u.playEffect(EntityEffect.HURT);
+									if (u.getHealth() - grenade.getDamage() <= 0)
 									{
-										if(ppl == player)
-											Deaths.playerDies(DeathType.Other, player, ppl);
-										else	
-											Deaths.playerDies(DeathType.Grenade, player, ppl);
+										if (u == p)
+											Deaths.playerDies(DeathType.Other, p, u);
+										else
+											Deaths.playerDies(DeathType.Grenade, p, u);
 									} else
 									{
-										ppl.setHealth(ppl.getHealth() - Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Damage"));
+										u.damage(grenade.getDamage(), p);
 									}
 								}
 							}
-							grenadeItem.remove();
 							Location loc = grenadeItem.getLocation();
-							player.getWorld().createExplosion(loc, 0.0F, false);
-							item.remove(grenade.getUniqueId().toString());
+							p.getWorld().createExplosion(loc, 0.0F, false);
+
+							GrenadeManager.delThrownGrenade(grenadeItem.getUniqueId());
+							grenadeItem.remove();
 						}
-					}, delay);
+					}, grenade.getDelay() * 20);
 				}
 			}
 			event.setCancelled(true);
@@ -116,5 +111,5 @@ public class GrenadeListener implements Listener {
 			event.setUseItemInHand(Result.DENY);
 		}
 	}
-	
+
 }
