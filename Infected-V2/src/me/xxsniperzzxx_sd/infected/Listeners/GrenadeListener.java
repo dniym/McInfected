@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.DeathType;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
+import me.xxsniperzzxx_sd.infected.Handlers.Grenades.Grenade;
+import me.xxsniperzzxx_sd.infected.Handlers.Grenades.GrenadeManager;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -60,39 +63,33 @@ public class GrenadeListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowEvent(PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
-		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && Main.inGame.contains(player.getName()) && Files.getGrenades().contains(String.valueOf(player.getItemInHand().getTypeId())))
+		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(player.getItemInHand().getTypeId()))
 		{
-			if (Infected.getGameState() == GameState.STARTED && Files.getGrenades().getBoolean("Use"))
+			final Lobby Lobby = Main.Lobby;
+			if (Lobby.getGameState() == GameState.Started && Lobby.isInGame(player))
 			{
-				if (!Main.inLobby.contains(player.getName()) && (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades."+Files.getGrenades().getString(event.getPlayer().getItemInHand().getTypeId() + ".Name"))))
+				Grenade grenade = GrenadeManager.getGrenade(player.getItemInHand().getTypeId());
+				
+				if (player.hasPermission("Infected.Grenades") || player.hasPermission("Infected.Grenades."+grenade.getName()))
 				{
-					final String ItemId = String.valueOf(player.getItemInHand().getTypeId());
-					final int delay = Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Delay");
-					final Item grenade = event.getPlayer().getWorld().dropItem(player.getEyeLocation(), new ItemStack(
-							Material.getMaterial(player.getItemInHand().getTypeId())));
-					grenade.setVelocity(event.getPlayer().getEyeLocation().getDirection());
-					if (Files.getGrenades().getBoolean(Integer.valueOf(ItemId) + ".Take After Thrown"))
-					{
-						if (player.getInventory().getItemInHand().getAmount() >= 2)
-						{
-							player.getInventory().getItemInHand().setAmount(player.getInventory().getItemInHand().getAmount() - 1);
-						} else
-						{
-							player.getInventory().remove(player.getItemInHand());
-						}
-					}
+			
+					final Item grenadeItem = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(
+							Material.getMaterial(grenade.getId())));
+					
+					grenadeItem.setVelocity(event.getPlayer().getEyeLocation().getDirection());
+					
 					player.updateInventory();
-					item.add(grenade.getUniqueId().toString());
+					GrenadeManager.addThrownGrenade(grenadeItem.getUniqueId());
+					
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 					{
 						@Override
 						public void run() {
-							grenade.getWorld().playEffect(grenade.getLocation(), Effect.SMOKE, 5);
-							for (Player ppl : Bukkit.getServer().getOnlinePlayers())
+							grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
+							for(Player u: Lobby.getInGame()))
 							{
-								if (Infected.isPlayerInGame(ppl) && ((!(Infected.playerGetGroup(ppl) == Infected.playerGetGroup(player))) || (Files.getGrenades().getBoolean(Integer.valueOf(ItemId) + ".Damage Self") && ppl == player)) && ppl.getLocation().distance(grenade.getLocation()) < Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Range"))
 								{
-									grenadeAddPotion(ppl, Integer.valueOf(ItemId));
+									
 									ppl.playEffect(EntityEffect.HURT);
 									if (ppl.getHealth() - Files.getGrenades().getInt(Integer.valueOf(ItemId) + ".Damage") <= 0)
 									{
@@ -106,8 +103,8 @@ public class GrenadeListener implements Listener {
 									}
 								}
 							}
-							grenade.remove();
-							Location loc = grenade.getLocation();
+							grenadeItem.remove();
+							Location loc = grenadeItem.getLocation();
 							player.getWorld().createExplosion(loc, 0.0F, false);
 							item.remove(grenade.getUniqueId().toString());
 						}
@@ -118,26 +115,6 @@ public class GrenadeListener implements Listener {
 			event.setUseInteractedBlock(Result.DENY);
 			event.setUseItemInHand(Result.DENY);
 		}
-	}
-
-
-	@SuppressWarnings("deprecation")
-	public static void grenadeAddPotion(Player player, Integer Itemid) {
-		Integer id = 0;
-		Integer time = 0;
-		Integer power = 0;
-		int max = Files.getGrenades().getStringList(Itemid + ".Effects").size();
-		for (int x = 0; x < max; x = x + 1)
-		{
-			String path = Files.getGrenades().getStringList(Itemid + ".Effects").get(x);
-			String[] strings = path.split(":");
-			id = Integer.valueOf(strings[0]);
-			time = Integer.valueOf(strings[1]) * 20;
-			power = Integer.valueOf(strings[2]);
-			player.addPotionEffect(new PotionEffect(
-					PotionEffectType.getById(id), time, power));
-		}
-
 	}
 	
 }

@@ -16,6 +16,8 @@ public class InfClassManager {
 
 	private static ArrayList<InfClass> humanClasses = new ArrayList<InfClass>();
 	private static ArrayList<InfClass> zombieClasses = new ArrayList<InfClass>();
+	private static InfClass defaultHuman;
+	private static InfClass defaultZombie;
 
 	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects) {
 		InfClass IC = new InfClass(name, team, helmet, chestplate, leggings,
@@ -24,6 +26,12 @@ public class InfClassManager {
 			humanClasses.add(IC);
 		else
 			zombieClasses.add(IC);
+	}
+	public static ArrayList<InfClass> getHumanClasses(){
+		return humanClasses;
+	}
+	public static ArrayList<InfClass> getZombieClasses(){
+		return zombieClasses;
 	}
 
 	public static boolean isRegistered(Team team, InfClass IC) {
@@ -77,6 +85,16 @@ public class InfClassManager {
 				if (IC.getName().equalsIgnoreCase(className))
 					zombieClasses.remove(IC);
 			}
+	}
+	public InfClass getDefaultHumanClass(){
+		return defaultHuman;
+	}
+	public InfClass getDefaultZombieClass(){
+		return defaultZombie;
+	}
+	public static void loadDefaultClasses(){
+		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Classes.Default.Human"));
+		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Classes.Default.Zombie"));
 	}
 
 	public static void loadConfigClasses() {
@@ -151,7 +169,8 @@ public class InfClassManager {
 
 			if (!isRegistered(Team.Zombie, IC))
 				addClass(IC);
-
+			
+			loadDefaultClasses();
 		}
 	}
 }

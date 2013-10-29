@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.GameMechanics.UpdateInfoSigns;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.UpdateInfoSigns;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Listeners.DamageEvents;
 import me.xxsniperzzxx_sd.infected.Listeners.DeathEvent;

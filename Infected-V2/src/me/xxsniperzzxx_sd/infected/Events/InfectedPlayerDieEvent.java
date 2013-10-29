@@ -1,7 +1,7 @@
 
 package me.xxsniperzzxx_sd.infected.Events;
 
-import me.xxsniperzzxx_sd.infected.Enums.DeathType;
+import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

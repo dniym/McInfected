@@ -8,15 +8,15 @@ import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameEndEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Enums.Msgs;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.PointsAndScores;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
+import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
+import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
+import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.PointsAndScores;
 import me.xxsniperzzxx_sd.infected.Handlers.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.MapHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.TimeHandler;
-import me.xxsniperzzxx_sd.infected.Messages.Messages;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -153,7 +153,7 @@ public class Game {
 						} else
 						{
 							// Determine the most voted for map
-							Main.playingin = Stats.countdown(Main.Votes);
+							Main.playingin = MiscStats.countdown(Main.Votes);
 						}
 						if (Main.playingin.equalsIgnoreCase("random"))
 						{
@@ -571,5 +571,14 @@ public class Game {
 	public static void restartGame() {
 		Bukkit.getScheduler().cancelTask(Main.timeVote);
 		START();
+	}
+	
+	public static void endGame(){
+		Lobby Lobby = Main.Lobby;
+		Lobby.getHumans().clear();
+		Lobby.getZombies().clear();
+		Lobby.setGameState(GameState.InLobby);
+		
+		
 	}
 }

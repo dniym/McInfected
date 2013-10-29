@@ -6,6 +6,7 @@ import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerLeaveEvent;
+import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Messages.Messages;
 
 import org.bukkit.Bukkit;

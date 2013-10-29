@@ -11,17 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 
 public class ItemHandler {
-
-	public static ItemStack getItemStack(String Path) {
-		ItemStack is;
-		if (getItem(Path) != null)
-		{
-			is = new ItemStack(getItem(Path));
-			is.setDurability(getItemData(Path));
-		} else
-			is = new ItemStack(Material.AIR);
-		return is;
-	}
+	
+	//TODO: Look into String.split("[:,-@%]"); , To see if i can make the order not matter.(Only issue I predict is the ItemID
 
 	public static Integer getItemID(String Path) {
 		String itemid = null;
@@ -206,7 +197,7 @@ public class ItemHandler {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static ItemStack getItem(String location) {
+	public static ItemStack getItemStack(String location) {
 		ItemStack is = null;
 		if (Material.getMaterial(getItemID(location)) != null)
 			is = new ItemStack(Material.getMaterial(getItemID(location)),

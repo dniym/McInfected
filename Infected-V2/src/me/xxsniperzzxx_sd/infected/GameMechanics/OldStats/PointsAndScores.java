@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.GameMechanics.Stats;
+package me.xxsniperzzxx_sd.infected.GameMechanics.OldStats;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;

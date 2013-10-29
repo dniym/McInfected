@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Messages.StringUtil;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 
@@ -23,8 +24,20 @@ public class Arena {
 	public Arena(Lobby Lobby, String name)
 	{
 		this.Lobby = Lobby;
-		this.name = name;
+		this.name = StringUtil.getWord(name);
 	}
+
+	// Get the arenas creator
+	public String getCreator() {
+		return Files.getArenas().getString("Arenas." + name + ".Creator");
+	}
+
+	// Set the arenas creator
+	public void setCreator(String maker) {
+		Files.getArenas().set("Arenas." + name + ".Creator", maker);
+		Files.saveArenas();
+	}
+
 
 	/**
 	 * @param spawns
@@ -114,6 +127,19 @@ public class Arena {
 	// Set the block at Loc
 	public void setBlock(Location loc, Material mat) {
 		blocks.put(loc, mat);
+	}
+	public void reset(){
+		if (!this.getBlocks().isEmpty())
+			for (Location loc : this.getBlocks().keySet())
+				this.setBlock(loc, this.getBlock(loc));
+
+		this.getBlocks().clear();
+
+		// Clear Chests too
+		if (!this.getChests().isEmpty())
+			for (Location loc : this.getChests().keySet())
+				if (loc.getBlock().getType() == Material.CHEST)
+					this.setChest(loc, this.getChest(loc));
 	}
 
 }

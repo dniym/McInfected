@@ -3,7 +3,7 @@ package me.xxsniperzzxx_sd.infected.Messages;
 
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.Enums.DeathType;
+import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 

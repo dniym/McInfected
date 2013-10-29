@@ -4,9 +4,9 @@ package me.xxsniperzzxx_sd.infected.GameMechanics;
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerDieEvent;
-import me.xxsniperzzxx_sd.infected.Enums.DeathType;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
+import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
+import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
@@ -35,8 +35,8 @@ public class Deaths {
 			InfKiller.updateStats(1, 0);
 			InfKilled.updateStats(0, 1);
 			
-			Stats.handleKillStreaks(true, killed);
-			Stats.handleKillStreaks(false, killer);
+			MiscStats.handleKillStreaks(true, killed);
+			MiscStats.handleKillStreaks(false, killer);
 			
 			for(InfPlayer IP : Main.Lobby.getPlayers())
 					IP.getPlayer().sendMessage(dieEvent.getDeathMsg());
@@ -46,14 +46,14 @@ public class Deaths {
 				Zombify.zombifyPlayer(killed);
 
 				InfKilled.respawn();
-				InfKilled.Infected();
+				InfKilled.Infect();
 			} else
 			{
 				killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
 				InfKilled.respawn();
 				Equip.equip(killed);
 			}
-			if (Main.humans.size() == 0 && Infected.getGameState() == GameState.STARTED)
+			if (Main.humans.size() == 0 && Main.Lobby.getGameState() == GameState.Started)
 				Game.endGame(false);
 
 			else

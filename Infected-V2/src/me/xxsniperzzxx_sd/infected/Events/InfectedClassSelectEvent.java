@@ -1,7 +1,8 @@
 
 package me.xxsniperzzxx_sd.infected.Events;
 
-import me.xxsniperzzxx_sd.infected.Enums.Teams;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
+import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClass;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -13,23 +14,23 @@ public class InfectedClassSelectEvent extends Event implements Cancellable{
 
 	boolean cancelled = false;
 	Player player;
-	Teams team;
-	String classname;
+	Team team;
+	InfClass InfClass;
 
-	public InfectedClassSelectEvent(Player player, Teams team, String classname)
+	public InfectedClassSelectEvent(Player player, Team team, InfClass Class)
 	{
 		this.player = player;
 		this.team = team;
-		this.classname = classname;
+		this.InfClass = Class;
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
-	public String getClassName(){
-		return classname;
+	public InfClass getInfClass(){
+		return InfClass;
 	}
-	public Teams getTeam(){
+	public Team getTeam(){
 		return team;
 	}
 

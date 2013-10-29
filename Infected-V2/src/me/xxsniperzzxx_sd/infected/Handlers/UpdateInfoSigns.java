@@ -1,9 +1,8 @@
-package me.xxsniperzzxx_sd.infected.GameMechanics;
+package me.xxsniperzzxx_sd.infected.Handlers;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -26,24 +25,9 @@ public class UpdateInfoSigns {
 				{
 					for (String loc : Files.getSigns().getStringList("Info Signs"))
 					{
-						String status;
-
-						if (Infected.getGameState() == GameState.VOTING)
-						{
-							status = "Voting";
-						}
-						if (Infected.getGameState() == GameState.BEFOREINFECTED)
-						{
-							status = "B4 Infected";
-						}
-						if (Infected.getGameState() == GameState.STARTED)
-						{
-							status = "Started";
-						} else
-						{
-							status = "In Lobby";
-						}
-
+						Lobby Lobby = Main.Lobby;
+						String status = Lobby.getGameState().toString();
+						
 						int time = Main.currentTime;
 
 						Location location = LocationHandler.getObjectLocation(loc);
@@ -52,7 +36,7 @@ public class UpdateInfoSigns {
 							Sign sign = (Sign) location.getBlock().getState();
 							sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
 							sign.setLine(2, ChatColor.GOLD + status);
-							if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.VOTING)
+							if (Lobby.getGameState() == GameState.Started ||Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Voting)
 								sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
 							else
 								sign.setLine(3, "");

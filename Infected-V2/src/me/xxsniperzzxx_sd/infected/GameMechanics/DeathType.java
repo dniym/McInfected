@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.Enums;
+package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 public enum DeathType {
 	

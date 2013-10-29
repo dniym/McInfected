@@ -1,8 +1,8 @@
-package me.xxsniperzzxx_sd.infected.GameMechanics;
+package me.xxsniperzzxx_sd.infected.Extras;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,7 +28,7 @@ public class ScoreBoard {
 			Objective infectedList = infectedBoard.registerNewObjective("InfectedBoard", "dummy");
 			infectedList.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-			if (Infected.getGameState() == GameState.STARTED || Infected.getGameState() == GameState.BEFOREINFECTED)
+			if (Main.Lobby.getGameState() == GameState.Started || Main.Lobby.getGameState() == GameState.Infecting)
 			{
 				infectedList.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
 				Score score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
@@ -49,7 +49,7 @@ public class ScoreBoard {
 				}
 				
 			} 
-			else if(Infected.getGameState() == GameState.INLOBBY || Infected.getGameState() == GameState.VOTING)
+			else if(Main.Lobby.getGameState() == GameState.InLobby || Main.Lobby.getGameState() == GameState.Voting)
 			{
 				infectedList.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote for your map!");
 				Main.possibleArenas.clear();

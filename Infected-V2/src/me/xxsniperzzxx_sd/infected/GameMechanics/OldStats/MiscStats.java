@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.GameMechanics.Stats;
+package me.xxsniperzzxx_sd.infected.GameMechanics.OldStats;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 
-public class Stats {
+public class MiscStats {
 
 
 	private static HashMap<String, Integer> Stats = new HashMap<String, Integer>();

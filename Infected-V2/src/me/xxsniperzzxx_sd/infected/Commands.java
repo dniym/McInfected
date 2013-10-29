@@ -8,16 +8,16 @@ import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Events.InfectedCommandEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGrenadePurchaseEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
+import me.xxsniperzzxx_sd.infected.Extras.Menus;
+import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Leave;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Menus;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
-import me.xxsniperzzxx_sd.infected.GameMechanics.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Vote;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
+import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
 import me.xxsniperzzxx_sd.infected.Handlers.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Messages.Messages;
@@ -399,7 +399,7 @@ public class Commands implements CommandExecutor {
 						Equip.equipZombies(player);
 						player.setHealth(20.0);
 						player.setFoodLevel(20);
-						Stats.setStats(player, 0, 1);
+						MiscStats.setStats(player, 0, 1);
 						if (plugin.KillStreaks.get(player.getName()) > Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".KillStreak"))
 						{
 							Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".KillStreak", plugin.KillStreaks.get(player.getName()));
@@ -1177,7 +1177,7 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(plugin.I + ChatColor.YELLOW + "------= " + user + " =------");
 						player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
 						player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Infected.playerGetTime(user));
-						player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Stats.KD(Bukkit.getPlayer(user)));
+						player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(Bukkit.getPlayer(user)));
 						player.sendMessage(plugin.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".KillStreak"));
 
 					} else
@@ -1192,7 +1192,7 @@ public class Commands implements CommandExecutor {
 						player.sendMessage(plugin.I + ChatColor.YELLOW + "------= " + user + " =------");
 						player.sendMessage(plugin.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Infected.playerGetPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Score"));
 						player.sendMessage(plugin.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Infected.playerGetTime(user));
-						player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + Stats.KD(Bukkit.getPlayer(user)));
+						player.sendMessage(plugin.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Kills") + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".Deaths") + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(Bukkit.getPlayer(user)));
 						player.sendMessage(plugin.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Infected.filesGetPlayers().getInt("Players." + user.toLowerCase() + ".KillStreak"));
 
 					}
@@ -1519,7 +1519,7 @@ public class Commands implements CommandExecutor {
 								sender.sendMessage(Messages.sendMessage(Msgs.ERROR_NOTASTAT, null, null));
 								return true;
 							}
-							String[] top = Stats.getTop5(Stat);
+							String[] top = MiscStats.getTop5(Stat);
 							int stat1 = Infected.filesGetPlayers().getInt("Players." + top[0] + "." + Stat);
 							int stat2 = Infected.filesGetPlayers().getInt("Players." + top[1] + "." + Stat);
 							int stat3 = Infected.filesGetPlayers().getInt("Players." + top[2] + "." + Stat);

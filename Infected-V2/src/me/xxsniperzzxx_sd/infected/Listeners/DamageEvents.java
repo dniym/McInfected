@@ -3,15 +3,15 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 
 import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.DeathType;
 import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Enums.Msgs;
+import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.GameMechanics.PotionEffects;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Stats.Stats;
+import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
 import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Messages.Messages;
 
@@ -65,7 +65,7 @@ public class DamageEvents implements Listener {
 							victim.sendMessage(Main.I + "You almost died before the game even started!");
 							victim.setHealth(20);
 							victim.setFoodLevel(20);
-							Stats.handleKillStreaks(true, victim);
+							MiscStats.handleKillStreaks(true, victim);
 							victim.setFoodLevel(20);
 							LocationHandler.respawn(victim);
 							victim.setFallDistance(0F);

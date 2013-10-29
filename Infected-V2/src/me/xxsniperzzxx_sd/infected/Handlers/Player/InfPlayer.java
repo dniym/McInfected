@@ -4,7 +4,11 @@ package me.xxsniperzzxx_sd.infected.Handlers.Player;
 import java.util.Random;
 
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
+import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
+import me.xxsniperzzxx_sd.infected.GameMechanics.PotionEffects;
+import me.xxsniperzzxx_sd.infected.GameMechanics.Stats;
 import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClass;
@@ -24,7 +28,6 @@ public class InfPlayer {
 	private Player player;
 	private Arena vote;
 	String name;
-	private int points = 0;
 	private int killstreak = 0;
 	private long timeIn;
 	private GameMode gamemode;
@@ -35,11 +38,8 @@ public class InfPlayer {
 	private ItemStack[] armor;
 	private ItemStack[] inventory;
 	private Location location;
-	private Arena arena;
 	private String creating;
 	private Player lastDamager;
-	private int kills = 0;
-	private int deaths = 0;
 	private InfClass humanClass;
 	private InfClass zombieClass;
 	private Team team = Team.None;
@@ -84,7 +84,7 @@ public class InfPlayer {
 
 	// Method to reset the player to how they were before they joined an arena
 	@SuppressWarnings("deprecation")
-	public void reset() {
+	public void leaveInfected() {
 		Player p = Bukkit.getPlayerExact(name);
 		p.getInventory().clear();
 		p.getInventory().setArmorContents(null);
@@ -101,10 +101,7 @@ public class InfPlayer {
 		p.setWalkSpeed(0.2F);
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
-		kills = 0;
-		deaths = 0;
 		killstreak = 0;
-		points = 0;
 		location = null;
 		gamemode = null;
 		level = 0;
@@ -113,7 +110,38 @@ public class InfPlayer {
 		food = 20;
 		inventory = null;
 		armor = null;
-		arena = null;
+		vote = null;
+	}
+
+	public void disguise() {
+
+		Disguises.disguisePlayer(player);
+	}
+
+	public void unDisguise() {
+		if (Main.config.getBoolean("Disguise Support.Enabled"))
+			if (Disguises.isPlayerDisguised(player))
+				Disguises.unDisguisePlayer(player);
+	}
+
+	public void tpToLobby() {
+
+		ScoreBoard.updateScoreBoard();
+		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
+		player.setLevel(0);
+		player.setExp(0.0F);
+		player.teleport(Main.Lobby.getLocation());
+		player.setGameMode(GameMode.ADVENTURE);
+		player.setFireTicks(0);
+		player.setHealth(20.0);
+		player.setFoodLevel(20);
+
+		unDisguise();
+		killstreak = 0;
+		vote = null;
+		lastDamager = null;
+		isWinner = true;
+
 	}
 
 	// Respawn the player
@@ -139,6 +167,23 @@ public class InfPlayer {
 		lastDamager = null;
 	}
 
+	public void Infect() {
+		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
+		player.sendMessage(Main.I + "You have become infected!");
+		team = Team.Zombie;
+		isWinner = false;
+		Equip.equipToZombie(player);
+		PotionEffects.applyClassEffects(player);
+		disguise();
+		ScoreBoard.updateScoreBoard();
+		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
+				2));
+	}
+	
+	public long getPlayingTime(InfPlayer IP) {
+		return (System.currentTimeMillis() / 1000) - getTimeIn();
+	}
+	
 	/**
 	 * @return the player
 	 */
@@ -173,7 +218,7 @@ public class InfPlayer {
 	 * @return the points
 	 */
 	public int getPoints() {
-		return points;
+		return Stats.getPoints(name);
 	}
 
 	/**
@@ -181,7 +226,23 @@ public class InfPlayer {
 	 *            the points to set
 	 */
 	public void setPoints(int points) {
-		this.points = points;
+		Stats.setPoints(name, points);
+	}
+
+
+	/**
+	 * @return the score
+	 */
+	public int getScore() {
+		return Stats.getScore(name);
+	}
+
+	/**
+	 * @param score
+	 *            the score to set
+	 */
+	public void setScore(int score) {
+		Stats.setScore(name, score);
 	}
 
 	/**
@@ -335,21 +396,6 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @return the arena
-	 */
-	public Arena getArena() {
-		return arena;
-	}
-
-	/**
-	 * @param arena
-	 *            the arena to set
-	 */
-	public void setArena(Arena arena) {
-		this.arena = arena;
-	}
-
-	/**
 	 * @return the creating
 	 */
 	public String getCreating() {
@@ -383,7 +429,7 @@ public class InfPlayer {
 	 * @return the kills
 	 */
 	public int getKills() {
-		return kills;
+		return Stats.getKills(name);
 	}
 
 	/**
@@ -391,14 +437,14 @@ public class InfPlayer {
 	 *            the kills to set
 	 */
 	public void setKills(int kills) {
-		this.kills = kills;
+		Stats.setKills(name, kills);
 	}
 
 	/**
 	 * @return the deaths
 	 */
 	public int getDeaths() {
-		return deaths;
+		return Stats.getDeaths(name);
 	}
 
 	/**
@@ -406,7 +452,7 @@ public class InfPlayer {
 	 *            the deaths to set
 	 */
 	public void setDeaths(int deaths) {
-		this.deaths = deaths;
+		this.setDeaths(deaths);
 	}
 
 	/**
@@ -461,22 +507,10 @@ public class InfPlayer {
 	}
 
 	public void updateStats(int kills, int deaths) {
-		// TODO: Add stats
 		if (kills != 0)
-			// Stats.setKills(getName(), getOverallKills() + kills);
+			Stats.setKills(name, Stats.getKills(name) + kills);
 			if (deaths != 0)
-				;
-		// Stats.setDeaths(getName(), getOverallDeaths() + deaths);
-	}
-
-	public void Infected() {
-		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-		player.sendMessage(Main.I + "You have become infected!");
-		team = Team.Zombie;
-		isWinner = false;
-		Equip.equipToZombie(player);
-		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
-				2));
+				Stats.setDeaths(name, Stats.getDeaths(name) + deaths);
 	}
 
 	/**
