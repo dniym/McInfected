@@ -1,6 +1,7 @@
+
 package me.xxsniperzzxx_sd.infected;
 
-
+// This class was moved here because I wanted it gone, but still want it as a refrence to see what i'm deleting
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
