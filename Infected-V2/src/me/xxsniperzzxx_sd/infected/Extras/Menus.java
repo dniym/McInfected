@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Events.InfectedClassSelectEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedShopPurchaseEvent;
-import me.xxsniperzzxx_sd.infected.Handlers.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClass;
 import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClassManager;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
@@ -31,8 +30,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Menus {
 
+	private static InfPlayerManager IPM = Main.InfPlayerManager;
+	
 	public static void chooseClass(final Team team, final Player p) {
-		final InfPlayer IP = InfPlayerManager.getPlayer(p);
+		final InfPlayer IP = IPM.getInfPlayer(p);
 		IconMenu menu = new IconMenu(
 				ChatColor.GREEN + p.getName() + "-"+team.toString()+" Classes", ((InfClassManager.getHumanClasses().size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
@@ -100,7 +101,7 @@ public class Menus {
 	// //////////////////////////////////////
 	public static void openVotingMenu(final Player p) {
 		final Lobby Lobby = Main.Lobby;
-		final InfPlayer IP = InfPlayerManager.getPlayer(p);
+		final InfPlayer IP = IPM.getInfPlayer(p);
 		IconMenu menu = new IconMenu(ChatColor.DARK_BLUE + p.getName() + " - Map Vote", ((Lobby.getArenas().size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -109,8 +110,8 @@ public class Menus {
 						Arena arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
 						arena.setVotes(arena.getVotes() + 1);
 						IP.setVote(arena);
-						for(InfPlayer u : Lobby.getInGame()){
-							u.getPlayer().sendMessage("<Player> voted for <Arena>");
+						for(Player u : Main.Lobby.getInGame()){
+							u.sendMessage("<Player> voted for <Arena>");
 						}
 						ScoreBoard.updateScoreBoard();
 
@@ -153,28 +154,29 @@ public class Menus {
 	// ///////////////////////////////// SHOP
 	// ///////////////////////////////////////////
 
-	public static void openShopMenu(final Player player) {
+	public static void openShopMenu(final Player p) {
 
+		final InfPlayer IP = IPM.getInfPlayer(p);
 			ArrayList<String> shop = new ArrayList<String>();
-			for (String string : Infected.filesGetShop().getConfigurationSection("Custom Items").getKeys(true))
+			for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
 			{
-				if (!string.contains(".") && ItemHandler.getItemID(Infected.filesGetShop().getString("Custom Items." + string + ".Item Code")) != null)
+				if (!string.contains(".") && ItemHandler.getItemID(Files.getShop().getString("Custom Items." + string + ".Item Code")) != null)
 				{
 					shop.add(string);
 				}
 			}
 
 			IconMenu menu = new IconMenu(
-					ChatColor.GREEN + player.getName() + " - Shop",
+					ChatColor.GREEN + p.getName() + " - Shop",
 					((shop.size() / 9) * 9) + 9,
 					new IconMenu.OptionClickEventHandler()
 					{
 						@SuppressWarnings("deprecation")
 						@Override
 						public void onOptionClick(IconMenu.OptionClickEvent event) {
-							int price = Infected.filesGetShop().getInt("Custom Items." + event.getName() + ".GUI Price");
-							int points = Infected.playerGetPoints(player.getName());
-							ItemStack is = ItemHandler.getItemStack(Infected.filesGetShop().getString("Custom Items." + event.getName() + ".Item Code"));
+							int price = Files.getShop().getInt("Custom Items." + event.getName() + ".GUI Price");
+							int points = IP.getPoints();
+							ItemStack is = ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + event.getName() + ".Item Code"));
 							String itemname = event.getName();
 							ItemMeta im = is.getItemMeta();
 							im.setDisplayName(itemname);
@@ -182,41 +184,41 @@ public class Menus {
 							if (price <= points)
 							{
 								InfectedShopPurchaseEvent shopEvent = new InfectedShopPurchaseEvent(
-										player, null, is, price);
+										p, null, is, price);
 								Bukkit.getServer().getPluginManager().callEvent(shopEvent);
 								if (!shopEvent.isCancelled())
 								{
-									Infected.playerSetPoints(player.getName(), points, price);
+									IP.setPoints(points - price);
 									
-										player.getInventory().addItem(is);
+										p.getInventory().addItem(is);
 									
 
-									player.sendMessage("<Item> Bought");
-									if (Files.getShop().getBoolean("Save Items") && (!Infected.filesGetGrenades().contains(String.valueOf(is.getTypeId()))))
+									p.sendMessage("<Item> Bought");
+									if (Files.getShop().getBoolean("Save Items") && (!Files.getGrenades().contains(String.valueOf(is.getTypeId()))))
 									{
 										if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
 										{
-											Infected.playerSaveShopInventory(player);
+											/**TODO: Allow saving Items saveShopInventory(p);*/
 										}
 									}
 								} else
-									player.sendMessage(Msgs.Error_No_Permission.getString());
+									p.sendMessage(Msgs.Error_No_Permission.getString());
 							} else
 							{
-								player.sendMessage("Not enough points");
-								player.sendMessage("You need <Points> more");
+								p.sendMessage("Not enough points");
+								p.sendMessage("You need <Points> more");
 							}
 							Files.savePlayers();
-							player.updateInventory();
+							p.updateInventory();
 
 						}
 					}, Main.me);
 			int i = 0;
 			for (String item : shop)
 			{
-				menu.setOption(i, ItemHandler.getItemStack(Infected.filesGetShop().getString("Custom Items." + item + ".Item Code")), item, ChatColor.YELLOW + "Click to purchase for: " + Infected.filesGetShop().getInt("Custom Items." + item + ".GUI Price"));
+				menu.setOption(i, ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + item + ".Item Code")), item, ChatColor.YELLOW + "Click to purchase for: " + Files.getShop().getInt("Custom Items." + item + ".GUI Price"));
 				i++;
 			}
-			menu.open(player);
+			menu.open(p);
 	}
 }

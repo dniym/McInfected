@@ -11,30 +11,31 @@ import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClassManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Grenades.GrenadeManager;
-import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Messages.StringUtil;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 
 public class Lobby {
 
-	//All the InfPlayer Objects
-	private ArrayList<InfPlayer> InfPlayers = new ArrayList<InfPlayer>();
-	//All the Arena Objects
+	// All the Arena Objects
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
-	//All the players playing Infected
+	// All the players playing Infected
 	private ArrayList<Player> inGame = new ArrayList<Player>();
-	//All the humans 
+	// All the humans
 	private ArrayList<Player> humans = new ArrayList<Player>();
-	//All the zombies
+	// All the zombies
 	private ArrayList<Player> zombies = new ArrayList<Player>();
-	//What ever arena we're playing on
+	// What ever arena we're playing on
 	private Arena activeArena;
-	//The games state
+	// The games state
 	private GameState state = GameState.InLobby;
 
-	public enum GameState {InLobby, Voting, Infecting, Started, Disabled;};
-	
+	public enum GameState
+	{
+		InLobby, Voting, Infecting, Started, Disabled;
+	};
+
 	private int voting, beforeInfected, game;
 
 	public Lobby()
@@ -44,13 +45,6 @@ public class Lobby {
 		GrenadeManager.loadConfigGrenades();
 	}
 
-	public void createInfPlayer(Player p){
-		InfPlayer IP = new InfPlayer(p);
-		InfPlayers.add(IP);
-	}
-	public void removeInfPlayer(InfPlayer IP){
-		InfPlayers.remove(IP);
-	}
 	public Location getLocation() {
 		return LocationHandler.getPlayerLocation(Main.config.getString("Lobby"));
 	}
@@ -63,9 +57,10 @@ public class Lobby {
 		return arenas;
 	}
 
-	public boolean isInGame(Player p){
+	public boolean isInGame(Player p) {
 		return inGame.contains(p);
 	}
+
 	public void addPlayerInGame(Player p) {
 		inGame.add(p);
 	}
@@ -85,20 +80,27 @@ public class Lobby {
 	public void delHuman(Player p) {
 		humans.remove(p);
 	}
-
+	public boolean isHuman(Player p){
+		return humans.contains(p);
+	}
 	public void delZombie(Player p) {
 		zombies.remove(p);
 	}
 
 	public void addZombie(Player p) {
 		zombies.add(p);
-		}
-
+	}
+	public boolean isZombie(Player p){
+		return zombies.contains(p);
+	}
+public boolean oppositeTeams(Player p, Player u){
+	return !(isZombie(p) && isZombie(u)) || (isHuman(p) && isHuman(u));
+}
 	public ArrayList<Player> getHumans() {
 		return humans;
 	}
 
-	public ArrayList<InfPlayer> getZombies() {
+	public ArrayList<Player> getZombies() {
 		return zombies;
 	}
 
@@ -143,7 +145,7 @@ public class Lobby {
 	public void removeArena(String arenaName) {
 		for (Arena arena : arenas)
 		{
-			if (arena.getName().equalsIgnoreCase( StringUtil.getWord(arenaName)))
+			if (arena.getName().equalsIgnoreCase(StringUtil.getWord(arenaName)))
 				arenas.remove(arena);
 		}
 	}
@@ -156,6 +158,10 @@ public class Lobby {
 	public boolean isArenaValid(String name) {
 		name = StringUtil.getWord(name);
 		return !Files.getArenas().getStringList("Arenas." + name + ".Spawns").isEmpty();
+	}
+	// Check if the arena is avalid
+	public boolean isArenaValid(Arena arena) {
+		return !arena.getSpawns().isEmpty();
 	}
 
 	public void resetArena(Arena arena) {

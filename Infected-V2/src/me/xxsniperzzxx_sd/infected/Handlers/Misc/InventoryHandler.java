@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.Handlers;
+package me.xxsniperzzxx_sd.infected.Handlers.Misc;
 
 
 import me.xxsniperzzxx_sd.infected.Tools.Files;

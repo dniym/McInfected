@@ -1,6 +1,8 @@
 
-package me.xxsniperzzxx_sd.infected.Handlers;
+package me.xxsniperzzxx_sd.infected.Handlers.Misc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
@@ -252,9 +254,18 @@ public class ItemHandler {
 					itemCode = itemCode + "@" + ench.getValue();
 			}
 			if (i.getItemMeta().getDisplayName() != null)
-				itemCode = itemCode + "%" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("§", "&");
+				itemCode = itemCode + "%" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("ï¿½", "&");
 		}
 		return itemCode;
 	}
-
+	// Loop through a list of these Item Codes and make a ItemStack[]
+	public static ItemStack[] getItemStackList(List<String> list) {
+		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		for (String string : list)
+		{
+			items.add(getItemStack(string));
+		}
+		ItemStack[] stack = items.toArray(new ItemStack[0]);
+		return stack;
+	}
 }

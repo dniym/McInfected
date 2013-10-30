@@ -1,8 +1,9 @@
 package me.xxsniperzzxx_sd.infected.Extras;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
+import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 public class ScoreBoard {
 
+	private static Lobby Lobby = Main.Lobby;
 
 	public static void updateScoreBoard() {
 
@@ -32,16 +34,16 @@ public class ScoreBoard {
 			{
 				infectedList.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
 				Score score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
-				if (Main.humans.size() != 0)
-					score.setScore(Main.humans.size());
+				if (Lobby.getHumans().size() != 0)
+					score.setScore(Lobby.getHumans().size());
 				else
 				{
 					score.setScore(1);
 					score.setScore(0);
 				}
 				Score score2 = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Zombies:"));
-				if (Main.zombies.size() != 0)
-					score2.setScore(Main.zombies.size());
+				if (Lobby.getZombies().size() != 0)
+					score2.setScore(Lobby.getZombies().size());
 				else
 				{
 					score2.setScore(1);
@@ -52,42 +54,25 @@ public class ScoreBoard {
 			else if(Main.Lobby.getGameState() == GameState.InLobby || Main.Lobby.getGameState() == GameState.Voting)
 			{
 				infectedList.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote for your map!");
-				Main.possibleArenas.clear();
-				for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
+				for (Arena arena : Lobby.getArenas())
 				{
-					// Check if the string matchs an arena
-
-					if (Main.possibleArenas.contains(parenas))
-					{
-						Main.possibleArenas.remove(parenas);
-					}
-					if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
-					{
-						Main.possibleArenas.remove(parenas);
-					} else if (!parenas.contains("."))
-					{
+					if(Lobby.isArenaValid(arena)){
 						Score score;
-						if(parenas.equalsIgnoreCase(Main.playingin))
-							score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD +">"+ parenas));
+						if(arena == Lobby.getActiveArena())
+							score = infectedList.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD +">"+ arena.getName()));
 						else
-							score = infectedList.getScore(Bukkit.getOfflinePlayer(""+ChatColor.YELLOW + ChatColor.ITALIC + parenas));
+							score = infectedList.getScore(Bukkit.getOfflinePlayer(""+ChatColor.YELLOW + ChatColor.ITALIC + arena.getName()));
 						
-							
-						if (Main.Votes.get(parenas) != null)
-							score.setScore(Main.Votes.get(parenas));
-						else
-						{
-							score.setScore(1);
-							score.setScore(0);
-						}
+						score.setScore(1);
+						score.setScore(arena.getVotes());
+					
 
 					}
 				}
 			}
-			for (String s : Infected.listInGame())
+			for (Player u : Lobby.getInGame())
 			{
-				Player player = Bukkit.getPlayer(s);
-				player.setScoreboard(infectedBoard);
+				u.setScoreboard(infectedBoard);
 			}
 
 		}

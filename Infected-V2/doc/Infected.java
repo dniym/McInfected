@@ -1,5 +1,6 @@
-
 package me.xxsniperzzxx_sd.infected;
+
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

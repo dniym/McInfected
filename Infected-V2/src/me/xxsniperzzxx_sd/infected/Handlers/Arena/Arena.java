@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Messages.StringUtil;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Tools.Settings;
 
 
 public class Arena {
@@ -20,6 +21,7 @@ public class Arena {
 	private int Votes;
 	private HashMap<Location, Inventory> chests = new HashMap<Location, Inventory>();
 	private HashMap<Location, Material> blocks = new HashMap<Location, Material>();
+	private Settings Settings = new Settings(this);
 
 	public Arena(Lobby Lobby, String name)
 	{
@@ -27,12 +29,30 @@ public class Arena {
 		this.name = StringUtil.getWord(name);
 	}
 
-	// Get the arenas creator
+
+	/**
+	 * @return the settings
+	 */
+	public Settings getSettings() {
+		return Settings;
+	}
+
+
+	/**
+	 * Returns the arenas creator
+	 * 
+	 * @return the creator
+	 */
 	public String getCreator() {
 		return Files.getArenas().getString("Arenas." + name + ".Creator");
 	}
 
-	// Set the arenas creator
+
+	/**
+	 * 
+	 * @param string
+	 *            the arena maker
+	 */
 	public void setCreator(String maker) {
 		Files.getArenas().set("Arenas." + name + ".Creator", maker);
 		Files.saveArenas();
@@ -40,6 +60,8 @@ public class Arena {
 
 
 	/**
+	 * Set the spawns in the config
+	 * 
 	 * @param spawns
 	 *            the spawns to set
 	 */
@@ -48,6 +70,8 @@ public class Arena {
 	}
 
 	/**
+	 * Returns the spawns from the config
+	 * 
 	 * @return the spawns
 	 */
 	public List<String> getSpawns() {
@@ -99,35 +123,62 @@ public class Arena {
 		Votes = votes;
 	}
 
-	// Get the saved chests
+	
 	public HashMap<Location, Inventory> getChests() {
 		return chests;
 	}
 
-	// Get the chest at Loc
+	/**
+	 * Get the opened chests
+	 * 
+	 * @param loc
+	 * @return
+	 */
 	public Inventory getChest(Location loc) {
 		return chests.get(loc);
 	}
 
-	// Set a chest at Loc
+	/**
+	 * 
+	 * Set the opened chests
+	 * 
+	 * @param loc
+	 * @param inv
+	 */
 	public void setChest(Location loc, Inventory inv) {
 		chests.put(loc, inv);
 	}
 
-	// Get the saved Blocks
+	/**
+	 * Get the broken blocks 
+	 * 
+	 * @param loc
+	 * @return
+	 */
 	public Material getBlock(Location loc) {
 		return blocks.get(loc);
 	}
 
-	// Get the block at Loc
+	/**
+	 * 
+	 * @return the broken blocks
+	 */
 	public HashMap<Location, Material> getBlocks() {
 		return blocks;
 	}
 
-	// Set the block at Loc
+	/**
+	 * Set the blocks broken
+	 * 
+	 * @param loc
+	 * @param mat
+	 */
 	public void setBlock(Location loc, Material mat) {
 		blocks.put(loc, mat);
 	}
+	/**
+	 * Reset the arena
+	 */
 	public void reset(){
 		if (!this.getBlocks().isEmpty())
 			for (Location loc : this.getBlocks().keySet())

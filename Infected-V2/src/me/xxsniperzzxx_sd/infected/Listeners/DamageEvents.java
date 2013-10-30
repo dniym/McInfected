@@ -1,21 +1,15 @@
 
 package me.xxsniperzzxx_sd.infected.Listeners;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.GameMechanics.PotionEffects;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
-import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
-import me.xxsniperzzxx_sd.infected.Messages.Messages;
-
-import org.bukkit.Bukkit;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
@@ -26,11 +20,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 
 public class DamageEvents implements Listener {
 
+	private InfPlayerManager IPM = Main.InfPlayerManager;
 	public Main plugin;
 
 	public DamageEvents(Main instance)
@@ -38,106 +32,64 @@ public class DamageEvents implements Listener {
 		this.plugin = instance;
 	}
 
-	// Player is Damaged, User is Damager
-	// When entity is damaged
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageEvent e) {
+
 		if (e.getEntity() instanceof Player)
 		{
 			Player victim = (Player) e.getEntity();
 
-			if (Infected.isPlayerInGame(victim))
+			Lobby Lobby = Main.Lobby;
+			// Make sure the victim is in Infected
+			if (Lobby.isInGame(victim))
 			{
+				// Make sure the damage caused isn't from another entity as that
+				// is handled in a different event listener
 				if (e.getCause() != DamageCause.ENTITY_ATTACK && e.getCause() != DamageCause.PROJECTILE)
 				{
+					InfPlayer IPV = IPM.getInfPlayer(victim);
 
-					// If the attack happened before the game started
-					if (Infected.getGameState() == GameState.VOTING)
-						e.setCancelled(true);
-
-					// Before a zombie is chosen
-					else if (Infected.getGameState() == GameState.BEFOREINFECTED)
+					// If the Player got hurt during Voting, just cancel it.
+					if (Lobby.getGameState() == GameState.Voting)
 					{
+						e.setDamage(0);
+						e.setCancelled(true);
+					}
+
+					// If the player gets hurt well the game is choosing an
+					// Infected, kill the player, but respawn them without doing
+					// anything
+					else if (Lobby.getGameState() == GameState.Infecting && victim.getHealth() - e.getDamage() <= 0)
+					{
+						e.setDamage(0);
+						victim.sendMessage(Main.I + "You almost died before the game even started!");
+						// Because we're not counting this, we'll just respawn
+						// them without saying they died
+						IPV.respawn();
+					}
+
+					// If the game has started, lets do some stuff
+					else if (Lobby.getGameState() == GameState.Started)
+					{
+						// Is the damage enough to kill the player?
 						if (victim.getHealth() - e.getDamage() <= 0)
 						{
-							e.setDamage(0);
-
-							victim.sendMessage(Main.I + "You almost died before the game even started!");
-							victim.setHealth(20);
-							victim.setFoodLevel(20);
-							MiscStats.handleKillStreaks(true, victim);
-							victim.setFoodLevel(20);
-							LocationHandler.respawn(victim);
-							victim.setFallDistance(0F);
-						}
-					}
-					// If the game has fully started
-					else if (Infected.getGameState() == GameState.STARTED)
-					{
-						Player killer = null;
-						if (Main.Lasthit.containsKey(victim.getName()))
-							killer = Bukkit.getPlayer(Main.Lasthit.get(victim.getName()));
-
-						if ((victim != null) && (killer != null))
-						{
-
-							// Make sure both are in the game(you never know :P)
-							if (Infected.isPlayerInGame(killer) && Infected.isPlayerInGame(victim))
+							// If the stored last damager isn't null, we'll say
+							// they're the killer
+							if (IPV.getLastDamager() != null)
 							{
-
-								// Saves who hit the person last
-								Main.Lasthit.put(victim.getName(), killer.getName());
-
-								// If it was enough to kill the player
-								if (victim.getHealth() - e.getDamage() <= 0)
-								{
-									Deaths.playerDies(DeathType.Other, killer, victim);
-									e.setDamage(0);
-								}
-							}
-						} else
-						{
-							if (victim.getHealth() - e.getDamage() <= 0)
-							{
-								if (Main.humans.contains(victim))
-								{
-									for (Player playing : Bukkit.getServer().getOnlinePlayers())
-									{
-										if (Infected.isPlayerInGame(playing))
-										{
-											playing.sendMessage(Messages.sendMessage(Msgs.GAME_GOTINFECTED, victim, null));
-										}
-									}
-								}
-
-								if (Infected.isPlayerHuman(victim))
-								{
-									for (Player playing : Bukkit.getServer().getOnlinePlayers())
-									{
-										if (Infected.isPlayerInGame(playing))
-										{
-											playing.sendMessage(Messages.sendMessage(Msgs.GAME_GOTINFECTED, victim, null));
-										}
-									}
-								}
-								victim.setHealth(20);
-								victim.setFallDistance(0F);
-								victim.setFoodLevel(20);
-								LocationHandler.respawn(victim);
-								victim.setFallDistance(0F);
+								Player killer = IPV.getLastDamager();
+								// Not really sure how they died? Just say melee
+								Deaths.playerDies(DeathType.Melee, killer, victim);
 								e.setDamage(0);
-								Main.humans.remove(victim.getName());
-								Main.Lasthit.remove(victim.getName());
-								Main.Winners.remove(victim.getName());
-								if (Infected.listHumans().size() == 0)
-								{
-									Game.endGame(false);
-								} else
-								{
-									Equip.equipZombies(victim);
-									Zombify.zombifyPlayer(victim);
-								}
 							}
+							// Other wise, they just died by "Other"
+							else
+								Deaths.playerDies(DeathType.Other, null, victim);
+
+							// Was that the last human?
+							if (Lobby.getHumans().size() == 0)
+								Game.endGame(false);
 						}
 					}
 				}
@@ -148,138 +100,111 @@ public class DamageEvents implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
 
+		// Hmm so an Entity hit them, but which entity?
+
 		// Is the victim a player?
 		if (e.getEntity() instanceof Player)
 		{
 			Player victim = (Player) e.getEntity();
 			Player killer = null;
 
-			// If they're in the game
-			if (Infected.isPlayerInGame(victim))
+			// Before we go any farther lets make sure they're even in the game
+			Lobby Lobby = Main.Lobby;
+			if (Lobby.isInGame(victim))
 			{
+				// By default we'll say it was melee
 				DeathType death = DeathType.Melee;
 
-				// Get the attacker
+				// Was the entity that did the damage a player?
 				if (e.getDamager() instanceof Player)
 					killer = (Player) e.getDamager();
 
+				// Was the entity that did the damage a arrow?
 				else if (e.getDamager() instanceof Arrow)
 				{
 					victim = (Player) e.getEntity();
 					Arrow arrow = (Arrow) e.getDamager();
 
+					// Was the shooter of the arrow a player?
 					if (arrow.getShooter() instanceof Player)
+					{
 						killer = (Player) arrow.getShooter();
-					death = DeathType.Arrow;
+						death = DeathType.Arrow;
+					}
 				}
-
+				// Was the entity that did the damage a Snowball?
 				else if (e.getDamager() instanceof Snowball)
 				{
 					victim = (Player) e.getEntity();
 					Snowball ball = (Snowball) e.getDamager();
 
+					// Was the shooter of the snowball a player?
 					if (ball.getShooter() instanceof Player)
+					{
 						killer = (Player) ball.getShooter();
-					death = DeathType.Snowball;
+						death = DeathType.Snowball;
+					}
 				}
 
+				// Was the entity that did the damage a Snowball?
 				else if (e.getDamager() instanceof Egg)
 				{
 					victim = (Player) e.getEntity();
 					Egg ball = (Egg) e.getDamager();
 
+					// Was the shooter of the egg a player??
 					if (ball.getShooter() instanceof Player)
+					{
 						killer = (Player) ball.getShooter();
-
-					death = DeathType.Egg;
+						death = DeathType.Egg;
+					}
 				}
-				if (killer instanceof Player)
+				// Lets make sure the final killer is a Player
+				if (killer instanceof Player && Lobby.isInGame(killer))
 				{
-					// Make sure they arn't on the same team
-					if (Infected.isPlayerHuman(killer) && Infected.isPlayerHuman(victim))
+					// If the Player got hurt by a player before the game
+					// started, just cancel it.
+					if (Lobby.getGameState() != GameState.Started)
 					{
 						e.setDamage(0);
 						e.setCancelled(true);
 					}
 
-					if (Infected.isPlayerZombie(killer) && Infected.isPlayerZombie(victim))
-					{
-						e.setDamage(0);
-						e.setCancelled(true);
-					}
-
+					// If the game has started lets start watching
 					else
 					{
-
-						// If the attack happened before the game started
-						if (Infected.getGameState() == GameState.VOTING)
+						// Make sure they arn't on the same team
+						if (!Lobby.oppositeTeams(killer, victim))
 						{
 							e.setDamage(0);
 							e.setCancelled(true);
-						}
-
-						// Before a zombie is chosen
-						else if (Infected.getGameState() == GameState.BEFOREINFECTED)
-						{
-							e.setDamage(0);
-							e.setCancelled(true);
-						}
-
-						// If the game has fully started
-						else if (Infected.getGameState() == GameState.STARTED)
-						{
-							// If it doesn't end up null (In case a mob hit
-							// them)
-							if ((victim != null) && (killer != null))
-							{
-
-								// Make sure both are in the game(you never know
-								// :P)
-								if (Infected.isPlayerInGame(killer) && Infected.isPlayerInGame(victim))
-								{
-
-									// Saves who hit the person last
-									Main.Lasthit.put(victim.getName(), killer.getName());
-
-									// If it was enough to kill the player
-									if (victim.getHealth() - e.getDamage() <= 0)
-									{
-										e.setDamage(0);
-										Deaths.playerDies(death, killer, victim);
-									} else if (Infected.playerhasHumanClass(killer) || Infected.playerhasZombieClass(killer))
-										PotionEffects.addEffectOnContact(killer, victim);
-
-								}
-							}
 						} else
 						{
-							e.setDamage(0);
-							e.setCancelled(true);
+							InfPlayer IPV = IPM.getInfPlayer(victim);
+							InfPlayer IPK = IPM.getInfPlayer(killer);
+							IPV.setLastDamager(killer);
+
+							// If it was enough to kill the player
+							if (victim.getHealth() - e.getDamage() <= 0)
+							{
+								e.setDamage(0);
+								Deaths.playerDies(death, killer, victim);
+
+							}
+							// If the damage wasn't enough to kill them, lets
+							// see what contact effects we need to apply
+							else if (!IPK.getInfClass(IPK.getTeam()).getContacteffects().isEmpty())
+								PotionEffects.addEffectOnContact(killer, victim);
 						}
 					}
+				} else
+				{
+					e.setDamage(0);
+					e.setCancelled(true);
 				}
+
 			}
 
 		}
 	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		final Player player = event.getPlayer();
-		if (Main.inGame.contains(player.getName()))
-			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-			{
-
-				@Override
-				public void run() {
-					player.sendMessage(Main.I + "Apperently i missed a way to die...");
-					player.sendMessage(Main.I + "Inform the author on how you died!");
-					player.sendMessage(Main.I + "http://www.dev.Bukkit.org/Server_Mods/Infected-Core");
-					player.performCommand("Infected Leave");
-					player.performCommand("Infected Join");
-				}
-
-			}, 10L);
-	}
-
 }

@@ -1,5 +1,5 @@
 
-package me.xxsniperzzxx_sd.infected.Handlers;
+package me.xxsniperzzxx_sd.infected.Handlers.Misc;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

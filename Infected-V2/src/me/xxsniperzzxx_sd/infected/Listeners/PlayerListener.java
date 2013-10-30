@@ -2,13 +2,9 @@
 package me.xxsniperzzxx_sd.infected.Listeners;
 
 import java.util.ArrayList;
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Leave;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
-import me.xxsniperzzxx_sd.infected.Messages.Messages;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -45,20 +41,6 @@ import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("static-access")
 public class PlayerListener implements Listener {
-
-	public Main Main = new Main();
-	public ArrayList<String> item = new ArrayList<String>();
-
-	public Main plugin;
-
-	public PlayerListener(Main instance)
-	{
-		this.plugin = instance;
-	}
-
-	// Create global players (Bows and melee)
-	Player playeruser = null;
-	Player useruser = null;
 
 	// Settings for effects
 	int effect = 0;

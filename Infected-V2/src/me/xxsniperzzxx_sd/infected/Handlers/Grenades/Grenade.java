@@ -3,7 +3,7 @@ package me.xxsniperzzxx_sd.infected.Handlers.Grenades;
 
 import java.util.ArrayList;
 
-import me.xxsniperzzxx_sd.infected.Handlers.PotionHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.PotionHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.entity.Player;

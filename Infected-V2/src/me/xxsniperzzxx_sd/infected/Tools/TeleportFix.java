@@ -1,11 +1,12 @@
+
 package me.xxsniperzzxx_sd.infected.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -15,9 +16,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.Plugin;
 
+
 public class TeleportFix implements Listener {
+
 	private Server server;
 	private Plugin plugin;
+	private Lobby Lobby = Main.Lobby;
 
 	private final int TELEPORT_FIX_DELAY = 15; // ticks
 
@@ -34,6 +38,7 @@ public class TeleportFix implements Listener {
 		// Fix the visibility issue one tick later
 		server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 		{
+
 			@Override
 			public void run() {
 				// Refresh nearby clients
@@ -45,6 +50,7 @@ public class TeleportFix implements Listener {
 				// Then show them again
 				server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 				{
+
 					@Override
 					public void run() {
 						updateEntities(player, nearby, true);
@@ -59,34 +65,31 @@ public class TeleportFix implements Listener {
 		// and hide or show tpedPlayer to every player.
 		for (Player player : players)
 		{
-			if (Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player))
+			if (Main.config.getBoolean("Disguise Support.Enabled"))
 			{
-				if (Main.config.getBoolean("Disguise Support.Enabled"))
+				if (visible)
 				{
-					if (visible)
-					{
-						if (!Disguises.isPlayerDisguised(player) || !Infected.isPlayerZombie(player))
-							tpedPlayer.showPlayer(player);
-						if (!Disguises.isPlayerDisguised(tpedPlayer) || !Infected.isPlayerZombie(player))
-							player.showPlayer(tpedPlayer);
-					} else
-					{
-						if (!Disguises.isPlayerDisguised(player) || !Infected.isPlayerZombie(player))
-							tpedPlayer.hidePlayer(player);
-						if (!Disguises.isPlayerDisguised(player) || !Infected.isPlayerZombie(player))
-							player.hidePlayer(tpedPlayer);
-					}
+					if (!Disguises.isPlayerDisguised(player))
+						tpedPlayer.showPlayer(player);
+					if (!Disguises.isPlayerDisguised(tpedPlayer))
+						player.showPlayer(tpedPlayer);
 				} else
 				{
-					if (visible)
-					{
-						tpedPlayer.showPlayer(player);
-						player.showPlayer(tpedPlayer);
-					} else
-					{
+					if (!Disguises.isPlayerDisguised(player))
 						tpedPlayer.hidePlayer(player);
+					if (!Disguises.isPlayerDisguised(tpedPlayer))
 						player.hidePlayer(tpedPlayer);
-					}
+				}
+			} else
+			{
+				if (visible)
+				{
+					tpedPlayer.showPlayer(player);
+					player.showPlayer(tpedPlayer);
+				} else
+				{
+					tpedPlayer.hidePlayer(player);
+					player.hidePlayer(tpedPlayer);
 				}
 			}
 		}
@@ -95,7 +98,7 @@ public class TeleportFix implements Listener {
 	public List<Player> getPlayersInInfected() {
 		List<Player> res = new ArrayList<Player>();
 		for (Player p : server.getOnlinePlayers())
-			if (Infected.isPlayerInGame(p) || Infected.isPlayerInLobby(p))
+			if (Lobby.isInGame(p))
 				res.add(p);
 		return res;
 	}

@@ -4,16 +4,11 @@ package me.xxsniperzzxx_sd.infected.Listeners;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Enums.Msgs;
-import me.xxsniperzzxx_sd.infected.Enums.Teams;
 import me.xxsniperzzxx_sd.infected.Events.InfectedClassSelectEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedShopPurchaseEvent;
-import me.xxsniperzzxx_sd.infected.Handlers.ItemHandler;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
-import me.xxsniperzzxx_sd.infected.Messages.Messages;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -37,15 +32,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 @SuppressWarnings("static-access")
 public class SignListener implements Listener {
 
-	public Main Main = new Main();
-	public ArrayList<String> item = new ArrayList<String>();
-
-	public Main plugin;
-
-	public SignListener(Main instance)
-	{
-		this.plugin = instance;
-	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerClickClassSign(PlayerInteractEvent event) {

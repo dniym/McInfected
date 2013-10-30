@@ -3,8 +3,6 @@ package me.xxsniperzzxx_sd.infected;
 
 import java.util.ArrayList;
 import java.util.List;
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
-import me.xxsniperzzxx_sd.infected.Enums.Msgs;
 import me.xxsniperzzxx_sd.infected.Events.InfectedCommandEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedGrenadePurchaseEvent;
 import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
@@ -14,13 +12,10 @@ import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Game;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Leave;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Reset;
-import me.xxsniperzzxx_sd.infected.GameMechanics.Vote;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Zombify;
 import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
-import me.xxsniperzzxx_sd.infected.Handlers.ItemHandler;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
-import me.xxsniperzzxx_sd.infected.Messages.Messages;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -436,23 +431,20 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 					Player player = (Player) sender;
-					
+
 					if (!player.hasPermission("Infected.Shop"))
 					{
 						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
 						return true;
-					}
-					else if (!plugin.inGame.contains(player.getName()))
+					} else if (!plugin.inGame.contains(player.getName()))
 					{
 						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOTINGAME, null, null));
 						return true;
-					}
-					else if (Infected.getGameState() == GameState.STARTED)
+					} else if (Infected.getGameState() == GameState.STARTED)
 					{
 						player.sendMessage(Messages.sendMessage(Msgs.SHOP_GUIONLYINLOBBY, null, null));
 						return true;
-					}
-					else
+					} else
 					{
 						if (!Infected.filesGetShop().getBoolean("Use GUI"))
 						{
@@ -523,7 +515,7 @@ public class Commands implements CommandExecutor {
 												Material.getMaterial(plugin.Grenades.get(gi)),
 												1);
 										ItemMeta im = itemstack.getItemMeta();
-										im.setDisplayName("§e" + Infected.filesGetGrenades().getString(plugin.Grenades.get(gi) + ".Name"));
+										im.setDisplayName("ï¿½e" + Infected.filesGetGrenades().getString(plugin.Grenades.get(gi) + ".Name"));
 										itemstack.setItemMeta(im);
 
 										InfectedGrenadePurchaseEvent grenadeEvent = new InfectedGrenadePurchaseEvent(
@@ -1124,23 +1116,23 @@ public class Commands implements CommandExecutor {
 					{
 						player.sendMessage(plugin.I + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======" + ChatColor.GOLD + " Admin Menu " + ChatColor.GREEN + ChatColor.STRIKETHROUGH + ChatColor.BOLD + "======");
 						player.sendMessage(plugin.I + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add points to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add points to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add score to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add score to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.DARK_AQUA + "/Inf Admin KStats <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add kills to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add kills to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.DARK_BLUE + "/Inf Admin DStats <Player> <#>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Add deaths to a player(Also goes negative)");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add deaths to a player(Also goes negative)");
 						player.sendMessage(plugin.I + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Kick a player out of Infected");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Kick a player out of Infected");
 						player.sendMessage(plugin.I + ChatColor.DARK_GREEN + "/Inf Admin Reset <Player>");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Reset a player's stats");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Reset a player's stats");
 						player.sendMessage(plugin.I + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Prevent joining Infected");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Prevent joining Infected");
 						player.sendMessage(plugin.I + ChatColor.DARK_RED + "/Inf Admin Reload");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"Reload the config");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Reload the config");
 						player.sendMessage(plugin.I + ChatColor.GOLD + "/Inf Admin Code");
-						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC +"See Infected's item code for the item in hand");
+						player.sendMessage(plugin.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "See Infected's item code for the item in hand");
 					}
 				}
 				// ////////////////////////////////////////////

@@ -3,8 +3,8 @@ package me.xxsniperzzxx_sd.infected.Handlers.Classes;
 
 import java.util.ArrayList;
 
-import me.xxsniperzzxx_sd.infected.Handlers.ItemHandler;
-import me.xxsniperzzxx_sd.infected.Handlers.PotionHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.PotionHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 

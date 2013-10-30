@@ -9,9 +9,10 @@ import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Equip;
 import me.xxsniperzzxx_sd.infected.GameMechanics.PotionEffects;
 import me.xxsniperzzxx_sd.infected.GameMechanics.Stats;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClass;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -61,7 +62,12 @@ public class InfPlayer {
 		player = p;
 	}
 
-	// Set all their info into their CPlayer
+	/**
+	 * Saves: - Location - Name - Gamemode - Level - Exp - Health - Food -
+	 * Inventory - Amor Clears: - Armor - Inventory Sets: - Gamemode to
+	 * adventure - Sets level to 0 - Sets the players exp to 0 - Sets the
+	 * players health to 20 - Sets the food to 20
+	 */
 	public void setInfo() {
 		location = player.getLocation();
 		name = player.getName();
@@ -82,7 +88,10 @@ public class InfPlayer {
 		player.setFoodLevel(20);
 	}
 
-	// Method to reset the player to how they were before they joined an arena
+	/**
+	 * Restores: - Inventory - Armor - Gamemode - Level - Exp - Health - Food -
+	 * Location Resets: - Potion Effects
+	 */
 	@SuppressWarnings("deprecation")
 	public void leaveInfected() {
 		Player p = Bukkit.getPlayerExact(name);
@@ -98,7 +107,6 @@ public class InfPlayer {
 		p.updateInventory();
 		p.setFallDistance(0);
 		p.teleport(location);
-		p.setWalkSpeed(0.2F);
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
 		killstreak = 0;
@@ -113,17 +121,37 @@ public class InfPlayer {
 		vote = null;
 	}
 
+	/**
+	 * Disguises the player
+	 */
 	public void disguise() {
 
 		Disguises.disguisePlayer(player);
 	}
 
+	/**
+	 * Undisguises the player
+	 */
 	public void unDisguise() {
 		if (Main.config.getBoolean("Disguise Support.Enabled"))
 			if (Disguises.isPlayerDisguised(player))
 				Disguises.unDisguisePlayer(player);
 	}
-
+/**
+ * - Updates Scoreboard
+ * - Play a sound
+ * - Set level to 0
+ * - Set exp to 0
+ * - Teleport to the lobby
+ * - Set gamemode
+ * - Remove Fire
+ * - Set health to 20
+ * - Set Food to 20
+ * 
+ * 
+ * - Undisguise the player
+ * 
+ */
 	public void tpToLobby() {
 
 		ScoreBoard.updateScoreBoard();
@@ -144,13 +172,17 @@ public class InfPlayer {
 
 	}
 
-	// Respawn the player
+	/**
+	 * - Set health and food to 20
+	 * - Remove Fire Ticks
+	 * - Teleport to new spawn
+	 * - Clear potion effects
+	 */
 	public void respawn() {
 		Player p = player;
 		p.setHealth(20.0);
 		p.setFoodLevel(20);
 		p.setFireTicks(0);
-		p.setExp(1.0F);
 		Random r = new Random();
 		int i = r.nextInt(Main.Lobby.getActiveArena().getSpawns().size());
 		String loc = Main.Lobby.getActiveArena().getSpawns().get(i);
@@ -166,7 +198,15 @@ public class InfPlayer {
 		p.setFallDistance(0F);
 		lastDamager = null;
 	}
-
+/**
+ * Change team to Zombie
+ * Set winner to false
+ * Change their equipment to zombie
+ * apply potion effects
+ * disguise
+ * update scoreboard
+ * apply confussion
+ */
 	public void Infect() {
 		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
 		player.sendMessage(Main.I + "You have become infected!");
@@ -179,11 +219,11 @@ public class InfPlayer {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
 				2));
 	}
-	
+
 	public long getPlayingTime(InfPlayer IP) {
 		return (System.currentTimeMillis() / 1000) - getTimeIn();
 	}
-	
+
 	/**
 	 * @return the player
 	 */
@@ -228,7 +268,6 @@ public class InfPlayer {
 	public void setPoints(int points) {
 		Stats.setPoints(name, points);
 	}
-
 
 	/**
 	 * @return the score
@@ -509,8 +548,8 @@ public class InfPlayer {
 	public void updateStats(int kills, int deaths) {
 		if (kills != 0)
 			Stats.setKills(name, Stats.getKills(name) + kills);
-			if (deaths != 0)
-				Stats.setDeaths(name, Stats.getDeaths(name) + deaths);
+		if (deaths != 0)
+			Stats.setDeaths(name, Stats.getDeaths(name) + deaths);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package me.xxsniperzzxx_sd.infected.Handlers;
+package me.xxsniperzzxx_sd.infected.Handlers.Misc;
 
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

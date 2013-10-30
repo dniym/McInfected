@@ -3,9 +3,11 @@ package me.xxsniperzzxx_sd.infected.Messages;
 
 import java.util.Random;
 
+import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,15 +15,25 @@ import org.bukkit.entity.Player;
 
 public class DeathMessages {
 
-	// Get the death message
+	private static InfPlayerManager IPM = Main.InfPlayerManager;
+	
 	public static String getDeathMessage(Player killer, Player killed, DeathType death) {
 
-		InfPlayer IP = InfPlayerManager.getPlayer(killer);
-		
+		InfPlayer IP = null;
+		Team team = null;
+		if(killer != null){
+			IP = IPM.getInfPlayer(killer);
+			team = IP.getTeam();
+		}else{
+			if(IPM.getInfPlayer(killed).getTeam() == Team.Human)
+				team = Team.Zombie;
+			else
+				team = Team.Human;
+		}
 		// Get a random message from the death type's messages
 		Random r = new Random();
-		int i = r.nextInt(IP.getTeam().getKillMessages().size());
-		String msg = IP.getTeam().getKillMessages().get(i);
+		int i = r.nextInt(team.getKillMessages(death).size());
+		String msg = team.getKillMessages(death).get(i);
 
 		// Replace color codes, and killer and killed names
 		msg = ChatColor.translateAlternateColorCodes('&', msg);

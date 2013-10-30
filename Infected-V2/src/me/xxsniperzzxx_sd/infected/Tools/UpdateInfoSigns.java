@@ -1,9 +1,9 @@
-package me.xxsniperzzxx_sd.infected.Handlers;
+package me.xxsniperzzxx_sd.infected.Tools;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
-import me.xxsniperzzxx_sd.infected.Tools.Files;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,7 +34,7 @@ public class UpdateInfoSigns {
 						if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
 						{
 							Sign sign = (Sign) location.getBlock().getState();
-							sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Infected.listInGame().size()));
+							sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Main.Lobby.getInGame().size()));
 							sign.setLine(2, ChatColor.GOLD + status);
 							if (Lobby.getGameState() == GameState.Started ||Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Voting)
 								sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));

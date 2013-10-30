@@ -1,9 +1,10 @@
 
 package me.xxsniperzzxx_sd.infected.Listeners;
 
-import me.xxsniperzzxx_sd.infected.Infected;
-
 import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Messages.RandomChatColor;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,24 +24,25 @@ public class TagApi implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onNameTag(PlayerReceiveNameTagEvent e) {
-		Player player = e.getPlayer();
-		if (Infected.isPlayerInGame(player))
+		Player p = e.getPlayer();
+		Lobby Lobby = Main.Lobby;
+		if (Lobby.isInGame(p))
 		{
-			if (Infected.isPlayerHuman(e.getNamedPlayer()))
+			if (Lobby.isHuman(e.getNamedPlayer()))
 			{
 				String string = ChatColor.DARK_GREEN + e.getNamedPlayer().getName();
 				String s = string.substring(0, Math.min(string.length(), 16));
 				e.setTag(s);
-			}
-			else if(Infected.isPlayerZombie(e.getNamedPlayer()))
+			} else if (Lobby.isZombie(e.getNamedPlayer()))
 			{
-					String string = ChatColor.DARK_RED + e.getNamedPlayer().getName();
-					String s = string.substring(0, Math.min(string.length(), 16));
-					e.setTag(s);
-			} else{
-					String string = ChatColor.UNDERLINE + e.getNamedPlayer().getName();
-					String s = string.substring(0, Math.min(string.length(), 16));
-					e.setTag(s);
+				String string = ChatColor.DARK_RED + e.getNamedPlayer().getName();
+				String s = string.substring(0, Math.min(string.length(), 16));
+				e.setTag(s);
+			} else
+			{
+				String string = RandomChatColor.getColor() + e.getNamedPlayer().getName();
+				String s = string.substring(0, Math.min(string.length(), 16));
+				e.setTag(s);
 			}
 		}
 	}

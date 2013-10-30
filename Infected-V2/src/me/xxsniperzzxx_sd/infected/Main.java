@@ -6,22 +6,17 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import me.xxsniperzzxx_sd.infected.Enums.GameState;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
-import me.xxsniperzzxx_sd.infected.Handlers.LocationHandler;
-import me.xxsniperzzxx_sd.infected.Handlers.UpdateInfoSigns;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Listeners.DamageEvents;
-import me.xxsniperzzxx_sd.infected.Listeners.DeathEvent;
 import me.xxsniperzzxx_sd.infected.Listeners.GrenadeListener;
 import me.xxsniperzzxx_sd.infected.Listeners.PlayerListener;
 import me.xxsniperzzxx_sd.infected.Listeners.SignListener;
 import me.xxsniperzzxx_sd.infected.Tools.AddonManager;
+import me.xxsniperzzxx_sd.infected.Tools.Files;
 import me.xxsniperzzxx_sd.infected.Tools.Metrics;
 import me.xxsniperzzxx_sd.infected.Tools.TeleportFix;
+import me.xxsniperzzxx_sd.infected.Tools.UpdateInfoSigns;
 import me.xxsniperzzxx_sd.infected.Tools.Updater;
 import net.milkbowl.vault.economy.Economy;
 
@@ -29,64 +24,22 @@ import code.husky.mysql.MySQL;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.scoreboard.DisplaySlot;
 
 
 public class Main extends JavaPlugin {
 
 	// Initialize all the variables
 	public static String bVersion = "1.6.4";
-	public static int currentTime = 0;
 	public static String v = null;
-	public static GameState gameState = GameState.INLOBBY;
-	// Lists, Strings and Integers Infected needs
-	public static int arenaNumber = 0;
-	public static ArrayList<String> infectedChat = new ArrayList<String>();
-	public static ArrayList<String> possibleArenas = new ArrayList<String>();
-	public static ArrayList<String> possibleArenasU = new ArrayList<String>();
-	public static ArrayList<String> Winners = new ArrayList<String>();
-	public static ArrayList<Integer> Score = new ArrayList<Integer>();
-	public static ArrayList<Integer> Grenades = new ArrayList<Integer>();
-	public static ArrayList<String> inLobby = new ArrayList<String>();
-	public static ArrayList<String> zombies = new ArrayList<String>();
-	public static ArrayList<String> humans = new ArrayList<String>();
-	public static ArrayList<String> inGame = new ArrayList<String>();
-	public static HashMap<String, String> humanClasses = new HashMap<String, String>();
-	public static HashMap<String, String> zombieClasses = new HashMap<String, String>();
-	public static HashMap<String, Integer> Leaders = new HashMap<String, Integer>();
-	public static HashMap<String, Long> Timein = new HashMap<String, Long>();
-	public static HashMap<String, String> Lasthit = new HashMap<String, String>();
-	public static HashMap<String, String> Voted4 = new HashMap<String, String>();
-	public static HashMap<String, String> Creating = new HashMap<String, String>();
-	public static HashMap<String, Integer> Votes = new HashMap<String, Integer>();
-	public static HashMap<String, Integer> KillStreaks = new HashMap<String, Integer>();
-
-	public static HashMap<String, String> gamemode = new HashMap<String, String>();
-	public static HashMap<String, Integer> Levels = new HashMap<String, Integer>();
-	public static HashMap<String, Float> Exp = new HashMap<String, Float>();
-	public static HashMap<String, Double> Health = new HashMap<String, Double>();
-	public static HashMap<String, Integer> Food = new HashMap<String, Integer>();
-	public static HashMap<String, ItemStack[]> Armor = new HashMap<String, ItemStack[]>();
-	public static HashMap<String, ItemStack[]> Inventory = new HashMap<String, ItemStack[]>();
-	public static HashMap<String, String> Spot = new HashMap<String, String>();
-
-	public static HashMap<Location, Material> Blocks = new HashMap<Location, Material>();
-	public static HashMap<Location, ItemStack[]> Chests = new HashMap<Location, ItemStack[]>();
 
 	public static String I = "" + ChatColor.DARK_RED + ChatColor.BOLD + "«" + ChatColor.DARK_GRAY + ChatColor.BOLD + "Infected" + ChatColor.DARK_RED + ChatColor.BOLD + "»" + ChatColor.LIGHT_PURPLE + " ";
 
-	public static String playingin = null;
 	public static int timestart;
 	public static int queuedtpback;
 	public static int queuedtp;
@@ -120,7 +73,7 @@ public class Main extends JavaPlugin {
 
 	public static Lobby Lobby;
 	public static InfPlayerManager InfPlayerManager;
-	
+
 	@Override
 	public void onEnable() {
 		Lobby = new Lobby();
@@ -145,16 +98,25 @@ public class Main extends JavaPlugin {
 
 		// Create Configs and files
 		getConfig().options().copyDefaults(true);
-		Infected.filesGetArenas().options().copyDefaults(true);
-		Infected.filesGetKillTypes().options().copyDefaults(true);
-		Infected.filesGetShop().options().copyDefaults(true);
-		Infected.filesGetPlayers().options().copyDefaults(true);
-		Infected.filesGetMessages().options().copyDefaults(true);
-		Infected.filesGetGrenades().options().copyDefaults(true);
-		Infected.filesGetAbilities().options().copyDefaults(true);
-		Infected.filesGetClasses().options().copyDefaults(true);
-		Infected.filesGetSigns().options().copyDefaults(true);
-		Infected.filesSafeAll();
+		Files.getArenas().options().copyDefaults(true);
+		Files.getKills().options().copyDefaults(true);
+		Files.getShop().options().copyDefaults(true);
+		Files.getPlayers().options().copyDefaults(true);
+		Files.getMessages().options().copyDefaults(true);
+		Files.getGrenades().options().copyDefaults(true);
+		Files.getAbilities().options().copyDefaults(true);
+		Files.getClasses().options().copyDefaults(true);
+		Files.getSigns().options().copyDefaults(true);
+		Files.saveAbilities();
+		Files.saveArenas();
+		Files.saveClasses();
+		Files.saveConfig();
+		Files.saveGrenades();
+		Files.saveKills();
+		Files.saveMessages();
+		Files.savePlayers();
+		Files.saveShop();
+		Files.saveSigns();
 
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
@@ -202,18 +164,19 @@ public class Main extends JavaPlugin {
 
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
-		PlayerListener PlayerListener = new PlayerListener(this);
-		SignListener SignListener = new SignListener(this);
+		PlayerListener PlayerListener = new PlayerListener();
+		SignListener SignListener = new SignListener();
 		TeleportFix TeleportFix = new TeleportFix(this);
-		if (getConfig().getBoolean("Use Death Event Instead of Damage Event"))
-		{
-			DeathEvent DeathEvents = new DeathEvent(this);
-			pm.registerEvents(DeathEvents, this);
-		} else
-		{
-			DamageEvents DamageEvents = new DamageEvents(this);
-			pm.registerEvents(DamageEvents, this);
-		}
+		// if
+		// (getConfig().getBoolean("Use Death Event Instead of Damage Event"))
+		// {
+		// DeathEvent DeathEvents = new DeathEvent(this);
+		// pm.registerEvents(DeathEvents, this);
+		// } else
+		// {
+		DamageEvents DamageEvents = new DamageEvents(this);
+		pm.registerEvents(DamageEvents, this);
+		// }
 		GrenadeListener GrenadeListener = new GrenadeListener(this);
 		pm.registerEvents(PlayerListener, this);
 		pm.registerEvents(GrenadeListener, this);
@@ -258,49 +221,12 @@ public class Main extends JavaPlugin {
 		System.out.println("====================");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
 
 		// On disable reset players with everything from before
-		for (Player player : Bukkit.getServer().getOnlinePlayers())
-			if (player != null)
-				if (Main.inGame.contains(player.getName()))
-				{
-					player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-					player.sendMessage(Main.I + "Server was reloaded!");
-					player.setHealth(20.0);
-					player.setFoodLevel(20);
-					for (PotionEffect reffect : player.getActivePotionEffects())
-					{
-						player.removePotionEffect(reffect.getType());
-					}
-					player.setGameMode(GameMode.valueOf(Main.gamemode.get(player.getName())));
-					Main.Lasthit.remove(player.getName());
-					if (Main.Inventory.containsKey(player.getName()))
-					{
-						player.getInventory().setContents(Main.Inventory.get(player.getName()));
-					}
-					if (Main.Armor.containsKey(player.getName()))
-					{
-						player.getInventory().setArmorContents(Main.Armor.get(player.getName()));
-					}
-					player.updateInventory();
-					player.setExp(Main.Exp.get(player.getName()));
-					player.setLevel(Main.Levels.get(player.getName()));
-					if (Main.Spot.containsKey(player.getName()))
-					{
-						player.teleport(LocationHandler.getPlayerLocation(Main.Spot.get(player.getName())));
-					}
-					if (Main.Food.containsKey(player.getName()))
-					{
-						player.setFoodLevel(Main.Food.get(player.getName()));
-					}
-					if (Main.Health.containsKey(player.getName()))
-					{
-						player.setHealth(Main.Health.get(player.getName()));
-					}
-				}
+		for (Player p : Lobby.getInGame())
+			InfPlayerManager.getInfPlayer(p).leaveInfected();
 
 		if (getConfig().getBoolean("MySQL.Enable"))
 		{

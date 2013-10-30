@@ -24,7 +24,6 @@ public class Stats {
 			return Files.getPlayers().getInt("Players." + name + ".HighestKillStreak");
 	}
 
-
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
@@ -41,6 +40,7 @@ public class Stats {
 			Files.savePlayers();
 		}
 	}
+
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
@@ -53,7 +53,6 @@ public class Stats {
 		else
 			return Files.getPlayers().getInt("Players." + name + ".Kills");
 	}
-
 
 	/**
 	 * Checks if we're setting MySQL or Player.yml
@@ -125,6 +124,7 @@ public class Stats {
 			Files.savePlayers();
 		}
 	}
+
 	/**
 	 * Checks if we're going MySQL or Player.yml
 	 * 
@@ -153,6 +153,7 @@ public class Stats {
 			Files.savePlayers();
 		}
 	}
+
 	/**
 	 * Attempts to get Stats from MySQL (Untested)
 	 * 

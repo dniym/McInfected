@@ -14,6 +14,5 @@ public class StringUtil {
 		}
 		return s;
 	}
-
 }
 

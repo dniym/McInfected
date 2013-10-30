@@ -3,6 +3,7 @@ package me.xxsniperzzxx_sd.infected.Handlers.Player;
 
 import java.util.List;
 
+import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
 
 
@@ -17,8 +18,8 @@ public enum Team
 		string = s;
 	}
 
-	public List<String> getKillMessages() {
-		return Files.getMessages().getStringList("Deaths." + string);
+	public List<String> getKillMessages(DeathType death) {
+		return Files.getMessages().getStringList("Deaths." + string + "." + death);
 	}
 
 };

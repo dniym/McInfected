@@ -10,23 +10,53 @@ import org.bukkit.plugin.Plugin;
 public class InfPlayerManager {
 
 	Plugin plugin;
-	private static ArrayList<InfPlayer> players = new ArrayList<InfPlayer>();
+	private ArrayList<InfPlayer> players = new ArrayList<InfPlayer>();
 
 	public InfPlayerManager(Plugin plugin)
 	{
 		this.plugin = plugin;
 	}
 
-	public static void addPlayer(Player player) {
-		InfPlayer IP = new InfPlayer(player);
+	/**
+	 * Create InfPlayer
+	 * 
+	 * @param IP
+	 */
+	public void createInfPlayer(InfPlayer IP) {
+		players.add(IP);
+	}
+	/**
+	 * Create InfPlayer
+	 * @param Player
+	 */
+	public void createInfPlayer(Player p) {
+		InfPlayer IP = new InfPlayer(p);
 		players.add(IP);
 	}
 
-	public static void addPlayer(InfPlayer IP) {
-		players.add(IP);
+	/**
+	 * Remove InfPlayer
+	 * @param Playername
+	 */
+	public void removeInfPlayer(String playerName) {
+		for (InfPlayer player : players)
+		{
+			if (player.getName().equalsIgnoreCase(playerName))
+				players.remove(player);
+		}
 	}
-
-	public static InfPlayer getPlayer(String playerName) {
+	/**
+	 * Remove InfPlayer
+	 * @param IP
+	 */
+	public void removeInfPlayer(InfPlayer IP) {
+		players.remove(IP);
+	}
+	/**
+	 * Get InfPlayer
+	 * @param playername
+	 */
+	public InfPlayer getInfPlayer(String playerName) {
 		for (InfPlayer IP : players)
 		{
 			if (IP.getName().equalsIgnoreCase(playerName))
@@ -34,25 +64,16 @@ public class InfPlayerManager {
 		}
 		return null;
 	}
-
-	public static InfPlayer getPlayer(Player p) {
+	/**
+	 * Create InfPlayer
+	 * @param Player
+	 */
+	public InfPlayer getInfPlayer(Player p) {
 		for (InfPlayer IP : players)
 		{
 			if (IP.getPlayer() == p)
 				return IP;
 		}
 		return null;
-	}
-
-	public static void removeInfPlayer(InfPlayer IP) {
-		players.remove(IP);
-	}
-
-	public static void removeInfPlayer(String playerName) {
-		for (InfPlayer player : players)
-		{
-			if (player.getName().equalsIgnoreCase(playerName))
-				players.remove(player);
-		}
 	}
 }
