@@ -45,7 +45,8 @@ public class InfPlayer {
 	private InfClass zombieClass;
 	private Team team = Team.None;
 	private boolean isWinner = true;
-
+	private boolean isInfChatting = false;
+	
 	public InfPlayer(Player p)
 	{
 		location = p.getLocation();
@@ -565,6 +566,20 @@ public class InfPlayer {
 	 */
 	public void setWinner(boolean isWinner) {
 		this.isWinner = isWinner;
+	}
+
+	/**
+	 * @return the isInfChatting
+	 */
+	public boolean isInfChatting() {
+		return isInfChatting;
+	}
+
+	/**
+	 * @param isInfChatting the isInfChatting to set
+	 */
+	public void setInfChatting(boolean isInfChatting) {
+		this.isInfChatting = isInfChatting;
 	}
 
 }

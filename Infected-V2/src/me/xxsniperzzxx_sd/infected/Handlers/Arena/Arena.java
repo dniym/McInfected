@@ -148,6 +148,14 @@ public class Arena {
 	public void setChest(Location loc, Inventory inv) {
 		chests.put(loc, inv);
 	}
+	/**
+	 * Remove a opened chest
+	 * 
+	 * @param loc
+	 */
+	public void removeChest(Location loc){
+		chests.remove(loc);
+	}
 
 	/**
 	 * Get the broken blocks 
@@ -175,6 +183,14 @@ public class Arena {
 	 */
 	public void setBlock(Location loc, Material mat) {
 		blocks.put(loc, mat);
+	}
+	/**
+	 * Removes a broken block
+	 * 
+	 * @param loc
+	 */
+	public void removeBlock(Location loc){
+		blocks.remove(loc);
 	}
 	/**
 	 * Reset the arena

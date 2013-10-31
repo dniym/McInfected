@@ -3,7 +3,6 @@ package me.xxsniperzzxx_sd.infected.Tools;
 
 import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
-
 import org.bukkit.inventory.ItemStack;
 
 public class Settings {
@@ -23,7 +22,7 @@ public class Settings {
 			return Files.getConfig().getInt("Settings.Global.Time.Game");
 	}
 
-	public int getInfecting() {
+	public int getInfectingTime() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Time.Infecting"))
 			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Time.Infecting");
 		else
@@ -71,6 +70,13 @@ public class Settings {
 			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Can Loose Hunger");
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Loose Hunger");
+	}
+	
+	public boolean canBreakBlock(int id) {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks"))
+			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks").contains(id);
+		else
+			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks").contains(id);
 	}
 
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////
