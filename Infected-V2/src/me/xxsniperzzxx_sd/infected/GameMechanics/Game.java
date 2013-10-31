@@ -1,30 +1,20 @@
 
 package me.xxsniperzzxx_sd.infected.GameMechanics;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.Infected;
 import me.xxsniperzzxx_sd.infected.Main;
-import me.xxsniperzzxx_sd.infected.Disguise.Disguises;
-import me.xxsniperzzxx_sd.infected.Events.InfectedGameEndEvent;
-import me.xxsniperzzxx_sd.infected.Events.InfectedGameStartEvent;
-import me.xxsniperzzxx_sd.infected.Events.InfectedVoteStartEvent;
 import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
-import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
-import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.PointsAndScores;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
-import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
-import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
-import me.xxsniperzzxx_sd.infected.Tools.Files;
-
+import me.xxsniperzzxx_sd.infected.Messages.Msgs;
+import me.xxsniperzzxx_sd.infected.Tools.Events;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 
 
@@ -32,169 +22,116 @@ public class Game {
 
 	private static Lobby Lobby = Main.Lobby;
 
-	@SuppressWarnings("deprecation")
 	public static void endGame(Boolean DidHumansWin) {
-		if (Lobby.getGameState() == GameState.Started)
+		Lobby.setGameState(GameState.InLobby);
+		ScoreBoard.updateScoreBoard();
+
+		for (Player u : Lobby.getInGame())
 		{
-			Lobby.setGameState(GameState.InLobby);
-
-			ScoreBoard.updateScoreBoard();
-			for (Player playing : Bukkit.getServer().getOnlinePlayers())
-			{
-				if (Lobby.isPlayerInGame(playing))
-				{
-					if (Main.KillStreaks.containsKey(playing.getName()))
-					{
-						if (Main.KillStreaks.get(playing.getName()) > Files.getPlayers().getInt("Players." + playing.getName().toLowerCase() + ".KillStreak"))
-						{
-							Files.getPlayers().set("Players." + playing.getName().toLowerCase() + ".KillStreak", Main.KillStreaks.get(playing.getName()));
-							Files.savePlayers();
-						}
-					}
-				}
-			}
-			Bukkit.getServer().getPluginManager().callEvent(new InfectedGameEndEvent(
-					Main.inGame, Main.Winners, DidHumansWin));
-
-			if (DidHumansWin)
-			{
-				if (Main.config.getBoolean("Vault Support.Enable"))
-				{
-					int rewardMoney = Main.config.getInt("Vault Support.Reward");
-
-					for (Player playing : Bukkit.getOnlinePlayers())
-						if (Main.Winners.contains(playing.getName()))
-
-							Main.economy.depositPlayer(playing.getName(), rewardMoney);
-				}
-				if (!(Main.config.getString("Command Reward").equalsIgnoreCase(null) || Main.config.getString("Command Reward").equalsIgnoreCase("[]")))
-				{
-					for (Player playing : Bukkit.getOnlinePlayers())
-					{
-						if (Main.Winners.contains(playing.getName()))
-						{
-							String s = Main.config.getString("Command Reward").replaceAll("<player>", playing.getName());
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
-						}
-					}
-				}
-				for (String s : Main.config.getStringList("Rewards"))
-				{
-					for (Player playing : Bukkit.getOnlinePlayers())
-					{
-						if (Main.Winners.contains(playing.getName()))
-						{
-							playing.getInventory().setContents(Main.Inventory.get(playing.getName()));
-							playing.updateInventory();
-							playing.getInventory().addItem(ItemHandler.getItemStack(s));
-							playing.updateInventory();
-							Main.Inventory.put(playing.getName(), playing.getInventory().getContents());
-							Reset.resetPlayersInventory(playing);
-							playing.updateInventory();
-						}
-					}
-				}
-				for (final Player playing : Bukkit.getServer().getOnlinePlayers())
-				{
-					if (Main.inGame.contains(playing.getName()))
-					{
-						PointsAndScores.rewardPointsAndScore(playing, "Game Over");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
-						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage(Msgs.AFTERGAME_HUMANSWIN, null, null));
-						StringBuilder winners = new StringBuilder();
-						for (Object o : Main.Winners)
-						{
-							winners.append(o.toString());
-							winners.append(", ");
-						}
-						playing.sendMessage(Main.I + "Winners: " + winners.toString());
-						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
-						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
-						Lobby.playerSetTime(playing.getName());
-						Files.savePlayers();
-						if (Main.config.getBoolean("Disguise Support.Enabled"))
-							if (Disguises.isPlayerDisguised(playing))
-								Disguises.unDisguisePlayer(playing);
-
-						for (PotionEffect reffect : playing.getActivePotionEffects())
-						{
-							playing.removePotionEffect(reffect.getType());
-						}
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-						{
-
-							@Override
-							public void run() {
-								Reset.tp2LobbyAfter(playing);
-							}
-						}, 100L);
-					}
-				}
-			} else
-			{
-				for (final Player playing : Bukkit.getServer().getOnlinePlayers())
-					if (Main.inGame.contains(playing.getName()))
-					{
-						PointsAndScores.rewardPointsAndScore(playing, "Game Over");
-						Lobby.playerSetTime(playing.getName());
-
-						Files.savePlayers();
-
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
-						playing.sendMessage(Messages.sendMessage(Msgs.AFTERGAME_ZOMBESWIN, null, null));
-						playing.sendMessage("");
-						playing.sendMessage(Messages.sendMessage(Msgs.GAME_MAP, null, null));
-						playing.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
-						for (PotionEffect reffect : playing.getActivePotionEffects())
-							playing.removePotionEffect(reffect.getType());
-
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-						{
-
-							@Override
-							public void run() {
-								Reset.tp2LobbyAfter(playing);
-							}
-						}, 100L);
-					}
-			}
-			ScoreBoard.updateScoreBoard();
-			Main.playingin = "";
-			Main.Winners.clear();
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-			{
-
-				@Override
-				public void run() {
-
-					Lobby.setGameState(GameState.INLOBBY);
-					if (Main.inGame.size() >= Main.config.getInt("Automatic Start.Minimum Players") && Lobby.getGameState() == GameState.INLOBBY && Main.config.getBoolean("Automatic Start.Use"))
-					{
-						Lobby.timerStartVote();
-					}
-				}
-			}, 10 * 60);
+			InfPlayer IP = Main.InfPlayerManager.getInfPlayer(u);
+			if (IP.getKillstreak() > Stats.getHighestKillStreak(u.getName()))
+				Stats.setHighestKillStreak(u.getName(), IP.getKillstreak());
 		}
-	}
+		if (DidHumansWin)
+		{
+			for (Player u : Lobby.getInGame())
+			{
+				InfPlayer IP = Main.InfPlayerManager.getInfPlayer(u);
+				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
+				IV.addItem(IP.getInventory());
+				IV.addItem(Lobby.getActiveArena().getSettings().getRewordItems());
+			}
+			// TODO: If winner add money
+			// Main.economy.depositPlayer(playing.getName(), rewardMoney);
 
+			ArrayList<String> winners = new ArrayList<String>();
+			for (final Player u : Lobby.getInGame())
+				if (Main.InfPlayerManager.getInfPlayer(u).isWinner())
+					winners.add(u.getName());
+
+			for (final Player u : Lobby.getInGame())
+			{
+				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds));
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage(Msgs.Format_Header.getString("<title>", "Game Over"));
+				u.sendMessage("");
+				u.sendMessage("Humans Won");
+				StringBuilder winnersS = new StringBuilder();
+				for (String s : winners)
+				{
+					winnersS.append(s);
+					winnersS.append(", ");
+				}
+				u.sendMessage(Main.I + "Winners: " + winners.toString());
+				u.sendMessage("");
+				u.sendMessage(Msgs.Arena_Information.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage("");
+				u.sendMessage(Msgs.Format_Line.getString());
+				Stats.setPlayingTime(u.getName(), Main.InfPlayerManager.getInfPlayer(u).getPlayingTime());
+
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+				{
+
+					@Override
+					public void run() {
+						Main.InfPlayerManager.getInfPlayer(u).tpToLobby();
+					}
+				}, 100L);
+			}
+		} else
+		{
+			for (final Player u : Lobby.getInGame())
+			{
+				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds));
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage(Msgs.Format_Header.getString("<title>", "Game Over"));
+				u.sendMessage("");
+				u.sendMessage("Zombies Won");
+				u.sendMessage("");
+				u.sendMessage(Msgs.Arena_Information.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage("");
+				u.sendMessage(Msgs.Format_Line.getString());
+				Stats.setPlayingTime(u.getName(), Main.InfPlayerManager.getInfPlayer(u).getPlayingTime());
+
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+				{
+
+					@Override
+					public void run() {
+						Main.InfPlayerManager.getInfPlayer(u).tpToLobby();
+
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+						{
+
+							@Override
+							public void run() {
+
+								if (Lobby.getInGame().size() >= Main.config.getInt("Automatic Start.Minimum Players") && Lobby.getGameState() == GameState.InLobby)
+								{
+									Lobby.timerStartVote();
+								}
+							}
+						}, 10 * 60);
+					}
+				}, 100L);
+			}
+		}
+
+	}
 
 	public static void endGame() {
 		Lobby Lobby = Main.Lobby;
@@ -205,5 +142,26 @@ public class Game {
 
 	public static void leaveGame(Player p) {
 
+	}
+
+	public static void chooseAlphas() {
+
+		int toInfect = Lobby.getInGame().size() / (Lobby.getActiveArena().getSettings().getAlphaPercent() / 10);
+
+		do
+		{
+			Player alpha = Lobby.getInGame().get(new Random(50).nextInt(Lobby.getInGame().size()));
+			alpha.sendMessage("You're an alpha");
+			Main.InfPlayerManager.getInfPlayer(alpha).Infect();
+			for (Player u : Lobby.getInGame())
+				if (u != alpha)
+					u.sendMessage("Alpha is an alpha");
+
+			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
+				alpha.addPotionEffect(PE);
+
+		} while (Lobby.getZombies().size() != toInfect);
+
+		ScoreBoard.updateScoreBoard();
 	}
 }

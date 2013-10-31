@@ -2,16 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Vault (1).jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/CrackShot.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/TagAPI.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/iDisguise_v2.2.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/DisguiseCraft (4).jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Factions (2).jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/mcMMO.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Essentials.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/LibsDisguises.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/bukkit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/Vault.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/mcore.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/Factions.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/LibsDisguises.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/DisguiseCraft.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/iDisguise.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/TagAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/mcMMO.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/CrackShot.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Messages.StringUtil;
 import me.xxsniperzzxx_sd.infected.Tools.Files;
@@ -36,7 +35,6 @@ public class Arena {
 	public Settings getSettings() {
 		return Settings;
 	}
-
 
 	/**
 	 * Returns the arenas creator

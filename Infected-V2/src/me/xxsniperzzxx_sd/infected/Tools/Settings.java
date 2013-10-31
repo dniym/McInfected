@@ -1,9 +1,16 @@
 
 package me.xxsniperzzxx_sd.infected.Tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.xxsniperzzxx_sd.infected.Handlers.Arena.Arena;
 import me.xxsniperzzxx_sd.infected.Handlers.Misc.ItemHandler;
+import me.xxsniperzzxx_sd.infected.Handlers.Misc.PotionHandler;
+
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+
 
 public class Settings {
 
@@ -44,16 +51,24 @@ public class Settings {
 	}
 
 	public int getScorePer(Events e) {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Score."+e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score."+e.toString());
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Score." + e.toString()))
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString());
 		else
-			return Files.getConfig().getInt("Settings.Global.Score."+e.toString());
+			return Files.getConfig().getInt("Settings.Global.Score." + e.toString());
 	}
+
 	public int getPointsPer(Events e) {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Points."+e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points."+e.toString());
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Points." + e.toString()))
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString());
 		else
-			return Files.getConfig().getInt("Settings.Global.Points."+e.toString());
+			return Files.getConfig().getInt("Settings.Global.Points." + e.toString());
+	}
+
+	public int getAlphaPercent() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Infecting.Percent"))
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Infecting.Percent");
+		else
+			return Files.getConfig().getInt("Settings.Global.Infecting.Percent");
 	}
 
 	// ////////////////////////////////////////////////-BOOLEANS-////////////////////////////////////////////////////
@@ -71,7 +86,7 @@ public class Settings {
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Loose Hunger");
 	}
-	
+
 	public boolean canBreakBlock(int id) {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks"))
 			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks").contains(id);
@@ -114,5 +129,28 @@ public class Settings {
 			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Equipment.Items"));
 		else
 			return ItemHandler.getItemStackList(Files.getConfig().getStringList("Settings.Global.Equipment.Items"));
+	}
+
+	public ItemStack[] getRewordItems() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards.Items"))
+			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards.Items"));
+		else
+			return ItemHandler.getItemStackList(Files.getConfig().getStringList("Settings.Global.Reward.Items"));
+	}
+
+	// /////////////////////////////////////////////////////////-STRINGS-///////////////////////////////////////////////////////
+
+	public List<String> getRewordCommands() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards.Commands"))
+			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards.Items");
+		else
+			return Files.getConfig().getStringList("Settings.Global.Rewards.Items");
+	}
+	// /////////////////////////////////////////////////////////-POTIONS-////////////////////////////////////////////////////////
+	public ArrayList<PotionEffect> getAlphaPotionEffects() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Infecting.Alpha Potion Effects"))
+			return PotionHandler.getPotions(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Infecting.Alpha Potion Effects"));
+		else
+			return PotionHandler.getPotions(Files.getConfig().getStringList("Settings.Global.Infecting.Alpha Potion Effects"));
 	}
 }

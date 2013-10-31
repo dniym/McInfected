@@ -28,7 +28,7 @@ public class UpdateInfoSigns {
 						Lobby Lobby = Main.Lobby;
 						String status = Lobby.getGameState().toString();
 						
-						int time = Lobby.getCurrentTime();
+						int time = Lobby.getTimeLeft();
 
 						Location location = LocationHandler.getObjectLocation(loc);
 						if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)

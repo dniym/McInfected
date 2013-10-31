@@ -39,6 +39,34 @@ public class Stats {
 			Files.getPlayers().set("Players." + name + ".HighestKillStreak", highestKillStreak);
 			Files.savePlayers();
 		}
+	}/**
+	 * Checks if we're setting MySQL or Player.yml
+	 * 
+	 * @param name
+	 * @return PlayingTime
+	 */
+	public static int getPlayingTime(String name) {
+		if (Files.getConfig().getBoolean("MySQL.Enable"))
+			return Integer.valueOf(getMySQLStats(name, "PlayingTime"));
+		else
+			return Files.getPlayers().getInt("Players." + name + ".PlayingTime");
+	}
+
+	/**
+	 * Checks if we're setting MySQL or Player.yml
+	 * 
+	 * @param name
+	 * @param PlayingTime
+	 */
+
+	public static void setPlayingTime(String name, long l) {
+		if (Files.getConfig().getBoolean("MySQL.Enable"))
+			setMySQLStats(name, "PlayingTime", (int) l);
+		else
+		{
+			Files.getPlayers().set("Players." + name + ".PlayingTime", l);
+			Files.savePlayers();
+		}
 	}
 
 	/**

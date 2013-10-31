@@ -408,17 +408,13 @@ public class Lobby {
 						}
 					}
 
-					// Game is ready to actually start
 					else if (TimeLeft == 0)
 					{
-						// Choose the first infected
+						Game.chooseAlphas();
 
 						for (Player u : getInGame())
-
-							// TODO: Main.Timein.put(playing.getName(),
-							// System.currentTimeMillis() / 1000);
-							;
-						// TODO: Zombify.newZombieSetUpEveryOne();
+							Main.InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis()/1000);
+						
 						timerStartGame();
 					}
 				}

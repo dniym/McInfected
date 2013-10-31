@@ -90,8 +90,15 @@ public class InfPlayer {
 	}
 
 	/**
-	 * Restores: - Inventory - Armor - Gamemode - Level - Exp - Health - Food -
-	 * Location Resets: - Potion Effects
+	 * Restores: 
+	 * - Inventory 
+	 * - Armor 
+	 * - Gamemode - Level - Exp - Health - Food -
+	 * Location
+	 *  
+	 * Resets: 
+	 * - Potion Effects
+	 * - timeIn
 	 */
 	@SuppressWarnings("deprecation")
 	public void leaveInfected() {
@@ -120,6 +127,7 @@ public class InfPlayer {
 		inventory = null;
 		armor = null;
 		vote = null;
+		timeIn = 0;
 	}
 
 	/**
@@ -221,7 +229,7 @@ public class InfPlayer {
 				2));
 	}
 
-	public long getPlayingTime(InfPlayer IP) {
+	public long getPlayingTime() {
 		return (System.currentTimeMillis() / 1000) - getTimeIn();
 	}
 
