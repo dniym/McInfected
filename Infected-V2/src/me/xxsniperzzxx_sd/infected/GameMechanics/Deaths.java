@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 public class Deaths {
 
 	// TODO: Readd death event
-	private static InfPlayerManager IPM = Main.InfPlayerManager;
 
 	public static void playerDies(DeathType death, Player killer, Player killed) {
 		ScoreBoard.updateScoreBoard();
@@ -28,7 +27,7 @@ public class Deaths {
 		InfPlayer InfKilled = null;
 		if (killer != null)
 		{
-			InfKiller = IPM.getInfPlayer(killer);
+			InfKiller = InfPlayerManager.getInfPlayer(killer);
 			InfKiller.updateStats(1, 0);
 			MiscStats.handleKillStreaks(false, killer);
 
@@ -36,7 +35,7 @@ public class Deaths {
 
 		if (killed != null)
 		{
-			InfKilled = IPM.getInfPlayer(killed);
+			InfKilled = InfPlayerManager.getInfPlayer(killed);
 			InfKilled.updateStats(0, 1);
 
 			MiscStats.handleKillStreaks(true, killed);

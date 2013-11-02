@@ -46,7 +46,7 @@ public class InfPlayer {
 	private Team team = Team.None;
 	private boolean isWinner = true;
 	private boolean isInfChatting = false;
-	
+
 	public InfPlayer(Player p)
 	{
 		location = p.getLocation();
@@ -64,8 +64,13 @@ public class InfPlayer {
 	}
 
 	/**
-	 * Saves: - Location - Name - Gamemode - Level - Exp - Health - Food -
-	 * Inventory - Amor Clears: - Armor - Inventory Sets: - Gamemode to
+	 * Saves: <li>Location 
+	 * - Name 
+	 * - Gamemode 
+	 * - Level 
+	 * - Exp - Health - Food -
+	 * Inventory - Armor </li>
+	 * Clears: <li>Armor - Inventory Sets: <li>Gamemode to
 	 * adventure - Sets level to 0 - Sets the players exp to 0 - Sets the
 	 * players health to 20 - Sets the food to 20
 	 */
@@ -90,15 +95,8 @@ public class InfPlayer {
 	}
 
 	/**
-	 * Restores: 
-	 * - Inventory 
-	 * - Armor 
-	 * - Gamemode - Level - Exp - Health - Food -
-	 * Location
-	 *  
-	 * Resets: 
-	 * - Potion Effects
-	 * - timeIn
+	 * Restores: - Inventory - Armor - Gamemode - Level - Exp - Health - Food -
+	 * Location Resets: - Potion Effects - timeIn
 	 */
 	@SuppressWarnings("deprecation")
 	public void leaveInfected() {
@@ -146,21 +144,12 @@ public class InfPlayer {
 			if (Disguises.isPlayerDisguised(player))
 				Disguises.unDisguisePlayer(player);
 	}
-/**
- * - Updates Scoreboard
- * - Play a sound
- * - Set level to 0
- * - Set exp to 0
- * - Teleport to the lobby
- * - Set gamemode
- * - Remove Fire
- * - Set health to 20
- * - Set Food to 20
- * 
- * 
- * - Undisguise the player
- * 
- */
+
+	/**
+	 * - Updates Scoreboard - Play a sound - Set level to 0 - Set exp to 0 -
+	 * Teleport to the lobby - Set gamemode - Remove Fire - Set health to 20 -
+	 * Set Food to 20 - Undisguise the player
+	 */
 	public void tpToLobby() {
 
 		ScoreBoard.updateScoreBoard();
@@ -182,10 +171,8 @@ public class InfPlayer {
 	}
 
 	/**
-	 * - Set health and food to 20
-	 * - Remove Fire Ticks
-	 * - Teleport to new spawn
-	 * - Clear potion effects
+	 * - Set health and food to 20 - Remove Fire Ticks - Teleport to new spawn -
+	 * Clear potion effects
 	 */
 	public void respawn() {
 		Player p = player;
@@ -207,15 +194,11 @@ public class InfPlayer {
 		p.setFallDistance(0F);
 		lastDamager = null;
 	}
-/**
- * Change team to Zombie
- * Set winner to false
- * Change their equipment to zombie
- * apply potion effects
- * disguise
- * update scoreboard
- * apply confussion
- */
+
+	/**
+	 * Change team to Zombie Set winner to false Change their equipment to
+	 * zombie apply potion effects disguise update scoreboard apply confussion
+	 */
 	public void Infect() {
 		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
 		player.sendMessage(Main.I + "You have become infected!");
@@ -274,8 +257,8 @@ public class InfPlayer {
 	 * @param points
 	 *            the points to set
 	 */
-	public void setPoints(int points) {
-		Stats.setPoints(name, points);
+	public void setPoints(int points, boolean useVault) {
+		Stats.setPoints(name, points, useVault);
 	}
 
 	/**
@@ -584,7 +567,8 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @param isInfChatting the isInfChatting to set
+	 * @param isInfChatting
+	 *            the isInfChatting to set
 	 */
 	public void setInfChatting(boolean isInfChatting) {
 		this.isInfChatting = isInfChatting;

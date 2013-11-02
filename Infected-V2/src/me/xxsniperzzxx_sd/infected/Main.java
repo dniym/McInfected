@@ -72,12 +72,10 @@ public class Main extends JavaPlugin {
 	public static Connection c = null;
 
 	public static Lobby Lobby;
-	public static InfPlayerManager InfPlayerManager;
 
 	@Override
 	public void onEnable() {
 		Lobby = new Lobby();
-		InfPlayerManager = new InfPlayerManager(this);
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		Main.me = this;

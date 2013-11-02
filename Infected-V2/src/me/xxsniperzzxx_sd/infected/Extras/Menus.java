@@ -30,10 +30,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Menus {
 
-	private static InfPlayerManager IPM = Main.InfPlayerManager;
 	
 	public static void chooseClass(final Team team, final Player p) {
-		final InfPlayer IP = IPM.getInfPlayer(p);
+		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		IconMenu menu = new IconMenu(
 				ChatColor.GREEN + p.getName() + "-"+team.toString()+" Classes", ((InfClassManager.getHumanClasses().size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
@@ -101,7 +100,7 @@ public class Menus {
 	// //////////////////////////////////////
 	public static void openVotingMenu(final Player p) {
 		final Lobby Lobby = Main.Lobby;
-		final InfPlayer IP = IPM.getInfPlayer(p);
+		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		IconMenu menu = new IconMenu(ChatColor.DARK_BLUE + p.getName() + " - Map Vote", ((Lobby.getArenas().size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -156,7 +155,7 @@ public class Menus {
 
 	public static void openShopMenu(final Player p) {
 
-		final InfPlayer IP = IPM.getInfPlayer(p);
+		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 			ArrayList<String> shop = new ArrayList<String>();
 			for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
 			{
@@ -188,7 +187,7 @@ public class Menus {
 								Bukkit.getServer().getPluginManager().callEvent(shopEvent);
 								if (!shopEvent.isCancelled())
 								{
-									IP.setPoints(points - price);
+									IP.setPoints(points - price, Main.config.getBoolean("Vault Support.Enabled"));
 									
 										p.getInventory().addItem(is);
 									

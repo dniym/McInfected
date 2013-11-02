@@ -8,6 +8,7 @@ import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Messages.Msgs;
 import me.xxsniperzzxx_sd.infected.Tools.Events;
@@ -28,7 +29,7 @@ public class Game {
 
 		for (Player u : Lobby.getInGame())
 		{
-			InfPlayer IP = Main.InfPlayerManager.getInfPlayer(u);
+			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 			if (IP.getKillstreak() > Stats.getHighestKillStreak(u.getName()))
 				Stats.setHighestKillStreak(u.getName(), IP.getKillstreak());
 		}
@@ -36,7 +37,7 @@ public class Game {
 		{
 			for (Player u : Lobby.getInGame())
 			{
-				InfPlayer IP = Main.InfPlayerManager.getInfPlayer(u);
+				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
 				IV.addItem(IP.getInventory());
 				IV.addItem(Lobby.getActiveArena().getSettings().getRewordItems());
@@ -46,13 +47,13 @@ public class Game {
 
 			ArrayList<String> winners = new ArrayList<String>();
 			for (final Player u : Lobby.getInGame())
-				if (Main.InfPlayerManager.getInfPlayer(u).isWinner())
+				if (InfPlayerManager.getInfPlayer(u).isWinner())
 					winners.add(u.getName());
 
 			for (final Player u : Lobby.getInGame())
 			{
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Main.config.getBoolean("Vault Support.Enabled"));
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -74,14 +75,14 @@ public class Game {
 				u.sendMessage(Msgs.Arena_Information.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
-				Stats.setPlayingTime(u.getName(), Main.InfPlayerManager.getInfPlayer(u).getPlayingTime());
+				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
 
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 				{
 
 					@Override
 					public void run() {
-						Main.InfPlayerManager.getInfPlayer(u).tpToLobby();
+						InfPlayerManager.getInfPlayer(u).tpToLobby();
 					}
 				}, 100L);
 			}
@@ -90,7 +91,7 @@ public class Game {
 			for (final Player u : Lobby.getInGame())
 			{
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Main.config.getBoolean("Vault Support.Enabled"));
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -105,14 +106,14 @@ public class Game {
 				u.sendMessage(Msgs.Arena_Information.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
-				Stats.setPlayingTime(u.getName(), Main.InfPlayerManager.getInfPlayer(u).getPlayingTime());
+				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
 
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 				{
 
 					@Override
 					public void run() {
-						Main.InfPlayerManager.getInfPlayer(u).tpToLobby();
+						InfPlayerManager.getInfPlayer(u).tpToLobby();
 
 						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 						{
@@ -152,7 +153,7 @@ public class Game {
 		{
 			Player alpha = Lobby.getInGame().get(new Random(50).nextInt(Lobby.getInGame().size()));
 			alpha.sendMessage("You're an alpha");
-			Main.InfPlayerManager.getInfPlayer(alpha).Infect();
+			InfPlayerManager.getInfPlayer(alpha).Infect();
 			for (Player u : Lobby.getInGame())
 				if (u != alpha)
 					u.sendMessage("Alpha is an alpha");

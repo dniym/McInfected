@@ -5,14 +5,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 
-import net.minecraft.server.v1_6_R3.NBTBase;
-import net.minecraft.server.v1_6_R3.NBTTagCompound;
-import net.minecraft.server.v1_6_R3.NBTTagList;
+//import net.minecraft.server.v1_6_R3.NBTBase;
+//import net.minecraft.server.v1_6_R3.NBTTagCompound;
+//import net.minecraft.server.v1_6_R3.NBTTagList;
 
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+//import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
+//import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -22,11 +24,16 @@ public class ItemSerialization {
 
 	public static Inventory getArmorInventory(PlayerInventory inventory) {
 		ItemStack[] armor = inventory.getArmorContents();
+		
 		CraftInventoryCustom storage = new CraftInventoryCustom(null,
 				armor.length);
 		for (int i = 0; i < armor.length; i++)
 			storage.setItem(i, armor[i]);
 		return storage;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static Inventory getContentInventory(PlayerInventory inventory) {
@@ -87,4 +94,23 @@ public class ItemSerialization {
 			return CraftItemStack.asNMSCopy(stack);
 		return null;
 	}
+	
+	public static String getServerVersion() {
+
+        /* compile a simple pattern to match any kind of server version, with or without the safe-guard */
+        Pattern brand = Pattern.compile("(v|)[0-9][_.][0-9][_.][R0-9]*");
+        String version = null;
+
+        String pkg = Bukkit.getServer().getClass().getPackage().getName();
+        String version0 = pkg.substring(pkg.lastIndexOf('.') + 1);
+
+        /* if the pattern does not match, it means that the server does not have the save-guard (libigot or old versions) */
+        if (!brand.matcher(version0).matches()) {
+            version0 = "";
+        }
+
+        version = version0;
+
+        return !"".equals(version) ? version + "." : "";
+    }
 }

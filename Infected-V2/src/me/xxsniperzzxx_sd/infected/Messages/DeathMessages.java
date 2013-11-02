@@ -3,7 +3,6 @@ package me.xxsniperzzxx_sd.infected.Messages;
 
 import java.util.Random;
 
-import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.GameMechanics.DeathType;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
@@ -15,17 +14,16 @@ import org.bukkit.entity.Player;
 
 public class DeathMessages {
 
-	private static InfPlayerManager IPM = Main.InfPlayerManager;
 	
 	public static String getDeathMessage(Player killer, Player killed, DeathType death) {
 
 		InfPlayer IP = null;
 		Team team = null;
 		if(killer != null){
-			IP = IPM.getInfPlayer(killer);
+			IP = InfPlayerManager.getInfPlayer(killer);
 			team = IP.getTeam();
 		}else{
-			if(IPM.getInfPlayer(killed).getTeam() == Team.Human)
+			if(InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Human)
 				team = Team.Zombie;
 			else
 				team = Team.Human;

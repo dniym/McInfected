@@ -1,7 +1,6 @@
 
 package me.xxsniperzzxx_sd.infected.GameMechanics;
 
-import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClass;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
@@ -14,11 +13,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class Equip {
 
-	private static InfPlayerManager IPM = Main.InfPlayerManager;
 
 	@SuppressWarnings("deprecation")
 	public static void equip(Player p) {
-		InfPlayer IP = IPM.getInfPlayer(p);
+		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		Team team = IP.getTeam();
 		InfClass Class = IP.getInfClass(team);
 		p.playSound(p.getLocation(), Sound.ANVIL_USE, 1, 1);
@@ -51,7 +49,7 @@ public class Equip {
 
 	@SuppressWarnings("deprecation")
 	public static void equipToZombie(Player p) {
-		InfPlayer IP = IPM.getInfPlayer(p);
+		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
 		InfClass humanClass = IP.getInfClass(Team.Human);
 		InfClass zombieClass = IP.getInfClass(Team.Zombie);

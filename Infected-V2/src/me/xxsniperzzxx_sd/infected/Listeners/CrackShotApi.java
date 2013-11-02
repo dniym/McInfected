@@ -7,6 +7,8 @@ import me.xxsniperzzxx_sd.infected.GameMechanics.Deaths;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,7 +51,7 @@ public class CrackShotApi implements Listener {
 					// If the game has fully started
 					else
 					{
-						InfPlayer IPV = Main.InfPlayerManager.getInfPlayer(victim);
+						InfPlayer IPV = InfPlayerManager.getInfPlayer(victim);
 
 						// Saves who hit the person last
 						IPV.setLastDamager(killer);

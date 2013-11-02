@@ -24,7 +24,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class DamageEvents implements Listener {
 
-	private InfPlayerManager IPM = Main.InfPlayerManager;
 	public Main plugin;
 
 	public DamageEvents(Main instance)
@@ -47,7 +46,7 @@ public class DamageEvents implements Listener {
 				// is handled in a different event listener
 				if (e.getCause() != DamageCause.ENTITY_ATTACK && e.getCause() != DamageCause.PROJECTILE)
 				{
-					InfPlayer IPV = IPM.getInfPlayer(victim);
+					InfPlayer IPV = InfPlayerManager.getInfPlayer(victim);
 
 					// If the Player got hurt during Voting, just cancel it.
 					if (Lobby.getGameState() == GameState.Voting)
@@ -180,8 +179,8 @@ public class DamageEvents implements Listener {
 							e.setCancelled(true);
 						} else
 						{
-							InfPlayer IPV = IPM.getInfPlayer(victim);
-							InfPlayer IPK = IPM.getInfPlayer(killer);
+							InfPlayer IPV = InfPlayerManager.getInfPlayer(victim);
+							InfPlayer IPK = InfPlayerManager.getInfPlayer(killer);
 							IPV.setLastDamager(killer);
 
 							// If it was enough to kill the player

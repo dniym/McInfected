@@ -40,7 +40,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerListener implements Listener {
 
 	Lobby Lobby = Main.Lobby;
-	InfPlayerManager IPM = Main.InfPlayerManager;
 
 	// Check for updates when a player joins, making sure they are OP
 	@EventHandler
@@ -106,7 +105,7 @@ public class PlayerListener implements Listener {
 	// to type
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
-		if (IPM.getInfPlayer(e.getPlayer()).isInfChatting())
+		if (InfPlayerManager.getInfPlayer(e.getPlayer()).isInfChatting())
 		{
 			String msg = e.getMessage();
 			e.getPlayer().performCommand("Inf Chat " + msg);

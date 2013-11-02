@@ -1,7 +1,6 @@
 
 package me.xxsniperzzxx_sd.infected.Listeners;
 
-import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 
@@ -15,7 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class RegisterAndUnRegister implements Listener{
 	
-	private InfPlayerManager IPM = Main.InfPlayerManager;
 	
 	
 //When a player joins the server, create a InfPlayer for them
@@ -23,20 +21,20 @@ public class RegisterAndUnRegister implements Listener{
 	public void onJoinCreateCrankedPlayer(PlayerJoinEvent e){
 		Player p = e.getPlayer();
 		InfPlayer IP= new InfPlayer(p);
-		IPM.createInfPlayer(IP);
+		InfPlayerManager.createInfPlayer(IP);
 	}
 //When a player leaves the server willingly, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onLeaveDeleteCrankedPlayer(PlayerQuitEvent e){
-		InfPlayer IP = IPM.getInfPlayer(e.getPlayer());
-		IPM.removeInfPlayer(IP);
+		InfPlayer IP = InfPlayerManager.getInfPlayer(e.getPlayer());
+		InfPlayerManager.removeInfPlayer(IP);
 	}
 
 	//When a player leaves the server by kick, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onKickedDeleteCrankedPlayer(PlayerKickEvent e){
-		InfPlayer cp = IPM.getInfPlayer(e.getPlayer());
-		IPM.removeInfPlayer(cp);
+		InfPlayer cp = InfPlayerManager.getInfPlayer(e.getPlayer());
+		InfPlayerManager.removeInfPlayer(cp);
 	}
 
 }

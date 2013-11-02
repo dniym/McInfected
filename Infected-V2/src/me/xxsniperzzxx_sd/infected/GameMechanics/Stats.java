@@ -39,7 +39,9 @@ public class Stats {
 			Files.getPlayers().set("Players." + name + ".HighestKillStreak", highestKillStreak);
 			Files.savePlayers();
 		}
-	}/**
+	}
+
+	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
 	 * @param name
@@ -172,8 +174,21 @@ public class Stats {
 	 * @param name
 	 * @param points
 	 */
-	public static void setPoints(String name, Integer points) {
-		if (Files.getConfig().getBoolean("MySQL.Enable"))
+	public static void setPoints(String name, Integer points, boolean useVault) {
+		if (useVault)
+		{
+			int cPoints = Stats.getPoints(name);
+			if (cPoints > points)
+			{
+				int price = cPoints - points;
+				Main.economy.withdrawPlayer(name, price);
+			}
+			else{
+				int depo = points;
+				Main.economy.depositPlayer(name, depo);
+			}
+		}
+		else if (Files.getConfig().getBoolean("MySQL.Enable"))
 			setMySQLStats(name, "Points", points);
 		else
 		{

@@ -27,6 +27,12 @@ public class InfClassManager {
 		else
 			zombieClasses.add(IC);
 	}
+	public static ArrayList<InfClass> getClasses(Team team){
+		if (team == Team.Human)
+			return humanClasses;
+		else
+			return zombieClasses;
+	}
 	public static ArrayList<InfClass> getHumanClasses(){
 		return humanClasses;
 	}
@@ -86,12 +92,13 @@ public class InfClassManager {
 					zombieClasses.remove(IC);
 			}
 	}
-	public InfClass getDefaultHumanClass(){
-		return defaultHuman;
+	public static InfClass getDefaultClass(Team team){
+		if(team == Team.Human)
+			return defaultHuman;
+		else
+			return defaultZombie;
 	}
-	public InfClass getDefaultZombieClass(){
-		return defaultZombie;
-	}
+	
 	public static void loadDefaultClasses(){
 		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Classes.Default.Human"));
 		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Classes.Default.Zombie"));

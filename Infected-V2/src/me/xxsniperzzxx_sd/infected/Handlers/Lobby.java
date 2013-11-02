@@ -17,6 +17,7 @@ import me.xxsniperzzxx_sd.infected.Handlers.Classes.InfClassManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Grenades.GrenadeManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Misc.LocationHandler;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Messages.Msgs;
 import me.xxsniperzzxx_sd.infected.Messages.StringUtil;
 import me.xxsniperzzxx_sd.infected.Messages.Time;
@@ -350,7 +351,7 @@ public class Lobby {
 								for (Player u : getInGame())
 								{
 									u.setGameMode(GameMode.SURVIVAL);
-									InfPlayer IP = Main.InfPlayerManager.getInfPlayer(u);
+									InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 									IP.respawn();
 									Equip.equip(u);
 									u.sendMessage("Infection going viral in : <time>");
@@ -413,7 +414,7 @@ public class Lobby {
 						Game.chooseAlphas();
 
 						for (Player u : getInGame())
-							Main.InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis()/1000);
+							InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis()/1000);
 						
 						timerStartGame();
 					}
