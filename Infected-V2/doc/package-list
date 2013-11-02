@@ -3,13 +3,15 @@ code.husky.mysql
 code.husky.sqlite
 me.xxsniperzzxx_sd.infected
 me.xxsniperzzxx_sd.infected.Disguise
-me.xxsniperzzxx_sd.infected.Enums
 me.xxsniperzzxx_sd.infected.Events
+me.xxsniperzzxx_sd.infected.Extras
 me.xxsniperzzxx_sd.infected.GameMechanics
-me.xxsniperzzxx_sd.infected.GameMechanics.Stats
+me.xxsniperzzxx_sd.infected.GameMechanics.OldStats
 me.xxsniperzzxx_sd.infected.Handlers
 me.xxsniperzzxx_sd.infected.Handlers.Arena
 me.xxsniperzzxx_sd.infected.Handlers.Classes
+me.xxsniperzzxx_sd.infected.Handlers.Grenades
+me.xxsniperzzxx_sd.infected.Handlers.Misc
 me.xxsniperzzxx_sd.infected.Handlers.Player
 me.xxsniperzzxx_sd.infected.Listeners
 me.xxsniperzzxx_sd.infected.Messages
