@@ -3,13 +3,15 @@ package me.xxsniperzzxx_sd.infected.GameMechanics;
 
 import me.xxsniperzzxx_sd.infected.Main;
 import me.xxsniperzzxx_sd.infected.Extras.ScoreBoard;
-import me.xxsniperzzxx_sd.infected.GameMechanics.OldStats.MiscStats;
 import me.xxsniperzzxx_sd.infected.Handlers.Lobby.GameState;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
 import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
 import me.xxsniperzzxx_sd.infected.Messages.DeathMessages;
+import me.xxsniperzzxx_sd.infected.Tools.Events;
+import me.xxsniperzzxx_sd.infected.Tools.Files;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -29,7 +31,7 @@ public class Deaths {
 		{
 			InfKiller = InfPlayerManager.getInfPlayer(killer);
 			InfKiller.updateStats(1, 0);
-			MiscStats.handleKillStreaks(false, killer);
+			handleKillStreaks(false, killer);
 
 		}
 
@@ -38,7 +40,7 @@ public class Deaths {
 			InfKilled = InfPlayerManager.getInfPlayer(killed);
 			InfKilled.updateStats(0, 1);
 
-			MiscStats.handleKillStreaks(true, killed);
+			handleKillStreaks(true, killed);
 
 			for (Player u : Main.Lobby.getInGame())
 				u.getPlayer().sendMessage(deathMessage);
@@ -58,6 +60,45 @@ public class Deaths {
 				Equip.equip(killed);
 			}
 
+		}
+	}
+
+	public static void handleKillStreaks(boolean killed, Player p) {
+		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
+		if (killed)
+		{
+			if (IP.getKillstreak() > Stats.getHighestKillStreak(p.getName()))
+				Stats.setHighestKillStreak(p.getName(), IP.getKillstreak());
+
+		} else
+		{
+			IP.setKillstreak(IP.getKillstreak() + 1);
+			int KillStreak = IP.getKillstreak();
+			if (KillStreak >= 3)
+				for (Player u : Main.Lobby.getInGame())
+					u.sendMessage("<player> has a killstreak of " + KillStreak);
+
+			if (Files.getKills().contains("Kill Streaks." + String.valueOf(KillStreak)))
+			{
+				String command = String.valueOf(Files.getKills().getString("Kill Streaks." + KillStreak)).replaceAll("<player>", p.getName());
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+			}
+			IP.setPoints(IP.getPoints() + Main.Lobby.getActiveArena().getSettings().getPointsPer(Events.Kill), Main.config.getBoolean("Vault Support.Enabled"));
+			IP.setScore(IP.getScore() + Main.Lobby.getActiveArena().getSettings().getScorePer(Events.Kill));
+
+			for (Player u : Main.Lobby.getInGame())
+			{
+				if (Main.Lobby.isHuman(u))
+				{
+					IP.setPoints(IP.getPoints() + Main.Lobby.getActiveArena().getSettings().getPointsPer(Events.Survive), Main.config.getBoolean("Vault Support.Enabled"));
+					IP.setScore(IP.getScore() + Main.Lobby.getActiveArena().getSettings().getScorePer(Events.Survive));
+				} else
+				{
+					IP.setPoints(IP.getPoints() + Main.Lobby.getActiveArena().getSettings().getPointsPer(Events.Infected), Main.config.getBoolean("Vault Support.Enabled"));
+					IP.setScore(IP.getScore() + Main.Lobby.getActiveArena().getSettings().getScorePer(Events.Infected));
+				}
+
+			}
 		}
 	}
 

@@ -1,10 +1,9 @@
 
 package me.xxsniperzzxx_sd.infected.Disguise;
 
-import java.util.Random;
-
-import me.xxsniperzzxx_sd.infected.Infected;
-import me.xxsniperzzxx_sd.infected.Main;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayer;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.InfPlayerManager;
+import me.xxsniperzzxx_sd.infected.Handlers.Player.Team;
 
 import org.bukkit.entity.Player;
 
@@ -16,65 +15,34 @@ import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 public class DisguiseDisguiseCraft {
 
-private static DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
+	private static DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
 
-	public static void disguisePlayer(Player player) {
-		if (Main.zombieClasses.containsKey(player.getName()))
+	public static void disguisePlayer(Player p) {
+		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
+
+		if (!dcAPI.isDisguised(p))
 		{
-			if (!dcAPI.isDisguised(player))
+			if (DisguiseType.fromString(IP.getInfClass(Team.Zombie).getDisguise()) != null)
 			{
-				if (DisguiseType.fromString(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise")) != null)
-				{
-					dcAPI.disguisePlayer(player, new Disguise(
-							dcAPI.newEntityID(),
-							DisguiseType.valueOf(Infected.filesGetClasses().getString("Classes.Zombie." + Main.zombieClasses.get(player.getName()) + ".Disguise"))).addSingleData("noarmor"));
-				} else
-					dcAPI.disguisePlayer(player, new Disguise(
-							dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
-
+				dcAPI.disguisePlayer(p, new Disguise(
+						dcAPI.newEntityID(),
+						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise())).addSingleData("noarmor"));
 			} else
-			{
-				dcAPI.undisguisePlayer(player);
-				disguisePlayer(player);
-			}
+				dcAPI.disguisePlayer(p, new Disguise(dcAPI.newEntityID(),
+						DisguiseType.Zombie).addSingleData("noarmor"));
 		} else
 		{
-			// https://gitorious.org/disguisecraft/disguisecraft/blobs/master/src/pgDev/bukkit/DisguiseCraft/disguise/Disguise.java#line234
-			Random ra = new Random();
-			int chance = ra.nextInt(100);
-			if (!dcAPI.isDisguised(player))
-			{
-				if (chance <=20)
-				{
-					dcAPI.disguisePlayer(player, new Disguise(
-							dcAPI.newEntityID(), DisguiseType.PigZombie).addSingleData("noarmor"));
-					if (Main.config.getBoolean("Debug"))
-					{
-						System.out.println("Choosing new zombie: " + player.getName() + " = pigzombie");
-					}
-				}  else
-				{
-					dcAPI.disguisePlayer(player, new Disguise(
-							dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
-					if (Main.config.getBoolean("Debug"))
-					{
-						System.out.println("Choosing new zombie: " + player.getName() + " = zombie");
-					}
-				}
-			} else
-			{
-				dcAPI.undisguisePlayer(player);
-				disguisePlayer(player);
-			}
+			dcAPI.undisguisePlayer(p);
+			disguisePlayer(p);
 		}
 	}
-	
-	public static void unDisguisePlayer(Player player){
+
+	public static void unDisguisePlayer(Player player) {
 
 		dcAPI.undisguisePlayer(player);
 	}
 
-	public static boolean isPlayerDisguised(Player player){
+	public static boolean isPlayerDisguised(Player player) {
 		return dcAPI.isDisguised(player);
 	}
 }

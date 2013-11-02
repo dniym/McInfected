@@ -19,24 +19,27 @@ public class InfClassManager {
 	private static InfClass defaultHuman;
 	private static InfClass defaultZombie;
 
-	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects) {
+	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects, String disguise) {
 		InfClass IC = new InfClass(name, team, helmet, chestplate, leggings,
-				boots, items, effects, transfereffects);
+				boots, items, effects, transfereffects, disguise);
 		if (team == Team.Human)
 			humanClasses.add(IC);
 		else
 			zombieClasses.add(IC);
 	}
-	public static ArrayList<InfClass> getClasses(Team team){
+
+	public static ArrayList<InfClass> getClasses(Team team) {
 		if (team == Team.Human)
 			return humanClasses;
 		else
 			return zombieClasses;
 	}
-	public static ArrayList<InfClass> getHumanClasses(){
+
+	public static ArrayList<InfClass> getHumanClasses() {
 		return humanClasses;
 	}
-	public static ArrayList<InfClass> getZombieClasses(){
+
+	public static ArrayList<InfClass> getZombieClasses() {
 		return zombieClasses;
 	}
 
@@ -92,14 +95,15 @@ public class InfClassManager {
 					zombieClasses.remove(IC);
 			}
 	}
-	public static InfClass getDefaultClass(Team team){
-		if(team == Team.Human)
+
+	public static InfClass getDefaultClass(Team team) {
+		if (team == Team.Human)
 			return defaultHuman;
 		else
 			return defaultZombie;
 	}
-	
-	public static void loadDefaultClasses(){
+
+	public static void loadDefaultClasses() {
 		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Classes.Default.Human"));
 		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Classes.Default.Zombie"));
 	}
@@ -113,6 +117,7 @@ public class InfClassManager {
 			String leggings = "0";
 			String boots = "0";
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			String disguise = null;
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 			ArrayList<PotionEffect> transfereffects = new ArrayList<PotionEffect>();
 			if (!s.contains("."))
@@ -127,6 +132,8 @@ public class InfClassManager {
 				boots = Files.getClasses().getCurrentPath() + s;
 			if (s.contains("Items"))
 				items.add(ItemHandler.getItemStack(Files.getClasses().getCurrentPath() + s));
+			if (s.contains("Disguise"))
+				disguise = Files.getClasses().getCurrentPath() + s;
 			if (s.contains("Potion Effects"))
 				effects.add(PotionHandler.getPotion(Files.getClasses().getCurrentPath() + s));
 			if (s.contains("Transfer Potion Effects"))
@@ -136,7 +143,7 @@ public class InfClassManager {
 					ItemHandler.getItemStack(chestplate),
 					ItemHandler.getItemStack(leggings),
 					ItemHandler.getItemStack(boots), items, effects,
-					transfereffects);
+					transfereffects, disguise);
 
 			if (!isRegistered(Team.Human, IC))
 				addClass(IC);
@@ -149,6 +156,7 @@ public class InfClassManager {
 			String leggings = "0";
 			String boots = "0";
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			String disguise = null;
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 			ArrayList<PotionEffect> transfereffects = new ArrayList<PotionEffect>();
 			if (!s.contains("."))
@@ -163,6 +171,8 @@ public class InfClassManager {
 				boots = Files.getClasses().getCurrentPath() + s;
 			if (s.contains("Items"))
 				items.add(ItemHandler.getItemStack(Files.getClasses().getCurrentPath() + s));
+			if (s.contains("Disguise"))
+				disguise = Files.getClasses().getCurrentPath() + s;
 			if (s.contains("Potion Effects"))
 				effects.add(PotionHandler.getPotion(Files.getClasses().getCurrentPath() + s));
 			if (s.contains("Transfer Potion Effects"))
@@ -172,11 +182,11 @@ public class InfClassManager {
 					ItemHandler.getItemStack(chestplate),
 					ItemHandler.getItemStack(leggings),
 					ItemHandler.getItemStack(boots), items, effects,
-					transfereffects);
+					transfereffects, disguise);
 
 			if (!isRegistered(Team.Zombie, IC))
 				addClass(IC);
-			
+
 			loadDefaultClasses();
 		}
 	}

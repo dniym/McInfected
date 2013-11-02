@@ -20,12 +20,13 @@ public class InfClass {
 	private ArrayList<PotionEffect> effects;
 	private ArrayList<PotionEffect> transfereffects;
 	private Team team;
+	private String disguise;
 
 	// TODO: Go through and change transfereffect to transfereffect
 	public InfClass(String name, Team team, ItemStack helmet,
 			ItemStack chestplate, ItemStack leggings, ItemStack boots,
 			ArrayList<ItemStack> items, ArrayList<PotionEffect> effects,
-			ArrayList<PotionEffect> transfereffects)
+			ArrayList<PotionEffect> transfereffects, String disguise)
 	{
 		this.name = name;
 		this.helmet = helmet;
@@ -36,6 +37,7 @@ public class InfClass {
 		this.effects = effects;
 		this.transfereffects = transfereffects;
 		this.team = team;
+		this.setDisguise(disguise);
 	}
 
 	/**
@@ -171,6 +173,20 @@ public class InfClass {
 	 */
 	public void setEffects(ArrayList<PotionEffect> effects) {
 		this.effects = effects;
+	}
+
+	/**
+	 * @return the disguise
+	 */
+	public String getDisguise() {
+		return disguise;
+	}
+
+	/**
+	 * @param disguise the disguise to set
+	 */
+	public void setDisguise(String disguise) {
+		this.disguise = disguise;
 	}
 
 }
