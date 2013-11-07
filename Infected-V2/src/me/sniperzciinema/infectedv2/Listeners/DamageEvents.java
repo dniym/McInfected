@@ -1,10 +1,10 @@
 
 package me.sniperzciinema.infectedv2.Listeners;
 
+import me.sniperzciinema.infectedv2.Game;
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.GameMechanics.DeathType;
 import me.sniperzciinema.infectedv2.GameMechanics.Deaths;
-import me.sniperzciinema.infectedv2.GameMechanics.Game;
 import me.sniperzciinema.infectedv2.GameMechanics.PotionEffects;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;

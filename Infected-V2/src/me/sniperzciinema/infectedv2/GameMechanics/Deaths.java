@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infectedv2.GameMechanics;
 
+import me.sniperzciinema.infectedv2.Game;
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;

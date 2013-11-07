@@ -8,10 +8,10 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import me.sniperzciinema.infectedv2.Game;
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.GameMechanics.Equip;
-import me.sniperzciinema.infectedv2.GameMechanics.Game;
 import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infectedv2.Handlers.Grenades.GrenadeManager;
@@ -22,6 +22,7 @@ import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Messages.Time;
 import me.sniperzciinema.infectedv2.Tools.Files;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 
 public class Lobby {
@@ -122,12 +123,15 @@ public class Lobby {
 		return zombies;
 	}
 
+	public static Settings getSettings(){
+		return new Arena("Sniperz Rocks").getSettings();
+	}
 	public static Arena getActiveArena() {
 		if (activeArena == null)
-		{
-			setActiveArena(addArena("Not a real Arena"));
-		}
-		return activeArena;
+			return new Arena("Sniperz Rocks");
+		
+		else
+			return activeArena;
 	}
 
 	public static void setActiveArena(Arena arena) {

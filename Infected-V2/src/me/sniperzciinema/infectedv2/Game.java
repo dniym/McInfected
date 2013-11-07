@@ -1,11 +1,11 @@
 
-package me.sniperzciinema.infectedv2.GameMechanics;
+package me.sniperzciinema.infectedv2;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
+import me.sniperzciinema.infectedv2.GameMechanics.Stats;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;

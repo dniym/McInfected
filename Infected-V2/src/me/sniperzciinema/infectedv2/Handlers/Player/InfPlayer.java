@@ -3,11 +3,11 @@ package me.sniperzciinema.infectedv2.Handlers.Player;
 
 import java.util.Random;
 
+import me.sniperzciinema.infectedv2.Game;
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Disguise.Disguises;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.GameMechanics.Equip;
-import me.sniperzciinema.infectedv2.GameMechanics.Game;
 import me.sniperzciinema.infectedv2.GameMechanics.PotionEffects;
 import me.sniperzciinema.infectedv2.GameMechanics.Stats;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
@@ -225,8 +225,8 @@ public class InfPlayer {
 	 * Disguises the player
 	 */
 	public void disguise() {
-
-		Disguises.disguisePlayer(player);
+		if (Main.config.getBoolean("Disguise Support.Enabled"))
+			Disguises.disguisePlayer(player);
 	}
 
 	/**
@@ -254,7 +254,10 @@ public class InfPlayer {
 		player.setFireTicks(0);
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
-
+		
+		player.setFlying(false);
+		for (PotionEffect effect : player.getActivePotionEffects())
+			player.removePotionEffect(effect.getType());
 		unDisguise();
 		killstreak = 0;
 		vote = null;

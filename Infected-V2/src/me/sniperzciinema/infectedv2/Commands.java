@@ -9,10 +9,14 @@ import me.sniperzciinema.infectedv2.Events.InfectedCommandEvent;
 import me.sniperzciinema.infectedv2.Extras.Menus;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.GameMechanics.Equip;
-import me.sniperzciinema.infectedv2.GameMechanics.Game;
 import me.sniperzciinema.infectedv2.GameMechanics.MiscStats;
+import me.sniperzciinema.infectedv2.Handlers.Lobby;
+import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
 import me.sniperzciinema.infectedv2.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infectedv2.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;
+import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Tools.Files;
 
 import org.bukkit.Bukkit;
@@ -47,268 +51,120 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("Infected"))
 		{
-			InfectedCommandEvent cmdEvent = new InfectedCommandEvent(sender,
-					args);
-			Bukkit.getServer().getPluginManager().callEvent(cmdEvent);
-			if (!cmdEvent.isCancelled())
+			Player p = null;
+			InfPlayer ip = null;
+			if (sender instanceof Player)
 			{
-				if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+				p = (Player) sender;
+				ip = InfPlayerManager.getInfPlayer(p);
+			}
+			if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+			{
+				if (p == null)
+					sender.sendMessage("Msgs.Error_Not_A_Player");
+				
+				else if (!p.hasPermission("Infected.Chat"))
+					p.sendMessage(Msgs.Error_No_Permission.getString());
+				
+				else if (!Lobby.getInGame().contains(p))
+					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+				
+				else if (args.length == 1)
 				{
-					// Is the sender a player
-					if (!(sender instanceof Player))
+					if (!ip.isInfChatting())
 					{
-						sender.sendMessage(plugin.I + ChatColor.RED + "Expected a player!");
-						return true;
+						ip.setInfChatting(true);
+						p.sendMessage("Commands_Toggled_InfChat(<state>)");
+					}else
+					{
+						ip.setInfChatting(false);
+						p.sendMessage("Commands_Toggled_InfChat(<state>)");
 					}
-					Player player = (Player) sender;
-					if (!player.hasPermission("Infected.Chat"))
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
-						return true;
-					} else if (!Infected.isPlayerInGame(player) || Infected.isPlayerInLobby(player) || Infected.getGameState() != GameState.STARTED)
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOTINGAME, player, null));
-						return true;
-					} else if (args.length == 1)
-					{
-						if (!plugin.infectedChat.contains(player.getName()))
-						{
-							plugin.infectedChat.add(player.getName());
-							player.sendMessage(plugin.I + "Toggled " + ChatColor.GREEN + "in " + ChatColor.GRAY + "to Infected's Chat");
-						} else if (plugin.infectedChat.contains(player.getName()))
-						{
-							player.sendMessage(plugin.I + "Toggled " + ChatColor.RED + "out " + ChatColor.GRAY + "of Infected's Chat");
-							plugin.infectedChat.remove(player.getName());
-						}
-
-						return true;
-					}
+				}else
+				{
 					StringBuilder message = new StringBuilder(args[1]);
 					for (int arg = 2; arg < args.length; arg++)
-					{
 						message.append(" ").append(args[arg]);
-					}
-					for (Player all : Bukkit.getOnlinePlayers())
-					{
-						System.out.println(Infected.playerGetGroup(all) + " " + all.getDisplayName());
-						if (Infected.playerGetGroup(player) == Infected.playerGetGroup(all) || all.hasPermission("Infected.Chat.Spy"))
-						{
-							all.sendMessage(plugin.I + ChatColor.GRAY + "[" + Infected.playerGetGroup(player) + "] " + ChatColor.DARK_GREEN + player.getName() + ": " + ChatColor.WHITE + message);
-						}
-					}
-				}
 
-				// //////////////////////////////////////////////////////////////
-				// CLASSES
+					for (Player u : Bukkit.getOnlinePlayers())
+						if (ip.getTeam() == InfPlayerManager.getInfPlayer(p).getTeam() || u.hasPermission("Infected.Chat.Spy"))
+							u.sendMessage("Game_InfChat_Format(<player> <message>)");
+				}
+			}
+			
+			////////////////////////////////////////////////-CLASSES-///////////////////////////////////////
 				else if (args.length >= 1 && args[0].equalsIgnoreCase("Classes"))
 				{
-
-					if (!(sender instanceof Player))
-					{
-						sender.sendMessage(plugin.I + ChatColor.RED + "Expected a player!");
-						return true;
-					}
-					Player player = (Player) sender;
-					if (Infected.getGameState() == GameState.STARTED)
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_GAMESTARTED, player, null));
-						return true;
-					}
-					if (!Infected.isPlayerInLobby(player))
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOTINGAME, player, null));
-						return true;
-					}
-					if (!plugin.getConfig().getBoolean("Class Support"))
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.CLASSES_DISABLED, player, null));
-						return true;
-					} else if (args.length == 2)
-					{
-						if (!(Infected.filesGetClasses().getConfigurationSection("Classes.Zombie") == null) && !(Infected.filesGetClasses().getConfigurationSection("Classes.Human") == null))
-						{
-							if (args[1].equalsIgnoreCase("Human"))
-							{
-								Menus.openHumanMenu(player);
-							} else if (args[1].equalsIgnoreCase("Zombie"))
-							{
-								Menus.openZombieMenu(player);
-							} else
-								player.sendMessage(plugin.I + ChatColor.RED + "/Inf Classes <Zombie/Human>");
-						} else
-							player.sendMessage(plugin.I + ChatColor.RED + "No Classes were found...");
-					} else
-						Menus.chooseClass(player);
+					if (p == null)
+						sender.sendMessage("Msgs.Error_Not_A_Player");
+				
+					else if (!Lobby.getInGame().contains(p))
+						p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					
+					else if (Lobby.getGameState() != GameState.Started)
+						p.sendMessage("Error_Games_Not_Started");
+					
+					else if (!Files.getClasses().getBoolean("Enabled"))
+						p.sendMessage("Error_Classes disabled");
+					
+					else
+						Menus.chooseClassTeam(p);
 				}
 
-				// ///////////////////////////////////////////////////////////////////////////////////////////////////
-				// JOIN
+				// ///////////////////////////////////////////-JOIN-//////////////////////////////////////////
 
 				else if (args.length > 0 && args[0].equalsIgnoreCase("Join"))
 				{
+					if (p == null)
+						sender.sendMessage("Msgs.Error_Not_A_Player");
+				
+					else if (!p.hasPermission("Infected.Join"))
+						p.sendMessage(Msgs.Error_No_Permission.getString());
+					
+					else if (!Lobby.getInGame().contains(p))
+						p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					
+					else if (Lobby.getGameState() == GameState.Disabled)
+						p.sendMessage("Error_Infected_Is_Disabled");
+			
+					else if (!plugin.getConfig().contains("Lobby"))
+						p.sendMessage("Error_Missing_A_Lobby");
+					
+					else if (Lobby.getArenas().isEmpty() || !Lobby.isArenaValid(Lobby.getArenas().get(0)))
+						p.sendMessage("Error_Missing_A_Valid_Arena");
+					
+					else
+					{
+						for (Player u : Lobby.getInGame())
+							u.sendMessage(Msgs.Game_They_Joined_A_Game.getString("<player>", p.getName()));
+						
+						ip.setInfo();
+						ip.tpToLobby();
+						
+						p.sendMessage(Msgs.Game_You_Joined_A_Game.getString());
 
-					if (!(sender instanceof Player))
-					{
-						sender.sendMessage(plugin.I + ChatColor.RED + "Expected a player!");
-						return true;
-					}
-					Player player = (Player) sender;
-					if (Infected.getGameState() == GameState.DISABLED)
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_INFECTEDDISABLED, null, null));
-						return true;
-					} else if (!player.hasPermission("Infected.Join"))
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_NOPERMISSION, null, null));
-						return true;
-					} else if (plugin.inLobby.contains(player.getName()) || plugin.inGame.contains(player.getName()))
-					{
-						player.sendMessage(Messages.sendMessage(Msgs.ERROR_ALREADYINGAME, null, null));
-						return true;
-					} else if (!plugin.getConfig().contains("Lobby"))
-					{
-						player.sendMessage(plugin.I + ChatColor.RED + " Missing Lobby's positions!");
-						return true;
-					}
-					Infected.filesReloadArenas();
-					plugin.possibleArenas.clear();
-					if (Infected.filesGetArenas().getConfigurationSection("Arenas") == null)
-					{
-						player.sendMessage(plugin.I + ChatColor.RED + " Missing an arena!");
-						return true;
-					}
-					for (String parenas : Infected.filesGetArenas().getConfigurationSection("Arenas").getKeys(true))
-					{
-						// Check if the string matchs an arena
-						if (!parenas.contains("."))
+						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Lobby.getSettings().getRequiredPlayers())
 						{
-							plugin.possibleArenas.add(parenas);
-						}
-						if (!Infected.filesGetArenas().contains("Arenas." + parenas + ".Spawns"))
+							Lobby.timerStartVote();
+						} else if (Lobby.getGameState() == GameState.Voting)
 						{
-							plugin.possibleArenas.remove(parenas);
+							p.sendMessage("Game_Vote_For_An_Arena");
+							p.performCommand("Infected Arenas");
+							
+						} else if (Lobby.getGameState() == GameState.Infecting)
+						{
+							ip.respawn();
+							Equip.equip(p);
 						}
+						else if (Lobby.getGameState() == GameState.Started)
+						{
+							ip.respawn();
+							ip.Infect();
+						}
+						ScoreBoard.updateScoreBoard();
 					}
-					if (plugin.possibleArenas.isEmpty())
-					{
-						player.sendMessage(plugin.I + ChatColor.RED + " Missing an arena with spawn points!");
-						return true;
-					} else if (plugin.getConfig().getBoolean("Prevent Joining During Game"))
-					{
-						if (Infected.getGameState() == GameState.STARTED)
-						{
-							player.sendMessage(Messages.sendMessage(Msgs.ERROR_JOINWELLSTARTEDBLOCKED, null, null));
-						}
-					} else
-					{
-						for (Player all : Bukkit.getServer().getOnlinePlayers())
-						{
-							if (Main.inGame.contains(all.getName()))
-							{
-								all.sendMessage(Messages.sendMessage(Msgs.LOBBY_OTHERJOINEDLOBBY, player, null));
-							}
-						}
-
-						// Safe player's stats/stuff
-
-						InfectedPlayerJoinEvent joinEvent = new InfectedPlayerJoinEvent(
-								player,
-								Main.inGame,
-								Main.me.getConfig().getInt("Automatic Start.Minimum Players"));
-						Bukkit.getServer().getPluginManager().callEvent(joinEvent);
-
-						if (!joinEvent.isCancelled())
-						{
-							Main.inGame.add(player.getName());
-							Main.Spot.put(player.getName(), LocationHandler.getLocationToString(player.getLocation()));
-							Main.Health.put(player.getName(), player.getHealth());
-							Main.Food.put(player.getName(), player.getFoodLevel());
-							player.teleport(LocationHandler.getPlayerLocation(Main.me.getConfig().getString("Lobby")));
-							Main.Levels.put(player.getName(), player.getLevel());
-							Main.Exp.put(player.getName(), player.getExp());
-							Main.Inventory.put(player.getName(), player.getInventory().getContents());
-							Main.Armor.put(player.getName(), player.getInventory().getArmorContents());
-							Main.Winners.clear();
-							Main.inLobby.add(player.getName());
-							Main.gamemode.put(player.getName(), player.getGameMode().toString());
-
-							if (Main.config.getBoolean("ScoreBoard Support"))
-							{
-								ScoreBoard.updateScoreBoard();
-							}
-
-							if (Main.config.getBoolean("Disguise Support.Enabled"))
-								if (Disguises.isPlayerDisguised(player))
-									Disguises.unDisguisePlayer(player);
-
-							// Prepare player
-							player.setMaxHealth(20.0);
-							player.setHealth(20.0);
-							player.setFoodLevel(20);
-							for (PotionEffect reffect : player.getActivePotionEffects())
-							{
-								player.removePotionEffect(reffect.getType());
-							}
-							Reset.resetPlayersInventory(player);
-
-							if (Main.bVersion.equalsIgnoreCase(plugin.updateBukkitVersion))
-							{
-								if (Infected.filesGetShop().getBoolean("Save Items") && Infected.playerGetShopInventory(player) != null)
-									player.getInventory().setContents(Infected.playerGetShopInventory(player));
-							}
-							player.sendMessage(Messages.sendMessage(Msgs.LOBBY_JOINLOBBY, null, null));
-
-							player.setGameMode(GameMode.ADVENTURE);
-							player.setFlying(false);
-
-							if (!Infected.playergetLastHumanClass(player).equalsIgnoreCase("None"))
-								Main.humanClasses.put(player.getName(), Infected.playergetLastHumanClass(player));
-
-							if (!Infected.playergetLastZombieClass(player).equalsIgnoreCase("None"))
-								Main.zombieClasses.put(player.getName(), Infected.playergetLastZombieClass(player));
-
-							if (!Main.KillStreaks.containsKey(player.getName()))
-								Main.KillStreaks.put(player.getName(), Integer.valueOf("0"));
-
-							if (Main.inGame.size() >= Main.me.getConfig().getInt("Automatic Start.Minimum Players") && Infected.getGameState() == GameState.INLOBBY && Main.me.getConfig().getBoolean("Automatic Start.Use"))
-							{
-								Game.START();
-							} else if (Infected.getGameState() == GameState.VOTING)
-							{
-								player.sendMessage(Messages.sendMessage(Msgs.VOTE_HOWTOVOTE, null, null));
-								player.performCommand("Infected Arenas");
-
-							} else if (Infected.getGameState() == GameState.STARTED)
-							{
-								player.setGameMode(GameMode.SURVIVAL);
-								Zombify.joinInfectHuman(player);
-								Infected.delPlayerInLobby(player);
-
-							} else if (Infected.getGameState() == GameState.BEFOREINFECTED)
-							{
-								if (Main.config.getBoolean("ScoreBoard Support"))
-								{
-									player.setGameMode(GameMode.SURVIVAL);
-									ScoreBoard.updateScoreBoard();
-								}
-								LocationHandler.respawn(player);
-								if (!Main.Winners.contains(player.getName()))
-								{
-									Main.Winners.add(player.getName());
-								}
-								Main.Timein.put(player.getName(), System.currentTimeMillis() / 1000);
-								if (!Main.KillStreaks.containsKey(player.getName()))
-									Main.KillStreaks.put(player.getName(), Integer.valueOf("0"));
-								player.setHealth(20.0);
-								player.setFoodLevel(20);
-								player.playEffect(player.getLocation(), Effect.SMOKE, BlockFace.UP);
-								Equip.equipHumans(player);
-								Infected.delPlayerInLobby(player);
-							}
-						}
-					}
-
 				}
+			
 				// ////////////////////////////////////////
 				// REFRESH
 				else if (args.length > 0 && args[0].equalsIgnoreCase("Refresh"))
