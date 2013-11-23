@@ -1,6 +1,7 @@
 package me.sniperzciinema.infectedv2.Disguise;
 
 import me.sniperzciinema.infectedv2.Main;
+import me.sniperzciinema.infectedv2.Tools.AddonManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -129,6 +130,7 @@ public class Disguises {
 			}
 			if(Main.Disguiser != null){
 				System.out.println("For Disguise Support we're using " + Main.Disguiser);
+				AddonManager.useDisguises = true;
 			}
 		}else{
 			System.out.println("Disguise Support is Disabled");

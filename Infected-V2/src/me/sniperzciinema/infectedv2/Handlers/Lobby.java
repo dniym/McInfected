@@ -58,7 +58,20 @@ public class Lobby {
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 	}
-
+	public static ArrayList<Arena> getValidArenas(){
+		ArrayList<Arena> ga = new ArrayList<Arena>();
+		for(Arena a : getArenas())
+			if(isArenaValid(a))
+				ga.add(a);
+		return ga;
+	}
+	public static ArrayList<Arena> getInValidArenas(){
+		ArrayList<Arena> ba = new ArrayList<Arena>();
+		for(Arena a : getArenas())
+			if(!isArenaValid(a))
+				ba.add(a);
+		return ba;
+	}
 	public static Location getLocation() {
 		return LocationHandler.getPlayerLocation(Main.config.getString("Lobby"));
 	}
@@ -203,10 +216,7 @@ public class Lobby {
 
 		// Get the arena to fix any broken blocks
 		arena.reset();
-		// Remove the arena to reset everything
-		removeArena(arena);
-		// Re-add it in case they feel like playing it again.
-		addArena(arena);
+		
 	}
 	public static void reset(){
 		stopTimer();

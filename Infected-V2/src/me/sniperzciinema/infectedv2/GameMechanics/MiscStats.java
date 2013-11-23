@@ -5,36 +5,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import me.sniperzciinema.infectedv2.GameMechanics.Stats.StatType;
 import me.sniperzciinema.infectedv2.Tools.Files;
-
-import org.bukkit.entity.Player;
 
 
 public class MiscStats {
 
 	private static HashMap<String, Integer> Top = new HashMap<String, Integer>();
 
-	public static Double KD(Player player) {
-		int kills = Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Kills");
-		int deaths = Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Deaths");
+	public static Double KD(String user) {
+		int kills = Stats.getKills(user);
+		int deaths = Stats.getDeaths(user);
 		double ratio = Math.round(((double) kills / (double) deaths) * 100.0D) / 100.0D;
 		if (deaths == 0)
 			ratio = kills;
 		else if (kills == 0)
 			ratio = 0.00;
 		return ratio;
-	}
-
-	public static void setStats(Player player, Integer Kills, Integer Deaths) {
-		int kills = Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Kills");
-		int deaths = Files.getPlayers().getInt("Players." + player.getName().toLowerCase() + ".Deaths");
-		if (kills == 0)
-			kills = 0;
-		if (deaths == 0)
-			deaths = 0;
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Kills", kills + Kills);
-		Files.getPlayers().set("Players." + player.getName().toLowerCase() + ".Deaths", deaths + Deaths);
-		Files.savePlayers();
 	}
 
 	public static String countdown(HashMap<String, Integer> map) {
@@ -53,16 +40,13 @@ public class MiscStats {
 		return top;
 	}
 
-	public static String[] getTop5(String stat) {
-		String Stat = stat;
-		char[] stringArray = Stat.toCharArray();
-		stringArray[0] = Character.toUpperCase(stringArray[0]);
-		Stat = new String(stringArray);
+	public static HashMap<String, Integer> getTop5(StatType type) {
+		
 		for (String user : Files.getPlayers().getConfigurationSection("Players").getKeys(true))
 		{
 			if (!user.contains("."))
 			{
-				Top.put(user, Files.getPlayers().getInt("Players." + user + "." + Stat));
+				Top.put(user, Stats.getStat(type, user));
 			}
 		}
 		if (Top.size() < 6)
@@ -83,9 +67,8 @@ public class MiscStats {
 		Top.remove(name4);
 		String name5 = countdown(Top);
 		Top.remove(name5);
-		String[] top = { name1, name2, name3, name4, name5 };
-		Top.clear();
-		return top;
+		
+		return Top;
 	}
 
 }

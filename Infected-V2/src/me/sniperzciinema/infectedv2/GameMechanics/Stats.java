@@ -11,6 +11,24 @@ import me.sniperzciinema.infectedv2.Tools.Files;
 
 public class Stats {
 
+	public enum StatType{
+		kills, deaths, points, score, killstreak, playingtime;
+	};
+	public static int getStat(StatType type, String user){
+		if(type == StatType.kills)
+			return getKills(user);
+		else if(type == StatType.deaths)
+			return getDeaths(user);
+		else if(type == StatType.points)
+			return getPoints(user);
+		else if(type == StatType.score)
+			return getScore(user);
+		else if(type == StatType.killstreak)
+			return getHighestKillStreak(user);
+		else if(type == StatType.playingtime)
+			return getPlayingTime(user);
+		else return 0;
+	}
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 

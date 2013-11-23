@@ -22,6 +22,14 @@ public class AddonManager {
 		plugin = instance;
 	}
 
+	public static boolean useVault = false;
+	public static boolean useDisguises = false;
+	public static boolean useCrackShot = false;
+	public static boolean useFactions = false;
+	public static boolean useEssentials = false;
+	public static boolean useMcmmo = false;
+	public static boolean useTagApi = false;
+	
 	public void getAddons() {
 
 		// Check if the plugin addons are there
@@ -35,6 +43,7 @@ public class AddonManager {
 				if (economyProvider != null)
 				{
 					Main.economy = economyProvider.getProvider();
+					useVault = true;
 				}
 
 			} else
@@ -60,6 +69,7 @@ public class AddonManager {
 				CrackShotApi CSApi = new CrackShotApi();
 				Bukkit.getPluginManager().registerEvents(CSApi, plugin);
 				System.out.println("CrackShot support has been enabled!");
+				useCrackShot = true;
 			}
 		} else
 			System.out.println("CrackShot Support is Disabled");
@@ -76,6 +86,7 @@ public class AddonManager {
 				FactionsEvents FactionsEvents = new FactionsEvents();
 				Bukkit.getPluginManager().registerEvents(FactionsEvents, plugin);
 				System.out.println("Factions support has been enabled!");
+				useFactions = true;
 			}
 		} else
 			System.out.println("Factions Support is Disabled");
@@ -92,6 +103,7 @@ public class AddonManager {
 				mcMMOEvents mcMMOEvents = new mcMMOEvents();
 				Bukkit.getPluginManager().registerEvents(mcMMOEvents, plugin);
 				System.out.println("mcMMO support has been enabled!");
+				useMcmmo = true;
 			}
 		} else
 			System.out.println("mcMMO Support is Disabled");
@@ -108,10 +120,12 @@ public class AddonManager {
 				TagApi TagApi = new TagApi(plugin);
 				Bukkit.getPluginManager().registerEvents(TagApi, plugin);
 				System.out.println("TagApi support has been enabled!");
+				useTagApi = true;
 			}
 		} else
 			System.out.println("TagAPI Support is Disabled");
 
+	
 		Disguises.getDisguisePlugin();
 	}
 }
