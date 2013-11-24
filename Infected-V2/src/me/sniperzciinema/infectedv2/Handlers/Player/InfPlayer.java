@@ -13,6 +13,7 @@ import me.sniperzciinema.infectedv2.GameMechanics.Stats;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClass;
+import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
 import me.sniperzciinema.infectedv2.Handlers.Misc.LocationHandler;
 
@@ -83,6 +84,8 @@ public class InfPlayer {
 		armor = player.getInventory().getArmorContents();
 		player.getInventory().clear();
 		player.getInventory().setArmorContents(null);
+		setInfClass(Team.Human, InfClassManager.getDefaultClass(Team.Human)); 
+		setInfClass(Team.Zombie, InfClassManager.getDefaultClass(Team.Zombie)); 
 
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setLevel(0);

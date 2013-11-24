@@ -9,7 +9,7 @@ import me.sniperzciinema.infectedv2.Tools.Files;
 
 public enum Team
 {
-	Human("Human"), Zombie("Zombie"), None("None");
+	Human("Human"), Zombie("Zombie"), None("None"), Global("Global");
 
 	private String string;
 
@@ -17,7 +17,11 @@ public enum Team
 	{
 		string = s;
 	}
-
+	
+	@Override
+	public String toString(){
+		return string;
+	}
 	public List<String> getKillMessages(DeathType death) {
 		return Files.getMessages().getStringList("Deaths." + string + "." + death);
 	}

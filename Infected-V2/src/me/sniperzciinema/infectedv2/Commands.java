@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import me.sniperzciinema.infectedv2.Extras.Menus;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.GameMechanics.DeathType;
@@ -26,8 +27,8 @@ import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Messages.Time;
-import me.sniperzciinema.infectedv2.Tools.AddonManager;
 import me.sniperzciinema.infectedv2.Tools.Files;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -143,7 +144,7 @@ public class Commands implements CommandExecutor {
 
 					p.sendMessage(Msgs.Game_You_Joined_A_Game.getString());
 
-					if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Lobby.getSettings().getRequiredPlayers())
+					if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
 					{
 						Lobby.timerStartVote();
 					} else if (Lobby.getGameState() == GameState.Voting)
@@ -256,7 +257,7 @@ public class Commands implements CommandExecutor {
 								{
 									Grenade grenade = GrenadeManager.getGrenade(gi);
 									p.getInventory().addItem(grenade.getItemStack());
-									ip.setPoints(ip.getPoints() - grenade.getCost(), AddonManager.useVault);
+									ip.setPoints(ip.getPoints() - grenade.getCost(), Settings.VaultEnabled());
 									p.sendMessage("Just bought grenade");
 
 								} else
@@ -280,7 +281,7 @@ public class Commands implements CommandExecutor {
 									ItemStack g = grenade.getItemStack();
 									g.setAmount(amount);
 									p.getInventory().addItem(g);
-									ip.setPoints(ip.getPoints() - (grenade.getCost() * amount), AddonManager.useVault);
+									ip.setPoints(ip.getPoints() - (grenade.getCost() * amount), Settings.VaultEnabled());
 									p.sendMessage("Just bought <Amount> grenades");
 								} else
 									p.sendMessage("You don't have enough points to make this purchase!");
@@ -613,7 +614,7 @@ public class Commands implements CommandExecutor {
 					if (args[1].equalsIgnoreCase("Points"))
 					{
 						int newValue = Stats.getPoints(user) + i;
-						Stats.setPoints(user, newValue, AddonManager.useVault);
+						Stats.setPoints(user, newValue, Settings.VaultEnabled());
 						p.sendMessage(user + "'s new points is: " + newValue);
 					} else if (args[1].equalsIgnoreCase("Score"))
 					{
@@ -964,14 +965,14 @@ public class Commands implements CommandExecutor {
 			{
 				
 				p.sendMessage("");
-				p.sendMessage(Main.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (AddonManager.useDisguises ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (plugin.getConfig().getBoolean("Disguise Support.DisguiseCraft") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "DisguiseCraft") : "") + (plugin.getConfig().getBoolean("Disguise Support.iDisguise") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "iDisguise") : "") + (plugin.getConfig().getBoolean("Disguise Support.LibsDisguises") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "LibsDisguises") : ""));
-				p.sendMessage(Main.I + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (AddonManager.useCrackShot ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "Zombie Abilities: " + "" + ChatColor.GREEN + ChatColor.ITALIC + "" + (plugin.getConfig().getBoolean("Zombie Abilities") ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (AddonManager.useTagApi ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (AddonManager.useFactions ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (AddonManager.useMcmmo ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (AddonManager.useVault ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Main.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.DisguisesEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				if(Settings.DisguisesEnabled())
+					p.sendMessage(Main.I + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Main.Disguiser.getName());
+				p.sendMessage(Main.I + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.CrackShotEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Main.I + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.TagAPIEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Main.I + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.FactionsEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Main.I + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Main.I + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 			}
 			/////////////////////////////////////////////////-ELSE-//////////////////////////////////////////////
 			else

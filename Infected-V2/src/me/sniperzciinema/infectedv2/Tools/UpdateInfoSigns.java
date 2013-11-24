@@ -45,6 +45,6 @@ public class UpdateInfoSigns {
 
 				}
 			}
-		}, 100L, Main.config.getInt("Info Signs.Refresh Time") * 20);
+		}, 100L, Settings.InfoSignsUpdateTime() * 20);
 	}
 }

@@ -3,6 +3,7 @@ package me.sniperzciinema.infectedv2.Extras;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import me.sniperzciinema.infectedv2.Main;
@@ -17,6 +18,7 @@ import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.IconMenu;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -96,7 +98,7 @@ public class Menus {
 	public static void openVotingMenu(final Player p) {
 		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		IconMenu menu = new IconMenu(
-				ChatColor.DARK_BLUE + p.getName() + " - Map Vote",
+				ChatColor.DARK_BLUE + p.getName() + " - Vote",
 				((Lobby.getArenas().size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -104,12 +106,18 @@ public class Menus {
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 						Arena arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
-						arena.setVotes(arena.getVotes() + 1);
+						int votes = 1;
+
+						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
+							if (p.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
+								votes = node.getValue();
+
+						arena.setVotes(arena.getVotes() + votes);
 						IP.setVote(arena);
+
 						for (Player u : Lobby.getInGame())
-						{
-							u.sendMessage("<Player> voted for <Arena>");
-						}
+							u.sendMessage("<Player> voted for <Arena>" + (votes != 0 ? " (x" + votes + ")" : ""));
+
 						ScoreBoard.updateScoreBoard();
 
 					}

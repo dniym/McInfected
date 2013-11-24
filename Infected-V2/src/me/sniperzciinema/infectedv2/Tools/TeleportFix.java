@@ -4,7 +4,6 @@ package me.sniperzciinema.infectedv2.Tools;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Disguise.Disguises;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 
@@ -34,29 +33,32 @@ public class TeleportFix implements Listener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 
 		final Player player = event.getPlayer();
-		// Fix the visibility issue one tick later
-		server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+		if (Lobby.isInGame(player))
 		{
+			// Fix the visibility issue one tick later
+			server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+			{
 
-			@Override
-			public void run() {
-				// Refresh nearby clients
-				final List<Player> nearby = getPlayersInInfected();
+				@Override
+				public void run() {
+					// Refresh nearby clients
+					final List<Player> nearby = getPlayersInInfected();
 
-				// Hide every player
-				updateEntities(player, nearby, false);
+					// Hide every player
+					updateEntities(player, nearby, false);
 
-				// Then show them again
-				server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-				{
+					// Then show them again
+					server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+					{
 
-					@Override
-					public void run() {
-						updateEntities(player, nearby, true);
-					}
-				}, 1);
-			}
-		}, TELEPORT_FIX_DELAY);
+						@Override
+						public void run() {
+							updateEntities(player, nearby, true);
+						}
+					}, 1);
+				}
+			}, TELEPORT_FIX_DELAY);
+		}
 	}
 
 	public void updateEntities(Player tpedPlayer, List<Player> players, boolean visible) {
@@ -64,7 +66,7 @@ public class TeleportFix implements Listener {
 		// and hide or show tpedPlayer to every player.
 		for (Player player : players)
 		{
-			if (Main.config.getBoolean("Disguise Support.Enabled"))
+			if (Settings.DisguisesEnabled())
 			{
 				if (visible)
 				{
@@ -96,9 +98,8 @@ public class TeleportFix implements Listener {
 
 	public List<Player> getPlayersInInfected() {
 		List<Player> res = new ArrayList<Player>();
-		for (Player p : server.getOnlinePlayers())
-			if (Lobby.isInGame(p))
-				res.add(p);
+		for (Player p : Lobby.getInGame())
+			res.add(p);
 		return res;
 	}
 }

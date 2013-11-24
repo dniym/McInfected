@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Tools.Files;
-import me.sniperzciinema.infectedv2.Tools.Settings;
+import me.sniperzciinema.infectedv2.Tools.ArenaSettings;
 
 
 public class Arena {
@@ -19,7 +19,7 @@ public class Arena {
 	private int Votes;
 	private HashMap<Location, Inventory> chests = new HashMap<Location, Inventory>();
 	private HashMap<Location, Material> blocks = new HashMap<Location, Material>();
-	private Settings Settings = new Settings(this);
+	private ArenaSettings ArenaSettings = new ArenaSettings(this);
 
 	public Arena(String name)
 	{
@@ -30,8 +30,8 @@ public class Arena {
 	/**
 	 * @return the settings
 	 */
-	public Settings getSettings() {
-		return Settings;
+	public ArenaSettings getSettings() {
+		return ArenaSettings;
 	}
 
 	/**

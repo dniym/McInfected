@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 2.0.1
+# Default InfectedV2 Config, Last edited in 2.0.0
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -9,213 +9,14 @@
 # This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
 # You can use "/Infected Admin Code" To return the code for the item in your hand
 # #
-# See Infecteds dev page for help
+# See Infecteds config page for help
 # http://dev.bukkit.org/server-mods/infected-core
 # #   
 # # +======================================================+ #
-# # |                After Game Rewards                    | #
-# # +======================================================+ #
-# # MySQL information, should be self explained for those of you that use it
-# # Restart the server for this to take effect
-# MySQL:
-#   Host: 127.0.0.1
-#   Port: 3306
-#   Database: minecraft
-#   Username: user
-#   Password: pass
-# # +======================================================+ #
-# # |                      Updates                         | #
-# # +======================================================+ #
-# #
-# # Check for updates
-# Check For Updates:
-#   Enable: true
-# #
-# # +======================================================+ #
-# # |                   Plugin Addons                      | #
-# # +======================================================+ #
-# #
-# # Do you want zombies to look like zombies?
-# Disguise Support:
-#   Enabled: true
-# # Enable what you use and disable what you dont
-#   DisguiseCraft: true
-#   iDisguise: true
-#   LibsDisguises: true
-# #
-# Zombie Abilities: false
-# #
-# Class Support: true
-# #
-# Vault Support:
-#   Enable: false
-# # How much do you get if you win as a human
-#   Reward: 100
-# # Cash symbol for Vault sign supports (Don't use $ as it doesnt work for some reason)
-#   Symbol: C
-# #
-# # Want to use Crack Shot?
-# # Enabling this will let infected check for when a player gets shot by a crackshot gun
-# CrackShot Support:
-#   Enable: true
-# #
-# # Want to use TagApi?
-# # Enabling this will make the humans and in lobby players get special colored tags
-# TagAPI Support:
-#   Enable: true
-# #
-# # Do you want to use Faction support?
-# # Enabling this will allow allied and truced factions to pvp
-# Factions Support:
-#   Enable: true
-# #
-# # Do you want to use mcMMO support?
-# # Enabling this will prevent mcMMO from changing damage done during the game
-# mcMMO Support:
-#   Enable: true
-# #
-# ScoreBoard Support: true
-# #
-# # +======================================================+ #
-# # |                   Game Settings                      | #
-# # +======================================================+ #
-# #
-# # When the alpha zombies are chosen what percent of the players become infected
-# Percent to infect:
-# # Are we going to use this option?
-#   Enable: true
-# What percentage? (0% - 100%)
-#   Percent: 20
-# #
-# # Should Infected use death events instead of the damage events(Still a WIP)
-# Use Death Event Instead of Damage Event: false
-# # Use books for Infecteds commands
-# Book For Help: true
-# #
-# Votes:
-# # Are we going to allow players to vote for a map?
-#   Allow: true
-# # Should we allow players to use a GUI to choose their map
-#   Use GUI: true
-# # This will make a players votes worth more with the permission node Infected.vote.<extra votes name> 
-#   Extra Votes:
-#     vip:2
-#     staff:3
-# #    
-# # Info signs
-# Info Signs:
-#   Enabled: true
-# # How long between each refresh time for the signs
-#   Refresh Time: 2
-# #  
-# # Should players be allowed to join once a game has started
-# Prevent Joining During Game: false
-# #
-# # Does the game auto start
-# Automatic Start:
-#   Use: true
-#   Minimum Players: 3
-# #  
-# # Whats the time for each phase
-#  Time:
-#    Voting Time: 30
-#    Alpha Zombie Infection: 20
-#    Game Time Limit: 480
-# #
-# # Commands players can use inside Infected they have to be in lowercase (Ops can use all commands regardless of being in Infected)
-# Allowed Commands:
-# - /list
-# - /tell
-# #
-# # This setting goes into the Arenas.yml and requires you to change the blocks players can break in that arena.
-# Allow Breaking Certain Blocks: false
-# #
-# # Play effects around the zombie every so many seconds
-# Use Zombie Movement Effects: true
-# #
-# Disable Hunger: true
-# Disable Enchanting: true
-# Allow Interacting: true
-# #
-# # When a player becomes a zombie are they respawned?
-# New Zombie Tp: false
-# #
-# #
-# # +======================================================+ #
-# # |                  Points and Score                    | #
-# # +======================================================+ #
-# #
-# # Max - The most a user can have
-# # Survive - What you get for each other human getting infected(As a human)
-# # Zombies Infected - What you get for each human getting infected(As a zombie)
-# # Kill - What you get when a game ends
-# # Game Over - What you get when a game ends
-# Points:
-#   Use: true
-#   Max Points: 10000
-#   Survive: 3
-#   Zombies Infected: 3
-#   Kill: 2
-#   Game Over: 10
-# Score:
-#   Use: true
-#   Max Score: 10000
-#   Survive: 3
-#   Zombies Infected: 3
-#   Kill: 2
-#   Game Over: 10
-# #
-# # +======================================================+ #
-# # |                  Armor and Weapons                   | #
-# # +======================================================+ #
-# #
-# # Do they start off with a class instead of the defaults in the config? (Classes allow more in depth configuration)
-# # Capitals DO matter
-# Default Classes:
-#   Use: false
-#   Human: Knight
-# You can either state a class name or put None
-#   Zombie: None
-# #
-# # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
-# Armor:
-#   Human:
-#     Head: '298'
-#     Chest: '299'
-#     Legs: '300'
-#     Feet: '301'
-#     Items:
-#     - 272-34@100
-#     - '261'
-#     - 262,64
-#   Zombie:
-#     Head: 302:2-5@1
-#     Chest: '303'
-#     Legs: '304'
-#     Feet: '305'
-#     Items:
-#     - 272-34@100
-# #   
-# # +======================================================+ #
-# # |                After Game Rewards                    | #
-# # +======================================================+ #
-# #
-# # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel%Item_Name
-# Rewards:
-# - 351:2,3
-# - 265,2
-# #
-# # The command triggered for each player when a player wins Infected
-# Command Reward: tell <player> you have won!
-# # +======================================================+ #
-# # +======================================================+ #
-# #
-# I Apoligize for the way the config looks but i do this so i don't 
-# have to reset it every version. Because I still add to this config.
-# # 
+# # |                Infected Settings                     | #
 # # +======================================================+ #
 MySQL:
-  Enable: false
+  Enabled: false
   Host: 127.0.0.1
   Port: 3306
   Database: minecraft
@@ -223,122 +24,117 @@ MySQL:
   Password: pass
 
 Check For Updates:
-  Enable: true
-
-Disguise Support:
   Enabled: true
-  DisguiseCraft: true
-  iDisguise: true
-  LibsDisguises: true
-  
-Zombie Abilities: false
+ 
+# All the addons for Infected 
+Addons:
+# Can they choose classes
+  Class Support: true
+# Economy Support
+  Vault Support:
+    Enabled: false
+    Reward: 100
+# The symbol used on signs to show that we use Economy even if Vault is disabled
+    Symbol: C
+# Gun support
+  CrackShot Support:
+    Enabled: true
+# Colored Nametag support
+  TagAPI Support:
+    Enabled: true
+# To allow allies to attack each other
+  Factions Support:
+    Enabled: true
+# To prevent mcmmo from unbalancing a fight
+  mcMMO Support:
+    Enabled: true
+# Should the zombies look like real mobs
+  Disguise Support:
+    Enabled: true
 
-Class Support: true
-
-Vault Support:
-  Enable: false
-  Reward: 100
-  Symbol: C
-  
-CrackShot Support:
-  Enable: true
-  
-TagAPI Support:
-  Enable: true
-  
-Factions Support:
-  Enable: true
-  
-mcMMO Support:
-  Enable: true
-  
-ScoreBoard Support: true
-
-Book For Help: true
-
-
-Votes:
-  Allow: true
-  Use a GUI: true
-  Extra Votes:
-    vip: 2
-    staff: 3
-    
-Info Signs:
-  Enabled: true
-  Refresh Time: 2
-  
-Prevent Joining During Game: false
-
-Automatic Start:
-  Use: true
-  Minimum Players: 3
-  
-Time:
-  Voting Time: 30
-  Alpha Zombie Infection: 20
-  Game Time Limit: 480
-
-Percent to infect:
-  Enable: true
-  Percent: 20
-  
-Use Death Event Instead of Damage Event: false
-
-Allowed Commands:
-- /list
-- /tell
-
-Allow Breaking Certain Blocks: false
-
-Use Zombie Movement Effects: true
-
-Disable Hunger: true
-Disable Enchanting: true
-Allow Interacting: true
-
-New Zombie Tp: false
-
-Points:
-  Use: true
-  Max Points: 10000
-  Survive: 3
-  Zombies Infected: 3
-  Kill: 2
-  Game Over: 10
-Score:
-  Use: true
-  Max Score: 10000
-  Survive: 3
-  Zombies Infected: 3
-  Kill: 2
-  Game Over: 10
-
-Default Classes:
-  Use: false
-  Human: Knight
-  Zombie: None
-  
-Armor:
-  Human:
-    Head: '298'
-    Chest: '299'
-    Legs: '300'
-    Feet: '301'
-    Items:
-    - 272-34@100
-    - '261'
-    - 262,64
-  Zombie:
-    Head: 302:2-5@1
-    Chest: '303'
-    Legs: '304'
-    Feet: '305'
-    Items:
-    - 272-34@100
-    
-Rewards:
-- 351:2,3
-- 265,2
-
-Command Reward: tell <player> you have won!
+# All the settings for Infected
+Settings:
+# These settings can not be used Per Arena
+  Misc:
+# Should "/Infected Help" Give a book
+    Book For Help: true
+# To allow certain ranks to have more influance in voting
+    Votes:
+      Extra Votes:
+        vip: 2
+        staff: 3
+# Info Signs, every "Refresh Time"(seconds) the signs will be updated
+    Info Signs:
+      Enabled: true
+      Refresh Time: 2
+# How many players needed for it to automatically start
+    Automatic Start:
+      Minimum Players: 3
+# Should we prevent players from joining once a game has started
+    Prevent Joining During Game: false
+# Global Settings can be just copied and pasted into an arenas settings then you have settings per arena
+  Global:
+# All the time limits (Seconds)
+    Time:
+      Voting: 30
+      Infecting: 20
+      Game: 480
+# When choosing the alpha should we choose more then one based on the players in game
+    Percent to Infect:
+      Enabled: true
+      Percent: 20
+# Commands to allow in the arena
+    Allowed Commands:
+    - /list
+    - /tell
+# Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
+    Breakable Blocks:
+      Global:
+      - '1'
+      Zombie:
+      - '2'
+      Human:
+      - '3'
+# The points(Store/Grenades/Etc) a player is rewarded upon certain events
+    Points:
+      Use: true
+# When another human gets infected
+      Survive: 3
+# As a zombie when your team gets a new Infected
+      Zombies Infected: 3
+# When you kill a player
+      Kill: 2
+# When the game ends
+      Game Over: 10
+# The score a player is rewarded upon certain events
+    Score:
+      Use: true
+# When another human gets infected
+      Survive: 3
+# As a zombie when your team gets a new Infected
+      Zombies Infected: 3
+# When you kill a player
+      Kill: 2
+# When the game ends
+      Game Over: 10
+# Default Classes
+    Default Classes:
+      Human: Knight
+      Zombie: None
+# Zombie abilities are zombies with certain attribute boosts, such as agility, speed, strength, slowness, etc
+    Zombie Abilities: false
+    Misc:
+# Should players be able to loose hunger in the arena
+      Disable Hunger: true
+# Should players be able to enchant in the arena
+      Disable Enchanting: true
+# Should players be able to open doors, use levers, etc in arenas
+      Allow Interacting: true
+# Should players be able to drop items
+      Allow Dropping Items: false
+# The rewards for playing a game(Items)
+    Rewards:
+    - 351:2,3
+    - 265,2
+# The command triggered for a player winning a game(Can be used to give special items, money, permissions, etc)
+    Command Reward: tell <player> you have won!

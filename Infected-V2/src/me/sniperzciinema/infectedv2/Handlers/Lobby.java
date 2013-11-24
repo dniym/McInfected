@@ -22,7 +22,7 @@ import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Messages.Time;
 import me.sniperzciinema.infectedv2.Tools.Files;
-import me.sniperzciinema.infectedv2.Tools.Settings;
+import me.sniperzciinema.infectedv2.Tools.ArenaSettings;
 
 
 public class Lobby {
@@ -44,7 +44,6 @@ public class Lobby {
 	private static int InfectingTime;
 	private static int GameTime;
 	private static int TimeLeft;
-
 	private static int currentGameTimer;
 
 	public enum GameState
@@ -136,9 +135,10 @@ public class Lobby {
 		return zombies;
 	}
 
-	public static Settings getSettings(){
-		return new Arena("Sniperz Rocks").getSettings();
+	public static ArenaSettings getArenaSettings(Arena arena){
+		return arena.getSettings();
 	}
+	
 	public static Arena getActiveArena() {
 		if (activeArena == null)
 			return new Arena("Sniperz Rocks");

@@ -123,21 +123,21 @@ public class InfClassManager {
 			if (!s.contains("."))
 				name = s;
 			if (s.contains("Helmet"))
-				helmet = Files.getClasses().getCurrentPath() + s;
+				helmet = Files.getClasses().getString("Classes.Human") + s;
 			if (s.contains("ChestPlate"))
-				chestplate = Files.getClasses().getCurrentPath() + s;
+				chestplate = Files.getClasses().getString("Classes.Human") + s;
 			if (s.contains("Leggings"))
-				leggings = Files.getClasses().getCurrentPath() + s;
+				leggings = Files.getClasses().getString("Classes.Human") + s;
 			if (s.contains("Boots"))
-				boots = Files.getClasses().getCurrentPath() + s;
+				boots = Files.getClasses().getString("Classes.Human") + s;
 			if (s.contains("Items"))
-				items.add(ItemHandler.getItemStack(Files.getClasses().getCurrentPath() + s));
+				items.add(ItemHandler.getItemStack(Files.getClasses().getString("Classes.Human") + s));
 			if (s.contains("Disguise"))
-				disguise = Files.getClasses().getCurrentPath() + s;
+				disguise = Files.getClasses().getString("Classes.Human") + s;
 			if (s.contains("Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getCurrentPath() + s));
+				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Human") + s));
 			if (s.contains("Transfer Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getCurrentPath() + s));
+				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Human") + s));
 			InfClass IC = new InfClass(name, Team.Human,
 					ItemHandler.getItemStack(helmet),
 					ItemHandler.getItemStack(chestplate),
@@ -160,23 +160,23 @@ public class InfClassManager {
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 			ArrayList<PotionEffect> transfereffects = new ArrayList<PotionEffect>();
 			if (!s.contains("."))
-				name = Files.getClasses().getCurrentPath() + s;
+				name = Files.getClasses().getString("Classes.Zombie") + s;
 			if (s.contains("Helmet"))
-				helmet = Files.getClasses().getCurrentPath() + s;
+				helmet = Files.getClasses().getString("Classes.Zombie") + s;
 			if (s.contains("ChestPlate"))
-				chestplate = Files.getClasses().getCurrentPath() + s;
+				chestplate = Files.getClasses().getString("Classes.Zombie") + s;
 			if (s.contains("Leggings"))
-				leggings = Files.getClasses().getCurrentPath() + s;
+				leggings = Files.getClasses().getString("Classes.Zombie") + s;
 			if (s.contains("Boots"))
-				boots = Files.getClasses().getCurrentPath() + s;
+				boots = Files.getClasses().getString("Classes.Zombie") + s;
 			if (s.contains("Items"))
-				items.add(ItemHandler.getItemStack(Files.getClasses().getCurrentPath() + s));
+				items.add(ItemHandler.getItemStack(Files.getClasses().getString("Classes.Zombie") + s));
 			if (s.contains("Disguise"))
-				disguise = Files.getClasses().getCurrentPath() + s;
+				disguise = Files.getClasses().getString("Classes.Zombie") + s;
 			if (s.contains("Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getCurrentPath() + s));
+				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Zombie") + s));
 			if (s.contains("Transfer Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getCurrentPath() + s));
+				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Zombie") + s));
 			InfClass IC = new InfClass(name, Team.Zombie,
 					ItemHandler.getItemStack(helmet),
 					ItemHandler.getItemStack(chestplate),

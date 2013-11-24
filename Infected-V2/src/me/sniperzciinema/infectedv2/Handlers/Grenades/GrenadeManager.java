@@ -42,20 +42,16 @@ public class GrenadeManager {
 
 	public static Grenade getGrenade(int id) {
 			for (Grenade grenade : grenades)
-			{
 				if (grenade.getId() == id)
 					return grenade;
-			}
+			
 		return null;
 	}
 
 
 	public static void loadConfigGrenades() {
 		for (String s : Files.getClasses().getConfigurationSection("Grenades").getKeys(false))
-		{
-			if (!isGrenade(Integer.valueOf(s))){
+			if (!isGrenade(Integer.valueOf(s)))
 				addGrenade(Integer.valueOf(s));
-			}
-		}
 	}
 }

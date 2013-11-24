@@ -2,7 +2,6 @@
 package me.sniperzciinema.infectedv2.GameMechanics;
 
 import me.sniperzciinema.infectedv2.Game;
-import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
@@ -12,6 +11,7 @@ import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Messages.DeathMessages;
 import me.sniperzciinema.infectedv2.Tools.Events;
 import me.sniperzciinema.infectedv2.Tools.Files;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -85,18 +85,18 @@ public class Deaths {
 				String command = String.valueOf(Files.getKills().getString("Kill Streaks." + KillStreak)).replaceAll("<player>", p.getName());
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 			}
-			IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Kill), Main.config.getBoolean("Vault Support.Enabled"));
+			IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Kill), Settings.VaultEnabled());
 			IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Kill));
 
 			for (Player u : Lobby.getInGame())
 			{
 				if (Lobby.isHuman(u))
 				{
-					IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Survive), Main.config.getBoolean("Vault Support.Enabled"));
+					IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Survive), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Survive));
 				} else
 				{
-					IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Infected), Main.config.getBoolean("Vault Support.Enabled"));
+					IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Infected), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Infected));
 				}
 

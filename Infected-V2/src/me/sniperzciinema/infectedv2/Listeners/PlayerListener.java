@@ -9,6 +9,7 @@ import me.sniperzciinema.infectedv2.Handlers.Misc.LocationHandler;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Tools.Files;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,12 +40,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
 
-
 	// Check for updates when a player joins, making sure they are OP
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (Main.update && Main.config.getBoolean("Check For Updates") && player.hasPermission("Infected.Admin"))
+		if (Main.update && player.hasPermission("Infected.Admin"))
 		{
 			player.sendMessage(Main.I + ChatColor.RED + "An update is available: " + Main.name);
 			player.sendMessage(Main.I + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
@@ -55,10 +55,8 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
-		{
 			if (!Lobby.getActiveArena().getSettings().canDropBlocks())
 				e.setCancelled(true);
-		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -84,7 +82,7 @@ public class PlayerListener implements Listener {
 			{
 				e.getBlock().getDrops().clear();
 				// Does the config say they can break it?
-				if (Lobby.getActiveArena().getSettings().canBreakBlock(e.getBlock().getTypeId()))
+				if (Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
 				{
 					Location loc = e.getBlock().getLocation();
 					// Lets make sure this block wasn't a placed one, if so
@@ -119,17 +117,28 @@ public class PlayerListener implements Listener {
 			// If they are playing and the game has started
 			if (Lobby.isInGame(e.getPlayer()) && Lobby.getGameState() == GameState.Started)
 			{
-				if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
+				if (Lobby.getActiveArena().getSettings().canInteract())
 				{
-					Block b = e.getClickedBlock();
-					// Make sure the chest isn't already saved, if it isn't save
-					// it
-					if (e.getClickedBlock().getType() == Material.CHEST)
+
+					if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
 					{
-						Chest chest = (Chest) b.getState();
-						if (Lobby.getActiveArena().getChests().containsKey(chest.getLocation()))
-							Lobby.getActiveArena().setChest(chest.getLocation(), chest.getBlockInventory());
+						Block b = e.getClickedBlock();
+						// Make sure the chest isn't already saved, if it isn't
+						// save
+						// it
+						if (e.getClickedBlock().getType() == Material.CHEST)
+						{
+							Chest chest = (Chest) b.getState();
+							if (Lobby.getActiveArena().getChests().containsKey(chest.getLocation()))
+								Lobby.getActiveArena().setChest(chest.getLocation(), chest.getBlockInventory());
+						}
 					}
+				} else
+				{
+					e.setUseInteractedBlock(Result.DENY);
+					e.setUseItemInHand(Result.DENY);
+					e.setCancelled(true);
+
 				}
 			}
 	}
@@ -149,14 +158,14 @@ public class PlayerListener implements Listener {
 
 	// If the player gets kicked out of the server, do we need to remove them?
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerGetKicked(final PlayerKickEvent e) {
+	public void onPlayerKick(final PlayerKickEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
 			Game.leaveGame(e.getPlayer());
 	}
 
 	// If the player quits on the server, do we need to remove them?
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerGetQuited(final PlayerQuitEvent e) {
+	public void onPlayerQuit(final PlayerQuitEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
 			Game.leaveGame(e.getPlayer());
 	}
@@ -176,7 +185,7 @@ public class PlayerListener implements Listener {
 			{
 				msg = e.getMessage();
 			}
-			if (!(Main.config.getStringList("Commands.Allowed").contains(msg.toLowerCase()) && e.getMessage().toLowerCase().contains("inf")))
+			if (!(Settings.AllowedCommands().contains(msg.toLowerCase()) && e.getMessage().toLowerCase().contains("inf")))
 			{
 				e.getPlayer().sendMessage(Msgs.Error_Cant_Use_Command.getString());
 				e.setCancelled(true);
@@ -222,7 +231,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerTryEnchant(PrepareItemEnchantEvent e) {
 		Player p = e.getEnchanter();
-		if (Lobby.isInGame(p))
+		if (Lobby.isInGame(p) && !Lobby.getActiveArena().getSettings().canEnchant())
 			e.setCancelled(true);
 	}
 
