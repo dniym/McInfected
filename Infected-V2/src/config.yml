@@ -57,7 +57,7 @@ Settings:
 # These settings can not be used Per Arena
   Misc:
 # Should "/Infected Help" Give a book
-    Book For Help: true
+    Use Book For Help: true
 # To allow certain ranks to have more influance in voting
     Votes:
       Extra Votes:

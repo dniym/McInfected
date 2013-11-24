@@ -420,7 +420,7 @@ public class Commands implements CommandExecutor {
 						}
 					} else
 					{
-						if (p != null && plugin.getConfig().getBoolean("Book For Help"))
+						if (p != null && Settings.useBookForHelp())
 						{
 							ItemStack is = new ItemStack(Material.WRITTEN_BOOK);
 							BookMeta b = (BookMeta) is.getItemMeta();
@@ -836,16 +836,12 @@ public class Commands implements CommandExecutor {
 						
 						String arena = StringUtil.getWord(args[1]);
 						
-						if(Lobby.addArena(arena) != null)
+						if(Lobby.getArena(arena) != null)
 							p.sendMessage("This arena already exists");
 					
 						else{
 							p.sendMessage(Main.I + ChatColor.DARK_AQUA + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.DARK_AQUA + " to finish the arena!");
-							String[] list = { "55", "20" };
-							Files.getArenas().set("Arenas." + arena + ".Allow Breaking Of.Global", list);
-							Files.getArenas().set("Arenas." + arena + ".Allow Breaking Of.Human", "[]");
-							Files.getArenas().set("Arenas." + arena + ".Allow Breaking Of.Zombie", "[]");
-		
+				
 							if (args.length == 3)
 								Files.getArenas().set("Arenas." + arena + ".Creator", args[2]);
 							else

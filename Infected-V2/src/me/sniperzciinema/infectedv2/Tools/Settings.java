@@ -36,6 +36,9 @@ public class Settings {
 	public static List<String> AllowedCommands(){
 		return Files.getConfig().getStringList("Settings.Misc.Allowed Commands");
 	}
+	public static boolean useBookForHelp(){
+		return Files.getConfig().getBoolean("Settings.Misc.Use Book For Help");
+	}
 	public static HashMap<String, Integer> getExtraVoteNodes(){
 		HashMap<String, Integer> nodes = new HashMap<String, Integer>();
 		

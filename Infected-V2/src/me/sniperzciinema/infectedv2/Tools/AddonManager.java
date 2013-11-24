@@ -25,7 +25,7 @@ public class AddonManager {
 	public void getAddons() {
 
 		// Check if the plugin addons are there
-		if (plugin.getConfig().getBoolean("Vault Support.Enable"))
+		if (plugin.getConfig().getBoolean("Addons.Vault Support.Enabled"))
 		{
 			if (!(Bukkit.getServer().getPluginManager().getPlugin("Vault") == null))
 			{
@@ -40,20 +40,20 @@ public class AddonManager {
 			} else
 			{
 				System.out.println("Vault wasn't found on plugin server, Disabling Vault Support");
-				plugin.getConfig().set("Vault Support.Enable", false);
+				plugin.getConfig().set("Addons.Vault Support.Enabled", false);
 				plugin.saveConfig();
 
 			}
 		} else
 			System.out.println("Vault Support is Disabled");
 
-		if (plugin.getConfig().getBoolean("CrackShot Support.Enable"))
+		if (plugin.getConfig().getBoolean("Addons.CrackShot Support.Enabled"))
 		{
 			if (Bukkit.getServer().getPluginManager().getPlugin("CrackShot") == null)
 			{
 
 				System.out.println("CrackShot wasn't found on plugin server, disabling CrackShot Support");
-				plugin.getConfig().set("CrackShot Support.Enable", false);
+				plugin.getConfig().set("Addons.CrackShot Support.Enabled", false);
 				plugin.saveConfig();
 			} else
 			{
@@ -64,12 +64,12 @@ public class AddonManager {
 		} else
 			System.out.println("CrackShot Support is Disabled");
 
-		if (plugin.getConfig().getBoolean("Factions Support.Enable"))
+		if (plugin.getConfig().getBoolean("Addons.Factions Support.Enabled"))
 		{
 			if (Bukkit.getServer().getPluginManager().getPlugin("Factions") == null)
 			{
 				System.out.println("Factions wasn't found on plugin server, disabling Factions Support");
-				plugin.getConfig().set("Factions Support.Enable", false);
+				plugin.getConfig().set("Addons.Factions Support.Enabled", false);
 				plugin.saveConfig();
 			} else
 			{
@@ -80,12 +80,12 @@ public class AddonManager {
 		} else
 			System.out.println("Factions Support is Disabled");
 
-		if (plugin.getConfig().getBoolean("mcMMO Support.Enable"))
+		if (plugin.getConfig().getBoolean("Addons.mcMMO Support.Enabled"))
 		{
 			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") == null)
 			{
 				System.out.println("mcMMO wasn't found on plugin server, disabling mcMMO Support");
-				plugin.getConfig().set("mcMMO Support.Enable", false);
+				plugin.getConfig().set("Addons.mcMMO Support.Enabled", false);
 				plugin.saveConfig();
 			} else
 			{
@@ -96,12 +96,12 @@ public class AddonManager {
 		} else
 			System.out.println("mcMMO Support is Disabled");
 
-		if (plugin.getConfig().getBoolean("TagAPI Support.Enable"))
+		if (plugin.getConfig().getBoolean("Addons.TagAPI Support.Enabled"))
 		{
 			if (Bukkit.getServer().getPluginManager().getPlugin("TagAPI") == null)
 			{
 				System.out.println("TagApi wasn't found on plugin server, disabling TagApi Support");
-				plugin.getConfig().set("TagAPI Support.Enable", false);
+				plugin.getConfig().set("Addons.TagAPI Support.Enabled", false);
 				plugin.saveConfig();
 			} else
 			{
