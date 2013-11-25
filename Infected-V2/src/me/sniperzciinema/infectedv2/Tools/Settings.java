@@ -33,6 +33,9 @@ public class Settings {
 	public static int InfoSignsUpdateTime(){
 		return Files.getConfig().getInt("Settings.Misc.Info Signs.Refresh Time");
 	}
+	public static boolean InfoSignsEnabled(){
+		return Files.getConfig().getBoolean("Settings.Misc.Info Signs.Enabled");
+	}
 	public static List<String> AllowedCommands(){
 		return Files.getConfig().getStringList("Settings.Misc.Allowed Commands");
 	}

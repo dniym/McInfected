@@ -9,6 +9,7 @@ import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Messages.DeathMessages;
+import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Tools.Events;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.Settings;
@@ -78,7 +79,7 @@ public class Deaths {
 			int KillStreak = IP.getKillstreak();
 			if (KillStreak >= 3)
 				for (Player u : Lobby.getInGame())
-					u.sendMessage("<player> has a killstreak of " + KillStreak);
+					u.sendMessage(Msgs.Game_KillStreak.getString("<player>", p.getName(), "<killstreak", String.valueOf(KillStreak)));
 
 			if (Files.getKills().contains("Kill Streaks." + String.valueOf(KillStreak)))
 			{

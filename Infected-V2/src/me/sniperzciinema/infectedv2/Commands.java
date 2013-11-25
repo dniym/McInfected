@@ -65,24 +65,24 @@ public class Commands implements CommandExecutor {
 			if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Chat"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else if (args.length == 1)
 				{
 					if (!ip.isInfChatting())
 					{
 						ip.setInfChatting(true);
-						p.sendMessage("Commands_Toggled_InfChat(<state>)");
+						p.sendMessage(Msgs.Command_InfChat.getString("<state>", "in to"));
 					} else
 					{
 						ip.setInfChatting(false);
-						p.sendMessage("Commands_Toggled_InfChat(<state>)");
+						p.sendMessage(Msgs.Command_InfChat.getString("<state>", "out of"));
 					}
 				} else
 				{
@@ -92,7 +92,7 @@ public class Commands implements CommandExecutor {
 
 					for (Player u : Bukkit.getOnlinePlayers())
 						if (ip.getTeam() == InfPlayerManager.getInfPlayer(p).getTeam() || u.hasPermission("Infected.Chat.Spy"))
-							u.sendMessage("Game_InfChat_Format(<player> <message>)");
+							u.sendMessage(Msgs.Format_InfChat.getString("<team>", ip.getTeam().toString(), "<player>", p.getName(), "<message>", message.toString()));
 				}
 			}
 
@@ -100,13 +100,10 @@ public class Commands implements CommandExecutor {
 			else if (args.length >= 1 && args[0].equalsIgnoreCase("Classes"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
-
-				else if (!Files.getClasses().getBoolean("Enabled"))
-					p.sendMessage("Error_Classes disabled");
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else
 					Menus.chooseClassTeam(p);
@@ -117,39 +114,36 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Join"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Join"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-
-				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (Lobby.getGameState() == GameState.Disabled)
-					p.sendMessage("Error_Infected_Is_Disabled");
+					p.sendMessage(Msgs.Error_Misc_Plugin_Disabled.getString());
 
-				else if (!plugin.getConfig().contains("Lobby"))
-					p.sendMessage("Error_Missing_A_Lobby");
+				else if (Lobby.getLocation() == null)
+					p.sendMessage(Msgs.Error_Lobby_Doesnt_Exist.getString());
 
 				else if (Lobby.getArenas().isEmpty() || !Lobby.isArenaValid(Lobby.getArenas().get(0)))
-					p.sendMessage("Error_Missing_A_Valid_Arena");
+					p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", "Default"));
 
 				else
 				{
 					for (Player u : Lobby.getInGame())
-						u.sendMessage(Msgs.Game_They_Joined_A_Game.getString("<player>", p.getName()));
+						u.sendMessage(Msgs.Game_Joined_They.getString("<player>", p.getName()));
 
 					ip.setInfo();
 					ip.tpToLobby();
 
-					p.sendMessage(Msgs.Game_You_Joined_A_Game.getString());
+					p.sendMessage(Msgs.Game_Joined_You.getString());
 
 					if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
 					{
 						Lobby.timerStartVote();
 					} else if (Lobby.getGameState() == GameState.Voting)
 					{
-						p.sendMessage("Game_Vote_For_An_Arena");
+						p.sendMessage(Msgs.Help_Vote.getString());
 						p.performCommand("Infected Arenas");
 
 					} else if (Lobby.getGameState() == GameState.Infecting)
@@ -169,18 +163,18 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Info"))
 			{
 				if (!p.hasPermission("Infected.Join"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (Lobby.getGameState() == GameState.Disabled)
-					p.sendMessage("Error_Infected_Is_Disabled");
+					p.sendMessage(Msgs.Error_Misc_Plugin_Disabled.getString());
 
 				else
 				{
 					sender.sendMessage("");
 					sender.sendMessage(Msgs.Format_Header.getString("<title>", "Status"));
-					sender.sendMessage("Msgs.Info_In_Game - String.valueOf(Infected.listInGame().size())");
-					sender.sendMessage("Msgs_Info_Game_Status");
-					sender.sendMessage("Msgs_Inf_Time_Left");
+					sender.sendMessage(Msgs.Command_Info_Players.getString("<players>", String.valueOf(Lobby.getInGame().size())));
+					sender.sendMessage(Msgs.Command_Info_State.getString("<state>", Lobby.getGameState().toString()));
+					sender.sendMessage(Msgs.Command_Info_Time_Left.getString("<time>", Time.getTime((long) Lobby.getTimeLeft())));
 				}
 			}
 
@@ -189,16 +183,16 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Suicide"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Join"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else if (Lobby.getGameState() != GameState.Started)
-					p.sendMessage("Error_Games_Not_Started");
+					p.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else
 				{
@@ -214,16 +208,16 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && (args[0].equalsIgnoreCase("Shop") || args[0].equalsIgnoreCase("Store")))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Join"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else if (Lobby.getGameState() != GameState.Started)
-					p.sendMessage("Error_Games_Not_Started");
+					p.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else
 				{
@@ -234,16 +228,16 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && (args[0].equalsIgnoreCase("Grenades") || args[0].equalsIgnoreCase("Grenade")))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Grenades"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else if (Lobby.getGameState() != GameState.Started)
-					p.sendMessage("Error_Games_Not_Started");
+					p.sendMessage(Msgs.Error_Game_Started.getString());
 				else
 				{
 					if (args.length == 1)
@@ -258,14 +252,14 @@ public class Commands implements CommandExecutor {
 									Grenade grenade = GrenadeManager.getGrenade(gi);
 									p.getInventory().addItem(grenade.getItemStack());
 									ip.setPoints(ip.getPoints() - grenade.getCost(), Settings.VaultEnabled());
-									p.sendMessage("Just bought grenade");
+									p.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
 
 								} else
-									p.sendMessage("You don't have enough points to make this purchase!");
+									p.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
 							} else
-								p.sendMessage("Invalid Grenade Number");
+								p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 						} else
-							p.sendMessage("Invalid Grenade Number");
+							p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 					} else if (args.length == 2)
 					{
 						int amount = Integer.parseInt(args[2]);
@@ -282,13 +276,13 @@ public class Commands implements CommandExecutor {
 									g.setAmount(amount);
 									p.getInventory().addItem(g);
 									ip.setPoints(ip.getPoints() - (grenade.getCost() * amount), Settings.VaultEnabled());
-									p.sendMessage("Just bought <Amount> grenades");
+									p.sendMessage(Msgs.Grenades_Bought.getString("<name>", grenade.getName()));
 								} else
-									p.sendMessage("You don't have enough points to make this purchase!");
+									p.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
 							} else
-								p.sendMessage("Invalid Grenade Number");
+								p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 						} else
-							p.sendMessage("Invalid Grenade Number");
+							p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 					} else
 					{
 						p.sendMessage(Msgs.Format_Header.getString("<title>", "Grenades"));
@@ -296,11 +290,11 @@ public class Commands implements CommandExecutor {
 						int i = 1;
 						for (Grenade g : GrenadeManager.getGrenades())
 						{
-							p.sendMessage("Grenages <number> <name> <cost>");
+							p.sendMessage(Msgs.Grenades_List.getString("<id>", String.valueOf(i), "<name>", g.getName(), "<cost>", String.valueOf(g.getCost())));
 							i++;
 						}
 
-						p.sendMessage(Main.I + "To Buy Type: " + ChatColor.YELLOW + ChatColor.BOLD + "/Infected Grenades <ID>");
+						p.sendMessage(Msgs.Help_Grenades.getString());
 					}
 				}
 			}
@@ -309,15 +303,15 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("SetLobby"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Setup"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else
 				{
 					Lobby.setLocation(p.getLocation());
-					p.sendMessage("Lobby Set");
+					p.sendMessage(Msgs.Command_Lobby_Set.getString());
 				}
 			}
 
@@ -326,7 +320,7 @@ public class Commands implements CommandExecutor {
 			{
 
 				if (!p.hasPermission("Infected.List"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				if (args.length != 1)
 				{
@@ -334,36 +328,36 @@ public class Commands implements CommandExecutor {
 					{
 						p.sendMessage(Msgs.Format_Header.getString("<title>", "Playing"));
 						for (Player u : Lobby.getInGame())
-							p.sendMessage(Main.I + ChatColor.YELLOW + "> " + u.getDisplayName());
+							p.sendMessage(Msgs.Format_List.getString("<player>", u.getDisplayName()));
 					} else if (args[1].equalsIgnoreCase("Humans"))
 					{
 						p.sendMessage(Msgs.Format_Header.getString("<title>", "Humans"));
 						for (Player u : Lobby.getHumans())
-							p.sendMessage(Main.I + ChatColor.YELLOW + "> " + u.getDisplayName());
+							p.sendMessage(Msgs.Format_List.getString("<player>", u.getDisplayName()));
 
 					} else if (args[1].equalsIgnoreCase("Zombies"))
 					{
 						p.sendMessage(Msgs.Format_Header.getString("<title>", "Zombies"));
 						for (Player u : Lobby.getZombies())
-							p.sendMessage(Main.I + ChatColor.YELLOW + "> " + u.getDisplayName());
+							p.sendMessage(Msgs.Format_List.getString("<player>", u.getDisplayName()));
 
 					} else
-						p.sendMessage("Unkown List <lists>");
+						p.sendMessage(Msgs.Help_Lists.getString("<lists>", "Playing, Humans, Zombies"));
 
 				} else
-					p.sendMessage("Unkown List <lists>");
+					p.sendMessage(Msgs.Help_Lists.getString("<lists>", "Playing, Humans, Zombies"));
 			}
 			// ///////////////////////////////////////////////-LEAVE-////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Leave"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Leave"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else
 					ip.leaveInfected();
@@ -374,49 +368,49 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Help"))
 			{
 				if (!sender.hasPermission("Infected.Help"))
-					sender.sendMessage(Msgs.Error_No_Permission.getString());
+					sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else
 				{
 					if (args.length != 1)
 					{
 						sender.sendMessage("");
-						sender.sendMessage(Main.I + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected Help" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
-						sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Join" + ChatColor.WHITE + " - Join Infected");
-						sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Leave" + ChatColor.WHITE + " - Leave Infected");
-						sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Vote" + ChatColor.WHITE + " - Vote for a map");
-						sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Classes" + ChatColor.WHITE + " - Choose a class");
+						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected Help" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
+						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Join" + ChatColor.WHITE + " - Join Infected");
+						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Leave" + ChatColor.WHITE + " - Leave Infected");
+						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Vote" + ChatColor.WHITE + " - Vote for a map");
+						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Classes" + ChatColor.WHITE + " - Choose a class");
 						if (sender.hasPermission("Infected.Grenades"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Grenades" + ChatColor.WHITE + " - See the purchasable grenades");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Grenades" + ChatColor.WHITE + " - See the purchasable grenades");
 						if (sender.hasPermission("Infected.Chat"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Chat" + ChatColor.WHITE + " - Chat in your team's chat");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Chat" + ChatColor.WHITE + " - Chat in your team's chat");
 						if (sender.hasPermission("Infected.Stats"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Stats" + ChatColor.WHITE + " - Check a p's stats");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Stats" + ChatColor.WHITE + " - Check a p's stats");
 						if (sender.hasPermission("Infected.Suicide"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Suicide" + ChatColor.WHITE + " - Suicide if you're stuck");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Suicide" + ChatColor.WHITE + " - Suicide if you're stuck");
 						if (sender.hasPermission("Infected.Info"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Info" + ChatColor.WHITE + " - Check Infected's status");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Info" + ChatColor.WHITE + " - Check Infected's status");
 						if (sender.hasPermission("Infected.Top"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Top" + ChatColor.WHITE + " - Check the top 5 ps");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Top" + ChatColor.WHITE + " - Check the top 5 ps");
 						if (sender.hasPermission("Infected.Arenas"))
-							sender.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Arenas" + ChatColor.WHITE + " - See all possible arenas");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Arenas" + ChatColor.WHITE + " - See all possible arenas");
 						if (sender.hasPermission("Infected.SetUp"))
 						{
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetLobby" + ChatColor.WHITE + " - Set the main lobby");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetSpawn" + ChatColor.WHITE + " - Set the spawn for the selected arena");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Spawns" + ChatColor.WHITE + " - List the number of spawns for a map");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn" + ChatColor.WHITE + " - Tp to a spawn ID");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "DelSpawn" + ChatColor.WHITE + " - Delete the spawn ID");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetArena" + ChatColor.WHITE + " - Select an arena");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Create" + ChatColor.WHITE + " - Create an arena");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Remove" + ChatColor.WHITE + " - Remove an Arena");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetLobby" + ChatColor.WHITE + " - Set the main lobby");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetSpawn" + ChatColor.WHITE + " - Set the spawn for the selected arena");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Spawns" + ChatColor.WHITE + " - List the number of spawns for a map");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn" + ChatColor.WHITE + " - Tp to a spawn ID");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "DelSpawn" + ChatColor.WHITE + " - Delete the spawn ID");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetArena" + ChatColor.WHITE + " - Select an arena");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Create" + ChatColor.WHITE + " - Create an arena");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Remove" + ChatColor.WHITE + " - Remove an Arena");
 						}
 						if (p.hasPermission("Infected.Admin"))
 						{
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Start" + ChatColor.WHITE + " - Force the game to start");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "End" + ChatColor.WHITE + " - Force the game to end");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Admin" + ChatColor.WHITE + " - Show the admin menu");
-							p.sendMessage(Main.I + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Refresh" + ChatColor.WHITE + " - Refresh all the ps");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Start" + ChatColor.WHITE + " - Force the game to start");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "End" + ChatColor.WHITE + " - Force the game to end");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Admin" + ChatColor.WHITE + " - Show the admin menu");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Refresh" + ChatColor.WHITE + " - Refresh all the ps");
 						}
 					} else
 					{
@@ -449,13 +443,13 @@ public class Commands implements CommandExecutor {
 							if (!p.getInventory().contains(is))
 								p.getInventory().addItem(is);
 							else
-								p.sendMessage(Main.I + "You already have the help book!");
+								p.sendMessage(Msgs.Format_Prefix.getString() + "You already have the help book!");
 
 						} else
 						{
 							p.sendMessage("");
-							p.sendMessage(Main.I + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
-							p.sendMessage(Main.I + ChatColor.YELLOW + "For Help type: /Infected Help 1");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help 1");
 						}
 					}
 				}
@@ -465,19 +459,19 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Vote"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Leave"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (!Lobby.getInGame().contains(p))
-					p.sendMessage(Msgs.Error_Not_In_A_Game.getString());
+					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else if (Lobby.getGameState() != GameState.Voting)
-					p.sendMessage("No Vote Now");
+					p.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else if (ip.getVote() != null)
-					p.sendMessage("Already Voted");
+					p.sendMessage(Msgs.Error_Already_Voted.getString());
 
 				else
 					Menus.openVotingMenu(p);
@@ -488,10 +482,10 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Start"))
 			{
 				if (!sender.hasPermission("Infected.Force.Start"))
-					sender.sendMessage(Msgs.Error_No_Permission.getString());
+					sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (Lobby.getGameState() != GameState.InLobby)
-					sender.sendMessage("No Start Now");
+					sender.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else
 					Lobby.timerStartVote();
@@ -501,10 +495,10 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("End"))
 			{
 				if (!sender.hasPermission("Infected.Force.End"))
-					sender.sendMessage(Msgs.Error_No_Permission.getString());
+					sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else if (Lobby.getGameState() != GameState.InLobby)
-					sender.sendMessage("No Start Now");
+					sender.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else
 					Game.endGame(true);
@@ -515,7 +509,7 @@ public class Commands implements CommandExecutor {
 			{
 
 				if (!sender.hasPermission("Infected.Arenas"))
-					sender.sendMessage(Msgs.Error_No_Permission.getString());
+					sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else
 				{
@@ -537,7 +531,7 @@ public class Commands implements CommandExecutor {
 							inValid.append(", ");
 					}
 
-					sender.sendMessage("Possible Arenas  <valid> <invalid> ");
+					sender.sendMessage(Msgs.Command_Arenas.getString("<valid>", valid.toString(), "<invalid>", inValid.toString()));
 				}
 			}
 			// ///////////////////////////////////////////////////-ADMIN-///////////////////////////
@@ -545,7 +539,7 @@ public class Commands implements CommandExecutor {
 			{
 
 				if (!sender.hasPermission("Infected.Admin"))
-					sender.sendMessage(Msgs.Error_No_Permission.getString());
+					sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				if (args.length == 2)
 				{
@@ -555,11 +549,11 @@ public class Commands implements CommandExecutor {
 						if (Lobby.getGameState() != GameState.Disabled)
 						{
 							Lobby.setGameState(GameState.Disabled);
-							p.sendMessage("Join Set False");
+							p.sendMessage(Msgs.Command_Admin_Shutdown.getString("<state>", "Disabled"));
 						} else
 						{
 							Lobby.setGameState(GameState.InLobby);
-							p.sendMessage("Joining Infected has been enabled.");
+							p.sendMessage(Msgs.Command_Admin_Shutdown.getString("<state>", "Enabled"));
 						}
 					}
 					// RELOAD
@@ -578,17 +572,17 @@ public class Commands implements CommandExecutor {
 						Files.reloadSigns();
 						Main.addon.getAddons();
 						System.out.println("====================");
-						p.sendMessage("Infecteds Files have been reloaded");
+						p.sendMessage(Msgs.Command_Admin_Reload.getString());
 
 					}
 					// CODE
 					else if (args[1].equalsIgnoreCase("Code"))
 					{
-						p.sendMessage(Main.I + "Code: " + ChatColor.WHITE + ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
-						p.sendMessage(Main.I + "This code has also been sent to your console to allow for copy and paste!");
+						p.sendMessage(Msgs.Format_Prefix.getString() + "Code: " + ChatColor.WHITE + ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
+						p.sendMessage(Msgs.Format_Prefix.getString() + "This code has also been sent to your console to allow for copy and paste!");
 						System.out.println(ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
 					} else
-						p.sendMessage(Main.I + ChatColor.RED + "Unknown Admin Command, Type /Infected Admin");
+						p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 				} else if (args.length == 3)
 				{
 					// KICK
@@ -596,15 +590,15 @@ public class Commands implements CommandExecutor {
 					{
 						Player u = Bukkit.getPlayer(args[2]);
 						if (u == null || !Lobby.isInGame(u))
-							u.sendMessage("not playing Infected");
+							u.sendMessage(Msgs.Error_Game_Not_In.getString());
 						else
 						{
 							p.performCommand("Infected Leave");
-							u.sendMessage("Kicked");
-							p.sendMessage("kicked " + u.getName());
+							u.sendMessage(Msgs.Command_Admin_Kicked_You.getString());
+							p.sendMessage(Msgs.Command_Admin_Kicked_Them.getString("<player>", u.getName()));
 						}
 					} else
-						p.sendMessage(Main.I + ChatColor.RED + "Unknown Admin Command, Type /Infected Admin");
+						p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 
 				} else if (args.length == 4)
 				{
@@ -615,44 +609,44 @@ public class Commands implements CommandExecutor {
 					{
 						int newValue = Stats.getPoints(user) + i;
 						Stats.setPoints(user, newValue, Settings.VaultEnabled());
-						p.sendMessage(user + "'s new points is: " + newValue);
+						p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "points", "<value>", String.valueOf(newValue)));
 					} else if (args[1].equalsIgnoreCase("Score"))
 					{
 						int newValue = Stats.getScore(user) + i;
 						Stats.setScore(user, newValue);
-						p.sendMessage(user + "'s new score is: " + newValue);
+						p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "score", "<value>", String.valueOf(newValue)));
 					} else if (args[1].equalsIgnoreCase("kStats"))
 					{
 						int newValue = Stats.getKills(user) + i;
 						Stats.setKills(user, newValue);
-						p.sendMessage(user + "'s new kill count is: " + newValue);
+						p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "kills", "<value>", String.valueOf(newValue)));
 					} else if (args[1].equalsIgnoreCase("DStats"))
 					{
 						int newValue = Stats.getDeaths(user) + i;
 						Stats.setDeaths(user, newValue);
-						p.sendMessage(user + "'s new death count is: " + newValue);
+						p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "deaths", "<value>", String.valueOf(newValue)));
 					} else
-						p.sendMessage(Main.I + ChatColor.RED + "Unknown Admin Command, Type /Infected Admin");
+						p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 
 				} else
 				{
 					p.sendMessage(Msgs.Format_Header.getString("<title>", "Admin CMDs"));
-					p.sendMessage(Main.I + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add points to a p(Also goes negative)");
-					p.sendMessage(Main.I + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add score to a p(Also goes negative)");
-					p.sendMessage(Main.I + ChatColor.DARK_AQUA + "/Inf Admin KStats <Player> <#>");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add kills to a p(Also goes negative)");
-					p.sendMessage(Main.I + ChatColor.DARK_BLUE + "/Inf Admin DStats <Player> <#>");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add deaths to a p(Also goes negative)");
-					p.sendMessage(Main.I + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Kick a p out of Infected");
-					p.sendMessage(Main.I + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Prevent joining Infected");
-					p.sendMessage(Main.I + ChatColor.DARK_RED + "/Inf Admin Reload");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Reload the config");
-					p.sendMessage(Main.I + ChatColor.GOLD + "/Inf Admin Code");
-					p.sendMessage(Main.I + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "See Infected's item code for the item in hand");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add points to a player(Also goes negative)");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add score to a player(Also goes negative)");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + "/Inf Admin KStats <Player> <#>");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add kills to a player(Also goes negative)");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_BLUE + "/Inf Admin DStats <Player> <#>");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add deaths to a player(Also goes negative)");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Kick a player out of Infected");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Prevent joining Infected");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_RED + "/Inf Admin Reload");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Reload the config");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GOLD + "/Inf Admin Code");
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "See Infected's item code for the item in hand");
 				}
 			}
 			// /////////////////////////////////////////-STATS-///////////////////////////////////////
@@ -660,10 +654,10 @@ public class Commands implements CommandExecutor {
 			{
 
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
 				else if (!p.hasPermission("Infected.Stats"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 				else
 				{
@@ -671,29 +665,28 @@ public class Commands implements CommandExecutor {
 					{
 
 						if (!p.hasPermission("Infected.Stats.Other"))
-							p.sendMessage(Msgs.Error_No_Permission.getString());
+							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 						else
 						{
-
 							String user = args[1];
 
 							p.sendMessage("");
 							p.sendMessage(Msgs.Format_Header.getString("<title>", user));
-							p.sendMessage(Main.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
-							p.sendMessage(Main.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
-							p.sendMessage(Main.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(user));
-							p.sendMessage(Main.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(user));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
 						}
 					} else
 					{
 						String user = sender.getName();
 						p.sendMessage("");
 						p.sendMessage(Msgs.Format_Header.getString("<title>", user));
-						p.sendMessage(Main.I + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
-						p.sendMessage(Main.I + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
-						p.sendMessage(Main.I + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(user));
-						p.sendMessage(Main.I + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(user));
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
 					}
 				}
 			}
@@ -701,97 +694,100 @@ public class Commands implements CommandExecutor {
 			// //////////////////////////////////////////-TPSPAWN-///////////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("TpSpawn"))
 			{
-				
-					if (p == null)
-						sender.sendMessage("Msgs.Error_Not_A_Player");
-				
-					else if (!p.hasPermission("Infected.Setup"))
-						p.sendMessage(Msgs.Error_No_Permission.getString());
 
-					else if(ip.getCreating() == null)
-						p.sendMessage(Msgs.Error_Not_An_Arena.getString());
-					
-					else{
-				if (args.length != 1)
+				if (p == null)
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
+				else if (!p.hasPermission("Infected.Setup"))
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+				else if (ip.getCreating() == null)
+					p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+
+				else
 				{
-
-					Arena a = Lobby.getArena(ip.getCreating());
-					int i = Integer.valueOf(args[1]) - 1;
-					if (i < a.getSpawns().size())
+					if (args.length != 1)
 					{
-						p.teleport(LocationHandler.getPlayerLocation(a.getSpawns().get(i)));
-						sender.sendMessage("You have teleported to spawn number " + (i + 1));
+
+						Arena a = Lobby.getArena(ip.getCreating());
+						int i = Integer.valueOf(args[1]) - 1;
+						if (i < a.getSpawns().size())
+						{
+							p.teleport(LocationHandler.getPlayerLocation(a.getSpawns().get(i)));
+							sender.sendMessage(Msgs.Command_Spawn_Spawns.getString("<spawns>", String.valueOf(i + 1)));
+						} else
+							sender.sendMessage(Msgs.Help_TpSpawn.getString());
+
 					} else
-						sender.sendMessage("Infected doesn't know where your tying to go, check how many spawns this arena has again!");
-				
-					}else
-					sender.sendMessage(Main.I + ChatColor.RED + "/Inf TpSpawn <ID>");
-					}
+						sender.sendMessage(Msgs.Help_TpSpawn.getString());
+				}
 			}
 			// /////////////////////////////////////////////-TPLOBBY-////////////////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("TpLobby"))
 			{
-					if (p == null)
-						sender.sendMessage("Msgs.Error_Not_A_Player");
-				
-					else if (!p.hasPermission("Infected.Setup"))
-						p.sendMessage(Msgs.Error_No_Permission.getString());
-					
-					else{
-				p.teleport(Lobby.getLocation());
-				p.sendMessage(Main.I + "You have teleported to the lobby.");
-					}
+				if (p == null)
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
+				else if (!p.hasPermission("Infected.Setup"))
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+				else
+				{
+					p.teleport(Lobby.getLocation());
+					p.sendMessage(Msgs.Command_Lobby_Tp.getString());
+				}
 			}
 
 			// ////////////////////////////////////-DELSPAWN-////////////////////////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("DelSpawn"))
-			{		
+			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
-			
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
 				else if (!p.hasPermission("Infected.Setup"))
-						p.sendMessage(Msgs.Error_No_Permission.getString());
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-					else if(ip.getCreating() == null)
-						p.sendMessage(Msgs.Error_Not_An_Arena.getString());
-					
-					else{
-				if (args.length != 1)
+				else if (ip.getCreating() == null)
+					p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+
+				else
 				{
-
-					Arena a = Lobby.getArena(ip.getCreating());
-					int i = Integer.valueOf(args[1]) - 1;
-					if (i < a.getSpawns().size())
+					if (args.length != 1)
 					{
-						List<String> spawns = a.getSpawns();
-						spawns.remove(i);
-						a.setSpawns(spawns);
-						p.sendMessage(Main.I + ChatColor.RED + "You have removed spawn number " + (i + 1) + ".");
+
+						Arena a = Lobby.getArena(ip.getCreating());
+						int i = Integer.valueOf(args[1]) - 1;
+						if (i < a.getSpawns().size())
+						{
+							List<String> spawns = a.getSpawns();
+							spawns.remove(i);
+							a.setSpawns(spawns);
+							p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<spawn>", String.valueOf(i + 1)));
+						} else
+							p.sendMessage(Msgs.Help_DelSpawn.getString());
 					} else
-						p.sendMessage(Main.I + ChatColor.RED + "Check how many spawns this arena has again!");
-				} else
-				{
-					p.sendMessage(Main.I + ChatColor.RED + "/Inf DelSpawn <ID>");
-				}
+					{
+						p.sendMessage(Msgs.Help_DelSpawn.getString());
 					}
+				}
 			}
 
 			// //////////////////////////////////-SPAWNS-//////////////////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Spawns"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
-			
-				if (!p.hasPermission("Infected.Setup"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-				
-				else if(ip.getCreating() == null)
-					p.sendMessage(Msgs.Error_Not_An_Arena.getString());
-				
-				else{
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
-				Arena a = Lobby.getArena(ip.getCreating());
-				p.sendMessage(ip.getCreating() + " has " + a.getSpawns().size() + " spawns.");
+				if (!p.hasPermission("Infected.Setup"))
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+				else if (ip.getCreating() == null)
+					p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+
+				else
+				{
+					Arena a = Lobby.getArena(ip.getCreating());
+					p.sendMessage(Msgs.Command_Spawn_Spawns.getString("<spawns", String.valueOf(a.getSpawns().size())));
 				}
 			}
 
@@ -799,61 +795,61 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("SetSpawn"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
-			
-				else if (!p.hasPermission("Infected.Setup"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-				
-				else if(ip.getCreating() == null)
-					p.sendMessage(Msgs.Error_Not_An_Arena.getString());
-				
-				else{
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
 
-				Location l = p.getLocation();
-				String s = LocationHandler.getLocationToString(l);
-				Arena a = Lobby.getArena(ip.getCreating());
-				List<String> list = a.getSpawns();
-				list.add(s);
-				a.setSpawns(list);
-				
-				p.sendMessage(ip.getCreating() + " spawn #" +list.size() +  " set at your location!");
-			}
+				else if (!p.hasPermission("Infected.Setup"))
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+				else if (ip.getCreating() == null)
+					p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+
+				else
+				{
+					Location l = p.getLocation();
+					String s = LocationHandler.getLocationToString(l);
+					Arena a = Lobby.getArena(ip.getCreating());
+					List<String> list = a.getSpawns();
+					list.add(s);
+					a.setSpawns(list);
+
+					p.sendMessage(Msgs.Command_Spawn_Set.getString("<spawn>", String.valueOf(list.size())));
+				}
 			}
 
 			// /////////////////////////////////////////-CREATE-///////////////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Create"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
-			
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
 				else if (!p.hasPermission("Infected.Setup"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-				
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
 				else
 				{
 					if (args.length != 1)
 					{
-						
+
 						String arena = StringUtil.getWord(args[1]);
-						
-						if(Lobby.getArena(arena) != null)
-							p.sendMessage("This arena already exists");
-					
-						else{
-							p.sendMessage(Main.I + ChatColor.DARK_AQUA + "Type " + ChatColor.YELLOW + "/Inf SetSpawn" + ChatColor.DARK_AQUA + " to finish the arena!");
-				
+
+						if (Lobby.getArena(arena) != null)
+							p.sendMessage(Msgs.Error_Arena_Already_Exists.getString());
+
+						else
+						{
+							p.sendMessage(Msgs.Help_SetSpawn.getString());
+
 							if (args.length == 3)
 								Files.getArenas().set("Arenas." + arena + ".Creator", args[2]);
 							else
 								Files.getArenas().set("Arenas." + arena + ".Creator", "Unkown");
-
+							Lobby.addArena(arena);
 							Files.saveArenas();
 							ip.setCreating(arena);
-							p.sendMessage(Main.I + "Arena " + ChatColor.WHITE + ChatColor.BOLD + arena + ChatColor.LIGHT_PURPLE + " created.");
+							p.sendMessage(Msgs.Command_Arena_Created.getString("<arena>", arena));
 						}
-					} 
-					else
-						p.sendMessage(Main.I + ChatColor.RED + "/Infected Create <Arena Name> [Creator]");
+					} else
+						p.sendMessage(Msgs.Help_Create.getString());
 				}
 			}
 
@@ -862,26 +858,26 @@ public class Commands implements CommandExecutor {
 			{
 
 				if (!p.hasPermission("Infected.Setup"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-				
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
 				else
 				{
 					if (args.length != 1)
 					{
-						
+
 						String arena = args[1];
-						
+
 						if (Lobby.getArena(arena) == null)
-							sender.sendMessage(Main.I + "That arena doesn't exists!");
-						
+							sender.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+
 						else
 						{
 							Lobby.removeArena(Lobby.getArena(arena));
-							sender.sendMessage(Main.I + "Arena deleted.");
+							sender.sendMessage(Msgs.Command_Arena_Removed.getString("<arena>", arena));
 							return true;
 						}
 					} else
-						sender.sendMessage(Main.I + ChatColor.RED + "/Infected Remove <Arena Name>");
+						sender.sendMessage(Msgs.Help_Remove.getString());
 				}
 			}
 
@@ -890,8 +886,8 @@ public class Commands implements CommandExecutor {
 			{
 
 				if (!p.hasPermission("Infected.Top"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-				
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
 				else
 				{
 					if (args.length != 1)
@@ -899,29 +895,32 @@ public class Commands implements CommandExecutor {
 
 						String stat = args[1].toLowerCase();
 						if (StatType.valueOf(stat) == null)
-							sender.sendMessage("Not A Stat, use " + StatType.values());
-						else{
+							sender.sendMessage(Msgs.Error_Top_Not_Stat.getString("<stats>", String.valueOf(StatType.values())));
+						else
+						{
 							StatType type = StatType.valueOf(stat);
 							HashMap<String, Integer> top = MiscStats.getTop5(type);
-							
+
 							int i = 1;
-							for(Entry<String, Integer> set : top.entrySet()){
-								if(i == 1)
-									sender.sendMessage(""+ChatColor.YELLOW + i +". " + set.getKey() +" - " + set.getValue());
-								else if(i == 2)
-									sender.sendMessage(""+ChatColor.GRAY + i +". " + set.getKey() +" - " + set.getValue());
-								else if(i == 3)
-									sender.sendMessage(""+ChatColor.GOLD + i +". " + set.getKey() +" - " + set.getValue());
+							for (Entry<String, Integer> set : top.entrySet())
+							{
+								if (i == 1)
+									sender.sendMessage("" + ChatColor.YELLOW + i + ". " + set.getKey() + " - " + set.getValue());
+								else if (i == 2)
+									sender.sendMessage("" + ChatColor.GRAY + i + ". " + set.getKey() + " - " + set.getValue());
+								else if (i == 3)
+									sender.sendMessage("" + ChatColor.GOLD + i + ". " + set.getKey() + " - " + set.getValue());
 								else
-									sender.sendMessage(""+ChatColor.WHITE + i +". " + set.getKey() +" - " + set.getValue());
+									sender.sendMessage("" + ChatColor.WHITE + i + ". " + set.getKey() + " - " + set.getValue());
 								i++;
-								
-								if(i ==6)
+
+								if (i == 6)
 									break;
 							}
-								
+
 						}
-					}
+					}else
+						sender.sendMessage(Msgs.Help_Top.getString());
 				}
 			}
 
@@ -929,60 +928,60 @@ public class Commands implements CommandExecutor {
 			else if (args.length > 0 && args[0].equalsIgnoreCase("SetArena"))
 			{
 				if (p == null)
-					sender.sendMessage("Msgs.Error_Not_A_Player");
-			
+					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
 				else if (!p.hasPermission("Infected.Setup"))
-					p.sendMessage(Msgs.Error_No_Permission.getString());
-			 else
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+				else
 				{
 					if (args.length != 1)
 					{
 						String arena = StringUtil.getWord(args[1]);
-						
+
 						if (Lobby.getArenas().isEmpty())
-							p.sendMessage(Main.I + ChatColor.RED + " No arenas created!");
-						
+							p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", "Default"));
+
 						else if (!Lobby.getArenas().contains(arena))
-							p.sendMessage(Main.I + ChatColor.RED + "Invalid Arena");
-						
+							p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+
 						else
 						{
 							ip.setCreating(arena);
-							p.sendMessage(Main.I + ChatColor.YELLOW + "Arena Set. Choosen Arena: " + ChatColor.GRAY + arena);
+							p.sendMessage(Msgs.Command_Arena_Set.getString("<arena>", arena));
 							return true;
 						}
 					} else
-						p.sendMessage(Main.I + ChatColor.RED + "/Infected SetArena <Arena Name>");
-					
+						p.sendMessage(Msgs.Help_SetArena.getString());
+
 				}
 			}
-			///////////////////////////////////////////////-ADDONS-/////////////////////////////////////////
+			// /////////////////////////////////////////////-ADDONS-/////////////////////////////////////////
 			else if (args.length > 0 && args[0].equalsIgnoreCase("Addons"))
 			{
-				
+
 				p.sendMessage("");
-				p.sendMessage(Main.I + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.DisguisesEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				if(Settings.DisguisesEnabled())
-					p.sendMessage(Main.I + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Main.Disguiser.getName());
-				p.sendMessage(Main.I + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.CrackShotEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.TagAPIEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.FactionsEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-				p.sendMessage(Main.I + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.DisguisesEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				if (Settings.DisguisesEnabled())
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Main.Disguiser.getName());
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.CrackShotEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.TagAPIEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.FactionsEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 			}
-			/////////////////////////////////////////////////-ELSE-//////////////////////////////////////////////
+			// ///////////////////////////////////////////////-ELSE-//////////////////////////////////////////////
 			else
 			{
 				p.sendMessage("");
-				p.sendMessage(Main.I + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
 				if (Main.update)
-					p.sendMessage(Main.I + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Main.name);
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Main.name);
 				p.sendMessage("");
-				p.sendMessage(Main.I + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "xXSniperzzXx_SD");
-				p.sendMessage(Main.I + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Main.v);
-				p.sendMessage(Main.I + ChatColor.GRAY + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
-				p.sendMessage(Main.I + ChatColor.YELLOW + "For Help type: /Infected Help");
-				p.sendMessage(Main.I + ChatColor.YELLOW + "For Addons type: /Infected Addons");
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "xXSniperzzXx_SD");
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Main.v);
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help");
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Addons type: /Infected Addons");
 
 				return true;
 			}

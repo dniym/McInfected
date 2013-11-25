@@ -8,11 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
+import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Listeners.DamageEvents;
 import me.sniperzciinema.infectedv2.Listeners.GrenadeListener;
 import me.sniperzciinema.infectedv2.Listeners.PlayerListener;
+import me.sniperzciinema.infectedv2.Listeners.RegisterAndUnRegister;
 import me.sniperzciinema.infectedv2.Listeners.SignListener;
+import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Tools.AddonManager;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.Metrics;
@@ -24,7 +27,6 @@ import net.milkbowl.vault.economy.Economy;
 import code.husky.mysql.MySQL;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -38,8 +40,6 @@ public class Main extends JavaPlugin {
 	// Initialize all the variables
 	public static String bVersion = "1.6.4";
 	public static String v = null;
-
-	public static String I = "" + ChatColor.DARK_RED + ChatColor.BOLD + "«" + ChatColor.DARK_GRAY + ChatColor.BOLD + "Infected" + ChatColor.DARK_RED + ChatColor.BOLD + "»" + ChatColor.LIGHT_PURPLE + " ";
 
 	public static int timestart;
 	public static int queuedtpback;
@@ -165,8 +165,10 @@ public class Main extends JavaPlugin {
 		GrenadeListener GrenadeListener = new GrenadeListener();
 		TeleportFix TeleportFix = new TeleportFix(this);
 		DamageEvents DamageEvents = new DamageEvents(this);
+		RegisterAndUnRegister RegisterAndUnRegister = new RegisterAndUnRegister();
 		pm.registerEvents(DamageEvents, this);
 		pm.registerEvents(PlayerListener, this);
+		pm.registerEvents(RegisterAndUnRegister, this);
 		pm.registerEvents(GrenadeListener, this);
 		pm.registerEvents(SignListener, this);
 		pm.registerEvents(TeleportFix, this);
@@ -203,6 +205,18 @@ public class Main extends JavaPlugin {
 			}
 
 		}
+		for(Player u : Bukkit.getOnlinePlayers()){
+			InfPlayerManager.createInfPlayer(u);
+		}
+		if (Files.getArenas().getConfigurationSection("Arenas") != null)
+			for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
+			{
+				Arena arena = new Arena(StringUtil.getWord(a));
+				Lobby.addArena(arena);
+				System.out.println("Loaded Arena: " + arena.getName());
+			}
+		else
+			System.out.println("Couldn't Find Any Arenas");
 
 		System.out.println("====================");
 	}

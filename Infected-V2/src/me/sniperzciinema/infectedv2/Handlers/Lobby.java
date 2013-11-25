@@ -57,26 +57,30 @@ public class Lobby {
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 	}
-	public static ArrayList<Arena> getValidArenas(){
+
+	public static ArrayList<Arena> getValidArenas() {
 		ArrayList<Arena> ga = new ArrayList<Arena>();
-		for(Arena a : getArenas())
-			if(isArenaValid(a))
+		for (Arena a : getArenas())
+			if (isArenaValid(a))
 				ga.add(a);
 		return ga;
 	}
-	public static ArrayList<Arena> getInValidArenas(){
+
+	public static ArrayList<Arena> getInValidArenas() {
 		ArrayList<Arena> ba = new ArrayList<Arena>();
-		for(Arena a : getArenas())
-			if(!isArenaValid(a))
+		for (Arena a : getArenas())
+			if (!isArenaValid(a))
 				ba.add(a);
 		return ba;
 	}
+
 	public static Location getLocation() {
 		return LocationHandler.getPlayerLocation(Main.config.getString("Lobby"));
 	}
 
 	public static void setLocation(Location loc) {
 		Files.getConfig().set("Lobby", LocationHandler.getLocationToString(loc));
+		Files.saveConfig();
 	}
 
 	public static ArrayList<Arena> getArenas() {
@@ -135,14 +139,14 @@ public class Lobby {
 		return zombies;
 	}
 
-	public static ArenaSettings getArenaSettings(Arena arena){
+	public static ArenaSettings getArenaSettings(Arena arena) {
 		return arena.getSettings();
 	}
-	
+
 	public static Arena getActiveArena() {
 		if (activeArena == null)
 			return new Arena("Sniperz Rocks");
-		
+
 		else
 			return activeArena;
 	}
@@ -216,9 +220,10 @@ public class Lobby {
 
 		// Get the arena to fix any broken blocks
 		arena.reset();
-		
+
 	}
-	public static void reset(){
+
+	public static void reset() {
 		stopTimer();
 		resetArena(getActiveArena());
 		getHumans().clear();
@@ -283,8 +288,8 @@ public class Lobby {
 			u.sendMessage("");
 			u.sendMessage(Msgs.Format_Header.getString("<title>", " Vote "));
 			u.sendMessage("");
-			u.sendMessage(Msgs.Game_Time_Left.getString("<time>", Time.getTime((long) getTimeLeft())));
-			u.sendMessage("How to vote");
+			u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
+			u.sendMessage(Msgs.Help_Vote.getString());
 			u.sendMessage("");
 			u.sendMessage(Msgs.Format_Line.getString());
 		}
@@ -307,7 +312,7 @@ public class Lobby {
 					if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
 						for (Player u : getInGame())
-							u.sendMessage(Msgs.Game_Time_Left.getString("<time>", Time.getTime((long) getTimeLeft())));
+							u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) getTimeLeft())));
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 					{
@@ -356,9 +361,9 @@ public class Lobby {
 							u.sendMessage("");
 							u.sendMessage(Msgs.Format_Line.getString());
 							u.sendMessage("");
-							u.sendMessage(Main.I + "Game Starting in 5 Seconds.");
+							u.sendMessage(Msgs.Format_Prefix.getString() + "Game Starting in 5 Seconds.");
 							u.sendMessage("");
-							u.sendMessage("Map - <MapName>");
+							u.sendMessage(Msgs.Game_Info_Arena.getString("<map>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
 							u.sendMessage("");
 							u.sendMessage(Msgs.Format_Line.getString());
 						}
@@ -374,8 +379,7 @@ public class Lobby {
 									InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 									IP.respawn();
 									Equip.equip(u);
-									u.sendMessage("Infection going viral in : <time>");
-
+									u.sendMessage(Msgs.Game_Time_Left_Infecting.getString("<time>", Time.getTime((long) getTimeLeft())));
 								}
 								ScoreBoard.updateScoreBoard();
 								timerStartInfecting();
@@ -434,8 +438,8 @@ public class Lobby {
 						Game.chooseAlphas();
 
 						for (Player u : getInGame())
-							InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis()/1000);
-						
+							InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis() / 1000);
+
 						timerStartGame();
 					}
 				}
@@ -472,10 +476,10 @@ public class Lobby {
 						{
 							if (TimeLeft > 61)
 							{
-								u.sendMessage(Msgs.Game_Time_Left.getString("<time>", Time.getTime((long) TimeLeft)));
-								u.sendMessage("humans left: <humans>|| Zombies left: <zombies>");
+								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
+								u.sendMessage(Msgs.Game_Players_Left.getString("<humans>", String.valueOf(getHumans().size()), "<zombies>", String.valueOf(getZombies().size())));
 							} else
-								u.sendMessage(Msgs.Game_Time_Left.getString("<time>", Time.getTime((long) TimeLeft)));
+								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
 						}
 
 					}

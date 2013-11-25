@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.entity.Player;
+
 import me.sniperzciinema.infectedv2.GameMechanics.Stats.StatType;
-import me.sniperzciinema.infectedv2.Tools.Files;
+import me.sniperzciinema.infectedv2.Handlers.Lobby;
 
 
 public class MiscStats {
@@ -42,12 +44,9 @@ public class MiscStats {
 
 	public static HashMap<String, Integer> getTop5(StatType type) {
 		
-		for (String user : Files.getPlayers().getConfigurationSection("Players").getKeys(true))
+		for (Player u : Lobby.getInGame())
 		{
-			if (!user.contains("."))
-			{
-				Top.put(user, Stats.getStat(type, user));
-			}
+			Top.put(u.getName(), Stats.getStat(type, u.getName()));
 		}
 		if (Top.size() < 6)
 		{

@@ -12,6 +12,7 @@ import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Tools.Events;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class Game {
 			for (final Player u : Lobby.getInGame())
 			{
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Main.config.getBoolean("Vault Support.Enabled"));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -62,16 +63,16 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Header.getString("<title>", "Game Over"));
 				u.sendMessage("");
-				u.sendMessage("Humans Won");
+				u.sendMessage(Msgs.Game_Over_Humans_Win.getString());
 				StringBuilder winnersS = new StringBuilder();
 				for (String s : winners)
 				{
 					winnersS.append(s);
 					winnersS.append(", ");
 				}
-				u.sendMessage(Main.I + "Winners: " + winners.toString());
+				u.sendMessage(Msgs.Game_Over_Winners.getString("<winners>" , winners.toString()));
 				u.sendMessage("");
-				u.sendMessage(Msgs.Arena_Information.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
@@ -90,7 +91,7 @@ public class Game {
 			for (final Player u : Lobby.getInGame())
 			{
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Main.config.getBoolean("Vault Support.Enabled"));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -100,9 +101,9 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Header.getString("<title>", "Game Over"));
 				u.sendMessage("");
-				u.sendMessage("Zombies Won");
+				u.sendMessage(Msgs.Game_Over_Zombies_Win.getString());
 				u.sendMessage("");
-				u.sendMessage(Msgs.Arena_Information.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage(Msgs.Game_Info_Arena.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
@@ -120,7 +121,7 @@ public class Game {
 							@Override
 							public void run() {
 
-								if (Lobby.getInGame().size() >= Main.config.getInt("Automatic Start.Minimum Players") && Lobby.getGameState() == GameState.InLobby)
+								if (Lobby.getInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
 								{
 									Lobby.timerStartVote();
 								}
@@ -151,11 +152,11 @@ public class Game {
 		do
 		{
 			Player alpha = Lobby.getInGame().get(new Random(50).nextInt(Lobby.getInGame().size()));
-			alpha.sendMessage("You're an alpha");
+			alpha.sendMessage(Msgs.Game_Alpha_You.getString());
 			InfPlayerManager.getInfPlayer(alpha).Infect();
 			for (Player u : Lobby.getInGame())
 				if (u != alpha)
-					u.sendMessage("Alpha is an alpha");
+					u.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
 
 			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
 				alpha.addPotionEffect(PE);

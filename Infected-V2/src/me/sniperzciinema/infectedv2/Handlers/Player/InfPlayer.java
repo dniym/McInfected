@@ -300,7 +300,7 @@ public class InfPlayer {
 	 */
 	public void Infect() {
 		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-		player.sendMessage(Main.I + "You have become infected!");
+		player.sendMessage("You have become infected!");
 		team = Team.Zombie;
 		isWinner = false;
 		Equip.equipToZombie(player);

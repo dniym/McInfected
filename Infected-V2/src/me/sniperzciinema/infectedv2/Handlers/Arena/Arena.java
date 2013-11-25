@@ -63,6 +63,7 @@ public class Arena {
 	 */
 	public void setSpawns(List<String> spawns) {
 		Files.getArenas().set("Arenas." + name + ".Spawns", spawns);
+		Files.saveArenas();
 	}
 
 	/**

@@ -10,6 +10,7 @@ import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infectedv2.Messages.Msgs;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
@@ -61,7 +62,7 @@ public class DamageEvents implements Listener {
 					else if (Lobby.getGameState() == GameState.Infecting && victim.getHealth() - e.getDamage() <= 0)
 					{
 						e.setDamage(0);
-						victim.sendMessage(Main.I + "You almost died before the game even started!");
+						victim.sendMessage(Msgs.Game_Death_Before_Game.getString());
 						// Because we're not counting this, we'll just respawn
 						// them without saying they died
 						IPV.respawn();

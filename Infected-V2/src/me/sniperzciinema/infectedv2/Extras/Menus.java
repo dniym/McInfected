@@ -2,7 +2,6 @@
 package me.sniperzciinema.infectedv2.Extras;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -45,13 +44,12 @@ public class Menus {
 
 						} else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + event.getName()))
 						{
-
-							p.sendMessage("You have chosen <Class>");
+							p.sendMessage(Msgs.Menu_Classes_Chosen.getString("<class>", event.getName()));
 							IP.setInfClass(team, InfClassManager.getClass(team, ChatColor.stripColor(event.getName())));
 
 						} else
 						{
-							p.sendMessage(Msgs.Error_No_Permission.getString());
+							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						}
 					}
 				}, Main.me);
@@ -59,10 +57,10 @@ public class Menus {
 		for (InfClass Class : (team == Team.Human ? InfClassManager.getHumanClasses() : InfClassManager.getZombieClasses()))
 		{
 			ItemStack item = Class.getItems().get(0);
-			menu.setOption(i, item, Class.getName(), (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + "Click to choose this class");
+			menu.setOption(i, item, Class.getName(), (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + Msgs.Menu_Classes_Click_To_Choose.getString());
 			i++;
 		}
-		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", "Choose to have no class");
+		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", Msgs.Menu_Classes_None.getString());
 		menu.open(p);
 	}
 
@@ -88,13 +86,12 @@ public class Menus {
 		zombie.setDurability((short) 2);
 		ItemStack human = new ItemStack(Material.SKULL_ITEM);
 		human.setDurability((short) 3);
-		menu.setOption(3, zombie, ChatColor.RED + "Zombie", ChatColor.DARK_PURPLE + "Choose a " + ChatColor.RED + "Zombie" + ChatColor.DARK_PURPLE + " Class!");
-		menu.setOption(5, human, ChatColor.GREEN + "Human", ChatColor.DARK_PURPLE + "Choose a " + ChatColor.GREEN + "Human" + ChatColor.DARK_PURPLE + " Class!");
+		menu.setOption(3, zombie, ChatColor.RED + "Zombie", Msgs.Menu_Team_Choose.getString("<team>", ChatColor.RED + "Zombie"));
+		menu.setOption(5, human, ChatColor.GREEN + "Human", Msgs.Menu_Team_Choose.getString("<team>", ChatColor.GREEN + "Human"));
 		menu.open(p);
 	}
 
-	// /////////////////////////////// VOTING
-	// //////////////////////////////////////
+	// ///////////////////////////////-VOTING-//////////////////////////////////////
 	public static void openVotingMenu(final Player p) {
 		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		IconMenu menu = new IconMenu(
@@ -116,34 +113,35 @@ public class Menus {
 						IP.setVote(arena);
 
 						for (Player u : Lobby.getInGame())
-							u.sendMessage("<Player> voted for <Arena>" + (votes != 0 ? " (x" + votes + ")" : ""));
+							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", event.getName()) + (votes != 0 ? " (x" + votes + ")" : ""));
 
 						ScoreBoard.updateScoreBoard();
 
 					}
 				}, Main.me);
 		int place = 0;
-		List<String> list = Files.getConfig().getStringList("Blocks to use for GUI voting");
 		for (Arena arena : Lobby.getArenas())
 		{
 			Random r = new Random();
-			int i = r.nextInt(list.size() - 1) + 1;
-			Material m = Material.valueOf(list.get(i));
+			Material m = null;
+			while (m == null || (!m.isBlock() && !m.isTransparent()))
+			{
+				int i = r.nextInt(Material.values().length);
+				m = Material.values()[i];
+			}
 
-			// Set the message depending on if the arena is valid(Has spawns)
 			if (Lobby.isArenaValid(arena.getName()))
-				menu.setOption(place, new ItemStack(m), "" + ChatColor.getByChar(String.valueOf(place + 1)) + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", ChatColor.GREEN + "Click Here Vote For This Arena", "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				menu.setOption(place, new ItemStack(m), "" + ChatColor.getByChar(String.valueOf(place + 1)) + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 			else
 				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + "Click Here Vote For This Arena", "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 
 			place++;
 		}
-		menu.setOption(place, new ItemStack(Material.MAP), "random", ChatColor.YELLOW + "Click to vote for Random");
+		menu.setOption(place, new ItemStack(Material.MAP), "random", Msgs.Menu_Vote_Random.getString());
 		menu.open(p);
 	}
 
-	// ///////////////////////////////// SHOP
-	// ///////////////////////////////////////////
+	// /////////////////////////////////-SHOP-///////////////////////////////////////////
 
 	public static void openShopMenu(final Player p) {
 
@@ -175,11 +173,11 @@ public class Menus {
 						if (price <= points)
 						{
 
-							IP.setPoints(points - price, Main.config.getBoolean("Vault Support.Enabled"));
+							IP.setPoints(points - price, Settings.VaultEnabled());
 
 							p.getInventory().addItem(is);
 
-							p.sendMessage("<Item> Bought");
+							p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", is.getItemMeta().getDisplayName()));
 							if (Files.getShop().getBoolean("Save Items") && (!Files.getGrenades().contains(String.valueOf(is.getTypeId()))))
 							{
 								if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
@@ -191,11 +189,11 @@ public class Menus {
 
 								}
 							} else
-								p.sendMessage(Msgs.Error_No_Permission.getString());
+								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						} else
 						{
-							p.sendMessage("Not enough points");
-							p.sendMessage("You need <Points> more");
+							p.sendMessage(Msgs.Shop_Cost_Not_Enough.getString());
+							p.sendMessage(Msgs.Shop_Cost_Needed.getString("<needed>", String.valueOf(price - points)));
 						}
 						Files.savePlayers();
 						p.updateInventory();
@@ -205,7 +203,7 @@ public class Menus {
 		int i = 0;
 		for (String item : shop)
 		{
-			menu.setOption(i, ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + item + ".Item Code")), item, ChatColor.YELLOW + "Click to purchase for: " + Files.getShop().getInt("Custom Items." + item + ".GUI Price"));
+			menu.setOption(i, ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + item + ".Item Code")), item, Msgs.Menu_Shop_Click_To_Buy.getString("<price>", String.valueOf(Files.getShop().getInt("Custom Items." + item + ".GUI Price"))));
 			i++;
 		}
 		menu.open(p);

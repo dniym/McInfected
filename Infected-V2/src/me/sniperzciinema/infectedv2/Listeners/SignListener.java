@@ -14,6 +14,7 @@ import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Tools.Files;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,37 +54,33 @@ public class SignListener implements Listener {
 					if (sign.getLine(0).contains("[Infected]") && sign.getLine(1).contains("Class"))
 					{
 						// Make sure classes are enabled
-						if (!Files.getClasses().getBoolean("Enabled"))
+
+						InfPlayer IP = InfPlayerManager.getInfPlayer(p);
+						String className = ChatColor.stripColor(sign.getLine(2));
+						Team team = Team.valueOf(ChatColor.stripColor(sign.getLine(3)));
+
+						// If className is "None" well set the back to the
+						// default class
+						if (className.equalsIgnoreCase("None"))
 						{
-							p.sendMessage("Error_Classes disabled");
+							IP.setInfClass(Team.Human, InfClassManager.getDefaultClass(team));
+							p.sendMessage(Msgs.Sign_Classes_Choosen.getString("<class>", "Default"));
+						}
+						// If its anything other then "None" Make sure they
+						// have the permissions needed
+						else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
+						{
+							IP.setInfClass(team, InfClassManager.getClass(team, className));
+							p.sendMessage(Msgs.Sign_Classes_Choosen.getString("<class>", className));
 						} else
 						{
-							InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-							String className = ChatColor.stripColor(sign.getLine(2));
-							Team team = Team.valueOf(ChatColor.stripColor(sign.getLine(3)));
+							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-							// If className is "None" well set the back to the
-							// default class
-							if (className.equalsIgnoreCase("None"))
-							{
-								IP.setInfClass(Team.Human, InfClassManager.getDefaultClass(team));
-								p.sendMessage("You have gone back to the default <team> class");
-							}
-							// If its anything other then "None" Make sure they
-							// have the permissions needed
-							else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
-							{
-								IP.setInfClass(team, InfClassManager.getClass(team, className));
-								p.sendMessage("You have chosen class <Class>");
-							} else
-							{
-								p.sendMessage(Msgs.Error_No_Permission.getString());
-
-							}
 						}
 					}
 				}
 			}
+
 		}
 	}
 
@@ -164,11 +161,11 @@ public class SignListener implements Listener {
 
 							} else
 							{
-								p.sendMessage(Main.I + "Not enough points!");
-								p.sendMessage(Main.I + "You need " + (iPrice - points) + " more points");
+								p.sendMessage(Msgs.Sign_CmdSet_Not_Enough.getString());
+								p.sendMessage(Msgs.Sign_CmdSet_Cost_Needed.getString("<needed>", String.valueOf(iPrice - points)));
 							}
 						} else
-							p.sendMessage(Msgs.Error_No_Permission.getString());
+							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					}
 				}
 			}
@@ -264,12 +261,12 @@ public class SignListener implements Listener {
 									}
 								} else
 								{
-									p.sendMessage("Invalid Points");
-									p.sendMessage("You need <points> more");
+									p.sendMessage(Msgs.Shop_Cost_Not_Enough.getString());
+									p.sendMessage(Msgs.Shop_Cost_Needed.getString("<needed>", String.valueOf(iPrice - points)));
 								}
 								p.updateInventory();
 							} else
-								p.sendMessage(Msgs.Error_No_Permission.getString());
+								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 						}
 					}
@@ -293,13 +290,13 @@ public class SignListener implements Listener {
 					// Make sure everything checks out as good
 					if (!p.hasPermission("Infected.Setup"))
 					{
-						p.sendMessage(Main.I + "Invalid Permissions.");
+						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						event.setCancelled(true);
 					}
 
 					if (event.getLine(1).isEmpty() || event.getLine(2).isEmpty())
 					{
-						p.sendMessage("Invalid sign");
+						p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 						event.setCancelled(true);
 					} else
 					{
@@ -347,14 +344,14 @@ public class SignListener implements Listener {
 									Files.saveSigns();
 								} else
 								{
-									p.sendMessage("Invalid Sign");
+									p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 									event.setCancelled(true);
 								}
 
 							}
 						} catch (Exception e)
 						{
-							p.sendMessage("Invalid Sign");
+							p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 							event.setCancelled(true);
 						}
 
@@ -377,18 +374,18 @@ public class SignListener implements Listener {
 				// Make thing everythings in check
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Msgs.Error_No_Permission.getString());
+					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
 				}
 				if (event.getLine(1).isEmpty())
 				{
-					event.getPlayer().sendMessage(Main.I + ChatColor.RED + "Line 2 is empty");
+					event.getPlayer().sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.getBlock().breakNaturally();
 					event.setCancelled(true);
 				} else
 				{
 					// Is Info Signs enabled
-					if (Main.config.getBoolean("Info Signs.Enabled"))
+					if (Settings.InfoSignsEnabled())
 					{
 
 						event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
@@ -434,12 +431,12 @@ public class SignListener implements Listener {
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Msgs.Error_No_Permission.getString());
+					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
 				}
 				if (event.getLine(1).isEmpty())
 				{
-					event.getPlayer().sendMessage(Main.I + ChatColor.RED + "Line 2 is empty");
+					event.getPlayer().sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.getBlock().breakNaturally();
 					event.setCancelled(true);
 				} else
@@ -454,6 +451,7 @@ public class SignListener implements Listener {
 		}
 	}
 
+	// /////////////////////////////////////////////////-CREATE_CMD_SET-////////////////////////////////////////
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateCmdset(SignChangeEvent event) {
 		if (!event.isCancelled())
@@ -463,7 +461,7 @@ public class SignListener implements Listener {
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Main.I + "Invalid Permissions.");
+					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
 				}
 				String commandSet = "None";
@@ -487,13 +485,13 @@ public class SignListener implements Listener {
 						event.setLine(3, ChatColor.YELLOW + "Cost: " + event.getLine(3));
 					} else
 					{
-						player.sendMessage("Invalid Sign");
+						player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 						event.setCancelled(true);
 					}
 
 				} else
 				{
-					player.sendMessage("Invalid Sign");
+					player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.setCancelled(true);
 				}
 			}
@@ -511,32 +509,25 @@ public class SignListener implements Listener {
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{
-					player.sendMessage(Msgs.Error_No_Permission.getString());
+					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
 				}
-				if (!Files.getClasses().getBoolean("Enabled"))
+				Team team = Team.valueOf(event.getLine(3));
+				String className = event.getLine(2);
+
+				if (className.equalsIgnoreCase("None") || InfClassManager.isRegistered(team, InfClassManager.getClass(team, className)))
 				{
-					player.sendMessage("Error_Classes disabled");
+
+					event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+					event.setLine(1, ChatColor.GRAY + "Class");
+					event.setLine(2, ChatColor.GREEN + className);
+					event.setLine(3, (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + "-> " + team.toString() + " <-");
 				} else
 				{
-					Team team = Team.valueOf(event.getLine(3));
-					String className = event.getLine(2);
-
-					if (className.equalsIgnoreCase("None") || InfClassManager.isRegistered(team, InfClassManager.getClass(team, className)))
-					{
-
-						event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-						event.setLine(1, ChatColor.GRAY + "Class");
-						event.setLine(2, ChatColor.GREEN + className);
-						event.setLine(3, (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + "-> " + team.toString() + " <-");
-					} else
-					{
-						player.sendMessage("Invalid sign");
-					}
+					player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 				}
 			}
 
 		}
 	}
-
 }

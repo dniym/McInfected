@@ -18,7 +18,8 @@ public class InfPlayerManager {
 	 * @param IP
 	 */
 	public static void createInfPlayer(InfPlayer IP) {
-		players.add(IP);
+		if(!players.contains(IP))
+			players.add(IP);
 	}
 	/**
 	 * Create InfPlayer
@@ -26,7 +27,8 @@ public class InfPlayerManager {
 	 */
 	public static void createInfPlayer(Player p) {
 		InfPlayer IP = new InfPlayer(p);
-		players.add(IP);
+		if(!players.contains(IP))
+			players.add(IP);
 	}
 
 	/**
