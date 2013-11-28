@@ -18,7 +18,6 @@ import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -185,7 +184,7 @@ public class SignListener implements Listener {
 				Block b = event.getClickedBlock();
 				if (b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN)
 				{
-					if (Files.getShop().getBoolean("Enabled"))
+					if (Settings.shopsEnabled())
 					{
 						Sign sign = ((Sign) b.getState());
 						if (sign.getLine(0).contains("[Infected]") && !sign.getLine(1).contains("Playing") && !sign.getLine(1).contains("CmdSet") && !sign.getLine(1).toLowerCase().contains("click to use") && !sign.getLine(1).contains("Class"))
@@ -209,7 +208,7 @@ public class SignListener implements Listener {
 							iPrice = Integer.valueOf(price);
 
 							String materialName = ChatColor.stripColor(sign.getLine(1));
-							ItemStack stack;
+							ItemStack stack = null;
 							Material material = null;
 							// Loop through all materials in minecraft, if the
 							// item name matches the itemname variable, break
@@ -235,14 +234,17 @@ public class SignListener implements Listener {
 								meta.setDisplayName(materialName);
 								stack.setItemMeta(meta);
 							}
-							// If it's not an item, and it's not in the custom
-							// items, it's GOTTA be in the Shops Files.
+							// It's gotta be the start of an item name then...
 							else
 							{
-								Location loc = event.getClickedBlock().getLocation();
-								String itemCode = Files.getSigns().getString("Shop Signs." + LocationHandler.getLocationToString(loc));
-								stack = ItemHandler.getItemStack(itemCode);
-
+								for (Material materials : Material.values())
+								{
+									if (materials.toString().startsWith(materialName))
+									{
+										stack = new ItemStack(materials);
+										break;
+									}
+								}
 							}
 							if (p.hasPermission("Infected.Shop") || p.hasPermission("Infected.Shop." + stack.getTypeId()))
 							{
@@ -282,83 +284,79 @@ public class SignListener implements Listener {
 	public void onPlayerCreateShop(SignChangeEvent event) {
 		if (!event.isCancelled())
 		{
-			if (Files.getShop().getBoolean("Enabled"))
-			{
-				Player p = event.getPlayer();
-				if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class"))
-				{
-					// Make sure everything checks out as good
-					if (!p.hasPermission("Infected.Setup"))
-					{
-						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-						event.setCancelled(true);
-					}
 
-					if (event.getLine(1).isEmpty() || event.getLine(2).isEmpty())
+			Player p = event.getPlayer();
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class"))
+			{
+				// Make sure everything checks out as good
+				if (!p.hasPermission("Infected.Setup"))
+				{
+					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+					event.setCancelled(true);
+				}
+
+				if (event.getLine(1).isEmpty() || event.getLine(2).isEmpty())
+				{
+					p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
+					event.setCancelled(true);
+				} else
+				{
+					try
+					{
+						// Check if it's a custom item
+						if (Files.getShop().contains("Custom Items." + event.getLine(1) + ".Item Code"))
+						{
+							// Lets get the Item Code and the price
+							String price = event.getLine(2);
+
+							// Set the sign
+							event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+							event.setLine(1, ChatColor.GRAY + event.getLine(1));
+							event.setLine(2, ChatColor.GREEN + "Click To Buy");
+							event.setLine(3, ChatColor.DARK_RED + price);
+
+						}
+						// If its not in the custom items, it's either an
+						// item
+						// id or invalid
+						else
+						{
+							int itemId = ItemHandler.getItemID(event.getLine(1));
+							short itemData = ItemHandler.getItemData(event.getLine(1));
+							String price = event.getLine(2);
+							Material material = null;
+
+							for (Material materials : Material.values())
+								if (materials.getId() == itemId)
+								{
+									material = materials;
+									break;
+								}
+							// If the material is a valid minecraft material
+							if (material != null)
+							{
+								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+								event.setLine(1, ChatColor.GRAY + material.name() + (itemData == 0 ? "" : ":" + itemData));
+								event.setLine(2, ChatColor.GREEN + "Click To Buy");
+								event.setLine(3, ChatColor.DARK_RED + "Cost: " + price);
+
+							} else
+							{
+								p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
+								event.setCancelled(true);
+							}
+
+						}
+					} catch (Exception e)
 					{
 						p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 						event.setCancelled(true);
-					} else
-					{
-						try
-						{
-							// Check if it's a custom item
-							if (Files.getShop().contains("Custom Items." + event.getLine(1) + ".Item Code"))
-							{
-								// Lets get the Item Code and the price
-								String price = event.getLine(2);
-
-								// Set the sign
-								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-								event.setLine(1, ChatColor.GRAY + event.getLine(1));
-								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + price);
-
-							}
-							// If its not in the custom items, it's either an
-							// item
-							// id or invalid
-							else
-							{
-								int itemId = ItemHandler.getItemID(event.getLine(1));
-								short itemData = ItemHandler.getItemData(event.getLine(1));
-								String price = event.getLine(2);
-								Material material = null;
-
-								for (Material materials : Material.values())
-									if (materials.getId() == itemId)
-									{
-										material = materials;
-										break;
-									}
-								// If the material is a valid minecraft material
-								if (material != null)
-								{
-									event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-									event.setLine(1, ChatColor.GRAY + material.name() + (itemData == 0 ? "" : ":" + itemData));
-									event.setLine(2, ChatColor.GREEN + "Click To Buy");
-									event.setLine(3, ChatColor.DARK_RED + "Cost: " + price);
-
-									Location loc = event.getBlock().getLocation();
-									Files.getSigns().set("Shop Signs." + LocationHandler.getLocationToString(loc), itemId + ":" + Integer.valueOf(itemData));
-									Files.saveSigns();
-								} else
-								{
-									p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
-									event.setCancelled(true);
-								}
-
-							}
-						} catch (Exception e)
-						{
-							p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
-							event.setCancelled(true);
-						}
-
 					}
+
 				}
 			}
 		}
+
 	}
 
 	// /////////////////////////////////////////////////////////-CREATE_INFO_SIGN-/////////////////////////////////////////////////////

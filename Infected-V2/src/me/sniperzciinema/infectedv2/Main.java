@@ -9,6 +9,8 @@ import java.sql.Statement;
 
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
+import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infectedv2.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Listeners.DamageEvents;
 import me.sniperzciinema.infectedv2.Listeners.GrenadeListener;
@@ -95,7 +97,6 @@ public class Main extends JavaPlugin {
 		// Create Configs and files
 		getConfig().options().copyDefaults(true);
 		Files.getArenas().options().copyDefaults(true);
-		Files.getKills().options().copyDefaults(true);
 		Files.getShop().options().copyDefaults(true);
 		Files.getPlayers().options().copyDefaults(true);
 		Files.getMessages().options().copyDefaults(true);
@@ -108,7 +109,6 @@ public class Main extends JavaPlugin {
 		Files.saveClasses();
 		Files.saveConfig();
 		Files.saveGrenades();
-		Files.saveKills();
 		Files.saveMessages();
 		Files.savePlayers();
 		Files.saveShop();
@@ -205,7 +205,8 @@ public class Main extends JavaPlugin {
 			}
 
 		}
-		for(Player u : Bukkit.getOnlinePlayers()){
+		for (Player u : Bukkit.getOnlinePlayers())
+		{
 			InfPlayerManager.createInfPlayer(u);
 		}
 		if (Files.getArenas().getConfigurationSection("Arenas") != null)
@@ -218,6 +219,9 @@ public class Main extends JavaPlugin {
 		else
 			System.out.println("Couldn't Find Any Arenas");
 
+		InfClassManager.loadConfigClasses();
+		GrenadeManager.loadConfigGrenades();
+
 		System.out.println("====================");
 	}
 
@@ -225,8 +229,10 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 
 		// On disable reset players with everything from before
-		for (Player p : Lobby.getInGame())
-			InfPlayerManager.getInfPlayer(p).leaveInfected();
+		if (!Lobby.getInGame().isEmpty())
+			for (Player p : Bukkit.getOnlinePlayers())
+				if(Lobby.isInGame(p))
+						InfPlayerManager.getInfPlayer(p).leaveInfected();
 
 		if (getConfig().getBoolean("MySQL.Enable"))
 		{

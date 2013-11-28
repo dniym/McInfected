@@ -23,7 +23,7 @@ public class DisguiseIDisguise {
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
-			if (DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise()) != null)
+			if (DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()) != null)
 			{
 				idAPI.disguiseToAll(p, new MobDisguise(
 						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()),

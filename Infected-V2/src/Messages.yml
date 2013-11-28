@@ -1,45 +1,64 @@
-# Default Message.yml, Last Edited in v1.9.1
+# Default Message.yml, Last Edited in v2.0.0
 # If you want to write "don't", write "don''t" instead (note the doubled apostrophe)
-Format_Line: "&7&l&m====================================="
-Error_NoPermission: "&cYou don't have valid permissions for this command!"
-Error_CantUseCommand: "&c&oYou can't use that command in Infected!"
-Error_GameStarted: "&c&oGames Already Started!"
-Error_NotInGame: "&c&oYou're not even in the game!"
-Error_AlreadyInGame: "&c&oYou're already in the game!"
-Error_InfectedDisabled: "&9&lInfected has been disabled..."
-Error_NotAStat: "&cInfected doesn't count that..."
-Error_JoinWellStartedBlocked: "&c&oJoining a started game has been disabled!"
-Error_CantEditInventoryYet: "&c&oPlease wait till first Infected's chosen before editing inventory"
-Grenade_Disabled: "&4&lGrenades &4are disabled..."
-Grenade_OnlyBuyInGame: "&cYou can only buy grenades in game..."
-Grenade_NoZombies: "&cHere at &lInfected Grenades&c, we only serve &aHumans!"
-Classes_Disabled: "&4&lClasses &4have been disabled"
-Classes_Chosen: "&b&lClass Selected: &f&l<class>"
-Shop_Purchase: "&e&oYou have just purchased: &l<item>"
-Shop_InvalidPoints: "&c&oYou don't have enough points!"
-Shop_NeedMorePoints: "&c&oYou need &c&l<pointsneeded> &c&omore points!"
-Shop_GuiOnlyInLobby: "&c&oIt would be unwise to open a menu in game!"
-Lobby_OtherJoinedLobby: "&a&l<player> &2joined the lobby."
-Lobby_JoinLobby: "&a&lYou have joined Infected."
-Vote_Time: "&7Let the voting begin! You have &e&l<timeleft>&7!"
-Vote_HowToVote: "&eVote for your arena! Use &l/Inf Vote&e."
-Vote_TimeLeft: "&e&l<timeleft> &7left till voting ends!"
-Vote_NotEnabled: "&c&lVoting &chas been disabled!"
-Vote_AlreadyVoted: "&c&oYou have already voted!"
-Vote_VotedFor: "&6&l<player> has voted for &f&l<votedfor>"
-Game_Map: "&a&lMap: &f&o<map> - &a&lMade by: &f&o<creator>"
-Game_FirstInfectedIn: "&7First Infected in &e&l<timeleft>&7!"
-Game_InfectionTimer: "&7Infection in: &e&l<timeleft>&7!"
-Game_YouAreFirstInfected: "&cYou are the first Infected! &aGood luck!"
-Game_FirstInfected: "&4&l<player> &chas became the first Infected!"
-Game_GotInfected: "&7&l<player> &7has became Infected!"
-Game_Time: "&7You have &e&l<timeleft>&7. &fGood luck&7!"
-Game_TimeLeft: "&e&l<timeleft> &7left till the game ends!"
-Game_Teams: "&a&lHumans Left: &f<humans>|&4&lZombies Left: &f<zombies>"
-Game_ForcedToStop: "&cThe Game has been forced to &4&lstop&c!"
-AfterGame_HumansWin: "&a&lTimes up! &2Humans Win!"
-AfterGame_ZombiesWin: "&c&lZombies win! &4All &a&lhumans &care dead!"
-Leave_NoEffect: "&4&l<player> &chas left Infected!"
-Leave_YouHaveLeft: "&c&lYou have left Infected."
-Leave_NotEnoughPlayers: "&4&l<player> &chas left the lobby. &oThe game can't continue!"
-Admin_YouAreKicked: "&4&lYou have been kicked out of Infected by an Admin"
+Format:
+  Header: '&e&l>&e&m-------------««&4&l<title>&e&o&m»»-------------&l<'
+  Line: '&e&l>&e&m-------------------------------------------&l<'
+  Prefix: '&0>>&4Infected&0<<&9'
+Command:
+  Arenas: '&l&7Arenas: &a<valid> &c<invalid>'
+  Arena:
+    Set: '&f&l<arena> &6&ohas been selected'
+    Doesnt Exist: '&7<arena> doesn''t exist'
+    Already Exist: '&7<arena> is already created'
+  Admin:
+    Reload: '&8&oInfected has been reloaded'
+  Misc:
+    Not Player: '&4&oYou''re not a player!'
+Kills:
+  Human:
+    Arrow:
+    - <killer> &6has shot <killed>
+    - <killer> &6has looked at <killed>, and killed them...
+    - <killer> &6has slayed <killed>
+    - <killer> &6has killed <killed>
+    Melee:
+    - <killer> &6has killed <killed>
+    - <killer> &6has slayed <killed>
+    - <killer> &6has decapitated <killed>
+    - <killer> &6has sliced <killed> into hundreds of peices
+    - <killer> &6has looked at <killed>, and killed them...
+    Grenade:
+    - <killer> &6has bombarded <killed>
+    - <killer> &6has blown up <killed>
+    Gun:
+    - <killer> &6has mowed <killed> down
+    - <killer> &6has made swiss cheese out of <killed>
+    Snowball:
+    - <killer> &6has pelted <killed>
+    Egg:
+    - <killer> &6has pelted <killed>
+    Other:
+    - <killer> &6has became Infected
+  Zombie:
+    Arrow:
+    - <killer> &6shot <killed>
+    - <killer> &6has killed <killed>
+    Melee:
+    - <killer> &6has bitten <killed>
+    - <killer> &6ripped off <killed>'s head
+    - <killer> &6ate <killed>
+    - <killer> &6has killed <killed>
+    - <killer> &6has infected <killed>
+    - <killer> &6has scratched <killed>
+    Grenade:
+    - <killer> &6has bombarded <killed>
+    - <killer> &6has blown up <killed>
+    Gun:
+    - <killer> &6has mowed <killed> down
+    - <killer> &6has made swiss cheese out of <killed>
+    Snowball:
+    - <killer> &6has pelted <killed>
+    Egg:
+    - <killer> &6has pelted <killed>
+    Other:
+    - <killer> &6 has died

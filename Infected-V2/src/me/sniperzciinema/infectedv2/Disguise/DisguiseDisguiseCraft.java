@@ -4,6 +4,7 @@ package me.sniperzciinema.infectedv2.Disguise;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Handlers.Player.Team;
+import me.sniperzciinema.infectedv2.Messages.StringUtil;
 
 import org.bukkit.entity.Player;
 
@@ -22,11 +23,11 @@ public class DisguiseDisguiseCraft {
 
 		if (!dcAPI.isDisguised(p))
 		{
-			if (DisguiseType.fromString(IP.getInfClass(Team.Zombie).getDisguise()) != null)
+			if (DisguiseType.fromString(StringUtil.getWord(IP.getInfClass(Team.Zombie).getDisguise())) != null)
 			{
 				dcAPI.disguisePlayer(p, new Disguise(
 						dcAPI.newEntityID(),
-						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise())).addSingleData("noarmor"));
+						DisguiseType.valueOf(StringUtil.getWord(IP.getInfClass(Team.Zombie).getDisguise()))).addSingleData("noarmor"));
 			} else
 				dcAPI.disguisePlayer(p, new Disguise(dcAPI.newEntityID(),
 						DisguiseType.Zombie).addSingleData("noarmor"));

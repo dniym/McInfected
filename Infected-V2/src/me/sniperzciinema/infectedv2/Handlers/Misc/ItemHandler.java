@@ -2,19 +2,23 @@
 package me.sniperzciinema.infectedv2.Handlers.Misc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 
 public class ItemHandler {
-	
-	//TODO: Look into String.split("[:,-@%]"); , To see if i can make the order not matter.(Only issue I predict is the ItemID
+
+	// TODO: Look into String.split("[:,-@%]"); , To see if i can make the order
+	// not matter.(Only issue I predict is the ItemID and figuring out what
+	// value is what)
 
 	public static Integer getItemID(String Path) {
 		String itemid = null;
@@ -258,14 +262,22 @@ public class ItemHandler {
 		}
 		return itemCode;
 	}
+
 	// Loop through a list of these Item Codes and make a ItemStack[]
-	public static ItemStack[] getItemStackList(List<String> list) {
+	public static ArrayList<ItemStack> getItemStackList(List<String> list) {
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		for (String string : list)
-		{
 			items.add(getItemStack(string));
-		}
-		ItemStack[] stack = items.toArray(new ItemStack[0]);
-		return stack;
+		
+		return items;
+	}
+
+	public static HashMap<Integer, ItemStack> getItemHashMap(Configuration config, String path) {
+		HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
+		for (String string : config.getConfigurationSection(path).getKeys(true))
+			if (!string.contains("."))
+				killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
+		
+		return killstreaks;
 	}
 }

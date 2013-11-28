@@ -72,6 +72,22 @@ Settings:
       Minimum Players: 3
 # Should we prevent players from joining once a game has started
     Prevent Joining During Game: false
+    ScoreBoard Stats:
+     - " "
+     - "&9&lPoints:"
+     - "&9&l<points>"
+     - " "
+     - "&7&lScore:"
+     - "&7&l<score>"
+     - " "
+     - "&a&lKills:"
+     - "&a&o<kills>"
+     - " "
+     - "&c&lDeaths:"
+     - "&c&o<deaths>"
+     - " "
+     - "&6&lBest Streak:"
+     - "&6&o<highestkillstreak>"
 # Global Settings can be just copied and pasted into an arenas settings then you have settings per arena
   Global:
 # All the time limits (Seconds)
@@ -120,7 +136,7 @@ Settings:
 # Default Classes
     Default Classes:
       Human: Knight
-      Zombie: None
+      Zombie: Assassin
 # Zombie abilities are zombies with certain attribute boosts, such as agility, speed, strength, slowness, etc
     Zombie Abilities: false
     Misc:

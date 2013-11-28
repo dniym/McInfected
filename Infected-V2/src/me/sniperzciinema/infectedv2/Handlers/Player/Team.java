@@ -1,11 +1,6 @@
 
 package me.sniperzciinema.infectedv2.Handlers.Player;
 
-import java.util.List;
-
-import me.sniperzciinema.infectedv2.GameMechanics.DeathType;
-import me.sniperzciinema.infectedv2.Tools.Files;
-
 
 public enum Team
 {
@@ -21,9 +16,6 @@ public enum Team
 	@Override
 	public String toString(){
 		return string;
-	}
-	public List<String> getKillMessages(DeathType death) {
-		return Files.getMessages().getStringList("Deaths." + string + "." + death);
 	}
 
 };

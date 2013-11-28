@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import me.sniperzciinema.infectedv2.Extras.Menus;
-import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.GameMechanics.DeathType;
 import me.sniperzciinema.infectedv2.GameMechanics.Deaths;
 import me.sniperzciinema.infectedv2.GameMechanics.Equip;
@@ -62,7 +61,11 @@ public class Commands implements CommandExecutor {
 				p = (Player) sender;
 				ip = InfPlayerManager.getInfPlayer(p);
 			}
-			if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+			if (args.length > 0 && args[0].equalsIgnoreCase("TEST"))
+			{
+				Deaths.playerDies(DeathType.Other, p, null);
+			}
+			else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 			{
 				if (p == null)
 					sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
@@ -128,12 +131,16 @@ public class Commands implements CommandExecutor {
 				else if (Lobby.getArenas().isEmpty() || !Lobby.isArenaValid(Lobby.getArenas().get(0)))
 					p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", "Default"));
 
+				else if (Lobby.getInGame().contains(p))
+					p.sendMessage(Msgs.Error_Game_In.getString());
+				
 				else
 				{
 					for (Player u : Lobby.getInGame())
 						u.sendMessage(Msgs.Game_Joined_They.getString("<player>", p.getName()));
 
 					ip.setInfo();
+					Lobby.addPlayerInGame(p);
 					ip.tpToLobby();
 
 					p.sendMessage(Msgs.Game_Joined_You.getString());
@@ -155,7 +162,6 @@ public class Commands implements CommandExecutor {
 						ip.respawn();
 						ip.Infect();
 					}
-					ScoreBoard.updateScoreBoard();
 				}
 			}
 
@@ -203,8 +209,7 @@ public class Commands implements CommandExecutor {
 					ip.respawn();
 				}
 			}
-			// //////////////////////////////////////////////////////////////////////////////
-			// SHOP / STORE
+			// ////////////////////////////////////////////////////-SHOP-STORE-/////////////////////////////
 			else if (args.length > 0 && (args[0].equalsIgnoreCase("Shop") || args[0].equalsIgnoreCase("Store")))
 			{
 				if (p == null)
@@ -215,10 +220,7 @@ public class Commands implements CommandExecutor {
 
 				else if (!Lobby.getInGame().contains(p))
 					p.sendMessage(Msgs.Error_Game_Not_In.getString());
-
-				else if (Lobby.getGameState() != GameState.Started)
-					p.sendMessage(Msgs.Error_Game_Started.getString());
-
+				
 				else
 				{
 					Menus.openShopMenu(p);
@@ -236,11 +238,9 @@ public class Commands implements CommandExecutor {
 				else if (!Lobby.getInGame().contains(p))
 					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
-				else if (Lobby.getGameState() != GameState.Started)
-					p.sendMessage(Msgs.Error_Game_Started.getString());
 				else
 				{
-					if (args.length == 1)
+					if (args.length == 2)
 					{
 						if (args[1].matches("[0-9]+"))
 						{
@@ -260,7 +260,7 @@ public class Commands implements CommandExecutor {
 								p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 						} else
 							p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
-					} else if (args.length == 2)
+					} else if (args.length == 3)
 					{
 						int amount = Integer.parseInt(args[2]);
 
@@ -467,7 +467,7 @@ public class Commands implements CommandExecutor {
 				else if (!Lobby.getInGame().contains(p))
 					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
-				else if (Lobby.getGameState() != GameState.Voting)
+				else if (Lobby.getGameState() != GameState.Voting && Lobby.getGameState() != GameState.InLobby)
 					p.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else if (ip.getVote() != null)
@@ -497,7 +497,7 @@ public class Commands implements CommandExecutor {
 				if (!sender.hasPermission("Infected.Force.End"))
 					sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-				else if (Lobby.getGameState() != GameState.InLobby)
+				else if (Lobby.getGameState() == GameState.InLobby)
 					sender.sendMessage(Msgs.Error_Game_Started.getString());
 
 				else
@@ -565,7 +565,6 @@ public class Commands implements CommandExecutor {
 						Files.reloadClasses();
 						Files.reloadConfig();
 						Files.reloadGrenades();
-						Files.reloadKills();
 						Files.reloadMessages();
 						Files.reloadPlayers();
 						Files.reloadShop();
@@ -941,8 +940,8 @@ public class Commands implements CommandExecutor {
 						if (Lobby.getArenas().isEmpty())
 							p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", "Default"));
 
-						else if (!Lobby.getArenas().contains(arena))
-							p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+						else if (Lobby.getArena(arena) == null)
+							p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", arena));
 
 						else
 						{
@@ -977,7 +976,7 @@ public class Commands implements CommandExecutor {
 				if (Main.update)
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Main.name);
 				p.sendMessage("");
-				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "xXSniperzzXx_SD");
+				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + Main.me.getDescription().getAuthors());
 				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Main.v);
 				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
 				p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help");

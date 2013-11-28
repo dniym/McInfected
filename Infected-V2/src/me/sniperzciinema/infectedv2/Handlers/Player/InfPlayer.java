@@ -4,7 +4,6 @@ package me.sniperzciinema.infectedv2.Handlers.Player;
 import java.util.Random;
 
 import me.sniperzciinema.infectedv2.Game;
-import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Disguise.Disguises;
 import me.sniperzciinema.infectedv2.Extras.ScoreBoard;
 import me.sniperzciinema.infectedv2.GameMechanics.Equip;
@@ -16,6 +15,8 @@ import me.sniperzciinema.infectedv2.Handlers.Classes.InfClass;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
 import me.sniperzciinema.infectedv2.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infectedv2.Messages.Msgs;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -24,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.kitteh.tag.TagAPI;
 
 
@@ -46,26 +48,22 @@ public class InfPlayer {
 	private Player lastDamager;
 	private InfClass humanClass;
 	private InfClass zombieClass;
-	private Team team = Team.None;
+	private Team team = Team.Human;
 	private boolean isWinner = true;
 	private boolean isInfChatting = false;
+	private ScoreBoard ScoreBoard = new ScoreBoard(this);
 
 	public InfPlayer(Player p)
 	{
-		location = p.getLocation();
 		name = p.getName();
-		gamemode = p.getGameMode();
-		level = p.getLevel();
-		exp = p.getExp();
-		health = p.getHealth();
-		food = p.getFoodLevel();
-		inventory = p.getInventory().getContents();
-		armor = p.getInventory().getArmorContents();
-		p.getInventory().clear();
-		p.getInventory().setArmorContents(null);
 		player = p;
 	}
-
+	public ScoreBoard getScoreBoard(){
+		return ScoreBoard;
+	}
+	public boolean isInGame(){
+		return Lobby.isInGame(player);
+	}
 	/**
 	 * Saves: <li>Location - Name - Gamemode - Level - Exp - Health - Food -
 	 * Inventory - Armor</li> Clears: <li>Armor - Inventory Sets: <li>Gamemode
@@ -82,8 +80,7 @@ public class InfPlayer {
 		food = player.getFoodLevel();
 		inventory = player.getInventory().getContents();
 		armor = player.getInventory().getArmorContents();
-		player.getInventory().clear();
-		player.getInventory().setArmorContents(null);
+		clearEquipment();
 		setInfClass(Team.Human, InfClassManager.getDefaultClass(Team.Human)); 
 		setInfClass(Team.Zombie, InfClassManager.getDefaultClass(Team.Zombie)); 
 
@@ -92,6 +89,14 @@ public class InfPlayer {
 		player.setExp(0.0F);
 		player.setHealth(20);
 		player.setFoodLevel(20);
+	}
+	/**
+	 * Clears the players armor and inventory
+	 */
+	public void clearEquipment(){
+
+		player.getInventory().clear();
+		player.getInventory().setArmorContents(null);
 	}
 
 	/**
@@ -130,11 +135,12 @@ public class InfPlayer {
 		vote = null;
 		timeIn = 0;
 		fullLeave();
+		player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 	}
 
 	public void fullLeave() {
 
-		player.sendMessage("You left Infected");
+		player.sendMessage(Msgs.Game_Left_You.getString());
 
 		// Is there anyone left in the lobby?
 		if (Lobby.getInGame().size() == 0)
@@ -143,7 +149,7 @@ public class InfPlayer {
 		// If nothing has started yet, just inform players they left
 		else if (Lobby.getGameState() == GameState.InLobby)
 			for (Player u : Lobby.getInGame())
-				u.sendMessage("<Player> has left");
+				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 		// If the game isn't fully started yet, this includes Voting, and before
 		// and Infecteds chosen
@@ -154,7 +160,7 @@ public class InfPlayer {
 			{
 				for (Player u : Lobby.getInGame())
 				{
-					u.sendMessage("Not enough ppl");
+					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
 					InfPlayerManager.getInfPlayer(u).tpToLobby();
 				}
 
@@ -168,8 +174,7 @@ public class InfPlayer {
 			else
 			{
 				for (Player u : Lobby.getInGame())
-					u.sendMessage("<Player> has left");
-
+					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 			}
 		}
 
@@ -181,7 +186,7 @@ public class InfPlayer {
 			{
 				for (Player u : Lobby.getInGame())
 				{
-					u.sendMessage("Not enough ppl");
+					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 					InfPlayerManager.getInfPlayer(u).tpToLobby();
 				}
 
@@ -201,7 +206,7 @@ public class InfPlayer {
 			{
 				for (Player u : Lobby.getInGame())
 				{
-					u.sendMessage("Not enough ppl");
+					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
 					InfPlayerManager.getInfPlayer(u).tpToLobby();
 				}
 
@@ -215,12 +220,12 @@ public class InfPlayer {
 			else
 			{
 				for (Player u : Lobby.getInGame())
-					u.sendMessage("<Player> has left");
+					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 			}
 
 			// Update the scoreboard stats
-			ScoreBoard.updateScoreBoard();
+			getScoreBoard().showProperBoard();
 		}
 	}
 
@@ -228,7 +233,7 @@ public class InfPlayer {
 	 * Disguises the player
 	 */
 	public void disguise() {
-		if (Main.config.getBoolean("Disguise Support.Enabled"))
+		if (Settings.DisguisesEnabled())
 			Disguises.disguisePlayer(player);
 	}
 
@@ -236,7 +241,7 @@ public class InfPlayer {
 	 * Undisguises the player
 	 */
 	public void unDisguise() {
-		if (Main.config.getBoolean("Disguise Support.Enabled"))
+		if (Settings.DisguisesEnabled())
 			if (Disguises.isPlayerDisguised(player))
 				Disguises.unDisguisePlayer(player);
 	}
@@ -248,7 +253,7 @@ public class InfPlayer {
 	 */
 	public void tpToLobby() {
 
-		ScoreBoard.updateScoreBoard();
+		getScoreBoard().showProperBoard();
 		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
 		player.setLevel(0);
 		player.setExp(0.0F);
@@ -257,6 +262,7 @@ public class InfPlayer {
 		player.setFireTicks(0);
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
+		clearEquipment();
 		
 		player.setFlying(false);
 		for (PotionEffect effect : player.getActivePotionEffects())
@@ -274,6 +280,7 @@ public class InfPlayer {
 	 * Clear potion effects
 	 */
 	public void respawn() {
+		getScoreBoard().showProperBoard();
 		Player p = player;
 		p.setHealth(20.0);
 		p.setFoodLevel(20);
@@ -284,7 +291,7 @@ public class InfPlayer {
 
 		p.teleport(LocationHandler.getPlayerLocation(loc));
 
-		if (Main.config.getBoolean("TagAPI Support.Enable"))
+		if (Settings.TagAPIEnabled())
 			TagAPI.refreshPlayer(player);
 
 		for (PotionEffect reffect : player.getActivePotionEffects())
@@ -300,13 +307,13 @@ public class InfPlayer {
 	 */
 	public void Infect() {
 		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-		player.sendMessage("You have become infected!");
+		Lobby.addZombie(player);
 		team = Team.Zombie;
 		isWinner = false;
 		Equip.equipToZombie(player);
 		PotionEffects.applyClassEffects(player);
 		disguise();
-		ScoreBoard.updateScoreBoard();
+		getScoreBoard().showProperBoard();
 		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
 				2));
 	}
@@ -671,6 +678,9 @@ public class InfPlayer {
 	 */
 	public void setInfChatting(boolean isInfChatting) {
 		this.isInfChatting = isInfChatting;
+	}
+	public int getHighestKillStreak() {
+		return Stats.getHighestKillStreak(name);
 	}
 
 }

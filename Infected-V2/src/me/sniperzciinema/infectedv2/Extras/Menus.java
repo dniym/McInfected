@@ -105,17 +105,18 @@ public class Menus {
 						Arena arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
 						int votes = 1;
 
-						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
+						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet()){
 							if (p.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
 								votes = node.getValue();
-
+						}
 						arena.setVotes(arena.getVotes() + votes);
 						IP.setVote(arena);
 
-						for (Player u : Lobby.getInGame())
+						for (Player u : Lobby.getInGame()){
 							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", event.getName()) + (votes != 0 ? " (x" + votes + ")" : ""));
-
-						ScoreBoard.updateScoreBoard();
+							InfPlayer up = InfPlayerManager.getInfPlayer(u);
+							up.getScoreBoard().showProperBoard();
+						}
 
 					}
 				}, Main.me);
@@ -133,7 +134,7 @@ public class Menus {
 			if (Lobby.isArenaValid(arena.getName()))
 				menu.setOption(place, new ItemStack(m), "" + ChatColor.getByChar(String.valueOf(place + 1)) + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 			else
-				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + "Click Here Vote For This Arena", "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 
 			place++;
 		}

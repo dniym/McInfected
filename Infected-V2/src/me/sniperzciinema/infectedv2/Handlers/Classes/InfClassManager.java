@@ -2,6 +2,7 @@
 package me.sniperzciinema.infectedv2.Handlers.Classes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import me.sniperzciinema.infectedv2.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infectedv2.Handlers.Misc.PotionHandler;
@@ -19,9 +20,9 @@ public class InfClassManager {
 	private static InfClass defaultHuman;
 	private static InfClass defaultZombie;
 
-	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects, String disguise) {
+	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects, HashMap<Integer, ItemStack> killstreaks, String disguise) {
 		InfClass IC = new InfClass(name, team, helmet, chestplate, leggings,
-				boots, items, effects, transfereffects, disguise);
+				boots, items, effects, transfereffects, killstreaks, disguise);
 		if (team == Team.Human)
 			humanClasses.add(IC);
 		else
@@ -104,8 +105,8 @@ public class InfClassManager {
 	}
 
 	public static void loadDefaultClasses() {
-		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Classes.Default.Human"));
-		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Classes.Default.Zombie"));
+		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Settings.Global.Default Classes.Human"));
+		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Settings.Global.Default Classes.Zombie"));
 	}
 
 	public static void loadConfigClasses() {
@@ -120,33 +121,29 @@ public class InfClassManager {
 			String disguise = null;
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 			ArrayList<PotionEffect> transfereffects = new ArrayList<PotionEffect>();
+			HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
 			if (!s.contains("."))
+			{
 				name = s;
-			if (s.contains("Helmet"))
-				helmet = Files.getClasses().getString("Classes.Human") + s;
-			if (s.contains("ChestPlate"))
-				chestplate = Files.getClasses().getString("Classes.Human") + s;
-			if (s.contains("Leggings"))
-				leggings = Files.getClasses().getString("Classes.Human") + s;
-			if (s.contains("Boots"))
-				boots = Files.getClasses().getString("Classes.Human") + s;
-			if (s.contains("Items"))
-				items.add(ItemHandler.getItemStack(Files.getClasses().getString("Classes.Human") + s));
-			if (s.contains("Disguise"))
-				disguise = Files.getClasses().getString("Classes.Human") + s;
-			if (s.contains("Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Human") + s));
-			if (s.contains("Transfer Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Human") + s));
-			InfClass IC = new InfClass(name, Team.Human,
-					ItemHandler.getItemStack(helmet),
-					ItemHandler.getItemStack(chestplate),
-					ItemHandler.getItemStack(leggings),
-					ItemHandler.getItemStack(boots), items, effects,
-					transfereffects, disguise);
-
-			if (!isRegistered(Team.Human, IC))
-				addClass(IC);
+				helmet = Files.getClasses().getString("Classes.Human." + s + ".Helmet");
+				chestplate = Files.getClasses().getString("Classes.Human." + s + ".Chestplate");
+				leggings = Files.getClasses().getString("Classes.Human." + s + ".Leggings");
+				boots = Files.getClasses().getString("Classes.Human." + s + ".Boots");
+				items = ItemHandler.getItemStackList(Files.getClasses().getStringList("Classes.Human." + s + ".Items"));
+				disguise = Files.getClasses().getString("Classes.Human." + s + ".Disguises");
+				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Potion Effects"));
+				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Transfer Potion Effects"));
+				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Human." + s + ".KillStreaks");
+				InfClass IC = new InfClass(name, Team.Human,
+						ItemHandler.getItemStack(helmet),
+						ItemHandler.getItemStack(chestplate),
+						ItemHandler.getItemStack(leggings),
+						ItemHandler.getItemStack(boots), items, effects,
+						transfereffects, killstreaks ,disguise);
+				System.out.println("Loaded Human Class: " + IC.getName());
+				if (!isRegistered(Team.Human, IC))
+					addClass(IC);
+			}
 		}
 		for (String s : Files.getClasses().getConfigurationSection("Classes.Zombie").getKeys(true))
 		{
@@ -159,35 +156,33 @@ public class InfClassManager {
 			String disguise = null;
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 			ArrayList<PotionEffect> transfereffects = new ArrayList<PotionEffect>();
+			HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
 			if (!s.contains("."))
-				name = Files.getClasses().getString("Classes.Zombie") + s;
-			if (s.contains("Helmet"))
-				helmet = Files.getClasses().getString("Classes.Zombie") + s;
-			if (s.contains("ChestPlate"))
-				chestplate = Files.getClasses().getString("Classes.Zombie") + s;
-			if (s.contains("Leggings"))
-				leggings = Files.getClasses().getString("Classes.Zombie") + s;
-			if (s.contains("Boots"))
-				boots = Files.getClasses().getString("Classes.Zombie") + s;
-			if (s.contains("Items"))
-				items.add(ItemHandler.getItemStack(Files.getClasses().getString("Classes.Zombie") + s));
-			if (s.contains("Disguise"))
-				disguise = Files.getClasses().getString("Classes.Zombie") + s;
-			if (s.contains("Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Zombie") + s));
-			if (s.contains("Transfer Potion Effects"))
-				effects.add(PotionHandler.getPotion(Files.getClasses().getString("Classes.Zombie") + s));
-			InfClass IC = new InfClass(name, Team.Zombie,
-					ItemHandler.getItemStack(helmet),
-					ItemHandler.getItemStack(chestplate),
-					ItemHandler.getItemStack(leggings),
-					ItemHandler.getItemStack(boots), items, effects,
-					transfereffects, disguise);
+			{
+				name = s;
+				helmet = Files.getClasses().getString("Classes.Zombie." + s + ".Helmet");
+				chestplate = Files.getClasses().getString("Classes.Zombie." + s + ".Chestplate");
+				leggings = Files.getClasses().getString("Classes.Zombie." + s + ".Leggings");
+				boots = Files.getClasses().getString("Classes.Zombie." + s + ".Boots");
+				items = ItemHandler.getItemStackList(Files.getClasses().getStringList("Classes.Zombie." + s + ".Items"));
+				disguise = Files.getClasses().getString("Classes.Zombie." + s + ".Disguises");
+				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Zombie." + s + ".Potion Effects"));
+				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Zombie." + s + ".Transfer Potion Effects"));
+				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Zombie." + s + ".KillStreaks");
+				
+				InfClass IC = new InfClass(name, Team.Zombie,
+						ItemHandler.getItemStack(helmet),
+						ItemHandler.getItemStack(chestplate),
+						ItemHandler.getItemStack(leggings),
+						ItemHandler.getItemStack(boots), items, effects,
+						transfereffects, killstreaks, disguise);
 
-			if (!isRegistered(Team.Zombie, IC))
-				addClass(IC);
-
-			loadDefaultClasses();
+				System.out.println("Loaded Zombie Class: " + IC.getName());
+				if (!isRegistered(Team.Zombie, IC))
+					addClass(IC);
+			}
 		}
+		loadDefaultClasses();
 	}
+
 }

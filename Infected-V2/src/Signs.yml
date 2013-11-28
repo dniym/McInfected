@@ -1,4 +1,4 @@
-# # Default Signs.yml, Last Edited in v1.9.4
+# # Default Signs.yml, Last Edited in v2.0.0
 # #
 # +======================================================+ #
 Command Sets:
@@ -6,4 +6,3 @@ Command Sets:
   - manuaddp <player> infected.classes.human.knight
   - tell <player> you have just purchased the knight class
 Info Signs: []
-Shop Signs: []

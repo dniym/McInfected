@@ -1,6 +1,11 @@
 
 package me.sniperzciinema.infectedv2.Messages;
 
+import java.util.List;
+import java.util.Random;
+
+import me.sniperzciinema.infectedv2.GameMechanics.DeathType;
+import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Tools.Files;
 
 import org.bukkit.ChatColor;
@@ -61,7 +66,8 @@ public enum Msgs
 	Shop_Bought_Item("Shop.Bought Item")/*<item>*/,
 	Shop_Cost_Not_Enough("Shop.Cost.Not Enough"),
 	Shop_Cost_Needed("Shop.Cost.Needed") /*<needed>*/,
-	Game_KillStreak("Game.KillStreak")/*<player>, <killstreak>*/,
+	Game_KillStreak_Value("Game.KillStreak.Value")/*<player>, <killstreak>*/,
+	Game_KillStreak_Reward("Game.KillStreak.Reward")/*<item>*/,
 	Game_Time_Left_Voting("Game.Time Left.Voteing")/*<time>*/,
 	Game_Time_Left_Infecting("Game.Time Left.Infected")/*<time>*/,
 	Game_Time_Left_Game("Game.Time Left.Game")/*<time>*/,
@@ -77,6 +83,7 @@ public enum Msgs
 	Game_Left_You("Game.Left.You"),
 	Game_Left_They("Game.Left.They")/*<player>*/,
 	Game_Info_Arena("Game.Info.Arena")/*<arena>, <creator>*/,
+	Game_End_Not_Enough_Players("Game.End.Not Enough Players"),
 	Help_Vote("Help.Vote"),
 	Help_Grenades("Help.Grenades"),
 	Help_Lists("Help.Lists")/*<lists>*/,
@@ -93,7 +100,8 @@ public enum Msgs
 	Grenades_Bought("Grenades.Bought"),
 	Grenades_List("Grenades.List")/*<id>, <name>, <cost>*/,
 	Grenades_Cost_Not_Enough("Grenades.Cost.Not Enough"),
-	Grenades_Invalid_Id("Grenades.Invalid Id");
+	Grenades_Invalid_Id("Grenades.Invalid Id"),
+	Kill("");
 			
 	private String string;
 
@@ -101,12 +109,19 @@ public enum Msgs
 	{
 		string = s;
 	}
-
+	public String getKill(Team team, DeathType death){
+		String message;
+		List<String> list = Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
+		Random r = new Random();
+		int i = r.nextInt(list.size());
+		message = list.get(i);
+		return message;
+	}
 	public String getString(String... variables) {
 		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix")) + " ";
 		try
 		{
-			String message = (string.startsWith("Format") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string));
+			String message = (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string));
 			int i = 0;
 			String replace = null;
 			for (String variable : variables)
@@ -124,7 +139,7 @@ public enum Msgs
 			return message;
 		} catch (NullPointerException npe)
 		{
-			return prefix + "Unable to find message: " + string;
+			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Unable to find message: " + string;
 		}
 	}
 
@@ -133,10 +148,10 @@ public enum Msgs
 		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix")) + " ";
 		try
 		{
-			return (string.startsWith("Format") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string));
+			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string));
 		} catch (NullPointerException npe)
 		{
-			return prefix + "Unable to find message: " + string;
+			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Unable to find message: " + string;
 		}
 	}
 };

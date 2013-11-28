@@ -19,8 +19,6 @@ public class Files {
 	// Set up all the needed things for files
 	public static YamlConfiguration abilities = null;
 	public static File abilitiesFile = null;
-	public static YamlConfiguration killT = null;
-	public static File killTFile = null;
 	public static YamlConfiguration classes = null;
 	public static File classesFile = null;
 	public static YamlConfiguration arenas = null;
@@ -47,41 +45,6 @@ public class Files {
 	public static void reloadConfig(){
 		Main.me.reloadConfig();
 	}
-	// Reload Kills File
-	public static void reloadKills() {
-		if (killTFile == null)
-			killTFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),"Kills.yml");
-		
-		killT = YamlConfiguration.loadConfiguration(killTFile);
-		// Look for defaults in the jar
-		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Kills.yml");
-		if (defConfigStream != null)
-		{
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-				killT.setDefaults(defConfig);
-		}
-	}
-
-	// Get Kills file
-	public static FileConfiguration getKills() {
-		if (killT == null)
-			reloadKills();
-		return killT;
-	}
-
-	// Safe Kills File
-	public static void saveKills() {
-		if (killT == null || killTFile == null)
-			return;
-		try
-		{
-			getKills().save(killTFile);
-		} catch (IOException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + killTFile, ex);
-		}
-	}
-
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Reload Abilities File
 	public static void reloadAbilities() {

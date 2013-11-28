@@ -6,6 +6,9 @@ import java.util.List;
 
 public class Settings {
 
+	public static boolean shopsEnabled(){
+		return Files.getShop().getBoolean("Enabled");
+	}
 	public static boolean DisguisesEnabled(){
 		return Files.getConfig().getBoolean("Addons.Disguise Support.Enabled");
 	}
@@ -50,5 +53,8 @@ public class Settings {
 				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Votes.Extra Votes"));
 			
 		return nodes;
+	}
+	public static List<String> getScoreBoardRows() {
+		return Files.getConfig().getStringList("Settings.Misc.ScoreBoard Stats");
 	}
 }

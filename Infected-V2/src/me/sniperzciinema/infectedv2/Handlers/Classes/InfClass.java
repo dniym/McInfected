@@ -2,6 +2,7 @@
 package me.sniperzciinema.infectedv2.Handlers.Classes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 
@@ -21,12 +22,13 @@ public class InfClass {
 	private ArrayList<PotionEffect> transfereffects;
 	private Team team;
 	private String disguise;
+	private HashMap<Integer, ItemStack> killstreaks;
 
 	// TODO: Go through and change transfereffect to transfereffect
 	public InfClass(String name, Team team, ItemStack helmet,
 			ItemStack chestplate, ItemStack leggings, ItemStack boots,
 			ArrayList<ItemStack> items, ArrayList<PotionEffect> effects,
-			ArrayList<PotionEffect> transfereffects, String disguise)
+			ArrayList<PotionEffect> transfereffects, HashMap<Integer, ItemStack> killstreaks, String disguise)
 	{
 		this.name = name;
 		this.helmet = helmet;
@@ -37,6 +39,7 @@ public class InfClass {
 		this.effects = effects;
 		this.transfereffects = transfereffects;
 		this.team = team;
+		this.setKillstreaks(killstreaks);
 		this.setDisguise(disguise);
 	}
 
@@ -187,6 +190,20 @@ public class InfClass {
 	 */
 	public void setDisguise(String disguise) {
 		this.disguise = disguise;
+	}
+
+	/**
+	 * @return the killstreaks
+	 */
+	public HashMap<Integer, ItemStack> getKillstreaks() {
+		return killstreaks;
+	}
+
+	/**
+	 * @param killstreaks the killstreaks to set
+	 */
+	public void setKillstreaks(HashMap<Integer, ItemStack> killstreaks) {
+		this.killstreaks = killstreaks;
 	}
 
 }

@@ -106,7 +106,7 @@ public class ArenaSettings {
 
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////
 
-	public ItemStack[] getRewordItems() {
+	public ArrayList<ItemStack> getRewordItems() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards.Items"))
 			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards.Items"));
 		else
