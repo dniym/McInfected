@@ -4,6 +4,8 @@ package me.sniperzciinema.infectedv2;
 import java.util.ArrayList;
 import java.util.Random;
 
+import me.sniperzciinema.infectedv2.Events.InfectedEndGame;
+import me.sniperzciinema.infectedv2.GameMechanics.Deaths;
 import me.sniperzciinema.infectedv2.GameMechanics.Stats;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
@@ -23,8 +25,12 @@ import org.bukkit.potion.PotionEffect;
 
 public class Game {
 
-	public static void theGameEnds(Boolean DidHumansWin) {
+	public static void endGame(Boolean DidHumansWin) {
 		Lobby.setGameState(GameState.InLobby);
+
+		InfectedEndGame e = new InfectedEndGame(DidHumansWin);
+		Bukkit.getPluginManager().callEvent(e);
+		
 		Lobby.reset();
 
 		for (Player u : Lobby.getInGame())
@@ -32,8 +38,7 @@ public class Game {
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 				IP.getScoreBoard().showProperBoard();
 			
-			if (IP.getKillstreak() > Stats.getHighestKillStreak(u.getName()))
-				Stats.setHighestKillStreak(u.getName(), IP.getKillstreak());
+			Deaths.handleKillStreaks(false, u);
 		}
 		if (DidHumansWin)
 		{
@@ -81,16 +86,17 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
-
+			}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 				{
 
 					@Override
 					public void run() {
-						InfPlayerManager.getInfPlayer(u).tpToLobby();
+						for(Player u : Lobby.getInGame())
+							InfPlayerManager.getInfPlayer(u).tpToLobby();
 					}
 				}, 100L);
-			}
+			
 		} else
 		{
 			for (final Player u : Lobby.getInGame())
@@ -112,13 +118,14 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
-
+			}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 				{
 
 					@Override
 					public void run() {
-						InfPlayerManager.getInfPlayer(u).tpToLobby();
+						for(Player u : Lobby.getInGame())
+							InfPlayerManager.getInfPlayer(u).tpToLobby();
 
 						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 						{
@@ -127,27 +134,19 @@ public class Game {
 							public void run() {
 
 								if (Lobby.getInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
-								{
 									Lobby.timerStartVote();
-								}
 							}
 						}, 10 * 60);
 					}
 				}, 100L);
-			}
+			
 		}
 
 	}
 
-	public static void endGame(boolean humansWin) {
-		Lobby.getHumans().clear();
-		Lobby.getZombies().clear();
-		Lobby.setGameState(GameState.InLobby);
-		theGameEnds(humansWin);
-	}
 
 	public static void leaveGame(Player p) {
-
+		InfPlayerManager.getInfPlayer(p).leaveInfected();
 	}
 
 	public static void chooseAlphas() {
@@ -176,6 +175,5 @@ public class Game {
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
-
 	}
 }

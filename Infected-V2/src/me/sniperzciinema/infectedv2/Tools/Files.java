@@ -45,6 +45,28 @@ public class Files {
 	public static void reloadConfig(){
 		Main.me.reloadConfig();
 	}
+	public static void saveAll(){
+		saveConfig();
+		saveAbilities();
+		saveClasses();
+		saveArenas();
+		savePlayers();
+		saveMessages();
+		saveShop();
+		saveGrenades();
+		saveSigns();
+	}
+	public static void reloadAll(){
+		reloadConfig();
+		reloadAbilities();
+		reloadClasses();
+		reloadArenas();
+		reloadPlayers();
+		reloadMessages();
+		reloadShop();
+		reloadGrenades();
+		reloadSigns();
+	}
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Reload Abilities File
 	public static void reloadAbilities() {

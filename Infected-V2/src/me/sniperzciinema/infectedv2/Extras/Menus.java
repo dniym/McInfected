@@ -3,18 +3,18 @@ package me.sniperzciinema.infectedv2.Extras;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
-import java.util.Random;
-
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClass;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infectedv2.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infectedv2.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infectedv2.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infectedv2.Handlers.Player.Team;
 import me.sniperzciinema.infectedv2.Messages.Msgs;
+import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.IconMenu;
 import me.sniperzciinema.infectedv2.Tools.Settings;
@@ -41,23 +41,21 @@ public class Menus {
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 						if (event.getName().equalsIgnoreCase("None"))
 						{
-
+							p.sendMessage(Msgs.Menu_Classes_None.getString("<team>", team.toString()));
 						} else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + event.getName()))
 						{
-							p.sendMessage(Msgs.Menu_Classes_Chosen.getString("<class>", event.getName()));
+							p.sendMessage(Msgs.Menu_Classes_Chosen.getString("<class>", event.getName(), "<team>", team.toString()));
 							IP.setInfClass(team, InfClassManager.getClass(team, ChatColor.stripColor(event.getName())));
 
 						} else
-						{
 							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-						}
 					}
 				}, Main.me);
 		int i = 0;
 		for (InfClass Class : (team == Team.Human ? InfClassManager.getHumanClasses() : InfClassManager.getZombieClasses()))
 		{
 			ItemStack item = Class.getItems().get(0);
-			menu.setOption(i, item, Class.getName(), (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + Msgs.Menu_Classes_Click_To_Choose.getString());
+			menu.setOption(i, item, Class.getName(), (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), team == Team.Zombie && Settings.DisguisesEnabled() ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
 			i++;
 		}
 		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", Msgs.Menu_Classes_None.getString());
@@ -105,14 +103,16 @@ public class Menus {
 						Arena arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
 						int votes = 1;
 
-						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet()){
+						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
+						{
 							if (p.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
 								votes = node.getValue();
 						}
 						arena.setVotes(arena.getVotes() + votes);
 						IP.setVote(arena);
 
-						for (Player u : Lobby.getInGame()){
+						for (Player u : Lobby.getInGame())
+						{
 							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", event.getName()) + (votes != 0 ? " (x" + votes + ")" : ""));
 							InfPlayer up = InfPlayerManager.getInfPlayer(u);
 							up.getScoreBoard().showProperBoard();
@@ -123,16 +123,9 @@ public class Menus {
 		int place = 0;
 		for (Arena arena : Lobby.getArenas())
 		{
-			Random r = new Random();
-			Material m = null;
-			while (m == null || (!m.isBlock() && !m.isTransparent()))
-			{
-				int i = r.nextInt(Material.values().length);
-				m = Material.values()[i];
-			}
 
 			if (Lobby.isArenaValid(arena.getName()))
-				menu.setOption(place, new ItemStack(m), "" + ChatColor.getByChar(String.valueOf(place + 1)) + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				menu.setOption(place, arena.getBlock(), "" + ChatColor.getByChar(String.valueOf(place + 1)) + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 			else
 				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 
@@ -173,21 +166,23 @@ public class Menus {
 						is.setItemMeta(im);
 						if (price <= points)
 						{
-
-							IP.setPoints(points - price, Settings.VaultEnabled());
-
-							p.getInventory().addItem(is);
-
-							p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", is.getItemMeta().getDisplayName()));
-							if (Files.getShop().getBoolean("Save Items") && (!Files.getGrenades().contains(String.valueOf(is.getTypeId()))))
+							if (p.hasPermission("Infected.Shop") || p.hasPermission("Infected.Shop." + is.getTypeId()))
 							{
-								if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
-								{
-									/**
-									 * TODO: Allow saving Items
-									 * saveShopInventory(p);
-									 */
+								p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", is.getItemMeta().getDisplayName()));
+								IP.setPoints(points - price, Settings.VaultEnabled());
 
+								p.getInventory().addItem(is);
+
+								if (Files.getShop().getBoolean("Save Items") && !GrenadeManager.isGrenade(is.getTypeId()))
+								{
+									if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
+									{
+										/**
+										 * TODO: Allow saving Items
+										 * saveShopInventory(p);
+										 */
+
+									}
 								}
 							} else
 								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());

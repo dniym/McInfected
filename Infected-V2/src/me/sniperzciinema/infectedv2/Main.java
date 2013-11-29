@@ -16,11 +16,13 @@ import me.sniperzciinema.infectedv2.Listeners.DamageEvents;
 import me.sniperzciinema.infectedv2.Listeners.GrenadeListener;
 import me.sniperzciinema.infectedv2.Listeners.PlayerListener;
 import me.sniperzciinema.infectedv2.Listeners.RegisterAndUnRegister;
+import me.sniperzciinema.infectedv2.Listeners.ScoreBoardToggle;
 import me.sniperzciinema.infectedv2.Listeners.SignListener;
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Tools.AddonManager;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.Metrics;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 import me.sniperzciinema.infectedv2.Tools.TeleportFix;
 import me.sniperzciinema.infectedv2.Tools.UpdateInfoSigns;
 import me.sniperzciinema.infectedv2.Tools.Updater;
@@ -165,7 +167,9 @@ public class Main extends JavaPlugin {
 		GrenadeListener GrenadeListener = new GrenadeListener();
 		TeleportFix TeleportFix = new TeleportFix(this);
 		DamageEvents DamageEvents = new DamageEvents(this);
+		ScoreBoardToggle ScoreBoardToggle = new ScoreBoardToggle();
 		RegisterAndUnRegister RegisterAndUnRegister = new RegisterAndUnRegister();
+		pm.registerEvents(ScoreBoardToggle, this);
 		pm.registerEvents(DamageEvents, this);
 		pm.registerEvents(PlayerListener, this);
 		pm.registerEvents(RegisterAndUnRegister, this);
@@ -174,10 +178,9 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(TeleportFix, this);
 
 		// Do the info signs (Updating the info)
-		if (getConfig().getBoolean("Info Signs.Enabled"))
-		{
+		if (Settings.InfoSignsEnabled())
 			UpdateInfoSigns.update();
-		}
+		
 		// Make sure the Infected's CB is the same as the server's CB
 		if (!currentBukkitVersion.equalsIgnoreCase(Main.bVersion))
 		{

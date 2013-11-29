@@ -6,6 +6,7 @@ import java.util.List;
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infectedv2.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infectedv2.Handlers.Lobby.GameState;
 import me.sniperzciinema.infectedv2.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infectedv2.Handlers.Misc.LocationHandler;
@@ -250,9 +251,10 @@ public class SignListener implements Listener {
 							{
 								if (iPrice <= points)
 								{
-									IP.setPoints(IP.getPoints(), useVault);
+									IP.setPoints(IP.getPoints()-iPrice, useVault);
 									p.getInventory().addItem(stack);
-									if (Files.getShop().getBoolean("Save Items"))
+									p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", stack.getType().name()));
+									if (Files.getShop().getBoolean("Save Items")  && !GrenadeManager.isGrenade(stack.getTypeId()))
 									{
 										if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
 										{

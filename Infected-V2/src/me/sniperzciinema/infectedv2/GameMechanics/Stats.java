@@ -37,6 +37,7 @@ public class Stats {
 	 * @return HighestKillStreak
 	 */
 	public static int getHighestKillStreak(String name) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "HighestKillStreak"));
 		else
@@ -51,6 +52,7 @@ public class Stats {
 	 */
 
 	public static void setHighestKillStreak(String name, Integer highestKillStreak) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			setMySQLStats(name, "HighestKillStreak", highestKillStreak);
 		else
@@ -67,6 +69,7 @@ public class Stats {
 	 * @return PlayingTime
 	 */
 	public static int getPlayingTime(String name) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "PlayingTime"));
 		else
@@ -81,6 +84,7 @@ public class Stats {
 	 */
 
 	public static void setPlayingTime(String name, long l) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			setMySQLStats(name, "PlayingTime", (int) l);
 		else
@@ -97,6 +101,7 @@ public class Stats {
 	 * @return Kills
 	 */
 	public static int getKills(String name) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Kills"));
 		else
@@ -111,6 +116,7 @@ public class Stats {
 	 */
 
 	public static void setKills(String name, Integer kills) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			setMySQLStats(name, "Kills", kills);
 		else
@@ -122,6 +128,7 @@ public class Stats {
 
 	// Get the deaths from the location required
 	public static int getDeaths(String name) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Deaths"));
 		else
@@ -136,6 +143,7 @@ public class Stats {
 	 */
 
 	public static void setDeaths(String name, Integer deaths) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			setMySQLStats(name, "Deaths", deaths);
 		else
@@ -152,6 +160,7 @@ public class Stats {
 	 * @return the players Score
 	 */
 	public static int getScore(String name) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Score"));
 		else
@@ -165,6 +174,7 @@ public class Stats {
 	 * @param score
 	 */
 	public static void setScore(String name, Integer score) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			setMySQLStats(name, "Score", score);
 		else
@@ -181,6 +191,7 @@ public class Stats {
 	 * @return the players Score
 	 */
 	public static int getPoints(String name) {
+		name = name.toLowerCase();
 		if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Points"));
 		else
@@ -194,6 +205,7 @@ public class Stats {
 	 * @param points
 	 */
 	public static void setPoints(String name, Integer points, boolean useVault) {
+		name = name.toLowerCase();
 		if (useVault)
 		{
 			int cPoints = Stats.getPoints(name);
@@ -225,7 +237,7 @@ public class Stats {
 	 */
 	private static String getMySQLStats(String name, String stat) {
 		String value = "0";
-
+		name = name.toLowerCase();
 		Statement statement;
 		try
 		{
@@ -262,6 +274,7 @@ public class Stats {
 	 */
 	private static void setMySQLStats(String name, String stat, int value) {
 		Statement statement;
+		name = name.toLowerCase();
 		try
 		{
 			statement = Main.c.createStatement();

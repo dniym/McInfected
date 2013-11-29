@@ -12,7 +12,13 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
+/**
+ * If anyone wants to use this class for their own plugin go ahead, this is a class you can also find in my gists(On Github).
+ * If you have any suggestions/additions that you think would help Infected feel free to message me or fork the gist
+ * 
+ * @author Sniperz
+ *
+ */
 
 public class ItemHandler {
 
@@ -249,16 +255,16 @@ public class ItemHandler {
 
 			if (i.getDurability() != 0)
 				itemCode = itemCode + ":" + i.getDurability();
-			if (i.getAmount() != 1)
+			if (i.getAmount() > 1)
 				itemCode = itemCode + "," + i.getAmount();
 			for (Entry<Enchantment, Integer> ench : i.getEnchantments().entrySet())
 			{
 				itemCode = itemCode + "-" + ench.getKey().getId();
-				if (ench.getValue() != 1)
+				if (ench.getValue() > 1)
 					itemCode = itemCode + "@" + ench.getValue();
 			}
 			if (i.getItemMeta().getDisplayName() != null)
-				itemCode = itemCode + "%" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("�", "&");
+				itemCode = itemCode + "%" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("§", "&");
 		}
 		return itemCode;
 	}
@@ -268,16 +274,17 @@ public class ItemHandler {
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		for (String string : list)
 			items.add(getItemStack(string));
-		
+
 		return items;
 	}
 
+	
 	public static HashMap<Integer, ItemStack> getItemHashMap(Configuration config, String path) {
 		HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
 		for (String string : config.getConfigurationSection(path).getKeys(true))
 			if (!string.contains("."))
 				killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
-		
+
 		return killstreaks;
 	}
 }

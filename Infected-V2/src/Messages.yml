@@ -1,19 +1,45 @@
 # Default Message.yml, Last Edited in v2.0.0
 # If you want to write "don't", write "don''t" instead (note the doubled apostrophe)
+# Due to me never being able to decide on a color, Infected supports "Random Color Codes" '&x' is for a random color and '&y' is for a random format
 Format:
-  Header: '&e&l>&e&m-------------««&4&l<title>&e&o&m»»-------------&l<'
-  Line: '&e&l>&e&m-------------------------------------------&l<'
-  Prefix: '&0>>&4Infected&0<<&9'
+  Header: '&x&y>&e&m---------------««&4&l<title>&e&o&m»»---------------&x&y<'
+  Line: '&x&y>&e&m-------------------------------------------&x&y<'
+  Prefix: '&0>>&4Infected&0<<&x'
 Command:
   Arenas: '&l&7Arenas: &a<valid> &c<invalid>'
   Arena:
-    Set: '&f&l<arena> &6&ohas been selected'
-    Doesnt Exist: '&7<arena> doesn''t exist'
-    Already Exist: '&7<arena> is already created'
+    Set: '&f&l<arena> &6&ohas been selected.'
+    Doesnt Exist: '&7<arena> doesn''t exist.'
+    Already Exist: '&7<arena> is already created!'
   Admin:
-    Reload: '&8&oInfected has been reloaded'
+    Reload: '&8&oInfected has been reloaded!'
+Error:
   Misc:
-    Not Player: '&4&oYou''re not a player!'
+    Not Player: '&c&oYou''re not a player!'
+    No Permission: '&c&oYou don''t have the needed permission node to perform this action'
+    Unkown Command: '&c&oInfected has no clue what command you want, but try looking into ''/Infected Help''!'
+    Cant Use Command: '&c&oInfected was warned you''d try this so we blocked this command!'
+Game:
+  Joined:
+    You: '&7&lYou &ahave joined Infected.'
+    They: '&7&l<player> &ahas joined Infected.'
+  Left:
+    You: '&7&lYou &chave left Infected.'
+    They: '&7&l<player> &chas left Infected.'
+Menu:
+  Shop:
+    Click To Buy: '&eClick to purchase this item for &9price> &bpoints'
+  Team:
+    Choose: '&eClick to choose classes for <team>'
+  Classes:
+    Click To Choose: '&eClick to choose this class'
+    None: '&7Click to choose the default class'
+    Chosen: '&cYou have chosen &a<class> &cas your &a<team> class'
+Shop:
+  Bought Item: '&eYou have just bought <item>'
+  Cost:
+    Not Enough: '&cYou don''t have enough to purchase this!'
+    Needed: '&cYou need <needed> more points!'
 Kills:
   Human:
     Arrow:
@@ -38,7 +64,7 @@ Kills:
     Egg:
     - <killer> &6has pelted <killed>
     Other:
-    - <killer> &6has became Infected
+    - <killed> &6has became Infected
   Zombie:
     Arrow:
     - <killer> &6shot <killed>
@@ -61,4 +87,4 @@ Kills:
     Egg:
     - <killer> &6has pelted <killed>
     Other:
-    - <killer> &6 has died
+    - <killed> &6 has died

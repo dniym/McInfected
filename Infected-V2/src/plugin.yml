@@ -1,58 +1,70 @@
 name: Infected
 main: me.sniperzciinema.infectedv2.Main
 author: xXSniperzzXx_SD
-authors: [SniperzCiinema]
 version: 2.0.0
 description: MW3 Infected for Minecraft(V2)!
 softdepend: [DisguiseCraft, iDisguise, TagAPI, Vault, Factions, mcMMO]
 website: www.youtube.com/user/SniperzCiinema
 commands:
-    Infected:
-       description: Infected Help Menu
-       usage: /<command>
-       aliases: [/i, inf]
+  Infected:
+    description: Infected Help Menu
+    usage: /<command>
+    aliases: [/i, inf]
+    
+    
 permissions:
-    infected.stats.other:
-        default: false
-        children:
-            infected.stats: true
-    infected.chat.spy:
-        default: false
-        children:
-            infected.chat: true
-    infected.admin:
-        default: false
-        children:
-            infected.chat.spy: true
-            infected.stats.other: true
-            infected.join: true
-            infected.refresh: true
-    infected.join:
-        default: true
-        children:
-            Infected.top: true
-            infected.list: true
-            infected.arenas: true
-            infected.stats: true
-            infected.grenades: true
-            infected.shop: true
-            infected.chat: true
-            infected.info: true
-            infected.suicide: true
-            infected.classes: true
-            infected.cmdsets: true
-    Infected.Classes:
-        default: true
-        children:
-            Infected.Classes.Human: true
-            Infected.Classes.Zombie: true
-    infected.*:
-        default: op
-        children:
-            infected.shutdown: true
-            infected.admin: true
-            infected.setup: true
-            infected.join: true
-            infected.force: true
-            infected.config: true
-            infected.stats.other: true
+# Default permissions given to everyone  
+  Infected.Default:
+    default: true
+    children:
+      Infected.Join: true
+      Infected.Leave: true
+      Infected.Top: true
+      Infected.List: true
+      Infected.Arenas: true
+      Infected.Stats: true
+      Infected.Grenades: true
+      Infected.Shop: true
+      Infected.Chat: true
+      Infected.Info: true
+      Infected.Suicide: true
+      Infected.Classes: true
+      Infected.CmdSets: true
+
+# Infected.Stats.Other will also give you perms to look at your own stats
+  Infected.Stats.Other:
+    default: false
+    children:
+      Infected.Stats: true
+
+# Infected.Chat.Spy also provides perms to chat  
+  Infected.Chat.Spy:
+    default: false
+    children:
+      Infected.Chat: true
+      
+# Infected.Admin provides all the normal perms to setup/control Infected
+  Infected.Admin:
+    default: false
+    children:
+      Infected.Chat.Spy: true
+      Infected.Stats.Other: true
+      Infected.Setup: true
+      Infected.Force: true
+
+# Infected.Classes provides ALL class perms      
+  Infected.Classes:
+    default: true
+    children:
+      Infected.Classes.Human: true
+      Infected.Classes.Zombie: true
+      
+# Infected.* provides ALL Infected's Permissions      
+  Infected.*:
+    default: op
+    children:
+      Infected.Default: true
+      Infected.Admin: true
+      Infected.Files: true
+      Infected.Stats.Other: true
+      Infected.Classes: true

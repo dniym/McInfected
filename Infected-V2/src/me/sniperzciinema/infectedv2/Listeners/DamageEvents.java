@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infectedv2.Listeners;
 
-import me.sniperzciinema.infectedv2.Game;
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.GameMechanics.DeathType;
 import me.sniperzciinema.infectedv2.GameMechanics.Deaths;
@@ -43,6 +42,7 @@ public class DamageEvents implements Listener {
 			// Make sure the victim is in Infected
 			if (Lobby.isInGame(victim))
 			{
+
 				// Make sure the damage caused isn't from another entity as that
 				// is handled in a different event listener
 				if (e.getCause() != DamageCause.ENTITY_ATTACK && e.getCause() != DamageCause.PROJECTILE)
@@ -50,7 +50,7 @@ public class DamageEvents implements Listener {
 					InfPlayer IPV = InfPlayerManager.getInfPlayer(victim);
 
 					// If the Player got hurt during Voting, just cancel it.
-					if (Lobby.getGameState() == GameState.Voting)
+					if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.InLobby)
 					{
 						e.setDamage(0);
 						e.setCancelled(true);
@@ -87,9 +87,7 @@ public class DamageEvents implements Listener {
 							else
 								Deaths.playerDies(DeathType.Other, null, victim);
 
-							// Was that the last human?
-							if (Lobby.getHumans().size() == 0)
-								Game.endGame(false);
+							
 						}
 					}
 				}

@@ -57,4 +57,7 @@ public class Settings {
 	public static List<String> getScoreBoardRows() {
 		return Files.getConfig().getStringList("Settings.Misc.ScoreBoard Stats");
 	}
+	public static int getVotingTime(){
+		return Files.getConfig().getInt("Settings.Global.Time.Voting");
+	}
 }

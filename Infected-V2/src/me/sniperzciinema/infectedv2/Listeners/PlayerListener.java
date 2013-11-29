@@ -185,7 +185,7 @@ public class PlayerListener implements Listener {
 			{
 				msg = e.getMessage();
 			}
-			if (!(Settings.AllowedCommands().contains(msg.toLowerCase()) && e.getMessage().toLowerCase().contains("inf")))
+			if (!Settings.AllowedCommands().contains(msg.toLowerCase()) && !e.getMessage().toLowerCase().contains("inf"))
 			{
 				e.getPlayer().sendMessage(Msgs.Error_Misc_Use_Command.getString());
 				e.setCancelled(true);

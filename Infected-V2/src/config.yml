@@ -106,11 +106,11 @@ Settings:
 # Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
     Breakable Blocks:
       Global:
-      - '1'
+      - '121'
       Zombie:
-      - '2'
+      - '170'
       Human:
-      - '3'
+      - '153'
 # The points(Store/Grenades/Etc) a player is rewarded upon certain events
     Points:
       Use: true

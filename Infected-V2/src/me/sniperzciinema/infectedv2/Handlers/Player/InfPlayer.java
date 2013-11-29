@@ -118,8 +118,9 @@ public class InfPlayer {
 		p.updateInventory();
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
-		p.setFallDistance(0);
+		player.setFallDistance(0F);
 		p.teleport(location);
+		p.setFallDistance(0F);
 		Lobby.getHumans().remove(p);
 		Lobby.getZombies().remove(p);
 		Lobby.getInGame().remove(p);
@@ -257,7 +258,9 @@ public class InfPlayer {
 		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
 		player.setLevel(0);
 		player.setExp(0.0F);
+		player.setFallDistance(0F);
 		player.teleport(Lobby.getLocation());
+		player.setFallDistance(0F);
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setFireTicks(0);
 		player.setHealth(20.0);
@@ -289,8 +292,10 @@ public class InfPlayer {
 		int i = r.nextInt(Lobby.getActiveArena().getSpawns().size());
 		String loc = Lobby.getActiveArena().getSpawns().get(i);
 
+		p.setFallDistance(0F);
 		p.teleport(LocationHandler.getPlayerLocation(loc));
-
+		p.setFallDistance(0F);
+		
 		if (Settings.TagAPIEnabled())
 			TagAPI.refreshPlayer(player);
 

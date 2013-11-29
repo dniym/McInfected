@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 
 import me.sniperzciinema.infectedv2.Game;
 import me.sniperzciinema.infectedv2.Main;
+import me.sniperzciinema.infectedv2.Events.InfectedStartGame;
+import me.sniperzciinema.infectedv2.Events.InfectedStartInfecting;
+import me.sniperzciinema.infectedv2.Events.InfectedStartVote;
 import me.sniperzciinema.infectedv2.GameMechanics.Equip;
 import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
 import me.sniperzciinema.infectedv2.Handlers.Classes.InfClassManager;
@@ -22,6 +25,7 @@ import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Messages.Time;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.ArenaSettings;
+import me.sniperzciinema.infectedv2.Tools.Settings;
 
 
 public class Lobby {
@@ -266,13 +270,13 @@ public class Lobby {
 
 	public static void timerStartVote() {
 		stopTimer();
-		VotingTime = getActiveArena().getSettings().getVotingTime();
+		VotingTime = Settings.getVotingTime();
 		TimeLeft = VotingTime;
 
 		setGameState(GameState.Voting);
-
+		InfectedStartVote e = new InfectedStartVote();
+		Bukkit.getPluginManager().callEvent(e);
 		
-
 		for (Player u : getInGame())
 		{
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
@@ -314,7 +318,7 @@ public class Lobby {
 					if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
 						for (Player u : getInGame())
-							u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) getTimeLeft())));
+							u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 					{
@@ -384,7 +388,6 @@ public class Lobby {
 									InfPlayer up = InfPlayerManager.getInfPlayer(u);
 									up.respawn();
 									Equip.equip(u);
-									up.getScoreBoard().showProperBoard();
 								}
 								timerStartInfecting();
 							}
@@ -399,6 +402,13 @@ public class Lobby {
 
 		stopTimer();
 		setGameState(GameState.Infecting);
+		
+		InfectedStartInfecting e = new InfectedStartInfecting();
+		Bukkit.getPluginManager().callEvent(e);
+		
+		for (Player u : getInGame())
+			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
+		
 		InfectingTime = getActiveArena().getSettings().getInfectingTime();
 		TimeLeft = InfectingTime;
 		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
@@ -455,6 +465,10 @@ public class Lobby {
 	public static void timerStartGame() {
 		stopTimer();
 		setGameState(GameState.Started);
+		InfectedStartGame e = new InfectedStartGame();
+		Bukkit.getPluginManager().callEvent(e);
+		
+
 		GameTime = getActiveArena().getSettings().getGameTime();
 		TimeLeft = GameTime;
 

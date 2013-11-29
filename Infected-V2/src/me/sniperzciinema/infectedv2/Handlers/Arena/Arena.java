@@ -7,7 +7,9 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
+import me.sniperzciinema.infectedv2.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Tools.Files;
 import me.sniperzciinema.infectedv2.Tools.ArenaSettings;
@@ -26,7 +28,6 @@ public class Arena {
 		this.name = StringUtil.getWord(name);
 	}
 
-
 	/**
 	 * @return the settings
 	 */
@@ -43,9 +44,7 @@ public class Arena {
 		return Files.getArenas().getString("Arenas." + name + ".Creator");
 	}
 
-
 	/**
-	 * 
 	 * @param string
 	 *            the arena maker
 	 */
@@ -53,7 +52,6 @@ public class Arena {
 		Files.getArenas().set("Arenas." + name + ".Creator", maker);
 		Files.saveArenas();
 	}
-
 
 	/**
 	 * Set the spawns in the config
@@ -105,7 +103,6 @@ public class Arena {
 		Votes = votes;
 	}
 
-	
 	public HashMap<Location, Inventory> getChests() {
 		return chests;
 	}
@@ -121,7 +118,6 @@ public class Arena {
 	}
 
 	/**
-	 * 
 	 * Set the opened chests
 	 * 
 	 * @param loc
@@ -130,17 +126,18 @@ public class Arena {
 	public void setChest(Location loc, Inventory inv) {
 		chests.put(loc, inv);
 	}
+
 	/**
 	 * Remove a opened chest
 	 * 
 	 * @param loc
 	 */
-	public void removeChest(Location loc){
+	public void removeChest(Location loc) {
 		chests.remove(loc);
 	}
 
 	/**
-	 * Get the broken blocks 
+	 * Get the broken blocks
 	 * 
 	 * @param loc
 	 * @return
@@ -150,7 +147,6 @@ public class Arena {
 	}
 
 	/**
-	 * 
 	 * @return the broken blocks
 	 */
 	public HashMap<Location, Material> getBlocks() {
@@ -166,18 +162,20 @@ public class Arena {
 	public void setBlock(Location loc, Material mat) {
 		blocks.put(loc, mat);
 	}
+
 	/**
 	 * Removes a broken block
 	 * 
 	 * @param loc
 	 */
-	public void removeBlock(Location loc){
+	public void removeBlock(Location loc) {
 		blocks.remove(loc);
 	}
+
 	/**
 	 * Reset the arena
 	 */
-	public void reset(){
+	public void reset() {
 		if (!this.getBlocks().isEmpty())
 			for (Location loc : this.getBlocks().keySet())
 				this.setBlock(loc, this.getBlock(loc));
@@ -189,6 +187,22 @@ public class Arena {
 			for (Location loc : this.getChests().keySet())
 				if (loc.getBlock().getType() == Material.CHEST)
 					this.setChest(loc, this.getChest(loc));
+		setVotes(0);
+	}
+
+	/**
+	 * @return the block
+	 */
+	public ItemStack getBlock() {
+		return ItemHandler.getItemStack(Files.getArenas().getString("Arenas." + name + ".Block"));
+	}
+
+	/**
+	 * @param block
+	 *            the block to set
+	 */
+	public void setBlock(String s) {
+		Files.getArenas().set("Arenas." + name + ".Block", s);
 	}
 
 }

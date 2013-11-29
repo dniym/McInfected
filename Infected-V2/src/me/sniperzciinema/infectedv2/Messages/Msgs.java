@@ -39,12 +39,15 @@ public enum Msgs
 	Command_Admin_Kicked_You("Command.Admin.Kicked.You"),
 	Command_Admin_Kicked_Them("Command.Admin.Kicked.Them")/*<player>*/,
 	Command_Admin_Changed_Stat("Command.Admin.Changed Stat")/*<player>, <stat>, <value>*/,
+	Command_Files_Value("Command.Files.Value")/*<path> <value>*/,
+	Command_Files_Changed("Command.Files.Changed")/*<path> <newvalue> <value>*/,
 	Error_Misc_No_Permission("Error.Misc.No Permission"),
 	Error_Misc_Plugin_Unload("Error.Misc.Plugin Unload"), 
 	Error_Misc_Plugin_Disabled("Error.Misc.Plugin Disabled"), 
-	Error_Misc_Use_Command("Error.Misc.Use Command"),
+	Error_Misc_Use_Command("Error.Misc.Cant Use Command"),
 	Error_Misc_Not_Player("Error.Misc.Not Player"), 
-	Error_Misc_Unkown_Command("Error.Misc.Unkown.Command"), 
+	Error_Misc_Unkown_Command("Error.Misc.Unkown Command"), 
+	Error_Misc_Not_A_File("Error.Misc.Not A File"),
 	Error_Game_Started("Error.Game.Started"), 
 	Error_Game_Not_In("Error.Game.Not In"),
 	Error_Game_In("Error.Game.In"), 
@@ -94,6 +97,7 @@ public enum Msgs
 	Help_Remove("Help.Remove"),
 	Help_SetArena("Help.SetArena"),
 	Help_Top("Help.Top"),
+	Help_Files("Help.Files"),
 	Sign_Classes_Choosen("Signs.Classes.Chosen")/*<class>*/,
 	Sign_CmdSet_Not_Enough("Sign.CmdSet.Cost.Not Enough"),
 	Sign_CmdSet_Cost_Needed("Sign.CmdSet.Cost.Needed") /*<needed>*/, 
@@ -118,10 +122,10 @@ public enum Msgs
 		return message;
 	}
 	public String getString(String... variables) {
-		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix")) + " ";
+		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
 		try
 		{
-			String message = (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string));
+			String message = (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar())));
 			int i = 0;
 			String replace = null;
 			for (String variable : variables)
@@ -145,10 +149,10 @@ public enum Msgs
 
 	// Get the message from the Messages.yml, well replacing and variables given
 	public String getString() {
-		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix")) + " ";
+		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
 		try
 		{
-			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string));
+			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar())));
 		} catch (NullPointerException npe)
 		{
 			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Unable to find message: " + string;
