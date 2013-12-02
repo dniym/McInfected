@@ -3,6 +3,8 @@ package me.sniperzciinema.infectedv2.Extras;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.Random;
+
 import me.sniperzciinema.infectedv2.Main;
 import me.sniperzciinema.infectedv2.Handlers.Lobby;
 import me.sniperzciinema.infectedv2.Handlers.Arena.Arena;
@@ -44,7 +46,7 @@ public class Menus {
 							p.sendMessage(Msgs.Menu_Classes_None.getString("<team>", team.toString()));
 						} else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + event.getName()))
 						{
-							p.sendMessage(Msgs.Menu_Classes_Chosen.getString("<class>", event.getName(), "<team>", team.toString()));
+							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", team.toString()));
 							IP.setInfClass(team, InfClassManager.getClass(team, ChatColor.stripColor(event.getName())));
 
 						} else
@@ -100,7 +102,7 @@ public class Menus {
 
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
-						Arena arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
+						Arena arena;
 						int votes = 1;
 
 						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
@@ -108,12 +110,21 @@ public class Menus {
 							if (p.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
 								votes = node.getValue();
 						}
+						if(ChatColor.stripColor(event.getName()).equalsIgnoreCase("Random")){
+							int i;
+							Random r = new Random();
+							i = r.nextInt(Lobby.getArenas().size());
+							arena = Lobby.getArenas().get(i);
+						}
+						else{
+							arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
+						}
 						arena.setVotes(arena.getVotes() + votes);
 						IP.setVote(arena);
 
 						for (Player u : Lobby.getInGame())
 						{
-							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", event.getName()) + (votes != 0 ? " (x" + votes + ")" : ""));
+							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", arena.getName()) + ChatColor.GRAY+(votes != 0 ? " (x" + votes + ")" : ""));
 							InfPlayer up = InfPlayerManager.getInfPlayer(u);
 							up.getScoreBoard().showProperBoard();
 						}
@@ -158,7 +169,7 @@ public class Menus {
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 						int price = Files.getShop().getInt("Custom Items." + event.getName() + ".GUI Price");
-						int points = IP.getPoints();
+						int points = IP.getPoints(Settings.VaultEnabled());
 						ItemStack is = ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + event.getName() + ".Item Code"));
 						String itemname = event.getName();
 						ItemMeta im = is.getItemMeta();

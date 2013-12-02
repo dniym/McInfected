@@ -14,20 +14,30 @@ import org.bukkit.ChatColor;
 
 public class RandomChatColor {
 
-	public static ChatColor getColor() {
+	public static ChatColor getColor(ChatColor...chatColors ) {
 		Random r = new Random();
-		int i = r.nextInt(ChatColor.values().length);
-		while (!ChatColor.values()[i].isColor())
-			i = r.nextInt(ChatColor.values().length);
-		ChatColor rc = ChatColor.values()[i];
+		ChatColor[] colors;
+		if(chatColors.length == 0)
+			colors = ChatColor.values();
+		else
+			colors = chatColors;
+		int i = r.nextInt(colors.length);
+		while (!colors[i].isColor())
+			i = r.nextInt(colors.length);
+		ChatColor rc = colors[i];
 		return rc;
 	}
-	public static ChatColor getFormat() {
+	public static ChatColor getFormat(ChatColor...chatColors ) {
 		Random r = new Random();
-		int i = r.nextInt(ChatColor.values().length);
-		while (!ChatColor.values()[i].isFormat())
-			i = r.nextInt(ChatColor.values().length);
-		ChatColor rc = ChatColor.values()[i];
+		ChatColor[] colors;
+		if(chatColors.length == 0)
+			colors = ChatColor.values();
+		else
+			colors = chatColors;
+		int i = r.nextInt(colors.length);
+		while (!colors[i].isFormat())
+			i = r.nextInt(colors.length);
+		ChatColor rc = colors[i];
 		return rc;
 	}
 }

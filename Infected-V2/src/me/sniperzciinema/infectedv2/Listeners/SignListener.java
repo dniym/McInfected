@@ -64,14 +64,14 @@ public class SignListener implements Listener {
 						if (className.equalsIgnoreCase("None"))
 						{
 							IP.setInfClass(Team.Human, InfClassManager.getDefaultClass(team));
-							p.sendMessage(Msgs.Sign_Classes_Choosen.getString("<class>", "Default"));
+							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", "Default"));
 						}
 						// If its anything other then "None" Make sure they
 						// have the permissions needed
 						else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
 						{
 							IP.setInfClass(team, InfClassManager.getClass(team, className));
-							p.sendMessage(Msgs.Sign_Classes_Choosen.getString("<class>", className));
+							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className));
 						} else
 						{
 							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
@@ -133,19 +133,19 @@ public class SignListener implements Listener {
 						boolean useVault = false;
 
 						InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-						int points = IP.getPoints();
 
 						int iPrice = 0;
 						String price = ChatColor.stripColor(sign.getLine(3).replaceAll("Cost: ", ""));
 
 						// If the price starts with a $, then we'll set vault
 						// support to true, and remove the $ for now
-						if (price.startsWith("\\$"))
+						if (price.startsWith(String.valueOf('$')))
 						{
 							useVault = true;
-							price.replaceAll("\\$", "");
+							price = price.replaceAll("\\$", "");
 						}
 						iPrice = Integer.valueOf(price);
+						int points = IP.getPoints(useVault);
 
 						// Make sure they have permissions for this command set
 						if (p.hasPermission("Infected.CmdSets") || p.hasPermission("Infected.CmdSets." + cmdset))
@@ -193,7 +193,6 @@ public class SignListener implements Listener {
 							boolean useVault = false;
 
 							InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-							int points = IP.getPoints();
 
 							int iPrice = 0;
 							String price = ChatColor.stripColor(sign.getLine(3).replaceAll("Cost: ", ""));
@@ -201,11 +200,12 @@ public class SignListener implements Listener {
 							// If the price starts with a $, then we'll set
 							// vault
 							// support to true, and remove the $ for now
-							if (price.startsWith("\\$"))
+							if (price.startsWith(String.valueOf('$')))
 							{
 								useVault = true;
-								price.replaceAll("\\$", "");
+								price = price.replaceAll("\\$", "");
 							}
+							int points = IP.getPoints(useVault);
 							iPrice = Integer.valueOf(price);
 
 							String materialName = ChatColor.stripColor(sign.getLine(1));
@@ -251,7 +251,7 @@ public class SignListener implements Listener {
 							{
 								if (iPrice <= points)
 								{
-									IP.setPoints(IP.getPoints()-iPrice, useVault);
+									IP.setPoints(IP.getPoints(useVault)-iPrice, useVault);
 									p.getInventory().addItem(stack);
 									p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", stack.getType().name()));
 									if (Files.getShop().getBoolean("Save Items")  && !GrenadeManager.isGrenade(stack.getTypeId()))

@@ -34,8 +34,6 @@ Addons:
   Vault Support:
     Enabled: false
     Reward: 100
-# The symbol used on signs to show that we use Economy even if Vault is disabled
-    Symbol: C
 # Gun support
   CrackShot Support:
     Enabled: true

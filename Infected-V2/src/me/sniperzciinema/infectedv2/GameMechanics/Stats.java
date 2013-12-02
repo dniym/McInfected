@@ -21,7 +21,7 @@ public class Stats {
 		else if(type == StatType.deaths)
 			return getDeaths(user);
 		else if(type == StatType.points)
-			return getPoints(user);
+			return getPoints(user, Settings.VaultEnabled());
 		else if(type == StatType.score)
 			return getScore(user);
 		else if(type == StatType.killstreak)
@@ -190,9 +190,11 @@ public class Stats {
 	 * @param name
 	 * @return the players Score
 	 */
-	public static int getPoints(String name) {
+	public static int getPoints(String name, boolean useVault) {
 		name = name.toLowerCase();
-		if (Settings.MySQLEnabled())
+		if (useVault)
+			return (int)Main.economy.getBalance(name);
+		else if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Points"));
 		else
 			return Files.getPlayers().getInt("Players." + name + ".Points");
@@ -208,14 +210,14 @@ public class Stats {
 		name = name.toLowerCase();
 		if (useVault)
 		{
-			int cPoints = Stats.getPoints(name);
+			int cPoints = Stats.getPoints(name, useVault);
 			if (cPoints > points)
 			{
 				int price = cPoints - points;
 				Main.economy.withdrawPlayer(name, price);
 			}
 			else{
-				int depo = points;
+				int depo = points - cPoints;
 				Main.economy.depositPlayer(name, depo);
 			}
 		}
@@ -279,7 +281,7 @@ public class Stats {
 		{
 			statement = Main.c.createStatement();
 
-			statement.executeUpdate("INSERT INTO Cranked (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
+			statement.executeUpdate("INSERT INTO Infected (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block

@@ -33,7 +33,7 @@ public class Grenade {
 		this.setDamage(Files.getGrenades().getInt(path + "Damage"));
 		this.setDelay(Files.getGrenades().getInt(path + "Delay"));
 		this.setRange(Files.getGrenades().getInt(path + "Range"));
-		this.setRange(Files.getGrenades().getInt(path + "Cost"));
+		this.setCost(Files.getGrenades().getInt(path + "Cost"));
 		this.setDamageThrower(Files.getGrenades().getBoolean(path + "Damage Thrower"));
 		ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
 		for(String string : Files.getGrenades().getStringList(path + "Potion Effects"))

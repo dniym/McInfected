@@ -30,15 +30,15 @@ public class Game {
 
 		InfectedEndGame e = new InfectedEndGame(DidHumansWin);
 		Bukkit.getPluginManager().callEvent(e);
-		
+
 		Lobby.reset();
 
 		for (Player u : Lobby.getInGame())
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
-				IP.getScoreBoard().showProperBoard();
-			
-			Deaths.handleKillStreaks(false, u);
+			IP.getScoreBoard().showProperBoard();
+
+			Deaths.handleKillStreaks(true, u);
 		}
 		if (DidHumansWin)
 		{
@@ -63,7 +63,7 @@ public class Game {
 			for (final Player u : Lobby.getInGame())
 			{
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -80,29 +80,29 @@ public class Game {
 					winnersS.append(s);
 					winnersS.append(", ");
 				}
-				u.sendMessage(Msgs.Game_Over_Winners.getString("<winners>", winners.toString()));
+				u.sendMessage(Msgs.Game_Over_Winners.getString("<winners>", winnersS.toString()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
-				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
+				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			}
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-				{
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+			{
 
-					@Override
-					public void run() {
-						for(Player u : Lobby.getInGame())
-							InfPlayerManager.getInfPlayer(u).tpToLobby();
-					}
-				}, 100L);
-			
+				@Override
+				public void run() {
+					for (Player u : Lobby.getInGame())
+						InfPlayerManager.getInfPlayer(u).tpToLobby();
+				}
+			}, 100L);
+
 		} else
 		{
 			for (final Player u : Lobby.getInGame())
 			{
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -117,33 +117,31 @@ public class Game {
 				u.sendMessage(Msgs.Game_Info_Arena.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
-				Stats.setPlayingTime(u.getName(), InfPlayerManager.getInfPlayer(u).getPlayingTime());
+				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			}
+		}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+		{
+
+			@Override
+			public void run() {
+				for (Player u : Lobby.getInGame())
+					InfPlayerManager.getInfPlayer(u).tpToLobby();
+
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 				{
 
 					@Override
 					public void run() {
-						for(Player u : Lobby.getInGame())
-							InfPlayerManager.getInfPlayer(u).tpToLobby();
 
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-						{
-
-							@Override
-							public void run() {
-
-								if (Lobby.getInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
-									Lobby.timerStartVote();
-							}
-						}, 10 * 60);
+						if (Lobby.getInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
+							Lobby.timerStartVote();
 					}
-				}, 100L);
-			
-		}
+				}, 10 * 60);
+			}
+		}, 100L);
 
 	}
-
 
 	public static void leaveGame(Player p) {
 		InfPlayerManager.getInfPlayer(p).leaveInfected();
@@ -171,7 +169,8 @@ public class Game {
 			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
 				alpha.addPotionEffect(PE);
 		}
-		for(Player u : Lobby.getInGame()){
+		for (Player u : Lobby.getInGame())
+		{
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}

@@ -19,6 +19,8 @@ public enum Msgs
 	Format_Prefix("Format.Prefix"),
 	Format_List("Format.List")/*<player>*/,
 	Format_InfChat("Format.InfChat")/*<team>, <player>, <message>*/,
+	Format_Grenades_List("Format.Grenades List")/*<id>, <name>, <cost>*/,
+	Command_Arena_List("Command.Arena.List")/*<valid>, <invalid>*/,
 	Command_Arena_Created("Command.Arena.Created")/*<arena>*/,
 	Command_Arena_Removed("CommandArena.Removed")/*<arena>*/,
 	Command_Arena_Set("Command.Arena.Set")/*<arena>*/,
@@ -33,7 +35,6 @@ public enum Msgs
 	Command_Info_Players("Command.Info.Players")/*<players>*/,
 	Command_Info_State("Command.Info.State")/*<state>*/,
 	Command_Info_Time_Left("Command.Info.Time Left")/*<time>*/,
-	Command_Arenas("Command.Arenas")/*<valid>, <invalid>*/,
 	Command_Admin_Shutdown("Command.Admin.Shutdown")/*<state>*/,
 	Command_Admin_Reload("Command.Admin.Reload"),
 	Command_Admin_Kicked_You("Command.Admin.Kicked.You"),
@@ -42,12 +43,12 @@ public enum Msgs
 	Command_Files_Value("Command.Files.Value")/*<path> <value>*/,
 	Command_Files_Changed("Command.Files.Changed")/*<path> <newvalue> <value>*/,
 	Error_Misc_No_Permission("Error.Misc.No Permission"),
-	Error_Misc_Plugin_Unload("Error.Misc.Plugin Unload"), 
+	Error_Misc_Plugin_Unloaded("Error.Misc.Plugin Unloaded"), 
 	Error_Misc_Plugin_Disabled("Error.Misc.Plugin Disabled"), 
 	Error_Misc_Use_Command("Error.Misc.Cant Use Command"),
 	Error_Misc_Not_Player("Error.Misc.Not Player"), 
 	Error_Misc_Unkown_Command("Error.Misc.Unkown Command"), 
-	Error_Misc_Not_A_File("Error.Misc.Not A File"),
+	Error_Misc_Not_A_File("Error.Misc.Not A File")/*<files>*/,
 	Error_Game_Started("Error.Game.Started"), 
 	Error_Game_Not_In("Error.Game.Not In"),
 	Error_Game_In("Error.Game.In"), 
@@ -60,7 +61,6 @@ public enum Msgs
 	Error_Sign_Not_Valid("Error.Sign.Not Valid"),
 	Error_Already_Voted("Error.Already Voted"),
 	Menu_Classes_None("Menu.Classes.None"),
-	Menu_Classes_Chosen("Menu.Classes.Chosen")/*<class>*/, 
 	Menu_Classes_Click_To_Choose("Menu.Classes.Click To Choose"),
 	Menu_Team_Choose("Menu.Team.Choose")/*<team>*/,
 	Menu_Vote_Choose("Menu.Vote.Choose"), 
@@ -71,8 +71,8 @@ public enum Msgs
 	Shop_Cost_Needed("Shop.Cost.Needed") /*<needed>*/,
 	Game_KillStreak_Value("Game.KillStreak.Value")/*<player>, <killstreak>*/,
 	Game_KillStreak_Reward("Game.KillStreak.Reward")/*<item>*/,
-	Game_Time_Left_Voting("Game.Time Left.Voteing")/*<time>*/,
-	Game_Time_Left_Infecting("Game.Time Left.Infected")/*<time>*/,
+	Game_Time_Left_Voting("Game.Time Left.Voting")/*<time>*/,
+	Game_Time_Left_Infecting("Game.Time Left.Infecting")/*<time>*/,
 	Game_Time_Left_Game("Game.Time Left.Game")/*<time>*/,
 	Game_Death_Before_Game("Game.Death.Before Game"),
 	Game_Over_Humans_Win("Game.Over.Humans Win"),
@@ -96,13 +96,13 @@ public enum Msgs
 	Help_Create("Help.Create"),
 	Help_Remove("Help.Remove"),
 	Help_SetArena("Help.SetArena"),
-	Help_Top("Help.Top"),
-	Help_Files("Help.Files"),
-	Sign_Classes_Choosen("Signs.Classes.Chosen")/*<class>*/,
+	Help_Top("Help.Top")/*<stats>*/,
+	Help_Files("Help.Files")/*Files*/,
+	Classes_None("Classes.None"), 
+	Classes_Chosen("Classes.Chosen")/*<class>*/,
 	Sign_CmdSet_Not_Enough("Sign.CmdSet.Cost.Not Enough"),
 	Sign_CmdSet_Cost_Needed("Sign.CmdSet.Cost.Needed") /*<needed>*/, 
 	Grenades_Bought("Grenades.Bought"),
-	Grenades_List("Grenades.List")/*<id>, <name>, <cost>*/,
 	Grenades_Cost_Not_Enough("Grenades.Cost.Not Enough"),
 	Grenades_Invalid_Id("Grenades.Invalid Id"),
 	Kill("");
@@ -147,15 +147,4 @@ public enum Msgs
 		}
 	}
 
-	// Get the message from the Messages.yml, well replacing and variables given
-	public String getString() {
-		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
-		try
-		{
-			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar())));
-		} catch (NullPointerException npe)
-		{
-			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Unable to find message: " + string;
-		}
-	}
 };

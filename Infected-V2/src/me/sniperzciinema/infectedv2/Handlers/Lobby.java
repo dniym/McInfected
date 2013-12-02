@@ -371,7 +371,7 @@ public class Lobby {
 							u.sendMessage("");
 							u.sendMessage(Msgs.Format_Prefix.getString() + "Game Starting in 5 Seconds.");
 							u.sendMessage("");
-							u.sendMessage(Msgs.Game_Info_Arena.getString("<map>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
+							u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
 							u.sendMessage("");
 							u.sendMessage(Msgs.Format_Line.getString());
 							stopTimer();
@@ -422,7 +422,7 @@ public class Lobby {
 					for (Player u : getInGame())
 						u.setLevel(TimeLeft);
 
-					if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
+					if (TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
 						for (Player u : getInGame())
 							u.sendMessage(Msgs.Game_Time_Left_Infecting.getString("<time>", Time.getTime((long) getTimeLeft())));

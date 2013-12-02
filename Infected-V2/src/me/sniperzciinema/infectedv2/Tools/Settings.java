@@ -49,9 +49,9 @@ public class Settings {
 		HashMap<String, Integer> nodes = new HashMap<String, Integer>();
 		
 		for(String node : Files.getConfig().getConfigurationSection("Settings.Misc.Votes.Extra Votes").getKeys(true))
-			if(!node.contains("."))
-				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Votes.Extra Votes"));
-			
+			if(!node.contains(".")){
+				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Votes.Extra Votes."+node));
+			}
 		return nodes;
 	}
 	public static List<String> getScoreBoardRows() {

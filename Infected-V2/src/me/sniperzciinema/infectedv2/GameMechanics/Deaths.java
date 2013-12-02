@@ -86,18 +86,18 @@ public class Deaths {
 				p.getInventory().addItem(IP.getInfClass(IP.getTeam()).getKillstreaks().get(IP.getKillstreak()));
 				p.sendMessage(Msgs.Game_KillStreak_Reward.getString("<item>", IP.getInfClass(IP.getTeam()).getKillstreaks().get(IP.getKillstreak()).getItemMeta().getDisplayName()));
 			}
-			IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Kill), Settings.VaultEnabled());
+			IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.Kill), Settings.VaultEnabled());
 			IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Kill));
 
 			for (Player u : Lobby.getInGame())
 			{
 				if (Lobby.isHuman(u))
 				{
-					IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Survive), Settings.VaultEnabled());
+					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.Survive), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Survive));
 				} else
 				{
-					IP.setPoints(IP.getPoints() + Lobby.getActiveArena().getSettings().getPointsPer(Events.Infected), Settings.VaultEnabled());
+					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.Infected), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Infected));
 				}
 

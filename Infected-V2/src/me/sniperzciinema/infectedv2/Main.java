@@ -18,6 +18,7 @@ import me.sniperzciinema.infectedv2.Listeners.PlayerListener;
 import me.sniperzciinema.infectedv2.Listeners.RegisterAndUnRegister;
 import me.sniperzciinema.infectedv2.Listeners.ScoreBoardToggle;
 import me.sniperzciinema.infectedv2.Listeners.SignListener;
+import me.sniperzciinema.infectedv2.Messages.Msgs;
 import me.sniperzciinema.infectedv2.Messages.StringUtil;
 import me.sniperzciinema.infectedv2.Tools.AddonManager;
 import me.sniperzciinema.infectedv2.Tools.Files;
@@ -201,7 +202,7 @@ public class Main extends JavaPlugin {
 			{
 				Statement state = c.createStatement();
 
-				state.executeUpdate("CREATE TABLE IF NOT EXISTS Infected (Player CHAR(16), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10));");
+				state.executeUpdate("CREATE TABLE IF NOT EXISTS Infected (Player CHAR(16), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(10), HighestKillStreak INT(10);");
 			} catch (SQLException e)
 			{
 				e.printStackTrace();
@@ -234,9 +235,10 @@ public class Main extends JavaPlugin {
 		// On disable reset players with everything from before
 		if (!Lobby.getInGame().isEmpty())
 			for (Player p : Bukkit.getOnlinePlayers())
-				if(Lobby.isInGame(p))
-						InfPlayerManager.getInfPlayer(p).leaveInfected();
-
+				if(Lobby.isInGame(p)){
+					p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
+					InfPlayerManager.getInfPlayer(p).leaveInfected();
+				}
 		if (getConfig().getBoolean("MySQL.Enable"))
 		{
 			MySQL.closeConnection();

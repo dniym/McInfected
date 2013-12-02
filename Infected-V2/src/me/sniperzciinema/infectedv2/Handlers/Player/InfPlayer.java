@@ -124,6 +124,8 @@ public class InfPlayer {
 		Lobby.getHumans().remove(p);
 		Lobby.getZombies().remove(p);
 		Lobby.getInGame().remove(p);
+		if(getVote() != null)
+			getVote().setVotes(getVote().getVotes()-1);
 		killstreak = 0;
 		location = null;
 		gamemode = null;
@@ -360,8 +362,8 @@ public class InfPlayer {
 	/**
 	 * @return the points
 	 */
-	public int getPoints() {
-		return Stats.getPoints(name);
+	public int getPoints(boolean useVault) {
+		return Stats.getPoints(name, useVault);
 	}
 
 	/**

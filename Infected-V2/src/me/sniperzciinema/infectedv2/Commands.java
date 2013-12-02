@@ -71,7 +71,7 @@ public class Commands implements CommandExecutor {
 			{
 				if (args.length > 0 && args[0].equalsIgnoreCase("TEST"))
 				{
-					Deaths.playerDies(DeathType.Other, p, null);
+					Deaths.playerDies(DeathType.Melee, p, null);
 				} else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 				{
 					if (p == null)
@@ -254,11 +254,11 @@ public class Commands implements CommandExecutor {
 								int gi = Integer.parseInt(args[1]) - 1;
 								if (GrenadeManager.getGrenades().get(gi) != null)
 								{
-									if (ip.getPoints() >= GrenadeManager.getGrenade(gi).getCost())
+									if (ip.getPoints(Settings.VaultEnabled()) >= GrenadeManager.getGrenades().get(gi).getCost())
 									{
-										Grenade grenade = GrenadeManager.getGrenade(gi);
+										Grenade grenade = GrenadeManager.getGrenades().get(gi);
 										p.getInventory().addItem(grenade.getItemStack());
-										ip.setPoints(ip.getPoints() - grenade.getCost(), Settings.VaultEnabled());
+										ip.setPoints(ip.getPoints(Settings.VaultEnabled()) - grenade.getCost(), Settings.VaultEnabled());
 										p.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
 
 									} else
@@ -276,14 +276,14 @@ public class Commands implements CommandExecutor {
 								int gi = Integer.parseInt(args[1]) - 1;
 								if (GrenadeManager.getGrenades().get(gi) != null)
 								{
-									if (ip.getPoints() >= GrenadeManager.getGrenade(gi).getCost() * amount)
+									if (ip.getPoints(Settings.VaultEnabled()) >= GrenadeManager.getGrenades().get(gi).getCost() * amount)
 									{
-										Grenade grenade = GrenadeManager.getGrenade(gi);
+										Grenade grenade = GrenadeManager.getGrenades().get(gi);
 										ItemStack g = grenade.getItemStack();
 										g.setAmount(amount);
 										p.getInventory().addItem(g);
-										ip.setPoints(ip.getPoints() - (grenade.getCost() * amount), Settings.VaultEnabled());
-										p.sendMessage(Msgs.Grenades_Bought.getString("<name>", grenade.getName()));
+										ip.setPoints(ip.getPoints(Settings.VaultEnabled()) - (grenade.getCost() * amount), Settings.VaultEnabled());
+										p.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
 									} else
 										p.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
 								} else
@@ -297,7 +297,7 @@ public class Commands implements CommandExecutor {
 							int i = 1;
 							for (Grenade g : GrenadeManager.getGrenades())
 							{
-								p.sendMessage(Msgs.Grenades_List.getString("<id>", String.valueOf(i), "<name>", g.getName(), "<cost>", String.valueOf(g.getCost())));
+								p.sendMessage(Msgs.Format_Grenades_List.getString("<id>", String.valueOf(i), "<name>", g.getName(), "<cost>", String.valueOf(g.getCost())));
 								i++;
 							}
 
@@ -547,7 +547,7 @@ public class Commands implements CommandExecutor {
 								inValid.append(", ");
 						}
 
-						sender.sendMessage(Msgs.Command_Arenas.getString("<valid>", valid.toString(), "<invalid>", inValid.toString()));
+						sender.sendMessage(Msgs.Command_Arena_List.getString("<valid>", valid.toString(), "<invalid>", inValid.toString()));
 					}
 				}
 				// ///////////////////////////////////////////////////-ADMIN-///////////////////////////
@@ -624,24 +624,24 @@ public class Commands implements CommandExecutor {
 							int i = Integer.parseInt(args[3]);
 							if (args[1].equalsIgnoreCase("Points"))
 							{
-								int newValue = Stats.getPoints(user) + i;
+								int newValue = Stats.getPoints(user, Settings.VaultEnabled()) + i;
 								Stats.setPoints(user, newValue, Settings.VaultEnabled());
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "points", "<value>", String.valueOf(newValue)));
+								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "points", "<value>", String.valueOf(newValue)));
 							} else if (args[1].equalsIgnoreCase("Score"))
 							{
 								int newValue = Stats.getScore(user) + i;
 								Stats.setScore(user, newValue);
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "score", "<value>", String.valueOf(newValue)));
+								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "score", "<value>", String.valueOf(newValue)));
 							} else if (args[1].equalsIgnoreCase("Kills"))
 							{
 								int newValue = Stats.getKills(user) + i;
 								Stats.setKills(user, newValue);
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "kills", "<value>", String.valueOf(newValue)));
+								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "kills", "<value>", String.valueOf(newValue)));
 							} else if (args[1].equalsIgnoreCase("Deaths"))
 							{
 								int newValue = Stats.getDeaths(user) + i;
 								Stats.setDeaths(user, newValue);
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "stat", "deaths", "<value>", String.valueOf(newValue)));
+								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "deaths", "<value>", String.valueOf(newValue)));
 							} else
 								p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 
@@ -691,7 +691,7 @@ public class Commands implements CommandExecutor {
 
 								p.sendMessage("");
 								p.sendMessage(Msgs.Format_Header.getString("<title>", user));
-								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
+								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user, Settings.VaultEnabled()) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
 								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
 								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(user));
 								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
@@ -701,7 +701,7 @@ public class Commands implements CommandExecutor {
 							String user = sender.getName();
 							p.sendMessage("");
 							p.sendMessage(Msgs.Format_Header.getString("<title>", user));
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user, Settings.VaultEnabled()) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + MiscStats.KD(user));
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
@@ -977,7 +977,7 @@ public class Commands implements CommandExecutor {
 
 					}
 				}
-				// /////////////////////////////////////////////-ADDONS-/////////////////////////////////////////
+				// /////////////////////////////////////////////-FILES-/////////////////////////////////////////
 				else if (args.length > 0 && args[0].equalsIgnoreCase("Files"))
 				{
 					if (!sender.hasPermission("Infected.Files"))
@@ -1007,7 +1007,7 @@ public class Commands implements CommandExecutor {
 							else if (args[1].equalsIgnoreCase("Signs"))
 								config = Files.getSigns();
 							else
-								sender.sendMessage(Msgs.Error_Misc_Not_A_File.getString());
+								sender.sendMessage(Msgs.Error_Misc_Not_A_File.getString("<files>", "Config, Abilities, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
 
 						}
 						if (args.length == 2)
@@ -1023,7 +1023,7 @@ public class Commands implements CommandExecutor {
 							}
 						} else if (args.length == 3)
 						{
-							String path = args[2];
+							String path = args[2].replaceAll("_", " ");
 
 							if (config != null)
 							{
@@ -1031,13 +1031,20 @@ public class Commands implements CommandExecutor {
 							}
 						} else if (args.length == 4)
 						{
-							String path = args[2];
+							String path = args[2].replaceAll("_", " ");
 							String newvalue = args[3].replaceAll("_", " ");
 
 							if (config != null)
 							{
 								sender.sendMessage(Msgs.Command_Files_Changed.getString("<path>", path, "<value>", config.getString(path), "<newvalue>", newvalue));
-								config.set(path.replaceAll("_", " "), newvalue);
+								if(newvalue.equalsIgnoreCase("True") || newvalue.equalsIgnoreCase("False"))
+									config.set(path.replaceAll("_", " "), Boolean.valueOf(newvalue.toUpperCase()));
+								else if(newvalue.startsWith(String.valueOf('[')) && newvalue.endsWith("]")){
+									p.sendMessage("List");
+									String[] list = (newvalue.replaceAll("\\[", "").replaceAll("]", "")).split(",");
+									config.set(path, list);
+								}else
+									config.set(path, newvalue);
 								Files.saveAll();
 							}
 						} else

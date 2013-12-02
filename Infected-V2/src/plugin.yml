@@ -17,6 +17,7 @@ permissions:
   Infected.Default:
     default: true
     children:
+      Infected.Help: true
       Infected.Join: true
       Infected.Leave: true
       Infected.Top: true

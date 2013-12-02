@@ -1,12 +1,6 @@
 
 package me.sniperzciinema.infectedv2.Messages;
-/**
- * If anyone wants to use this class for their own plugin go ahead, this is a class you can also find in my gists(On Github).
- * If you have any suggestions/additions that you think would help Infected feel free to message me or fork the gist
- * 
- * @author Sniperz
- *
- */
+
 public class StringUtil {
 
 	// Method to capitalize the first letter of the arena name, and nothing
