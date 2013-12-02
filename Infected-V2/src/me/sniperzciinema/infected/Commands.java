@@ -64,7 +64,7 @@ public class Commands implements CommandExecutor {
 				p = (Player) sender;
 				ip = InfPlayerManager.getInfPlayer(p);
 			}
-			InfectedCommandEvent e = new InfectedCommandEvent(sender, args, p,
+			InfectedCommandEvent e = new InfectedCommandEvent(args, p,
 					ip);
 			Bukkit.getPluginManager().callEvent(e);
 			if (!e.isCancelled())

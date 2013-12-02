@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
-import me.xxsniperzzxx_sd.infected.Infected;
-import me.xxsniperzzxx_sd.infected.Messages;
-import me.xxsniperzzxx_sd.infected.Enums.Msgs;
-import me.xxsniperzzxx_sd.infected.Events.InfectedCommandEvent;
-import me.xxsniperzzxx_sd.infected.Events.InfectedGameEndEvent;
-import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerJoinEvent;
-import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerLeaveEvent;
+import me.sniperzciinema.infected.Events.InfectedCommandEvent;
+import me.sniperzciinema.infected.Events.InfectedEndGame;
+import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Handlers.Player.Team;
+import me.sniperzciinema.infected.Messages.Msgs;
+import me.sniperzciinema.infected.Tools.Settings;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
@@ -57,11 +57,11 @@ public class Main extends JavaPlugin implements Listener {
 	public void onInfectedCommand(InfectedCommandEvent event) {
 		if (event.getArgs().length >= 1)
 		{
-			if (event.getArgs()[0].equalsIgnoreCase("Rank") && event.getSender() instanceof Player)
+			if (event.getArgs()[0].equalsIgnoreCase("Rank") && event.getP() != null)
 			{
 				event.setCancelled(true);
-				Player p = (Player) event.getSender();
-				p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+				Player p = event.getP();
+				p.sendMessage(Msgs.Format_Header.getString("<title>", "Ranks"));
 				if (!canRankUp(p))
 					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
 				p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rankPrefix(getRank(p)));
@@ -72,45 +72,50 @@ public class Main extends JavaPlugin implements Listener {
 					p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " + ChatColor.GRAY + " Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score"));
 				if (!canRankUp(p))
 					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
-				p.sendMessage(Messages.sendMessage(Msgs.FORMAT_LINE, null, null));
+				p.sendMessage(Msgs.Format_Line.getString());
 			}
 		}
 	}
 
 	@EventHandler
-	public void onInfectedGameEnd(InfectedGameEndEvent event) {
-		for (String s : event.getPlayers())
+	public void onInfectedGameEnd(InfectedEndGame event) {
+		for (Player u : event.getPlayers())
+			if (canRankUp(u))
+				rankUp(u);
+	}
+
+	@EventHandler
+	public void onInfectedJoin(InfectedCommandEvent event) {
+		if (!event.isCancelled() && event.getArgs()[0].equals("Join"))
+			;
 		{
-			if (canRankUp(Bukkit.getPlayer(s)))
-				rankUp(Bukkit.getPlayer(s));
+			setClasses(event.getP());
+			addPermissions(event.getP());
+
+			if (canRankUp(event.getP()))
+				rankUp(event.getP());
 		}
 	}
 
 	@EventHandler
-	public void onInfectedJoin(InfectedPlayerJoinEvent event) {
-		if (!event.isCancelled())
+	public void onInfectedLeave(InfectedCommandEvent event) {
+		if (!event.isCancelled() && event.getArgs()[0].equals("Leave"))
 		{
-			setClasses(event.getPlayer());
-			addPermissions(event.getPlayer());
-
-			if (canRankUp(event.getPlayer()))
-				rankUp(event.getPlayer());
+			if (canRankUp(event.getP()))
+				rankUp(event.getP());
+			removePermissions(event.getP());
 		}
-	}
-
-	@EventHandler
-	public void onInfectedLeave(InfectedPlayerLeaveEvent event) {
-		if (!event.isCancelled())
-			removePermissions(event.getPlayer());
-		if (canRankUp(event.getPlayer()))
-			rankUp(event.getPlayer());
 	}
 
 	public void setClasses(Player p) {
 		if (getConfig().getString("Ranks." + getRank(p) + ".Default Class.Humans") != null)
-			Infected.playersetLastHumanClass(p, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Human"));
+		{
+			InfPlayerManager.getInfPlayer(p).setInfClass(Team.Human, InfClassManager.getClass(Team.Human, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Humans")));
+		}
 		if (getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombie") != null)
-			Infected.playersetLastHumanClass(p, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombie"));
+		{
+			InfPlayerManager.getInfPlayer(p).setInfClass(Team.Zombie, InfClassManager.getClass(Team.Zombie, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombies")));
+		}
 	}
 
 	public void addPermissions(Player p) {
@@ -220,9 +225,9 @@ public class Main extends JavaPlugin implements Listener {
 	public int getStat(Player p) {
 		if (getConfig().getBoolean("Use Score for ranks"))
 		{
-			return Infected.playerGetScore(p.getName());
+			return InfPlayerManager.getInfPlayer(p).getScore();
 		} else
-			return Infected.playerGetPoints(p.getName());
+			return InfPlayerManager.getInfPlayer(p).getPoints(Settings.VaultEnabled());
 	}
 
 	public void reloadRanks() {

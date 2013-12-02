@@ -1,6 +1,6 @@
 package me.sniperzciinema.infectedaddon.dedicatedserver;
 
-import me.xxsniperzzxx_sd.infected.Events.InfectedPlayerLeaveEvent;
+import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,8 +25,8 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	
 	@EventHandler
-	public void onPlayerLeave(InfectedPlayerLeaveEvent event) {
-		if(event.isCommand())
+	public void onPlayerTryToLeave(InfectedCommandEvent event) {
+		if(event.getArgs()[0].equalsIgnoreCase("Leave"))
 			event.setCancelled(true);
 	}
 	
@@ -38,8 +38,10 @@ public class Main extends JavaPlugin implements Listener{
 		msg = msg.replaceAll("/vote", "/inf vote");
 		msg = msg.replaceAll("/chat", "/inf chat");
 		msg = msg.replaceAll("/grenade", "/inf grenade");
+		msg = msg.replaceAll("/grenades", "/inf grenade");
+		msg = msg.replaceAll("/shop", "/inf shop");
+		msg = msg.replaceAll("/store", "/inf shop");
 		msg = msg.replaceAll("/classes", "/inf classes");
-		msg = msg.replaceAll("/refresh", "/inf refresh");
 		msg = msg.replaceAll("/info", "/inf info");
 		msg = msg.replaceAll("/suicide", "/inf suicide");
 		msg = msg.replaceAll("/setlobby", "/inf setlobby");
@@ -60,7 +62,6 @@ public class Main extends JavaPlugin implements Listener{
 		msg = msg.replaceAll("/remove", "/inf remove");
 		msg = msg.replaceAll("/top", "/inf top");
 		msg = msg.replaceAll("/setarena", "/inf setarena");
-		msg = msg.replaceAll("/rank", "/inf rank");
 		event.setMessage(msg);
 	}
 }

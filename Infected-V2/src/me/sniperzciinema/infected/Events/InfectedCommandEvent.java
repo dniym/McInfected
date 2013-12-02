@@ -15,14 +15,12 @@ public class InfectedCommandEvent extends Event implements Cancellable{
 
 	
 	private boolean cancelled = false;
-	private CommandSender sender;
 	private String[] args;
 	private Player p;
 	private InfPlayer ip;
 
-	public InfectedCommandEvent(CommandSender sender, String[] args, Player p, InfPlayer ip)
+	public InfectedCommandEvent(String[] args, Player p, InfPlayer ip)
 	{
-		this.sender = sender;
 		this.args = args;
 		this.p = p;
 		this.ip = ip;
@@ -66,20 +64,20 @@ public class InfectedCommandEvent extends Event implements Cancellable{
 		this.cancelled = cancelled;
 	}
 
-	
-	/**
-	 * @param sender the sender to set
-	 */
-	public void setSender(CommandSender sender) {
-		this.sender = sender;
-	}
 
-	
 	/**
 	 * @param args the args to set
 	 */
 	public void setArgs(String[] args) {
 		this.args = args;
+	}
+	
+	/**
+	 * 
+	 * @return args
+	 */
+	public String[] getArgs(){
+		return args;
 	}
 
 }
