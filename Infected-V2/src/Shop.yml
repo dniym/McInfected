@@ -27,12 +27,13 @@
 #     GUI Price: 20
 # +======================================================+ #
 Enabled: true
-Use GUI: false
-Save Items: false
-Save These Items No Matter What:
-- 827
-- 991
-- 0
+Save Items: 
+  All: false
+  Specific Items:
+  - 827
+  - 276
+  - 991
+  - 0
 Custom Items:
   StackOfArrow:
     Item Code: 262,64

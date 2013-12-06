@@ -11,6 +11,7 @@ import me.sniperzciinema.infected.Handlers.Classes.InfClass;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
+import me.sniperzciinema.infected.Handlers.Misc.SaveItemHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
@@ -176,18 +177,12 @@ public class Menus {
 								IP.setPoints(points - price, Settings.VaultEnabled());
 
 								p.getInventory().addItem(is);
-
-								if (Files.getShop().getBoolean("Save Items") && !GrenadeManager.isGrenade(is.getTypeId()))
-								{
-									if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
-									{
-										/**
-										 * TODO: Allow saving Items
-										 * saveShopInventory(p);
-										 */
-
-									}
-								}
+								
+								if(Lobby.isInGame(p))
+									if (!GrenadeManager.isGrenade(is.getTypeId()) && Settings.saveItem(is.getTypeId()))
+										SaveItemHandler.saveItems(p, is);
+							
+								
 							} else
 								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						} else

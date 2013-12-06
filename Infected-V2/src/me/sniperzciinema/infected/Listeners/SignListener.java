@@ -3,13 +3,13 @@ package me.sniperzciinema.infected.Listeners;
 
 import java.util.List;
 
-import me.sniperzciinema.infected.Main;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Misc.SaveItemHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
@@ -254,15 +254,9 @@ public class SignListener implements Listener {
 									IP.setPoints(IP.getPoints(useVault)-iPrice, useVault);
 									p.getInventory().addItem(stack);
 									p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", stack.getType().name()));
-									if (Files.getShop().getBoolean("Save Items")  && !GrenadeManager.isGrenade(stack.getTypeId()))
-									{
-										if (Main.bVersion.equalsIgnoreCase(Main.updateBukkitVersion))
-										{
-											// TODO: Re-add ability to add
-											// items to shop inventory(saved
-											// shop inv)
-										}
-									}
+									if(Lobby.isInGame(p))
+										if (!GrenadeManager.isGrenade(stack.getTypeId()) && Settings.saveItem(stack.getTypeId()))
+											SaveItemHandler.saveItems(p, stack);
 								} else
 								{
 									p.sendMessage(Msgs.Shop_Cost_Not_Enough.getString());

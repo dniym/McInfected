@@ -2,7 +2,7 @@
 package me.sniperzciinema.infected.GameMechanics;
 
 
-public class MiscStats {
+public class KDRatio {
 
 	public static Double KD(String user) {
 		int kills = Stats.getKills(user);

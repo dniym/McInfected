@@ -60,8 +60,7 @@ public class Equip {
 		// and add the new ones, this way we don't remove purchased/grenades
 		for (ItemStack is : humanClass.getItems())
 			p.getInventory().remove(is.getType());
-				
-			// TODO: Also see if their human armor is in their inventory
+		
 		for (ItemStack is : p.getInventory().getContents())
 			if(is != null && (is.getType() == humanClass.getBoots().getType() || is.getType() == humanClass.getChestplate().getType() || is.getType() == humanClass.getHelmet().getType() || is.getType() == humanClass.getLeggings().getType()))
 				p.getInventory().remove(is);

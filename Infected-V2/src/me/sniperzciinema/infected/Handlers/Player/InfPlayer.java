@@ -16,6 +16,7 @@ import me.sniperzciinema.infected.Handlers.Classes.InfClass;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Misc.SaveItemHandler;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.Settings;
 
@@ -275,6 +276,9 @@ public class InfPlayer {
 		if (Settings.TagAPIEnabled())
 			TagAPI.refreshPlayer(player);
 
+		if(!SaveItemHandler.getItems(player).isEmpty())
+			player.getInventory().addItem(SaveItemHandler.getItems(player).toArray(new ItemStack[0]));
+		
 		unDisguise();
 		killstreak = 0;
 		vote = null;

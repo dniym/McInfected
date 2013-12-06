@@ -35,8 +35,13 @@ public class AddonManager {
 				if (economyProvider != null)
 				{
 					Main.economy = economyProvider.getProvider();
+				} else
+				{
+					if (Settings.logAddonsEnabled())
+						System.out.println("Vault wasn't found on plugin server, Disabling Vault Support");
+					plugin.getConfig().set("Addons.Vault Support.Enabled", false);
+					plugin.saveConfig();
 				}
-
 			} else
 			{
 				if (Settings.logAddonsEnabled())

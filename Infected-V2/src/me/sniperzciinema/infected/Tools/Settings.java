@@ -64,9 +64,8 @@ public class Settings {
 
 		for (String node : Files.getConfig().getConfigurationSection("Settings.Misc.Votes.Extra Votes").getKeys(true))
 			if (!node.contains("."))
-			{
 				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Votes.Extra Votes." + node));
-			}
+
 		return nodes;
 	}
 
@@ -92,5 +91,9 @@ public class Settings {
 
 	public static boolean logClassesEnabled() {
 		return Files.getConfig().getBoolean("Logs.Classes");
+	}
+
+	public static boolean saveItem(int id) {
+		return Files.getShop().getBoolean("Save Items.All") || Files.getShop().getStringList("Save Items.Specific Items").contains(id);
 	}
 }
