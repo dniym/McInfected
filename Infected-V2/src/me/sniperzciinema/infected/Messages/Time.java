@@ -15,7 +15,9 @@ public class Time {
 		seconds %= 60;
 		if (seconds == 0)
 		{
-			if (minutes <= 1)
+			if (minutes == 0)
+				times = "N/A";
+			if (minutes == 1)
 				times = minutes + " Minute";
 			else
 				times = minutes + " Minutes";

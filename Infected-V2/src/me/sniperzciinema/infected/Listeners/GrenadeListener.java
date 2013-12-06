@@ -72,6 +72,7 @@ public class GrenadeListener implements Listener {
 
 						@Override
 						public void run() {
+							if(Lobby.getGameState() == GameState.Started){
 							grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
 							for (Player u : Lobby.getInGame())
 							{
@@ -90,6 +91,7 @@ public class GrenadeListener implements Listener {
 										u.damage(grenade.getDamage(), p);
 									}
 								}
+							}
 							}
 							Location loc = grenadeItem.getLocation();
 							p.getWorld().createExplosion(loc, 0.0F, false);

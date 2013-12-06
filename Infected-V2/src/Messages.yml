@@ -7,7 +7,7 @@ Format:
   Prefix: '&0>>&4Infected&0<<&x'
   InfChat: '&f&l<<&7<team>&8&l-&6&o<player>&f&l>>&7: &e<message>'
   List: '&e&l> &a&o<player>'
-  Grenades List: '&x&o<id>. &e<name> &7&l- &e<cost>'
+  Grenades List: '&x&o<id>. &e<name> &7&l- "&e<cost>'
 Command:
   Arena:
     List: '&l&7Arenas: &a<valid> &c<invalid>'
@@ -49,6 +49,7 @@ Error:
     Not A File: '&cThats not a file in Infected... &7Try one of these: &o<files>'
   Game:
     Started: '&e&oThe Games already started'
+    Started: '&e&oThe Games not started'
     Not In: '&c&oYou need to be playing Infected to do this...'
     In: '&c&oYou''re already playing Infected'
   Top:
@@ -79,7 +80,7 @@ Game:
     Game: '&a<time> &e&oleft in this game'
   Players Left: '&1Humans &a<humans> &8|| &4Zombies &c<zombies>'
   Info:
-    Arena: '&d<arena> &f- &8Created By: &7<creator>'
+    Arena: '&d<arena> &f- "&8Created By: &7<creator>'
   Death:
     Before Game: '&6Somehow you''ve managed to kill yourself before the games even started, Try harder next time...'
   End:
@@ -134,48 +135,41 @@ Grenades:
 Kills:
   Human:
     Arrow:
-    - <killer> &6has shot <killed>
-    - <killer> &6has looked at <killed>, and killed them...
-    - <killer> &6has slayed <killed>
-    - <killer> &6has killed <killed>
+    - "&x<killer> &6has shot &x<killed>"
+    - "&x<killer> &6has looked at &x<killed>&6, and killed them..."
+    - "&x<killer> &6has slayed &x<killed>"
+    - "&x<killer> &6has killed &x<killed>"
     Melee:
-    - <killer> &6has killed <killed>
-    - <killer> &6has slayed <killed>
-    - <killer> &6has decapitated <killed>
-    - <killer> &6has sliced <killed> into hundreds of peices
-    - <killer> &6has looked at <killed>, and killed them...
+    - "&x<killer> &6has killed &x<killed>"
+    - "&x<killer> &6has slayed &x<killed>"
+    - "&x<killer> &6has decapitated &x<killed>"
+    - "&x<killer> &6has sliced &x<killed>&6 into hundreds of peices"
+    - "&x<killer> &6has looked at &x<killed>&6, and killed them..."
     Grenade:
-    - <killer> &6has bombarded <killed>
-    - <killer> &6has blown up <killed>
+    - "&x<killer> &6has bombarded &x<killed>"
+    - "&x<killer> &6has blown up &x<killed>"
     Gun:
-    - <killer> &6has mowed <killed> down
-    - <killer> &6has made swiss cheese out of <killed>
-    Snowball:
-    - <killer> &6has pelted <killed>
-    Egg:
-    - <killer> &6has pelted <killed>
-    Other:
-    - <killed> &6has became Infected
+    - "&x<killer> &6has mowed &x<killed>&6 down"
+    - "&x<killer> &6has made swiss cheese out of &x<killed>"
   Zombie:
     Arrow:
-    - <killer> &6shot <killed>
-    - <killer> &6has killed <killed>
+    - "&x<killer> &6shot &x<killed>"
+    - "&x<killer> &6has killed &x<killed>"
     Melee:
-    - <killer> &6has bitten <killed>
-    - <killer> &6ripped off <killed>'s head
-    - <killer> &6ate <killed>
-    - <killer> &6has killed <killed>
-    - <killer> &6has infected <killed>
-    - <killer> &6has scratched <killed>
+    - "&x<killer> &6has bitten &x<killed>"
+    - "&x<killer> &6ripped off &x<killed>&6's head"
+    - "&x<killer> &6ate &x<killed>"
+    - "&x<killer> &6has killed &x<killed>"
+    - "&x<killer> &6has infected &x<killed>"
+    - "&x<killer> &6has scratched &x<killed>"
     Grenade:
-    - <killer> &6has bombarded <killed>
-    - <killer> &6has blown up <killed>
+    - "&x<killer> &6has bombarded &x<killed>"
+    - "&x<killer> &6has blown up &x<killed>"
     Gun:
-    - <killer> &6has mowed <killed> down
-    - <killer> &6has made swiss cheese out of <killed>
-    Snowball:
-    - <killer> &6has pelted <killed>
-    Egg:
-    - <killer> &6has pelted <killed>
-    Other:
-    - <killed> &6 has died
+    - "&x<killer> &6has mowed &x<killed>&6 down"
+    - "&x<killer> &6has made swiss cheese out of &x<killed>"
+Suicides:
+  Human:
+    - "&x<killed> &6 has died"
+  Zombies:
+    - "&x<killed> &6 has become infected"

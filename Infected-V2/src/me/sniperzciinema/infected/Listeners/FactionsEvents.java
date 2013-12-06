@@ -16,8 +16,9 @@ public class FactionsEvents implements Listener {
 
 	@EventHandler
 	public void factionPVP(FactionsEventPvpDisallowed e) {
-		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender()))
-			e.getEvent().setCancelled(false);
+		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender())){
+			e.setCancelled(true);	
+		}
 	}
 
 	@EventHandler

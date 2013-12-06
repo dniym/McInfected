@@ -51,7 +51,7 @@ public class Deaths {
 
 			if (InfKilled.getTeam() == Team.Human)
 			{
-				InfKilled.respawn();
+				
 				InfKilled.Infect();
 
 				if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)

@@ -2,7 +2,6 @@
 package me.sniperzciinema.infected.Extras;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import me.sniperzciinema.infected.Main;
@@ -103,13 +102,7 @@ public class Menus {
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 						Arena arena;
-						int votes = 1;
-
-						for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
-						{
-							if (p.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
-								votes = node.getValue();
-						}
+						int votes = IP.getAllowedVotes();
 						if(ChatColor.stripColor(event.getName()).equalsIgnoreCase("Random")){
 							int i;
 							Random r = new Random();

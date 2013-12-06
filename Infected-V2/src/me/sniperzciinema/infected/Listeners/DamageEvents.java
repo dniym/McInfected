@@ -87,7 +87,6 @@ public class DamageEvents implements Listener {
 							else
 								Deaths.playerDies(DeathType.Other, null, victim);
 
-							
 						}
 					}
 				}
@@ -128,32 +127,27 @@ public class DamageEvents implements Listener {
 						killer = (Player) arrow.getShooter();
 						death = DeathType.Arrow;
 					}
-				}
-				// Was the entity that did the damage a Snowball?
-				else if (e.getDamager() instanceof Snowball)
+				} else if (e.getDamager() instanceof Snowball)
 				{
 					victim = (Player) e.getEntity();
-					Snowball ball = (Snowball) e.getDamager();
+					Snowball sb = (Snowball) e.getDamager();
 
-					// Was the shooter of the snowball a player?
-					if (ball.getShooter() instanceof Player)
+					// Was the shooter of the arrow a player?
+					if (sb.getShooter() instanceof Player)
 					{
-						killer = (Player) ball.getShooter();
-						death = DeathType.Snowball;
+						killer = (Player) sb.getShooter();
+						death = DeathType.Gun;
 					}
-				}
-
-				// Was the entity that did the damage a Snowball?
-				else if (e.getDamager() instanceof Egg)
+				} else if (e.getDamager() instanceof Egg)
 				{
 					victim = (Player) e.getEntity();
-					Egg ball = (Egg) e.getDamager();
+					Egg egg = (Egg) e.getDamager();
 
-					// Was the shooter of the egg a player??
-					if (ball.getShooter() instanceof Player)
+					// Was the shooter of the arrow a player?
+					if (egg.getShooter() instanceof Player)
 					{
-						killer = (Player) ball.getShooter();
-						death = DeathType.Egg;
+						killer = (Player) egg.getShooter();
+						death = DeathType.Gun;
 					}
 				}
 				// Lets make sure the final killer is a Player

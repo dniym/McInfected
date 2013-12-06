@@ -8,6 +8,7 @@ import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Misc.PotionHandler;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Tools.Files;
+import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -130,7 +131,7 @@ public class InfClassManager {
 				leggings = Files.getClasses().getString("Classes.Human." + s + ".Leggings");
 				boots = Files.getClasses().getString("Classes.Human." + s + ".Boots");
 				items = ItemHandler.getItemStackList(Files.getClasses().getStringList("Classes.Human." + s + ".Items"));
-				disguise = Files.getClasses().getString("Classes.Human." + s + ".Disguises");
+				disguise = Files.getClasses().getString("Classes.Human." + s + ".Disguise");
 				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Potion Effects"));
 				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Transfer Potion Effects"));
 				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Human." + s + ".KillStreaks");
@@ -139,8 +140,10 @@ public class InfClassManager {
 						ItemHandler.getItemStack(chestplate),
 						ItemHandler.getItemStack(leggings),
 						ItemHandler.getItemStack(boots), items, effects,
-						transfereffects, killstreaks ,disguise);
-				System.out.println("Loaded Human Class: " + IC.getName());
+						transfereffects, killstreaks, disguise);
+
+				if (Settings.logClassesEnabled())
+					System.out.println("Loaded Human Class: " + IC.getName());
 				if (!isRegistered(Team.Human, IC))
 					addClass(IC);
 			}
@@ -165,11 +168,11 @@ public class InfClassManager {
 				leggings = Files.getClasses().getString("Classes.Zombie." + s + ".Leggings");
 				boots = Files.getClasses().getString("Classes.Zombie." + s + ".Boots");
 				items = ItemHandler.getItemStackList(Files.getClasses().getStringList("Classes.Zombie." + s + ".Items"));
-				disguise = Files.getClasses().getString("Classes.Zombie." + s + ".Disguises");
+				disguise = Files.getClasses().getString("Classes.Zombie." + s + ".Disguise");
 				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Zombie." + s + ".Potion Effects"));
 				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Zombie." + s + ".Transfer Potion Effects"));
 				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Zombie." + s + ".KillStreaks");
-				
+
 				InfClass IC = new InfClass(name, Team.Zombie,
 						ItemHandler.getItemStack(helmet),
 						ItemHandler.getItemStack(chestplate),
@@ -177,7 +180,8 @@ public class InfClassManager {
 						ItemHandler.getItemStack(boots), items, effects,
 						transfereffects, killstreaks, disguise);
 
-				System.out.println("Loaded Zombie Class: " + IC.getName());
+				if (Settings.logClassesEnabled())
+					System.out.println("Loaded Zombie Class: " + IC.getName());
 				if (!isRegistered(Team.Zombie, IC))
 					addClass(IC);
 			}

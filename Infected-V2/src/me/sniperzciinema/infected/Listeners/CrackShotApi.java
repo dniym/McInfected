@@ -17,7 +17,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 public class CrackShotApi implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerGetShot(WeaponDamageEntityEvent e) {
 
 		// Is the victim a player?
@@ -28,13 +28,13 @@ public class CrackShotApi implements Listener {
 			// If they're in the game
 			if (Lobby.isInGame(victim))
 			{
-
+				
 				// Get the attacker
 				if (e.getPlayer() instanceof Player)
 					killer = e.getPlayer();
 
 				// Make sure they arn't on the same team
-				if (Lobby.oppositeTeams(killer, victim))
+				if (!Lobby.oppositeTeams(killer, victim))
 				{
 					e.setDamage(0);
 					e.setCancelled(true);

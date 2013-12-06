@@ -131,7 +131,7 @@ public class Lobby {
 	}
 
 	public static boolean oppositeTeams(Player p, Player u) {
-		return !(isZombie(p) && isZombie(u)) || (isHuman(p) && isHuman(u));
+		return !((isZombie(p) && isZombie(u)) || (isHuman(p) && isHuman(u))) || (isInGame(p) && !isInGame(u)) || (!isInGame(p) && isInGame(u));
 	}
 
 	public static ArrayList<Player> getHumans() {
@@ -228,6 +228,10 @@ public class Lobby {
 
 	public static void reset() {
 		stopTimer();
+		Lobby.setGameState(GameState.InLobby);
+		for (Arena a : Lobby.getArenas())
+			a.setVotes(0);
+
 		resetArena(getActiveArena());
 		setActiveArena(null);
 		getHumans().clear();
@@ -266,149 +270,153 @@ public class Lobby {
 
 	public static void stopTimer() {
 		Bukkit.getScheduler().cancelTask(currentGameTimer);
+		TimeLeft = 0;
 	}
 
 	public static void timerStartVote() {
-		stopTimer();
-		VotingTime = Settings.getVotingTime();
-		TimeLeft = VotingTime;
-
-		setGameState(GameState.Voting);
-		InfectedStartVote e = new InfectedStartVote();
-		Bukkit.getPluginManager().callEvent(e);
-		
-		for (Player u : getInGame())
+		if (Lobby.getGameState() == GameState.InLobby)
 		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(u);
-			up.getScoreBoard().showProperBoard();
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage("");
-			u.sendMessage(Msgs.Format_Header.getString("<title>", " Vote "));
-			u.sendMessage("");
-			u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
-			u.sendMessage(Msgs.Help_Vote.getString());
-			u.sendMessage("");
-			u.sendMessage(Msgs.Format_Line.getString());
-		}
+			stopTimer();
+			VotingTime = Settings.getVotingTime();
+			TimeLeft = VotingTime;
 
-		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
-		{
+			setGameState(GameState.Voting);
+			InfectedStartVote e = new InfectedStartVote();
+			Bukkit.getPluginManager().callEvent(e);
 
-			@Override
-			public void run() {
-				if (getTimeLeft() != 0)
-				{
-					// TODO: Re-add: When all players vote, time gets cut in
-					// half
+			for (Player u : getInGame())
+			{
+				InfPlayer up = InfPlayerManager.getInfPlayer(u);
+				up.getScoreBoard().showProperBoard();
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage("");
+				u.sendMessage(Msgs.Format_Header.getString("<title>", " Vote "));
+				u.sendMessage("");
+				u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
+				u.sendMessage(Msgs.Help_Vote.getString());
+				u.sendMessage("");
+				u.sendMessage(Msgs.Format_Line.getString());
+			}
 
-					TimeLeft -= 1;
+			currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+			{
 
-					for (Player u : getInGame())
-						u.setLevel(getTimeLeft());
-
-					if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
+				@Override
+				public void run() {
+					if (getTimeLeft() != 0)
 					{
-						for (Player u : getInGame())
-							u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
-					}
-					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
-					{
-						for (Player u : getInGame())
-						{
-							u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
-						}
-					}
-					if (TimeLeft == 1)
+						// TODO: Re-add: When all players vote, time gets cut in
+						// half
+
+						TimeLeft -= 1;
 
 						for (Player u : getInGame())
-						{
-							u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 5);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 5);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 5);
-						}
-					else if (TimeLeft == 0)
-					{
-						Arena arena = getArenas().get(0);
-						for (Arena a : getArenas())
-						{
-							if (a.getVotes() > arena.getVotes())
-								arena = a;
-						}
-						
-						setActiveArena(arena);
-						for (Player u : getInGame())
-						{
-							InfPlayer up = InfPlayerManager.getInfPlayer(u);
-							up.getScoreBoard().showProperBoard();
-							
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage("");
-							u.sendMessage(Msgs.Format_Line.getString());
-							u.sendMessage("");
-							u.sendMessage(Msgs.Format_Prefix.getString() + "Game Starting in 5 Seconds.");
-							u.sendMessage("");
-							u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
-							u.sendMessage("");
-							u.sendMessage(Msgs.Format_Line.getString());
-							stopTimer();
-						}
-						currentGameTimer = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
-						{
+							u.setLevel(getTimeLeft());
 
-							@Override
-							public void run() {
-								
-								for (Player u : getInGame())
-								{
-									u.setGameMode(GameMode.SURVIVAL);
-									InfPlayer up = InfPlayerManager.getInfPlayer(u);
-									up.respawn();
-									Equip.equip(u);
-								}
-								timerStartInfecting();
+						if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
+						{
+							for (Player u : getInGame())
+								u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
+						}
+						if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
+						{
+							for (Player u : getInGame())
+							{
+								u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
+								u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
+								u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
 							}
-						}, 100L);
+						}
+						if (TimeLeft == 1)
+
+							for (Player u : getInGame())
+							{
+								u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 5);
+								u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 5);
+								u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 5);
+							}
+						else if (TimeLeft == 0)
+						{
+							Arena arena = getArenas().get(0);
+							for (Arena a : getArenas())
+							{
+								if (a.getVotes() > arena.getVotes())
+									arena = a;
+							}
+
+							setActiveArena(arena);
+							for (Player u : getInGame())
+							{
+								InfPlayer up = InfPlayerManager.getInfPlayer(u);
+								up.getScoreBoard().showProperBoard();
+
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage("");
+								u.sendMessage(Msgs.Format_Line.getString());
+								u.sendMessage("");
+								u.sendMessage(Msgs.Format_Prefix.getString() + "Game Starting in 5 Seconds.");
+								u.sendMessage("");
+								u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
+								u.sendMessage("");
+								u.sendMessage(Msgs.Format_Line.getString());
+								stopTimer();
+							}
+							currentGameTimer = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+							{
+
+								@Override
+								public void run() {
+
+									for (Player u : getInGame())
+									{
+										u.setGameMode(GameMode.SURVIVAL);
+										InfPlayer up = InfPlayerManager.getInfPlayer(u);
+										up.respawn();
+										Equip.equip(u);
+									}
+									timerStartInfecting();
+								}
+							}, 100L);
+						}
 					}
 				}
-			}
-		}, 0L, 20L);
+			}, 0L, 20L);
+		}
 	}
 
 	public static void timerStartInfecting() {
 
 		stopTimer();
 		setGameState(GameState.Infecting);
-		
+
 		InfectedStartInfecting e = new InfectedStartInfecting();
 		Bukkit.getPluginManager().callEvent(e);
-		
+
 		for (Player u : getInGame())
 			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
-		
+
 		InfectingTime = getActiveArena().getSettings().getInfectingTime();
 		TimeLeft = InfectingTime;
 		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
@@ -452,8 +460,11 @@ public class Lobby {
 						Game.chooseAlphas();
 
 						for (Player u : getInGame())
+						{
 							InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis() / 1000);
-
+							if (!Lobby.isHuman(u) && !Lobby.isZombie(u))
+								Lobby.addHuman(u);
+						}
 						timerStartGame();
 					}
 				}
@@ -467,12 +478,12 @@ public class Lobby {
 		setGameState(GameState.Started);
 		InfectedStartGame e = new InfectedStartGame();
 		Bukkit.getPluginManager().callEvent(e);
-		
 
 		GameTime = getActiveArena().getSettings().getGameTime();
 		TimeLeft = GameTime;
 
-		for(Player u : Lobby.getInGame()){
+		for (Player u : Lobby.getInGame())
+		{
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
@@ -491,17 +502,18 @@ public class Lobby {
 						for (Player u : getInGame())
 							u.teleport(u.getLocation());
 
-					if (TimeLeft == (Main.GtimeLimit / 4) * 3 || TimeLeft == Main.GtimeLimit / 2 || TimeLeft == Main.GtimeLimit / 4 || TimeLeft == 60 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
+					if (TimeLeft == (GameTime / 4) * 3 || TimeLeft == GameTime / 2 || TimeLeft == GameTime / 4 || TimeLeft == 60 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
-						for (Player u : getInGame())
+						if (TimeLeft > 61)
 						{
-							if (TimeLeft > 61)
+							for (Player u : getInGame())
 							{
 								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
 								u.sendMessage(Msgs.Game_Players_Left.getString("<humans>", String.valueOf(getHumans().size()), "<zombies>", String.valueOf(getZombies().size())));
-							} else
+							}
+						} else
+							for (Player u : getInGame())
 								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
-						}
 
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)

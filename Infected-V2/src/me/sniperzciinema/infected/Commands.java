@@ -2,10 +2,7 @@
 package me.sniperzciinema.infected;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.GameMechanics.DeathType;
@@ -29,6 +26,7 @@ import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infected.Tools.Settings;
+import me.sniperzciinema.infected.Tools.Sort;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -205,7 +203,7 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 					else if (Lobby.getGameState() != GameState.Started)
-						p.sendMessage(Msgs.Error_Game_Started.getString());
+						p.sendMessage(Msgs.Error_Game_Not_Started.getString());
 
 					else
 					{
@@ -589,7 +587,7 @@ public class Commands implements CommandExecutor {
 								Files.reloadSigns();
 								Main.addon.getAddons();
 								System.out.println("====================");
-								p.sendMessage(Msgs.Command_Admin_Reload.getString());
+								sender.sendMessage(Msgs.Command_Admin_Reload.getString());
 
 							}
 							// CODE
@@ -921,19 +919,20 @@ public class Commands implements CommandExecutor {
 							else
 							{
 								StatType type = StatType.valueOf(stat);
-								HashMap<String, Integer> top = MiscStats.getTop5(type);
 
 								int i = 1;
-								for (Entry<String, Integer> set : top.entrySet())
+								for (String name : Sort.topStats(type, 5))
 								{
+									if(name != " "){
 									if (i == 1)
-										sender.sendMessage("" + ChatColor.YELLOW + i + ". " + set.getKey() + " - " + set.getValue());
+										sender.sendMessage("" + ChatColor.YELLOW + i + ". " +  name + " - " + Stats.getStat(type, name));
 									else if (i == 2)
-										sender.sendMessage("" + ChatColor.GRAY + i + ". " + set.getKey() + " - " + set.getValue());
+										sender.sendMessage("" + ChatColor.GRAY + i + ". " +  name + " - " + Stats.getStat(type, name));
 									else if (i == 3)
-										sender.sendMessage("" + ChatColor.GOLD + i + ". " + set.getKey() + " - " + set.getValue());
+										sender.sendMessage("" + ChatColor.GOLD + i + ". " +  name + " - " + Stats.getStat(type, name));
 									else
-										sender.sendMessage("" + ChatColor.WHITE + i + ". " + set.getKey() + " - " + set.getValue());
+										sender.sendMessage("" + ChatColor.WHITE + i + ". " +  name + " - " + Stats.getStat(type, name));
+									}
 									i++;
 
 									if (i == 6)

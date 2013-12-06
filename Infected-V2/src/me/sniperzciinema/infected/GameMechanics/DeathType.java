@@ -4,7 +4,7 @@ package me.sniperzciinema.infected.GameMechanics;
 public enum DeathType
 {
 
-	Arrow("Arrow"), Melee("Melee"), Grenade("Grenade"), Gun("Gun"), Snowball("Snowball"), Egg("Egg"), Other("Other");
+	Arrow("Arrow"), Melee("Melee"), Grenade("Grenade"), Gun("Gun"), Other("Other");
 
 	private String string;
 

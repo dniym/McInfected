@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -45,23 +44,9 @@ public class Main extends JavaPlugin {
 	// Initialize all the variables
 	public static String bVersion = "1.6.4";
 	public static String v = null;
-
-	public static int timestart;
-	public static int queuedtpback;
-	public static int queuedtp;
-	public static int voteTime;
-	public static int Wait;
-	public static int GtimeLimit;
-	public static int timedCycle;
-	public static int timeLimit;
-	public static int timeVote;
-	public static int timest;
-	public static int lastscore;
 	public static boolean update = false;
 	public static String name = "";
-	public static String leader = "";
 	public static Plugin me;
-	public static File file;
 	public static String BV = null;
 
 	public static Configuration config = null;
@@ -82,9 +67,6 @@ public class Main extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		Main.me = this;
-		Main.file = getFile();
-		Configuration getconfig = getConfig();
-		Main.config = getconfig;
 
 		System.out.println("===== Infected =====");
 		try
@@ -107,15 +89,7 @@ public class Main extends JavaPlugin {
 		Files.getAbilities().options().copyDefaults(true);
 		Files.getClasses().options().copyDefaults(true);
 		Files.getSigns().options().copyDefaults(true);
-		Files.saveAbilities();
-		Files.saveArenas();
-		Files.saveClasses();
-		Files.saveConfig();
-		Files.saveGrenades();
-		Files.saveMessages();
-		Files.savePlayers();
-		Files.saveShop();
-		Files.saveSigns();
+		Files.saveAll();
 
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
@@ -155,12 +129,7 @@ public class Main extends JavaPlugin {
 		// Get Plugin addons
 		addon = new AddonManager(this);
 		addon.getAddons();
-
-		// On enable set the times form the config
-		Main.voteTime = getConfig().getInt("Time.Voting Time");
-		Main.Wait = getConfig().getInt("Time.Alpha Zombie Infection");
-		Main.GtimeLimit = getConfig().getInt("Time.Game Time Limit");
-
+		
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
 		PlayerListener PlayerListener = new PlayerListener();
@@ -218,10 +187,12 @@ public class Main extends JavaPlugin {
 			{
 				Arena arena = new Arena(StringUtil.getWord(a));
 				Lobby.addArena(arena);
-				System.out.println("Loaded Arena: " + arena.getName());
+				if(Settings.logAreansEnabled())
+					System.out.println("Loaded Arena: " + arena.getName());
 			}
 		else
-			System.out.println("Couldn't Find Any Arenas");
+			if(Settings.logAreansEnabled())
+				System.out.println("Couldn't Find Any Arenas");
 
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();

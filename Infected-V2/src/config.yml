@@ -37,9 +37,6 @@ Addons:
 # Gun support
   CrackShot Support:
     Enabled: true
-# Colored Nametag support
-  TagAPI Support:
-    Enabled: true
 # To allow allies to attack each other
   Factions Support:
     Enabled: true
@@ -50,6 +47,13 @@ Addons:
   Disguise Support:
     Enabled: true
 
+# Logs that show when the server starts up
+Logs:
+  Addons: true
+  Arenas: true
+  Classes: true
+  Grenades: true
+  
 # All the settings for Infected
 Settings:
 # These settings can not be used Per Arena

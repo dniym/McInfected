@@ -15,7 +15,7 @@ import de.robingrether.idisguise.disguise.MobDisguise;
 
 public class DisguiseIDisguise {
 
-	public static DisguiseAPI idAPI = Bukkit.getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();;
+	public static DisguiseAPI idAPI = Bukkit.getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
 
 	public static void disguisePlayer(Player p) {
 

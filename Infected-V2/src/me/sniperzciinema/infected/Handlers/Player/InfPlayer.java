@@ -2,6 +2,7 @@
 package me.sniperzciinema.infected.Handlers.Player;
 
 import java.util.Random;
+import java.util.Map.Entry;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Disguise.Disguises;
@@ -125,7 +126,7 @@ public class InfPlayer {
 		Lobby.getZombies().remove(p);
 		Lobby.getInGame().remove(p);
 		if(getVote() != null)
-			getVote().setVotes(getVote().getVotes()-1);
+			getVote().setVotes(getVote().getVotes()-getAllowedVotes());
 		killstreak = 0;
 		location = null;
 		gamemode = null;
@@ -138,6 +139,10 @@ public class InfPlayer {
 		vote = null;
 		timeIn = 0;
 		fullLeave();
+
+		if (Settings.TagAPIEnabled())
+			TagAPI.refreshPlayer(player);
+
 		player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 	}
 
@@ -158,9 +163,14 @@ public class InfPlayer {
 		// and Infecteds chosen
 		else if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.Infecting)
 		{
+
+			for (Player u : Lobby.getInGame())
+				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			
 			// If theres only one person left in the lobby, end the game
-			if (Lobby.getInGame().size() == 1)
+			if (Lobby.getInGame().size() <= 1)
 			{
+				Lobby.setGameState(GameState.InLobby);
 				for (Player u : Lobby.getInGame())
 				{
 					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
@@ -171,25 +181,21 @@ public class InfPlayer {
 				// people in Infected)
 				Lobby.reset();
 			}
-
-			// More then one person left in Infected, just inform players they
-			// left
-			else
-			{
-				for (Player u : Lobby.getInGame())
-					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
-			}
 		}
 
 		// If the game has fully started
 		else if (Lobby.getGameState() == GameState.Started)
 		{
+			for (Player u : Lobby.getInGame())
+				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+
 			// If theres only one person left in the lobby, end the game
-			if (Lobby.getInGame().size() == 1)
+			if (Lobby.getInGame().size() <= 1)
 			{
+				Lobby.setGameState(GameState.InLobby);
 				for (Player u : Lobby.getInGame())
 				{
-					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
 					InfPlayerManager.getInfPlayer(u).tpToLobby();
 				}
 
@@ -205,8 +211,9 @@ public class InfPlayer {
 
 			// If theres no humans left(Player who left was human, or the new
 			// zombie was the only human)
-			if (Lobby.getHumans().size() == 0)
+			else if (Lobby.getHumans().size() == 0)
 			{
+				Lobby.setGameState(GameState.InLobby);
 				for (Player u : Lobby.getInGame())
 				{
 					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
@@ -218,18 +225,10 @@ public class InfPlayer {
 				Lobby.reset();
 			}
 
-			// If it is anything else(Game is over, etc) just tell others they
-			// left
-			else
-			{
-				for (Player u : Lobby.getInGame())
-					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
-
-			}
-
-			// Update the scoreboard stats
-			getScoreBoard().showProperBoard();
 		}
+		for (Player u : Lobby.getInGame())
+		// Update the scoreboard stats
+			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
 	}
 
 	/**
@@ -237,7 +236,8 @@ public class InfPlayer {
 	 */
 	public void disguise() {
 		if (Settings.DisguisesEnabled())
-			Disguises.disguisePlayer(player);
+			if(!Disguises.isPlayerDisguised(player))
+				Disguises.disguisePlayer(player);
 	}
 
 	/**
@@ -256,7 +256,6 @@ public class InfPlayer {
 	 */
 	public void tpToLobby() {
 
-		getScoreBoard().showProperBoard();
 		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
 		player.setLevel(0);
 		player.setExp(0.0F);
@@ -272,12 +271,17 @@ public class InfPlayer {
 		player.setFlying(false);
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
+
+		if (Settings.TagAPIEnabled())
+			TagAPI.refreshPlayer(player);
+
 		unDisguise();
 		killstreak = 0;
 		vote = null;
 		lastDamager = null;
 		isWinner = true;
 
+		getScoreBoard().showProperBoard();
 	}
 
 	/**
@@ -313,13 +317,21 @@ public class InfPlayer {
 	 * zombie apply potion effects disguise update scoreboard apply confussion
 	 */
 	public void Infect() {
+		Player p = player;
+		p.setHealth(20.0);
+		p.setFoodLevel(20);
+		p.setFireTicks(0);
 		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
 		Lobby.addZombie(player);
+		Lobby.delHuman(player);
 		team = Team.Zombie;
 		isWinner = false;
 		Equip.equipToZombie(player);
 		PotionEffects.applyClassEffects(player);
 		disguise();
+		if (Settings.TagAPIEnabled())
+			TagAPI.refreshPlayer(player);
+
 		getScoreBoard().showProperBoard();
 		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
 				2));
@@ -688,6 +700,21 @@ public class InfPlayer {
 	}
 	public int getHighestKillStreak() {
 		return Stats.getHighestKillStreak(name);
+	}
+	
+	/**
+	 * 
+	 * @return how many votes they have
+	 */
+	public int getAllowedVotes() {
+		int votes = 1;
+
+		for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
+		{
+			if (player.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
+				votes = node.getValue();
+		}
+		return votes;
 	}
 
 }

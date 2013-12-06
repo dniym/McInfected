@@ -79,17 +79,20 @@ public class Disguises {
 
 			else
 			{
-				System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
+				if (Settings.logAddonsEnabled())
+					System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
 				Files.getConfig().set("Addons.Disguise Support.Enabled", false);
 				Files.saveConfig();
 			}
 			if (Main.Disguiser != null)
 			{
-				System.out.println("For Disguise Support we're using " + Main.Disguiser);
+				if (Settings.logAddonsEnabled())
+					System.out.println("For Disguise Support we're using " + Main.Disguiser);
 			}
 		} else
 		{
-			System.out.println("Disguise Support is Disabled");
+			if (Settings.logAddonsEnabled())
+				System.out.println("Disguise Support is Disabled");
 		}
 	}
 }

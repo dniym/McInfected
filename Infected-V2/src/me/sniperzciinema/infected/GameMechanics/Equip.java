@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class Equip {
 
-
 	@SuppressWarnings("deprecation")
 	public static void equip(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
@@ -26,14 +25,14 @@ public class Equip {
 		// and add the new ones, this way we don't remove purchased/grenades
 		for (ItemStack is : Class.getItems())
 		{
-			if (p.getInventory().contains(is))
+			if (p.getInventory().contains(is.getType()))
 				p.getInventory().remove(is);
-			if (!p.getInventory().contains(is))
+			if (!p.getInventory().contains(is.getType()))
 				p.getInventory().addItem(is);
 		}
 
-		// Only replace the armor if the player hasn't changed it(So if it there
-		// is none, or if it is the same as default)
+		// Only replace the armor if the player hasn't changed it(So if
+		// its none, or if it is the same as default)
 		if (p.getInventory().getHelmet() == Class.getHelmet() || p.getInventory().getHelmet() == null)
 			p.getInventory().setHelmet(Class.getHelmet());
 		if (p.getInventory().getChestplate() == Class.getChestplate() || p.getInventory().getChestplate() == null)
@@ -60,24 +59,25 @@ public class Equip {
 		// from the class
 		// and add the new ones, this way we don't remove purchased/grenades
 		for (ItemStack is : humanClass.getItems())
-		{
-			p.getInventory().remove(is);
+			p.getInventory().remove(is.getType());
+				
 			// TODO: Also see if their human armor is in their inventory
-		}
+		for (ItemStack is : p.getInventory().getContents())
+			if(is != null && (is.getType() == humanClass.getBoots().getType() || is.getType() == humanClass.getChestplate().getType() || is.getType() == humanClass.getHelmet().getType() || is.getType() == humanClass.getLeggings().getType()))
+				p.getInventory().remove(is);
+		
 		for (ItemStack is : zombieClass.getItems())
-		{
 			p.getInventory().addItem(is);
-		}
 
-		// Only replace the armor if the player hasn't changed it(So if it there
-		// is none, or if it is the same as default)
-		if (p.getInventory().getHelmet() == humanClass.getHelmet() || p.getInventory().getHelmet() == null)
+		// Only replace the armor if the player hasn't changed it(So if
+		// its none, or if it is the same as default)
+		if (p.getInventory().getHelmet() == null || p.getInventory().getHelmet().getType() == humanClass.getHelmet().getType())
 			p.getInventory().setHelmet(zombieClass.getHelmet());
-		if (p.getInventory().getChestplate() == humanClass.getChestplate() || p.getInventory().getChestplate() == null)
+		if (p.getInventory().getChestplate() == null ||p.getInventory().getChestplate().getType() == humanClass.getChestplate().getType())
 			p.getInventory().setChestplate(zombieClass.getChestplate());
-		if (p.getInventory().getLeggings() == humanClass.getLeggings() || p.getInventory().getLeggings() == null)
+		if (p.getInventory().getLeggings() == null || p.getInventory().getLeggings().getType() == humanClass.getLeggings().getType())
 			p.getInventory().setLeggings(zombieClass.getLeggings());
-		if (p.getInventory().getBoots() == humanClass.getBoots() || p.getInventory().getBoots() == null)
+		if (p.getInventory().getBoots() == null || p.getInventory().getBoots().getType() == humanClass.getBoots().getType())
 			p.getInventory().setBoots(zombieClass.getBoots());
 
 		p.updateInventory();

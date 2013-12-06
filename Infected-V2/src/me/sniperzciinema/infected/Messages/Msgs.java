@@ -1,11 +1,6 @@
 
 package me.sniperzciinema.infected.Messages;
 
-import java.util.List;
-import java.util.Random;
-
-import me.sniperzciinema.infected.GameMechanics.DeathType;
-import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Tools.Files;
 
 import org.bukkit.ChatColor;
@@ -49,7 +44,8 @@ public enum Msgs
 	Error_Misc_Not_Player("Error.Misc.Not Player"), 
 	Error_Misc_Unkown_Command("Error.Misc.Unkown Command"), 
 	Error_Misc_Not_A_File("Error.Misc.Not A File")/*<files>*/,
-	Error_Game_Started("Error.Game.Started"), 
+	Error_Game_Started("Error.Game.Started"),
+	Error_Game_Not_Started("Error.Game.Not Started"),
 	Error_Game_Not_In("Error.Game.Not In"),
 	Error_Game_In("Error.Game.In"), 
 	Error_Top_Not_Stat("Error.Top.Not Stat")/*<stats>*/, 
@@ -104,22 +100,13 @@ public enum Msgs
 	Sign_CmdSet_Cost_Needed("Sign.CmdSet.Cost.Needed") /*<needed>*/, 
 	Grenades_Bought("Grenades.Bought"),
 	Grenades_Cost_Not_Enough("Grenades.Cost.Not Enough"),
-	Grenades_Invalid_Id("Grenades.Invalid Id"),
-	Kill("");
+	Grenades_Invalid_Id("Grenades.Invalid Id");
 			
 	private String string;
 
 	private Msgs(String s)
 	{
 		string = s;
-	}
-	public String getKill(Team team, DeathType death){
-		String message;
-		List<String> list = Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
-		Random r = new Random();
-		int i = r.nextInt(list.size());
-		message = list.get(i);
-		return message;
 	}
 	public String getString(String... variables) {
 		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";

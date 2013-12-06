@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected.Tools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.sniperzciinema.infected.Disguise.Disguises;
@@ -42,7 +41,7 @@ public class TeleportFix implements Listener {
 				@Override
 				public void run() {
 					// Refresh nearby clients
-					final List<Player> nearby = getPlayersInInfected();
+					final List<Player> nearby = Lobby.getInGame();
 
 					// Hide every player
 					updateEntities(player, nearby, false);
@@ -96,10 +95,4 @@ public class TeleportFix implements Listener {
 		}
 	}
 
-	public List<Player> getPlayersInInfected() {
-		List<Player> res = new ArrayList<Player>();
-		for (Player p : Lobby.getInGame())
-			res.add(p);
-		return res;
-	}
 }

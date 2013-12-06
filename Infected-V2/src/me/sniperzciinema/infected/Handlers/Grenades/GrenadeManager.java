@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import me.sniperzciinema.infected.Tools.Files;
+import me.sniperzciinema.infected.Tools.Settings;
 
 
 public class GrenadeManager {
@@ -64,7 +65,9 @@ public class GrenadeManager {
 		for (String s : Files.getGrenades().getConfigurationSection("Grenades").getKeys(true)){
 			if (!s.contains(".")){
 				Grenade g = new Grenade(Integer.valueOf(s));
-				System.out.println("Loaded Grenade " + g.getName());
+
+				if(Settings.logGrenadesEnabled())
+					System.out.println("Loaded Grenade " + g.getName());
 				if (!isGrenade(g))
 					addGrenade(g);
 			}

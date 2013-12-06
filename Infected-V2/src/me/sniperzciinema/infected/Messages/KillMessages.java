@@ -1,11 +1,15 @@
 
 package me.sniperzciinema.infected.Messages;
 
+import java.util.List;
+import java.util.Random;
+
 import me.sniperzciinema.infected.GameMechanics.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
+import me.sniperzciinema.infected.Tools.Files;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,7 +33,7 @@ public class KillMessages {
 				team = Team.Human;
 		}
 		
-		String msg = Msgs.Kill.getKill(team, death);
+		String msg = getKill(team, death);
 
 		// Replace color codes, and killer and killed names
 		msg = ChatColor.translateAlternateColorCodes('&', msg);
@@ -38,5 +42,18 @@ public class KillMessages {
 		if (killed != null)
 			msg = msg.replaceAll("<killed>", killed.getName() + "(" + Stats.getScore(killed.getName()) + ")");
 		return Msgs.Format_Prefix.getString() + msg;
+	}
+
+	private static String getKill(Team team, DeathType death){
+		String message;
+		List<String> list;
+		if(death == DeathType.Other)
+		list = Files.getMessages().getStringList("Suicides." + team.toString());
+			else
+		list =  Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
+		Random r = new Random();
+		int i = r.nextInt(list.size());
+		message = list.get(i);
+		return message;
 	}
 }
