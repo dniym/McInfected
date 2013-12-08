@@ -64,8 +64,7 @@ public class Commands implements CommandExecutor {
 				p = (Player) sender;
 				ip = InfPlayerManager.getInfPlayer(p);
 			}
-			InfectedCommandEvent e = new InfectedCommandEvent(args, p,
-					ip);
+			InfectedCommandEvent e = new InfectedCommandEvent(args, p, ip);
 			Bukkit.getPluginManager().callEvent(e);
 			if (!e.isCancelled())
 			{
@@ -917,15 +916,16 @@ public class Commands implements CommandExecutor {
 								int i = 1;
 								for (String name : Sort.topStats(type, 5))
 								{
-									if(name != " "){
-									if (i == 1)
-										sender.sendMessage("" + ChatColor.YELLOW + i + ". " +  name + " - " + Stats.getStat(type, name));
-									else if (i == 2)
-										sender.sendMessage("" + ChatColor.GRAY + i + ". " +  name + " - " + Stats.getStat(type, name));
-									else if (i == 3)
-										sender.sendMessage("" + ChatColor.GOLD + i + ". " +  name + " - " + Stats.getStat(type, name));
-									else
-										sender.sendMessage("" + ChatColor.WHITE + i + ". " +  name + " - " + Stats.getStat(type, name));
+									if (name != " ")
+									{
+										if (i == 1)
+											sender.sendMessage("" + ChatColor.YELLOW + i + ". " + name + " - " + Stats.getStat(type, name));
+										else if (i == 2)
+											sender.sendMessage("" + ChatColor.GRAY + i + ". " + name + " - " + Stats.getStat(type, name));
+										else if (i == 3)
+											sender.sendMessage("" + ChatColor.GOLD + i + ". " + name + " - " + Stats.getStat(type, name));
+										else
+											sender.sendMessage("" + ChatColor.WHITE + i + ". " + name + " - " + Stats.getStat(type, name));
 									}
 									i++;
 
@@ -1028,13 +1028,14 @@ public class Commands implements CommandExecutor {
 							if (config != null)
 							{
 								sender.sendMessage(Msgs.Command_Files_Changed.getString("<path>", path, "<value>", config.getString(path), "<newvalue>", newvalue));
-								if(newvalue.equalsIgnoreCase("True") || newvalue.equalsIgnoreCase("False"))
+								if (newvalue.equalsIgnoreCase("True") || newvalue.equalsIgnoreCase("False"))
 									config.set(path.replaceAll("_", " "), Boolean.valueOf(newvalue.toUpperCase()));
-								else if(newvalue.startsWith(String.valueOf('[')) && newvalue.endsWith("]")){
+								else if (newvalue.startsWith(String.valueOf('[')) && newvalue.endsWith("]"))
+								{
 									p.sendMessage("List");
 									String[] list = (newvalue.replaceAll("\\[", "").replaceAll("]", "")).split(",");
 									config.set(path, list);
-								}else
+								} else
 									config.set(path, newvalue);
 								Files.saveAll();
 							}
@@ -1066,10 +1067,10 @@ public class Commands implements CommandExecutor {
 						p.sendMessage("");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
 						if (Main.update)
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Main.name);
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Main.updateName);
 						p.sendMessage("");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_RED + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "Sniperz");
-						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Main.v);
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Main.version);
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.WHITE + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Addons type: /Infected Addons");

@@ -46,7 +46,7 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		if (Main.update && player.hasPermission("Infected.Admin"))
 		{
-			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + Main.name);
+			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + Main.updateName);
 			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
 		}
 	}

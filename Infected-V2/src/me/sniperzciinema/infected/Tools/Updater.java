@@ -300,7 +300,7 @@ public class Updater {
                 this.plugin.getLogger().info("Finished updating.");
             }
         } catch (final Exception ex) {
-            this.plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful.");
+            System.out.println("The auto-updater tried to download a new update, but was unsuccessful.");
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             try {
@@ -385,7 +385,7 @@ public class Updater {
             new File(zipPath).delete();
             fSourceZip.delete();
         } catch (final IOException ex) {
-            this.plugin.getLogger().warning("The auto-updater tried to unzip a new update file, but was unsuccessful.");
+            System.out.println("The auto-updater tried to unzip a new update file, but was unsuccessful.");
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
             ex.printStackTrace();
         }
@@ -421,9 +421,9 @@ public class Updater {
             } else {
                 // The file's name did not contain the string 'vVersion'
                 final String authorInfo = this.plugin.getDescription().getAuthors().size() == 0 ? "" : " (" + this.plugin.getDescription().getAuthors().get(0) + ")";
-                this.plugin.getLogger().warning("The author of this plugin" + authorInfo + " has misconfigured their Auto Update system");
-                this.plugin.getLogger().warning("File versions should follow the format 'PluginName vVERSION'");
-                this.plugin.getLogger().warning("Please notify the author of this error.");
+                System.out.println("The author of this plugin" + authorInfo + " has misconfigured their Auto Update system");
+                System.out.println("File versions should follow the format 'PluginName vVERSION'");
+                System.out.println("Please notify the author of this error.");
                 this.result = Updater.UpdateResult.FAIL_NOVERSION;
                 return false;
             }
@@ -461,7 +461,7 @@ public class Updater {
             final JSONArray array = (JSONArray) JSONValue.parse(response);
 
             if (array.size() == 0) {
-                this.plugin.getLogger().warning("The updater could not find any files for the project id " + this.id);
+                System.out.println("The updater could not find any files for the project id " + this.id);
                 this.result = UpdateResult.FAIL_BADID;
                 return false;
             }
@@ -474,15 +474,13 @@ public class Updater {
             return true;
         } catch (final IOException e) {
             if (e.getMessage().contains("HTTP response code: 403")) {
-                this.plugin.getLogger().warning("dev.bukkit.org rejected the API key provided in plugins/Updater/config.yml");
-                this.plugin.getLogger().warning("Please double-check your configuration to ensure it is correct.");
+                System.out.println("dev.bukkit.org rejected the API key provided in plugins/Updater/config.yml");
+                System.out.println("Please double-check your configuration to ensure it is correct.");
                 this.result = UpdateResult.FAIL_APIKEY;
             } else {
-                this.plugin.getLogger().warning("The updater could not contact dev.bukkit.org for updating.");
-                this.plugin.getLogger().warning("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
+                System.out.println("Unable to connect to dev.Bukkit.org");
                 this.result = UpdateResult.FAIL_DBO;
             }
-            e.printStackTrace();
             return false;
         }
     }

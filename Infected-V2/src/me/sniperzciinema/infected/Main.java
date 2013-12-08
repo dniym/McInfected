@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infected;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,7 +32,6 @@ import net.milkbowl.vault.economy.Economy;
 import code.husky.mysql.MySQL;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -42,16 +42,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
 	// Initialize all the variables
-	public static String bVersion = "1.6.4";
-	public static String v = null;
-	public static boolean update = false;
-	public static String name = "";
+	public static String version = null;
 	public static Plugin me;
-	public static String BV = null;
 
-	public static Configuration config = null;
-	public String currentBukkitVersion = null;
-	public static String updateBukkitVersion = "0.0.0";
+	public static boolean update = false;
+	public static String updateName = "";
+	public static File file;
 
 	public static AddonManager addon;
 
@@ -60,13 +56,13 @@ public class Main extends JavaPlugin {
 	public static Economy economy = null;
 
 	public static MySQL MySQL = null;
-	public static Connection c = null;
+	public static Connection connection = null;
 
 	@Override
 	public void onEnable() {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
-		Main.me = this;
+		me = this;
 
 		System.out.println("===== Infected =====");
 		try
@@ -92,38 +88,20 @@ public class Main extends JavaPlugin {
 
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
-		Main.v = pdf.getVersion();
-		String[] s = Bukkit.getBukkitVersion().split("-");
-		currentBukkitVersion = s[0];
+		version = pdf.getVersion();
+
 		if (getConfig().getBoolean("Check For Updates.Enable"))
 		{
-			try
-			{
-				Updater updater = new Updater(this, 44622, getFile(),
-						Updater.UpdateType.NO_DOWNLOAD, false);
 
-				Main.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				Main.name = updater.getLatestName();
+			file = this.getFile();
+			Updater updater = new Updater(this, 44622, this.getFile(),
+					Updater.UpdateType.NO_DOWNLOAD, true);
 
-				System.out.println(v.replaceAll(".", ""));
-				System.out.println(updater.getLatestFileVersion().replaceAll(".", ""));
+			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+			updateName = updater.getLatestName();
 
-				int currentVersion = Integer.valueOf(v.replaceAll("\\.", ""));
-				int newVersion = Integer.valueOf(updater.getLatestFileVersion().replaceAll("\\.", ""));
-
-				if (currentVersion >= newVersion)
-				{
-					System.out.println("You are running a beta version of Infected!");
-					update = false;
-				}
-
-				else
-					System.out.println("You need to update Infected to: " + updater.getLatestFileVersion());
-
-			} catch (Exception ex)
-			{
-				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
-			}
+			if (update)
+				System.out.println("You need to update Infected to: " + updater.getLatestFileVersion());
 		}
 
 		// Get the Commands class and the Listener
@@ -147,12 +125,6 @@ public class Main extends JavaPlugin {
 		if (Settings.InfoSignsEnabled())
 			UpdateInfoSigns.update();
 
-		// Make sure the Infected's CB is the same as the server's CB
-		if (!currentBukkitVersion.equalsIgnoreCase(Main.bVersion))
-		{
-			System.out.println("Your Bukkit Version: |" + currentBukkitVersion + "|");
-			System.out.println("Versions do not match! \n There is no promise this plugin will work!");
-		}
 		if (Settings.MySQLEnabled())
 		{
 			System.out.println("Attempting to connect to MySQL");
@@ -161,11 +133,11 @@ public class Main extends JavaPlugin {
 					getConfig().getString("MySQL.Database"),
 					getConfig().getString("MySQL.Username"),
 					getConfig().getString("MySQL.Password"));
-			c = MySQL.openConnection();
+			connection = MySQL.openConnection();
 
 			try
 			{
-				Statement statement = c.createStatement();
+				Statement statement = connection.createStatement();
 
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (Player VARCHAR(20), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
 				System.out.println("MySQL Table has been loaded");
