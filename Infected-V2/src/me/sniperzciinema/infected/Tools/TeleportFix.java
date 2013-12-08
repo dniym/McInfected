@@ -4,6 +4,7 @@ package me.sniperzciinema.infected.Tools;
 import java.util.List;
 
 import me.sniperzciinema.infected.Disguise.Disguises;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 
 import org.bukkit.Server;

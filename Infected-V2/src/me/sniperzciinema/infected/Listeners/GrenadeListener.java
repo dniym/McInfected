@@ -4,7 +4,7 @@ package me.sniperzciinema.infected.Listeners;
 import java.util.ArrayList;
 
 import me.sniperzciinema.infected.Main;
-import me.sniperzciinema.infected.GameMechanics.DeathType;
+import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Grenades.Grenade;

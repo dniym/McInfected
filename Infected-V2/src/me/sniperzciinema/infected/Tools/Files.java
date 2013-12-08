@@ -17,8 +17,6 @@ public class Files {
 
 
 	// Set up all the needed things for files
-	public static YamlConfiguration abilities = null;
-	public static File abilitiesFile = null;
 	public static YamlConfiguration classes = null;
 	public static File classesFile = null;
 	public static YamlConfiguration arenas = null;
@@ -47,7 +45,6 @@ public class Files {
 	}
 	public static void saveAll(){
 		saveConfig();
-		saveAbilities();
 		saveClasses();
 		saveArenas();
 		savePlayers();
@@ -58,7 +55,6 @@ public class Files {
 	}
 	public static void reloadAll(){
 		reloadConfig();
-		reloadAbilities();
 		reloadClasses();
 		reloadArenas();
 		reloadPlayers();
@@ -68,43 +64,7 @@ public class Files {
 		reloadSigns();
 	}
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Reload Abilities File
-	public static void reloadAbilities() {
-		if (abilitiesFile == null)
-			abilitiesFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Abilities.yml");
-		abilities = YamlConfiguration.loadConfiguration(abilitiesFile);
-		// Look for defaults in the jar
-		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Abilities.yml");
-		if (defConfigStream != null)
-		{
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!abilitiesFile.exists())
-				abilities.setDefaults(defConfig);
-		}
-	}
-
-	// Get Abilities file
-	public static FileConfiguration getAbilities() {
-		if (abilities == null)
-			reloadAbilities();
-		return abilities;
-	}
-
-	// Safe Abilities File
-	public static void saveAbilities() {
-		if (abilities == null || abilitiesFile == null)
-			return;
-		try
-		{
-			getAbilities().save(abilitiesFile);
-		} catch (IOException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + abilitiesFile, ex);
-		}
-	}
-
+	
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Reload Abilities File
 	public static void reloadClasses() {

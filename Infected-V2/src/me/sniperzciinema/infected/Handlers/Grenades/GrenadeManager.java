@@ -4,8 +4,8 @@ package me.sniperzciinema.infected.Handlers.Grenades;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
 
 
 public class GrenadeManager {

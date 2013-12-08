@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.infected.Handlers.Misc;
+package me.sniperzciinema.infected.Handlers.Potions;
 
 import java.util.ArrayList;
 import java.util.List;

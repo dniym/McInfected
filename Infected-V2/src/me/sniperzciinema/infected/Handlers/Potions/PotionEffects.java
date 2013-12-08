@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.infected.GameMechanics;
+package me.sniperzciinema.infected.Handlers.Potions;
 
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;

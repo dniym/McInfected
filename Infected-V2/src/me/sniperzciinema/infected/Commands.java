@@ -3,30 +3,32 @@ package me.sniperzciinema.infected;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Extras.Menus;
-import me.sniperzciinema.infected.GameMechanics.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.GameMechanics.Equip;
 import me.sniperzciinema.infected.GameMechanics.KDRatio;
+import me.sniperzciinema.infected.GameMechanics.Settings;
+import me.sniperzciinema.infected.GameMechanics.Sort;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.GameMechanics.Stats.StatType;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Grenades.Grenade;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
-import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
-import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
+import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
-import me.sniperzciinema.infected.Tools.Sort;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -565,27 +567,19 @@ public class Commands implements CommandExecutor {
 								if (Lobby.getGameState() != GameState.Disabled)
 								{
 									Lobby.setGameState(GameState.Disabled);
-									p.sendMessage(Msgs.Command_Admin_Shutdown.getString("<state>", "Disabled"));
+									sender.sendMessage(Msgs.Command_Admin_Shutdown.getString("<state>", "Disabled"));
 								} else
 								{
 									Lobby.setGameState(GameState.InLobby);
-									p.sendMessage(Msgs.Command_Admin_Shutdown.getString("<state>", "Enabled"));
+									sender.sendMessage(Msgs.Command_Admin_Shutdown.getString("<state>", "Enabled"));
 								}
 							}
 							// RELOAD
 							else if (args[1].equalsIgnoreCase("Reload"))
 							{
 								System.out.println("===== Infected =====");
-								Files.reloadAbilities();
-								Files.reloadArenas();
-								Files.reloadClasses();
-								Files.reloadConfig();
-								Files.reloadGrenades();
-								Files.reloadMessages();
-								Files.reloadPlayers();
-								Files.reloadShop();
-								Files.reloadSigns();
-								Main.addon.getAddons();
+								Files.reloadAll();
+								AddonManager.getAddons();
 								System.out.println("====================");
 								sender.sendMessage(Msgs.Command_Admin_Reload.getString());
 
@@ -593,11 +587,11 @@ public class Commands implements CommandExecutor {
 							// CODE
 							else if (args[1].equalsIgnoreCase("Code"))
 							{
-								p.sendMessage(Msgs.Format_Prefix.getString() + "Code: " + ChatColor.WHITE + ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
-								p.sendMessage(Msgs.Format_Prefix.getString() + "This code has also been sent to your console to allow for copy and paste!");
+								sender.sendMessage(Msgs.Format_Prefix.getString() + "Code: " + ChatColor.WHITE + ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
+								sender.sendMessage(Msgs.Format_Prefix.getString() + "This code has also been sent to your console to allow for copy and paste!");
 								System.out.println(ItemHandler.getItemStackToString(((Player) sender).getItemInHand()));
 							} else
-								p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
+								sender.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 						} else if (args.length == 3)
 						{
 							// KICK
@@ -605,15 +599,15 @@ public class Commands implements CommandExecutor {
 							{
 								Player u = Bukkit.getPlayer(args[2]);
 								if (u == null || !Lobby.isInGame(u))
-									u.sendMessage(Msgs.Error_Game_Not_In.getString());
+									sender.sendMessage(Msgs.Error_Game_Not_In.getString());
 								else
 								{
-									p.performCommand("Infected Leave");
+									u.performCommand("Infected Leave");
 									u.sendMessage(Msgs.Command_Admin_Kicked_You.getString());
-									p.sendMessage(Msgs.Command_Admin_Kicked_Them.getString("<player>", u.getName()));
+									sender.sendMessage(Msgs.Command_Admin_Kicked_Them.getString("<player>", u.getName()));
 								}
 							} else
-								p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
+								sender.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 
 						} else if (args.length == 4)
 						{
@@ -624,44 +618,44 @@ public class Commands implements CommandExecutor {
 							{
 								int newValue = Stats.getPoints(user, Settings.VaultEnabled()) + i;
 								Stats.setPoints(user, newValue, Settings.VaultEnabled());
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "points", "<value>", String.valueOf(newValue)));
+								sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "points", "<value>", String.valueOf(newValue)));
 							} else if (args[1].equalsIgnoreCase("Score"))
 							{
 								int newValue = Stats.getScore(user) + i;
 								Stats.setScore(user, newValue);
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "score", "<value>", String.valueOf(newValue)));
+								sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "score", "<value>", String.valueOf(newValue)));
 							} else if (args[1].equalsIgnoreCase("Kills"))
 							{
 								int newValue = Stats.getKills(user) + i;
 								Stats.setKills(user, newValue);
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "kills", "<value>", String.valueOf(newValue)));
+								sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "kills", "<value>", String.valueOf(newValue)));
 							} else if (args[1].equalsIgnoreCase("Deaths"))
 							{
 								int newValue = Stats.getDeaths(user) + i;
 								Stats.setDeaths(user, newValue);
-								p.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "deaths", "<value>", String.valueOf(newValue)));
+								sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "deaths", "<value>", String.valueOf(newValue)));
 							} else
-								p.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
+								sender.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 
 						} else
 						{
-							p.sendMessage(Msgs.Format_Header.getString("<title>", "Admin CMDs"));
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add points to a player(Also goes negative)");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add score to a player(Also goes negative)");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + "/Inf Admin Kills <Player> <#>");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add kills to a player(Also goes negative)");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_BLUE + "/Inf Admin Deaths <Player> <#>");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add deaths to a player(Also goes negative)");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Kick a player out of Infected");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Prevent joining Infected");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_RED + "/Inf Admin Reload");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Reload the config");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GOLD + "/Inf Admin Code");
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "See Infected's item code for the item in hand");
+							sender.sendMessage(Msgs.Format_Header.getString("<title>", "Admin CMDs"));
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.AQUA + "/Inf Admin Points <Player> <#>");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add points to a player(Also goes negative)");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.BLUE + "/Inf Admin Score <Player> <#>");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add score to a player(Also goes negative)");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + "/Inf Admin Kills <Player> <#>");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add kills to a player(Also goes negative)");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_BLUE + "/Inf Admin Deaths <Player> <#>");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Add deaths to a player(Also goes negative)");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_GRAY + "/Inf Admin Kick <Player>");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Kick a player out of Infected");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_PURPLE + "/Inf Admin Shutdown");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Prevent joining Infected");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_RED + "/Inf Admin Reload");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "Reload the config");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GOLD + "/Inf Admin Code");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "See Infected's item code for the item in hand");
 						}
 					}
 				}
@@ -989,8 +983,6 @@ public class Commands implements CommandExecutor {
 						{
 							if (args[1].equalsIgnoreCase("Config"))
 								config = Files.getConfig();
-							else if (args[1].equalsIgnoreCase("Abilites"))
-								config = Files.getAbilities();
 							else if (args[1].equalsIgnoreCase("Arenas"))
 								config = Files.getArenas();
 							else if (args[1].equalsIgnoreCase("Classes"))
@@ -1006,7 +998,7 @@ public class Commands implements CommandExecutor {
 							else if (args[1].equalsIgnoreCase("Signs"))
 								config = Files.getSigns();
 							else
-								sender.sendMessage(Msgs.Error_Misc_Not_A_File.getString("<files>", "Config, Abilities, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
+								sender.sendMessage(Msgs.Error_Misc_Not_A_File.getString("<files>", "Config, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
 
 						}
 						if (args.length == 2)

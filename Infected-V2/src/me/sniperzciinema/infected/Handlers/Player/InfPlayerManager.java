@@ -3,6 +3,7 @@ package me.sniperzciinema.infected.Handlers.Player;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 
@@ -24,11 +25,13 @@ public class InfPlayerManager {
 	/**
 	 * Create InfPlayer
 	 * @param Player
+	 * @return The new InfPlayer
 	 */
-	public static void createInfPlayer(Player p) {
+	public static InfPlayer createInfPlayer(Player p) {
 		InfPlayer IP = new InfPlayer(p);
 		if(!players.contains(IP))
 			players.add(IP);
+		return IP;
 	}
 
 	/**
@@ -59,7 +62,7 @@ public class InfPlayerManager {
 			if (IP.getName().equalsIgnoreCase(playerName))
 				return IP;
 		}
-		return null;
+		return createInfPlayer(Bukkit.getPlayer(playerName));
 	}
 	/**
 	 * Create InfPlayer
@@ -71,6 +74,6 @@ public class InfPlayerManager {
 			if (IP.getPlayer() == p)
 				return IP;
 		}
-		return null;
+		return createInfPlayer(p);
 	}
 }

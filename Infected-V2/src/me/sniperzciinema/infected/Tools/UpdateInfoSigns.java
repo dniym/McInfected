@@ -1,9 +1,10 @@
 package me.sniperzciinema.infected.Tools;
 
 import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
-import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

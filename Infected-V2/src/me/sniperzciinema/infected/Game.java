@@ -4,16 +4,16 @@ package me.sniperzciinema.infected;
 import java.util.ArrayList;
 import java.util.Random;
 
+import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Events.InfectedEndGame;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
-import me.sniperzciinema.infected.Tools.Events;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -8,17 +8,17 @@ import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Disguise.Disguises;
 import me.sniperzciinema.infected.Extras.ScoreBoard;
 import me.sniperzciinema.infected.GameMechanics.Equip;
-import me.sniperzciinema.infected.GameMechanics.PotionEffects;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Classes.InfClass;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
-import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
-import me.sniperzciinema.infected.Handlers.Misc.SaveItemHandler;
+import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Potions.PotionEffects;
 import me.sniperzciinema.infected.Messages.Msgs;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -35,7 +35,7 @@ public class InfPlayer {
 
 	private Player player;
 	private Arena vote;
-	String name;
+	private String name;
 	private int killstreak = 0;
 	private long timeIn;
 	private GameMode gamemode;
@@ -59,6 +59,7 @@ public class InfPlayer {
 	{
 		name = p.getName();
 		player = p;
+		
 	}
 	public ScoreBoard getScoreBoard(){
 		return ScoreBoard;

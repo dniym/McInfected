@@ -2,6 +2,8 @@
 package me.sniperzciinema.infected.GameMechanics;
 
 import me.sniperzciinema.infected.Game;
+import me.sniperzciinema.infected.Enums.DeathType;
+import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
@@ -9,8 +11,6 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.KillMessages;
 import me.sniperzciinema.infected.Messages.Msgs;
-import me.sniperzciinema.infected.Tools.Events;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

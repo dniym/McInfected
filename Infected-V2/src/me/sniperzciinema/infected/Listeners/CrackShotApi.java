@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.Listeners;
 
-import me.sniperzciinema.infected.GameMechanics.DeathType;
+import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;

@@ -1,13 +1,9 @@
 
 package me.sniperzciinema.infected.GameMechanics;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import me.sniperzciinema.infected.Main;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
+import me.sniperzciinema.infected.Tools.MySQLManager;
 
 
 public class Stats {
@@ -237,35 +233,10 @@ public class Stats {
 	 * @param stat
 	 * @return value
 	 */
-	private static String getMySQLStats(String name, String stat) {
-		String value = "0";
+	private static Integer getMySQLStats(String name, String stat) {
 		name = name.toLowerCase();
-		Statement statement;
-		try
-		{
-			statement = Main.c.createStatement();
-
-			ResultSet res;
-
-			res = statement.executeQuery("SELECT * FROM " + stat + " WHERE PlayerName = '" + name + "';");
-
-			res.next();
-
-			if (res.getString("PlayerName") == null)
-			{
-				value = "0";
-			} else
-			{
-				value = res.getString("stat");
-			}
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			value = "0";
+		return	MySQLManager.getInt("Infected", stat, name);
 		}
-		return value;
-	}
 
 	/**
 	 * Attempts to set Stats to MySQL (Untested)
@@ -275,18 +246,7 @@ public class Stats {
 	 * @param value
 	 */
 	private static void setMySQLStats(String name, String stat, int value) {
-		Statement statement;
 		name = name.toLowerCase();
-		try
-		{
-			statement = Main.c.createStatement();
-
-			statement.executeUpdate("INSERT INTO Infected (`PlayerName`, `" + stat + "`) VALUES ('" + name + "', " + value + ");");
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		MySQLManager.update("Infected", stat, value, name);
 	}
 }

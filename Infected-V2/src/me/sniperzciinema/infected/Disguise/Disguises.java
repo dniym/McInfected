@@ -2,8 +2,8 @@
 package me.sniperzciinema.infected.Disguise;
 
 import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

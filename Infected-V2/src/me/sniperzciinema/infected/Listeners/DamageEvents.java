@@ -2,13 +2,13 @@
 package me.sniperzciinema.infected.Listeners;
 
 import me.sniperzciinema.infected.Main;
-import me.sniperzciinema.infected.GameMechanics.DeathType;
+import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
-import me.sniperzciinema.infected.GameMechanics.PotionEffects;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Handlers.Potions.PotionEffects;
 import me.sniperzciinema.infected.Messages.Msgs;
 
 import org.bukkit.entity.Arrow;

@@ -3,13 +3,13 @@ package me.sniperzciinema.infected.Listeners;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
-import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

@@ -9,9 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Messages.StringUtil;
-import me.sniperzciinema.infected.Tools.ArenaSettings;
 import me.sniperzciinema.infected.Tools.Files;
 
 

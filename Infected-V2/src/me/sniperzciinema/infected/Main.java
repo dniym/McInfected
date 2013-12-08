@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
@@ -22,7 +23,6 @@ import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infected.Tools.Metrics;
-import me.sniperzciinema.infected.Tools.Settings;
 import me.sniperzciinema.infected.Tools.TeleportFix;
 import me.sniperzciinema.infected.Tools.UpdateInfoSigns;
 import me.sniperzciinema.infected.Tools.Updater;
@@ -86,7 +86,6 @@ public class Main extends JavaPlugin {
 		Files.getPlayers().options().copyDefaults(true);
 		Files.getMessages().options().copyDefaults(true);
 		Files.getGrenades().options().copyDefaults(true);
-		Files.getAbilities().options().copyDefaults(true);
 		Files.getClasses().options().copyDefaults(true);
 		Files.getSigns().options().copyDefaults(true);
 		Files.saveAll();
@@ -126,10 +125,7 @@ public class Main extends JavaPlugin {
 				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
 			}
 		}
-		// Get Plugin addons
-		addon = new AddonManager(this);
-		addon.getAddons();
-		
+
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
 		PlayerListener PlayerListener = new PlayerListener();
@@ -150,33 +146,33 @@ public class Main extends JavaPlugin {
 		// Do the info signs (Updating the info)
 		if (Settings.InfoSignsEnabled())
 			UpdateInfoSigns.update();
-		
+
 		// Make sure the Infected's CB is the same as the server's CB
 		if (!currentBukkitVersion.equalsIgnoreCase(Main.bVersion))
 		{
 			System.out.println("Your Bukkit Version: |" + currentBukkitVersion + "|");
 			System.out.println("Versions do not match! \n There is no promise this plugin will work!");
 		}
-		if (getConfig().getBoolean("MySQL.Enable"))
+		if (Settings.MySQLEnabled())
 		{
-
 			System.out.println("Attempting to connect to MySQL");
 			MySQL = new MySQL(this, getConfig().getString("MySQL.Host"),
 					getConfig().getString("MySQL.Port"),
 					getConfig().getString("MySQL.Database"),
-					getConfig().getString("MySQL.User"),
-					getConfig().getString("MySQL.Pass"));
+					getConfig().getString("MySQL.Username"),
+					getConfig().getString("MySQL.Password"));
 			c = MySQL.openConnection();
+
 			try
 			{
-				Statement state = c.createStatement();
+				Statement statement = c.createStatement();
 
-				state.executeUpdate("CREATE TABLE IF NOT EXISTS Infected (Player CHAR(16), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(10), HighestKillStreak INT(10);");
+				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (Player VARCHAR(20), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
+				System.out.println("MySQL Table has been loaded");
 			} catch (SQLException e)
 			{
 				e.printStackTrace();
 			}
-
 		}
 		for (Player u : Bukkit.getOnlinePlayers())
 		{
@@ -187,12 +183,11 @@ public class Main extends JavaPlugin {
 			{
 				Arena arena = new Arena(StringUtil.getWord(a));
 				Lobby.addArena(arena);
-				if(Settings.logAreansEnabled())
+				if (Settings.logAreansEnabled())
 					System.out.println("Loaded Arena: " + arena.getName());
 			}
-		else
-			if(Settings.logAreansEnabled())
-				System.out.println("Couldn't Find Any Arenas");
+		else if (Settings.logAreansEnabled())
+			System.out.println("Couldn't Find Any Arenas");
 
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
@@ -206,7 +201,8 @@ public class Main extends JavaPlugin {
 		// On disable reset players with everything from before
 		if (!Lobby.getInGame().isEmpty())
 			for (Player p : Bukkit.getOnlinePlayers())
-				if(Lobby.isInGame(p)){
+				if (Lobby.isInGame(p))
+				{
 					p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
 					InfPlayerManager.getInfPlayer(p).leaveInfected();
 				}

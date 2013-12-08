@@ -3,12 +3,12 @@ package me.sniperzciinema.infected.Extras;
 
 import java.util.List;
 
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Messages.ScoreBoardVariables;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

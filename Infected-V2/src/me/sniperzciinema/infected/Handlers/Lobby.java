@@ -14,18 +14,18 @@ import me.sniperzciinema.infected.Events.InfectedStartGame;
 import me.sniperzciinema.infected.Events.InfectedStartInfecting;
 import me.sniperzciinema.infected.Events.InfectedStartVote;
 import me.sniperzciinema.infected.GameMechanics.Equip;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
+import me.sniperzciinema.infected.Handlers.Arena.ArenaSettings;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
-import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
+import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
-import me.sniperzciinema.infected.Tools.ArenaSettings;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
 
 
 public class Lobby {

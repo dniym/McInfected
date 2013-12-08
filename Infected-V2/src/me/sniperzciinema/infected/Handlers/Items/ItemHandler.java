@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.infected.Handlers.Misc;
+package me.sniperzciinema.infected.Handlers.Items;
 
 import java.util.ArrayList;
 import java.util.HashMap;

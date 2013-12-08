@@ -1,4 +1,4 @@
-package me.sniperzciinema.infected.Tools;
+package me.sniperzciinema.infected.Enums;
 
 
 public enum Events{

@@ -4,11 +4,11 @@ package me.sniperzciinema.infected.Handlers.Classes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
-import me.sniperzciinema.infected.Handlers.Misc.PotionHandler;
+import me.sniperzciinema.infected.GameMechanics.Settings;
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Player.Team;
+import me.sniperzciinema.infected.Handlers.Potions.PotionHandler;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;

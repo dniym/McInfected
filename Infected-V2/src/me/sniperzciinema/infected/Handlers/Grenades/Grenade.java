@@ -3,7 +3,7 @@ package me.sniperzciinema.infected.Handlers.Grenades;
 
 import java.util.ArrayList;
 
-import me.sniperzciinema.infected.Handlers.Misc.PotionHandler;
+import me.sniperzciinema.infected.Handlers.Potions.PotionHandler;
 import me.sniperzciinema.infected.Tools.Files;
 
 import org.bukkit.Material;

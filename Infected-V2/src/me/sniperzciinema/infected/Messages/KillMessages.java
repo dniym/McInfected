@@ -4,7 +4,7 @@ package me.sniperzciinema.infected.Messages;
 import java.util.List;
 import java.util.Random;
 
-import me.sniperzciinema.infected.GameMechanics.DeathType;
+import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;

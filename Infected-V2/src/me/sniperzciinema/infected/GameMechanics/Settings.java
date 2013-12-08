@@ -1,8 +1,10 @@
 
-package me.sniperzciinema.infected.Tools;
+package me.sniperzciinema.infected.GameMechanics;
 
 import java.util.HashMap;
 import java.util.List;
+
+import me.sniperzciinema.infected.Tools.Files;
 
 
 public class Settings {

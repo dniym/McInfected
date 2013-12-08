@@ -3,19 +3,19 @@ package me.sniperzciinema.infected.Listeners;
 
 import java.util.List;
 
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
+import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
-import me.sniperzciinema.infected.Handlers.Misc.ItemHandler;
-import me.sniperzciinema.infected.Handlers.Misc.LocationHandler;
-import me.sniperzciinema.infected.Handlers.Misc.SaveItemHandler;
+import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
