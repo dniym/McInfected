@@ -12,7 +12,7 @@ import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
-import me.sniperzciinema.infected.Tools.Settings;
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
