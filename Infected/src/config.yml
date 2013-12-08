@@ -1,0 +1,158 @@
+# Default InfectedV2 Config, Last edited in 2.0.0
+# #
+# For more help with ids go here: 
+# Item/Block Ids - Minecraftinfo.com/IDList.htm
+# Enchantment Ids - www.minecraftwiki.net/wiki/Enchanting
+# Potion Effect Ids - www.minecraftwiki.net/wiki/Potion_effects
+# #
+# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
+# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
+# You can use "/Infected Admin Code" To return the code for the item in your hand
+# #
+# See Infecteds config page for help
+# http://dev.bukkit.org/server-mods/infected-core
+# #   
+# # +======================================================+ #
+# # |                Infected Settings                     | #
+# # +======================================================+ #
+MySQL:
+  Enabled: false
+  Host: 127.0.0.1
+  Port: 3306
+  Database: minecraft
+  Username: user
+  Password: pass
+
+Check For Updates:
+  Enabled: true
+ 
+# All the addons for Infected 
+Addons:
+# Can they choose classes
+  Class Support: true
+# Economy Support
+  Vault Support:
+    Enabled: false
+    Reward: 100
+# Gun support
+  CrackShot Support:
+    Enabled: true
+# To allow allies to attack each other
+  Factions Support:
+    Enabled: true
+# To prevent mcmmo from unbalancing a fight
+  mcMMO Support:
+    Enabled: true
+# Should the zombies look like real mobs
+  Disguise Support:
+    Enabled: true
+
+# Logs that show when the server starts up
+Logs:
+  Addons: true
+  Arenas: true
+  Classes: true
+  Grenades: true
+  
+# All the settings for Infected
+Settings:
+# These settings can not be used Per Arena
+  Misc:
+# Should "/Infected Help" Give a book
+    Use Book For Help: true
+# To allow certain ranks to have more influance in voting
+    Votes:
+      Extra Votes:
+        vip: 2
+        staff: 3
+# Info Signs, every "Refresh Time"(seconds) the signs will be updated
+    Info Signs:
+      Enabled: true
+      Refresh Time: 2
+# How many players needed for it to automatically start
+    Automatic Start:
+      Minimum Players: 3
+# Should we prevent players from joining once a game has started
+    Prevent Joining During Game: false
+    ScoreBoard Stats:
+     - " "
+     - "&9&lPoints:"
+     - "&9&l<points>"
+     - " "
+     - "&7&lScore:"
+     - "&7&l<score>"
+     - " "
+     - "&a&lKills:"
+     - "&a&o<kills>"
+     - " "
+     - "&c&lDeaths:"
+     - "&c&o<deaths>"
+     - " "
+     - "&6&lBest Streak:"
+     - "&6&o<highestkillstreak>"
+# Global Settings can be just copied and pasted into an arenas settings then you have settings per arena
+  Global:
+# All the time limits (Seconds)
+    Time:
+      Voting: 30
+      Infecting: 20
+      Game: 480
+# When choosing the alpha should we choose more then one based on the players in game
+    Percent to Infect:
+      Enabled: true
+      Percent: 20
+# Commands to allow in the arena
+    Allowed Commands:
+    - /list
+    - /tell
+# Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
+    Breakable Blocks:
+      Global:
+      - '121'
+      Zombie:
+      - '170'
+      Human:
+      - '153'
+# The points(Store/Grenades/Etc) a player is rewarded upon certain events
+    Points:
+      Use: true
+# When another human gets infected
+      Survive: 3
+# As a zombie when your team gets a new Infected
+      Zombies Infected: 3
+# When you kill a player
+      Kill: 2
+# When the game ends
+      Game Over: 10
+# The score a player is rewarded upon certain events
+    Score:
+      Use: true
+# When another human gets infected
+      Survive: 3
+# As a zombie when your team gets a new Infected
+      Zombies Infected: 3
+# When you kill a player
+      Kill: 2
+# When the game ends
+      Game Over: 10
+# Default Classes
+    Default Classes:
+      Human: Knight
+      Zombie: Assassin
+# Zombie abilities are zombies with certain attribute boosts, such as agility, speed, strength, slowness, etc
+    Zombie Abilities: false
+    Misc:
+# Should players be able to loose hunger in the arena
+      Disable Hunger: true
+# Should players be able to enchant in the arena
+      Disable Enchanting: true
+# Should players be able to open doors, use levers, etc in arenas
+      Allow Interacting: true
+# Should players be able to drop items
+      Allow Dropping Items: false
+# The rewards for playing a game(Items)
+    Rewards:
+    - 351:2,3
+    - 265,2
+# The command triggered for a player winning a game(Can be used to give special items, money, permissions, etc)
+    Command Reward: tell <player> you have won!
