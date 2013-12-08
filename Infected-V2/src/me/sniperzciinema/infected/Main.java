@@ -121,6 +121,8 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(SignListener, this);
 		pm.registerEvents(TeleportFix, this);
 
+		AddonManager.getAddons();
+		
 		// Do the info signs (Updating the info)
 		if (Settings.InfoSignsEnabled())
 			UpdateInfoSigns.update();
