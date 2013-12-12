@@ -30,38 +30,39 @@ public class Main extends JavaPlugin implements Listener{
 			event.setCancelled(true);
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandAttempt(PlayerCommandPreprocessEvent event) {
-		String msg = event.getMessage().toLowerCase();
-		msg = msg.replaceAll("/join", "/inf join");
-		msg = msg.replaceAll("/leave", "/inf leave");
-		msg = msg.replaceAll("/vote", "/inf vote");
-		msg = msg.replaceAll("/chat", "/inf chat");
-		msg = msg.replaceAll("/grenade", "/inf grenade");
-		msg = msg.replaceAll("/grenades", "/inf grenade");
-		msg = msg.replaceAll("/shop", "/inf shop");
-		msg = msg.replaceAll("/store", "/inf shop");
-		msg = msg.replaceAll("/classes", "/inf classes");
-		msg = msg.replaceAll("/info", "/inf info");
-		msg = msg.replaceAll("/suicide", "/inf suicide");
-		msg = msg.replaceAll("/setlobby", "/inf setlobby");
-		msg = msg.replaceAll("/list", "/inf list");
-		msg = msg.replaceAll("/help", "/inf help");
-		msg = msg.replaceAll("/vote", "/inf vote");
-		msg = msg.replaceAll("/start", "/inf start");
-		msg = msg.replaceAll("/end", "/inf end");
-		msg = msg.replaceAll("/arenas", "/inf arenas");
-		msg = msg.replaceAll("/admin", "/inf admin");
-		msg = msg.replaceAll("/stats", "/inf stats");
-		msg = msg.replaceAll("/tpspawn", "/inf tpspawn");
-		msg = msg.replaceAll("/tplobby", "/inf tplobby");
-		msg = msg.replaceAll("/delspawn", "/inf delspawn");
-		msg = msg.replaceAll("/spawns", "/inf spawns");
-		msg = msg.replaceAll("/setspawn", "/inf setspawn");
-		msg = msg.replaceAll("/create", "/inf create");
-		msg = msg.replaceAll("/remove", "/inf remove");
-		msg = msg.replaceAll("/top", "/inf top");
-		msg = msg.replaceAll("/setarena", "/inf setarena");
+		String msg = event.getMessage();
+		msg = msg.toLowerCase().replaceAll("/join", "/inf join");
+		msg = msg.toLowerCase().replaceAll("/leave", "/inf leave");
+		msg = msg.toLowerCase().replaceAll("/vote", "/inf vote");
+		msg = msg.toLowerCase().replaceAll("/files", "/inf files");
+		msg = msg.toLowerCase().replaceAll("/chat", "/inf chat");
+		msg = msg.toLowerCase().replaceAll("/grenade", "/inf grenade");
+		msg = msg.toLowerCase().replaceAll("/grenades", "/inf grenade");
+		msg = msg.toLowerCase().replaceAll("/shop", "/inf shop");
+		msg = msg.toLowerCase().replaceAll("/store", "/inf shop");
+		msg = msg.toLowerCase().replaceAll("/classes", "/inf classes");
+		msg = msg.toLowerCase().replaceAll("/info", "/inf info");
+		msg = msg.toLowerCase().replaceAll("/suicide", "/inf suicide");
+		msg = msg.toLowerCase().replaceAll("/setlobby", "/inf setlobby");
+		msg = msg.toLowerCase().replaceAll("/list", "/inf list");
+		msg = msg.toLowerCase().replaceAll("/help", "/inf help");
+		msg = msg.toLowerCase().replaceAll("/vote", "/inf vote");
+		msg = msg.toLowerCase().replaceAll("/start", "/inf start");
+		msg = msg.toLowerCase().replaceAll("/end", "/inf end");
+		msg = msg.toLowerCase().replaceAll("/arenas", "/inf arenas");
+		msg = msg.toLowerCase().replaceAll("/admin", "/inf admin");
+		msg = msg.toLowerCase().replaceAll("/stats", "/inf stats");
+		msg = msg.toLowerCase().replaceAll("/tpspawn", "/inf tpspawn");
+		msg = msg.toLowerCase().replaceAll("/tplobby", "/inf tplobby");
+		msg = msg.toLowerCase().replaceAll("/delspawn", "/inf delspawn");
+		msg = msg.toLowerCase().replaceAll("/spawns", "/inf spawns");
+		msg = msg.toLowerCase().replaceAll("/setspawn", "/inf setspawn");
+		msg = msg.toLowerCase().replaceAll("/create", "/inf create");
+		msg = msg.toLowerCase().replaceAll("/remove", "/inf remove");
+		msg = msg.toLowerCase().replaceAll("/top", "/inf top");
+		msg = msg.toLowerCase().replaceAll("/setarena", "/inf setarena");
 		event.setMessage(msg);
 	}
 }

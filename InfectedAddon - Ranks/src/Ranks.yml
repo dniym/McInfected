@@ -6,25 +6,34 @@
 Ranks:
   Default:
     Prefix: '&7Noob'
-    Needed Score: 0
-    Rank Permissions: []
-  Slayer:
-    Prefix: '&2Slayer'
-    Needed Score: 100
-    Default Class:
+    Default: true
+    Max: false
+    Score: 0
+    Class:
       Human: Knight
       Zombie: Assassin
-    Rank Permissions:
-    - infected.classes.human.slayor
-    - infected.classes.zombie.slayor
-    - infected.shop.184
+    Permissions: []
+  Knight:
+    Prefix: '&9Knight'
+    Default: false
+    Max: false
+    Score: 0
+    Class:
+      Human: Knight
+      Zombie: Assassin
+    Permissions:
+    - infected.classes.human.knight
+    - infected.classes.zombie.knight
+    - infected.shop.186
   Killer:
-    Prefix: '&cKiller'
-    Needed Score: 300
-    Default Class:
+    Prefix: '&4&lKiller'
+    Default: false
+    Max: true
+    Score: 0
+    Class:
       Human: Knight
       Zombie: Assassin
-    Rank Permissions:
+    Permissions:
     - infected.classes.human.killer
     - infected.classes.zombie.killer
     - infected.shop.276

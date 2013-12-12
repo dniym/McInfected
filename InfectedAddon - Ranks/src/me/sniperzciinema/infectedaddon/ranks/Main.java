@@ -9,10 +9,10 @@ import java.util.logging.Level;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Events.InfectedEndGame;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
-import me.sniperzciinema.infected.GameMechanics.Settings;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
@@ -46,6 +46,23 @@ public class Main extends JavaPlugin implements Listener {
 		getRanks().options().copyDefaults(true);
 		saveRanks();
 
+		for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
+		{
+			if (!s.contains("."))
+			{
+				RanksManager.addRank(new Rank(
+						s,
+						getRanks().getString("Ranks." + s + ".Prefix"),
+						getRanks().getBoolean("Ranks." + s + ".Default"),
+						getRanks().getBoolean("Ranks." + s + ".Max"),
+						getRanks().getInt("Ranks." + s + ".Score"),
+						InfClassManager.getClass(Team.Human, getRanks().getString("Ranks." + s + ".Class.Human")),
+						InfClassManager.getClass(Team.Zombie, getRanks().getString("Ranks." + s + ".Class.Zombie")),
+						getRanks().getStringList("Ranks." + s + ".Permissions")));
+			}
+		}
+		RanksManager.getPresets();
+
 		saveDefaultConfig();
 		getServer().getPluginManager().registerEvents(this, this);
 	}
@@ -57,20 +74,22 @@ public class Main extends JavaPlugin implements Listener {
 	public void onInfectedCommand(InfectedCommandEvent event) {
 		if (event.getArgs().length >= 1)
 		{
-			if (event.getArgs()[0].equalsIgnoreCase("Rank") && event.getP() != null)
+			if (event.getArgs()[0].equalsIgnoreCase("Rank") || event.getArgs()[0].equalsIgnoreCase("Ranks") && event.getP() != null)
 			{
 				event.setCancelled(true);
 				Player p = event.getP();
+				Rank rank = RanksManager.getPlayersRank(p);
+				Rank nextRank = RanksManager.getNextRank(p);
 				p.sendMessage(Msgs.Format_Header.getString("<title>", "Ranks"));
-				if (!canRankUp(p))
+				if (rank.isMaxRank())
 					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
-				p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rankPrefix(getRank(p)));
-				p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + getStat(p));
-				if (canRankUp(p))
-					p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score") - getStat(p)));
-				if (canRankUp(p))
-					p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + ChatColor.GRAY + rankPrefix(nextRank(p)) + ChatColor.RED + " - " + ChatColor.GRAY + " Unlocks at " + ChatColor.RED + getRanks().getInt("Ranks." + nextRank(p) + ".Needed Score"));
-				if (!canRankUp(p))
+				p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Your Current Rank: " + ChatColor.GRAY + rank.getPrefix());
+				p.sendMessage(ChatColor.GRAY + "Your Score: " + ChatColor.RED + InfPlayerManager.getInfPlayer(p).getScore());
+				if (!rank.isMaxRank())
+					p.sendMessage(ChatColor.GRAY + "Score to next rank: " + ChatColor.RED + (nextRank.getScoreNeeded() - InfPlayerManager.getInfPlayer(p).getScore()));
+				if (!rank.isMaxRank())
+					p.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Next Rank: " + nextRank.getPrefix() + ChatColor.RED + " - " + ChatColor.GRAY + " Unlocks at " + ChatColor.RED + nextRank.getScoreNeeded());
+				if (rank.isMaxRank())
 					p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "                      MAX RANK");
 				p.sendMessage(Msgs.Format_Line.getString());
 			}
@@ -80,154 +99,47 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onInfectedGameEnd(InfectedEndGame event) {
 		for (Player u : event.getPlayers())
-			if (canRankUp(u))
-				rankUp(u);
+			if (RanksManager.canRankUp(u))
+				RanksManager.setPlayersRank(u, RanksManager.getNextRank(u));
 	}
 
 	@EventHandler
-	public void onInfectedJoin(InfectedCommandEvent event) {
-		if (!event.isCancelled() && event.getArgs()[0].equals("Join"))
-			;
+	public void onInfectedJoin(InfectedCommandEvent e) {
+		if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("join"))
 		{
-			setClasses(event.getP());
-			addPermissions(event.getP());
+			Player p = e.getP();
 
-			if (canRankUp(event.getP()))
-				rankUp(event.getP());
+			if (RanksManager.canRankUp(p))
+				RanksManager.setPlayersRank(p, RanksManager.getNextRank(p));
+
+			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
+			ip.setInfClass(Team.Human, RanksManager.getPlayersRank(p).getHumanClass());
+			ip.setInfClass(Team.Zombie, RanksManager.getPlayersRank(p).getZombieClass());
+			addPermissions(p);
 		}
 	}
 
 	@EventHandler
-	public void onInfectedLeave(InfectedCommandEvent event) {
-		if (!event.isCancelled() && event.getArgs()[0].equals("Leave"))
+	public void onInfectedLeave(InfectedCommandEvent e) {
+		if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("leave"))
 		{
-			if (canRankUp(event.getP()))
-				rankUp(event.getP());
-			removePermissions(event.getP());
-		}
-	}
+			Player p = e.getP();
 
-	public void setClasses(Player p) {
-		if (getConfig().getString("Ranks." + getRank(p) + ".Default Class.Humans") != null)
-		{
-			InfPlayerManager.getInfPlayer(p).setInfClass(Team.Human, InfClassManager.getClass(Team.Human, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Humans")));
-		}
-		if (getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombie") != null)
-		{
-			InfPlayerManager.getInfPlayer(p).setInfClass(Team.Zombie, InfClassManager.getClass(Team.Zombie, getConfig().getString("Ranks." + getRank(p) + ".Default Class.Zombies")));
+			if (RanksManager.canRankUp(p))
+				RanksManager.setPlayersRank(p, RanksManager.getNextRank(p));
+
+			removePermissions(p);
 		}
 	}
 
 	public void addPermissions(Player p) {
-		for (String s : getRanks().getStringList("Ranks." + getRank(p) + ".Permissions"))
+		for (String s : RanksManager.getPlayersRank(p).getPermissions())
 			perms.playerAdd(p, s);
 	}
 
 	public void removePermissions(Player p) {
-		for (String s : getRanks().getStringList("Ranks." + getRank(p) + ".Permissions"))
+		for (String s : RanksManager.getPlayersRank(p).getPermissions())
 			perms.playerRemove(p, s);
-	}
-
-	public String getRank(Player p) {
-		if (!getConfig().contains("Players." + p.getName()))
-		{
-			String rank = "";
-			for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
-			{
-				if (!s.contains("."))
-				{
-					if (getRanks().getInt("Ranks." + s + ".Needed Score") == 0)
-					{
-						rank = s;
-					}
-				}
-			}
-
-			getConfig().set("Players." + p.getName(), rank);
-			saveConfig();
-		}
-		return getConfig().getString("Players." + p.getName());
-	}
-
-	public String rankPrefix(String rank) {
-		return ChatColor.translateAlternateColorCodes('&', getRanks().getString("Ranks." + rank + ".Prefix"));
-	}
-
-	public boolean canRankUp(Player p) {
-
-		boolean b = false;
-		String rank = getRank(p);
-
-		int pointsNeed = 0;
-
-		for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
-			if (!s.contains("."))
-			{
-				if (!s.equalsIgnoreCase(rank))
-				{
-					if (getRanks().getInt("Ranks." + s + ".Needed Score") > getRanks().getInt("Ranks." + rank + ".Needed Score"))
-					{
-						if (getRanks().getInt("Ranks." + s + ".Needed Score") <= getStat(p))
-						{
-							if (getRanks().getInt("Ranks." + s + ".Needed Score") > pointsNeed)
-							{
-								pointsNeed = getRanks().getInt("Ranks." + s + ".Needed Score");
-								b = true;
-							}
-						}
-					}
-				}
-			}
-		return b;
-	}
-
-	public String nextRank(Player p) {
-		String rank = getRank(p);
-
-		// Set the next rank to null
-		String rankto = null;
-		int pointsNeed = 0;
-
-		for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
-			if (!s.contains("."))
-			{
-
-				// If the current rank and the rank isnt the same
-				if (!s.equalsIgnoreCase(rank))
-				{
-
-					// If the score for the rank is less or equal to that of the
-					// players
-					if (getRanks().getInt("Ranks." + s + ".Needed Score") <= getStat(p))
-					{
-
-						// If the score of the rank is more then the previously
-						// discovered rank's
-						if (getRanks().getInt("Ranks." + s + ".Needed Score") > pointsNeed)
-						{
-							rankto = s;
-							pointsNeed = getRanks().getInt("Ranks." + s + ".Needed Score");
-						}
-					}
-				}
-			}
-		return rankto;
-
-	}
-
-	public void rankUp(Player p) {
-
-		String rankto = nextRank(p);
-		getConfig().set("Players." + p.getName(), rankto);
-		saveConfig();
-	}
-
-	public int getStat(Player p) {
-		if (getConfig().getBoolean("Use Score for ranks"))
-		{
-			return InfPlayerManager.getInfPlayer(p).getScore();
-		} else
-			return InfPlayerManager.getInfPlayer(p).getPoints(Settings.VaultEnabled());
 	}
 
 	public void reloadRanks() {
