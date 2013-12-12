@@ -310,14 +310,10 @@ public class Lobby {
 
 			currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
 			{
-
 				@Override
 				public void run() {
 					if (getTimeLeft() != 0)
 					{
-						// TODO: Re-add: When all players vote, time gets cut in
-						// half
-
 						TimeLeft -= 1;
 
 						for (Player u : getInGame())
