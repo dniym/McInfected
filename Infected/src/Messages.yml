@@ -37,7 +37,7 @@ Command:
     Changed Stat: '&e&l<player>''s &7&o<stat> &ehave been changed to &7&o<value>'
   Files:
     Value: '&2&o<path> &2has a value of: &7&o<value>'
-    Changed: '&2&o<path> &2was changed from a value of: &7&o<value> &2 to: &7&o<newvalue>'
+    Changed: '&2&o<path> &2was changed from a value of &7&o<value> &2 to: &7&o<newvalue>'
 Error:
   Misc:
     Not Player: '&c&oYou''re not a player!'
@@ -80,7 +80,7 @@ Game:
     Game: '&a<time> &e&oleft in this game'
   Players Left: '&1Humans &a<humans> &8|| &4Zombies &c<zombies>'
   Info:
-    Arena: '&d<arena> &f- "&8Created By: &7<creator>'
+    Arena: '&6<arena> &f- &2Created By: &7<creator>'
   Death:
     Before Game: '&6Somehow you''ve managed to kill yourself before the games even started, Try harder next time...'
   End:

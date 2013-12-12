@@ -4,7 +4,6 @@ package me.sniperzciinema.infected;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import me.sniperzciinema.infected.GameMechanics.Settings;
@@ -49,7 +48,6 @@ public class Main extends JavaPlugin {
 	public static String updateName = "";
 	public static File file;
 
-	public static AddonManager addon;
 
 	// Plugin Addons
 	public static Plugin Disguiser;
@@ -63,7 +61,7 @@ public class Main extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		me = this;
-
+		
 		System.out.println("===== Infected =====");
 		try
 		{
@@ -135,17 +133,18 @@ public class Main extends JavaPlugin {
 					getConfig().getString("MySQL.Database"),
 					getConfig().getString("MySQL.Username"),
 					getConfig().getString("MySQL.Password"));
-			connection = MySQL.openConnection();
 
 			try
 			{
+				connection = MySQL.openConnection();
 				Statement statement = connection.createStatement();
 
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (Player VARCHAR(20), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
 				System.out.println("MySQL Table has been loaded");
-			} catch (SQLException e)
+			} catch (Exception e)
 			{
-				e.printStackTrace();
+				Files.getConfig().set("MySQL.Enabled", false);
+				System.out.println("Unable to connect to MySQL");
 			}
 		}
 		for (Player u : Bukkit.getOnlinePlayers())

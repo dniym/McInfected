@@ -22,6 +22,7 @@ import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
@@ -461,9 +462,14 @@ public class Lobby {
 
 						for (Player u : getInGame())
 						{
+							InfPlayer ip = InfPlayerManager.getInfPlayer(u);
+							ip.setTimeIn(System.currentTimeMillis() / 1000);
 							InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis() / 1000);
 							if (!Lobby.isHuman(u) && !Lobby.isZombie(u))
+							{
 								Lobby.addHuman(u);
+								ip.setTeam(Team.Human);
+							}
 						}
 						timerStartGame();
 					}

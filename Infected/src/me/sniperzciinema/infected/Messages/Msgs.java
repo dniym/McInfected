@@ -130,7 +130,7 @@ public enum Msgs
 			return message;
 		} catch (NullPointerException npe)
 		{
-			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Unable to find message: " + string;
+			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Either theres something wrong with the variables or we're unable to find message: " + string;
 		}
 	}
 

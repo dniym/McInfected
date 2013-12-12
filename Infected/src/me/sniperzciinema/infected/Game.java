@@ -6,7 +6,7 @@ import java.util.Random;
 
 import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Events.InfectedEndGame;
-import me.sniperzciinema.infected.GameMechanics.Deaths;
+import me.sniperzciinema.infected.GameMechanics.KillStreaks;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;
@@ -14,7 +14,6 @@ import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -31,14 +30,12 @@ public class Game {
 		InfectedEndGame e = new InfectedEndGame(DidHumansWin);
 		Bukkit.getPluginManager().callEvent(e);
 
-		Lobby.reset();
-
 		for (Player u : Lobby.getInGame())
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 			IP.getScoreBoard().showProperBoard();
 
-			Deaths.handleKillStreaks(true, u);
+			KillStreaks.handle(true, u);
 		}
 		if (DidHumansWin)
 		{
@@ -114,12 +111,13 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Game_Over_Zombies_Win.getString());
 				u.sendMessage("");
-				u.sendMessage(Msgs.Game_Info_Arena.getString("<map>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			}
 		}
+		Lobby.reset();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 		{
 

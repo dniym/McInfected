@@ -68,10 +68,7 @@ public class Commands implements CommandExecutor {
 			Bukkit.getPluginManager().callEvent(e);
 			if (!e.isCancelled())
 			{
-				if (args.length > 0 && args[0].equalsIgnoreCase("TEST"))
-				{
-					Deaths.playerDies(DeathType.Melee, p, null);
-				} else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+				if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 				{
 					if (p == null)
 						sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
@@ -1040,7 +1037,12 @@ public class Commands implements CommandExecutor {
 									String[] list = (newvalue.replaceAll("\\[", "").replaceAll("]", "")).split(",");
 									config.set(path, list);
 								} else
+									try{
+										int i = Integer.valueOf(newvalue);
+										config.set(path, i);
+									} catch (Exception ex){
 									config.set(path, newvalue);
+									}
 								Files.saveAll();
 							}
 						} else

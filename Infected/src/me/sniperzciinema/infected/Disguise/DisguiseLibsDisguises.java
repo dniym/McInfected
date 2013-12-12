@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 public class DisguiseLibsDisguises {
 
+	@SuppressWarnings("deprecation")
 	public static void disguisePlayer(Player p) {
 
 		if (!DisguiseAPI.isDisguised(p))
@@ -40,6 +41,7 @@ public class DisguiseLibsDisguises {
 		DisguiseAPI.undisguiseToAll(player);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isPlayerDisguised(Player player) {
 		return DisguiseAPI.isDisguised(player);
 	}

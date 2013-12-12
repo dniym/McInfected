@@ -108,10 +108,10 @@ public class ArenaSettings {
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////
 
 	public ArrayList<ItemStack> getRewordItems() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards.Items"))
-			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards.Items"));
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards"))
+			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards"));
 		else
-			return ItemHandler.getItemStackList(Files.getConfig().getStringList("Settings.Global.Reward.Items"));
+			return ItemHandler.getItemStackList(Files.getConfig().getStringList("Settings.Global.Rewards"));
 	}
 
 	// /////////////////////////////////////////////////////////-STRINGS-///////////////////////////////////////////////////////
