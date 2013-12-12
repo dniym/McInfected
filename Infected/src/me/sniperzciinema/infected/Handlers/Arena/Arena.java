@@ -201,7 +201,10 @@ public class Arena {
 	 *            the block to set
 	 */
 	public void setBlock(String s) {
-		Files.getArenas().set("Arenas." + name + ".Block", s);
+		if(s.equals("0"))
+			Files.getArenas().set("Arenas." + name + ".Block", "395");
+		else		
+			Files.getArenas().set("Arenas." + name + ".Block", s);
 	}
 
 }

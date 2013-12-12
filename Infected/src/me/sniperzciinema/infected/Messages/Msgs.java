@@ -17,7 +17,7 @@ public enum Msgs
 	Format_Grenades_List("Format.Grenades List")/*<id>, <name>, <cost>*/,
 	Command_Arena_List("Command.Arena.List")/*<valid>, <invalid>*/,
 	Command_Arena_Created("Command.Arena.Created")/*<arena>*/,
-	Command_Arena_Removed("CommandArena.Removed")/*<arena>*/,
+	Command_Arena_Removed("Command.Arena.Removed")/*<arena>*/,
 	Command_Arena_Set("Command.Arena.Set")/*<arena>*/,
 	Command_Lobby_Set("Command.Lobby.Set"),
 	Command_Lobby_Tp("Command.Lobby.Tp"),

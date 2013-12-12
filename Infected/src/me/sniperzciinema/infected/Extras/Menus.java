@@ -17,6 +17,7 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
+import me.sniperzciinema.infected.Messages.RandomChatColor;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infected.Tools.IconMenu;
@@ -130,13 +131,13 @@ public class Menus {
 		{
 
 			if (Lobby.isArenaValid(arena.getName()))
-				menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(Material.EMPTY_MAP), "" + ChatColor.getByChar(String.valueOf(place + 1)) + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 			else
 				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 
 			place++;
 		}
-		menu.setOption(place, new ItemStack(Material.MAP), "random", Msgs.Menu_Vote_Random.getString());
+		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", Msgs.Menu_Vote_Random.getString());
 		menu.open(p);
 	}
 
