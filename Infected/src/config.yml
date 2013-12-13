@@ -34,6 +34,9 @@ Addons:
   Vault Support:
     Enabled: false
     Reward: 100
+# Picture Support
+  Picture Support:
+    Enabled: true
 # Gun support
   CrackShot Support:
     Enabled: true

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Events.InfectedEndGame;
+import me.sniperzciinema.infected.Extras.Pictures;
 import me.sniperzciinema.infected.GameMechanics.KillStreaks;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
@@ -15,6 +16,7 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -155,14 +157,39 @@ public class Game {
 		{
 			toInfect = 1;
 		}
+		String[] face = null;
+		
 		while (Lobby.getZombies().size() != toInfect)
 		{
-			Player alpha = Lobby.getInGame().get(new Random(50).nextInt(Lobby.getInGame().size()));
-			alpha.sendMessage(Msgs.Game_Alpha_You.getString());
+			Player alpha = Lobby.getInGame().get(new Random().nextInt(Lobby.getInGame().size()));
+			
+			if (Settings.PictureEnabled())
+			{
+				face = Pictures.getZombie();
+				face[2] = face[2] + "     " + Msgs.Game_Alpha_You.getString();
+				face[3] = face[3] + ChatColor.RED + ChatColor.ITALIC + "     Infect all the humans to win";
+
+				alpha.sendMessage(face);
+			}
+			else
+				alpha.sendMessage(Msgs.Game_Alpha_You.getString());
+			
 			InfPlayerManager.getInfPlayer(alpha).Infect();
+
+			if (Settings.PictureEnabled())	
+			{
+				face = Pictures.getHuman();
+				face[2] = face[2] + "     " + Msgs.Game_Survivor.getString();
+				face[3] = face[3] + ChatColor.GREEN + ChatColor.ITALIC + "     Survive to win";
+			}
 			for (Player u : Lobby.getInGame())
 				if (u != alpha)
-					u.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
+				{
+					if (Settings.PictureEnabled())		
+						u.sendMessage(face);
+					 else
+						u.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
+				}
 
 			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
 				alpha.addPotionEffect(PE);

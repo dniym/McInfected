@@ -18,7 +18,7 @@ public class SaveItemHandler {
 	@SuppressWarnings("unchecked")
 	public static List<ItemStack> getItems(Player p){
 		List<ItemStack> list = new ArrayList<ItemStack>();
-		if(Files.getPlayers().get("Players." + p.getName() + ".Saved Inventory") != null)
+		if(Files.getPlayers().get("Players." + p.getName().toLowerCase() + ".Saved Inventory") != null)
 			try{
 				list = (ArrayList<ItemStack>)Files.getPlayers().get("Players." + p.getName().toLowerCase() + ".Saved Inventory");
 			}catch(Exception e){

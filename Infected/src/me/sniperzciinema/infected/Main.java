@@ -118,7 +118,6 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(GrenadeListener, this);
 		pm.registerEvents(SignListener, this);
 		pm.registerEvents(TeleportFix, this);
-
 		AddonManager.getAddons();
 		
 		// Do the info signs (Updating the info)

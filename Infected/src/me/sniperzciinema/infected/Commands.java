@@ -1037,11 +1037,13 @@ public class Commands implements CommandExecutor {
 									String[] list = (newvalue.replaceAll("\\[", "").replaceAll("]", "")).split(",");
 									config.set(path, list);
 								} else
-									try{
+									try
+									{
 										int i = Integer.valueOf(newvalue);
 										config.set(path, i);
-									} catch (Exception ex){
-									config.set(path, newvalue);
+									} catch (Exception ex)
+									{
+										config.set(path, newvalue);
 									}
 								Files.saveAll();
 							}

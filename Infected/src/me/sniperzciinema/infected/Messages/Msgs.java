@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infected.Messages;
 
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Tools.Files;
 
 import org.bukkit.ChatColor;
@@ -77,6 +78,7 @@ public enum Msgs
 	Game_Players_Left("Game.Players Left")/*<humans>, <zombies>*/,
 	Game_Alpha_You("Game.Alpha.You"),
 	Game_Alpha_They("Game.Alpha.They")/*<player>*/,
+	Game_Survivor("Game.Survior"),
 	Game_Joined_You("Game.Joined.You"),
 	Game_Joined_They("Game.Joined.They")/*<player>*/,
 	Game_Left_You("Game.Left.You"),
@@ -112,7 +114,7 @@ public enum Msgs
 		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
 		try
 		{
-			String message = (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar())));
+			String message = (string.startsWith("Format") || string.startsWith("Menu") || (Settings.PictureEnabled() && (string.startsWith("Game.Alpha") || string.startsWith("Game.Survior"))) ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&"+String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&"+String.valueOf(RandomChatColor.getFormat().getChar())));
 			int i = 0;
 			String replace = null;
 			for (String variable : variables)

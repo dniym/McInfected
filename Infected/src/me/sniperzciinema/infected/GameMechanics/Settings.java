@@ -16,6 +16,9 @@ public class Settings {
 	public static boolean DisguisesEnabled() {
 		return Files.getConfig().getBoolean("Addons.Disguise Support.Enabled");
 	}
+	public static boolean PictureEnabled() {
+		return Files.getConfig().getBoolean("Addons.Picture Support.Enabled");
+	}
 
 	public static boolean VaultEnabled() {
 		return Files.getConfig().getBoolean("Addons.Vault Support.Enabled");

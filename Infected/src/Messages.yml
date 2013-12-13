@@ -90,8 +90,9 @@ Game:
     Winners: '&aThe survivors are: &7<winners>'
     Zombies Win: '&cAll Humans have been Infected'
   Alpha:
-    You: '&4&oYou''re a alpha Zombie!'
+    You: '&f&oYou are a &4ZOMBIE!'
     They: '&7&o<player> &chas fallen to the Infection'
+  Survior: '&f&oYou are a &bSurvivor'
 Help:
   Vote: '&3To vote use &x&o/Infected Vote &3and choose an arena'
   Grenades: '&3To purchase a grenade use &x&o/Infected Grenades [ID] [Amount]'

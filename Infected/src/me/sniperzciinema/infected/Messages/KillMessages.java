@@ -32,11 +32,11 @@ public class KillMessages {
 			else
 				team = Team.Human;
 		}
-		
+
 		String msg = getKill(team, death);
 
 		// Replace color codes, and killer and killed names
-		msg = ChatColor.translateAlternateColorCodes('&', msg);
+		msg = ChatColor.translateAlternateColorCodes('&', msg.replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 		if (killer != null)
 			msg = msg.replaceAll("<killer>", killer.getName() + "(" + Stats.getScore(killer.getName()) + ")");
 		if (killed != null)
@@ -44,13 +44,13 @@ public class KillMessages {
 		return Msgs.Format_Prefix.getString() + msg;
 	}
 
-	private static String getKill(Team team, DeathType death){
+	private static String getKill(Team team, DeathType death) {
 		String message;
 		List<String> list;
-		if(death == DeathType.Other)
-		list = Files.getMessages().getStringList("Suicides." + team.toString());
-			else
-		list =  Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
+		if (death == DeathType.Other)
+			list = Files.getMessages().getStringList("Suicides." + team.toString());
+		else
+			list = Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
 		Random r = new Random();
 		int i = r.nextInt(list.size());
 		message = list.get(i);
