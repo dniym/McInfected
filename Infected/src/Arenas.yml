@@ -1,22 +1,22 @@
-# Default Arena.yml, Last Edited in v2.0.0
-# # Arena Name
-#  test:
-#    # Whos the creater of this map
+# Default Arena.yml, Last Edited in v2.0.2
+# # Arena Name  
+#  Arena1:
+# # Arenas Creator
 #    Creator: Unkown
-#    # Are humans not allowed to attack zombies(Making them have to only run)
-#    Plain Zombie Survival: false
-#    # Are mobs allowed to break blocks
-#    Allow Breaking Of:
-#      # All teams can break these blocks
-#      Global:
-#      - '55'
-#      - '20'
-#      # Only these teams can break blocks in a list(Look at global)
-#      Human: '[]'
-#      Zombie: '[]'
-#    # Where players can spawn
+# # The block that represents this arena when voting
+#    Block: '395'
+# # The arenas spawns
 #    Spawns:
-#    - world,-479,33,156,-91.95003,7.949999
+#    - world,1374.7586257635292,64.0,1271.7080055984245,-263.72348,8.700038
+#    - world,1364.092224152784,78.253052179447,1290.053756028495,17.976517,-9.749942
+# # Settings from the config under "Settings.Global" can just be copied and pasted here to make settings per arena
+#    Default Classes:
+#      Human: Knight
+#      Zombie: Assassin
+#    Rewards:
+#    - 351:2,3
+#    - 265,2
+
 # +========================================================================+
 
 Arenas: []

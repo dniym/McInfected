@@ -1,4 +1,4 @@
-# # Default Grenades.yml, Last Edited in v2.0.0
+# # Default Grenades.yml, Last Edited in v2.0.2
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -20,9 +20,6 @@
 # #  How far should the grenades explosion range be?
 #  Range: 3
 # #  How much damage should this grenade cause?
-#  Damage: 1
-# #  Should I remove the item after the player throws it?
-#  Take After Thrown: true
 # #  Does the grenade damage the thrower if in range?
 #  Damage Self: true
 #  Potion effects.
@@ -40,7 +37,6 @@ Grenades:
     Delay: 3
     Range: 3
     Damage: 1
-    Take After Thrown: true
     Damage Self: true
     Effects:
     - "2:5:3"
@@ -51,7 +47,6 @@ Grenades:
     Delay: 3
     Range: 3
     Damage: 1
-    Take After Thrown: true
     Damage Self: true
     Effects:
     - "2:1:2"
@@ -62,7 +57,6 @@ Grenades:
     Delay: 3
     Range: 4
     Damage: 10
-    Take After Thrown: true
     Damage Self: true
     Effects:
     - "2:1:1"
@@ -72,7 +66,6 @@ Grenades:
     Delay: 1
     Range: 2
     Damage: -10
-    Take After Thrown: true
     Damage Self: true
     Effects:
     - "15:1:1"

@@ -76,7 +76,12 @@ public class Main extends JavaPlugin implements Listener {
 			if (event.getArgs()[0].equalsIgnoreCase("Rank") || event.getArgs()[0].equalsIgnoreCase("Ranks") && event.getP() != null)
 			{
 				event.setCancelled(true);
+				
 				Player p = event.getP();
+
+				if (RanksManager.canRankUp(p))
+					RanksManager.setPlayersRank(p, RanksManager.getNextRank(p));
+
 				Rank rank = RanksManager.getPlayersRank(p);
 				Rank nextRank = RanksManager.getNextRank(p);
 				p.sendMessage(Msgs.Format_Header.getString("<title>", "Ranks"));
