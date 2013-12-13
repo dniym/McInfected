@@ -63,7 +63,6 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		RanksManager.getPresets();
 
-		saveDefaultConfig();
 		getServer().getPluginManager().registerEvents(this, this);
 	}
 
