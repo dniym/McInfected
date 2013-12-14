@@ -8,24 +8,28 @@ import me.sniperzciinema.infected.Tools.MySQLManager;
 
 public class Stats {
 
-	public enum StatType{
+	public enum StatType
+	{
 		kills, deaths, points, score, killstreak, playingtime;
 	};
-	public static int getStat(StatType type, String user){
-		if(type == StatType.kills)
+
+	public static int getStat(StatType type, String user) {
+		if (type == StatType.kills)
 			return getKills(user);
-		else if(type == StatType.deaths)
+		else if (type == StatType.deaths)
 			return getDeaths(user);
-		else if(type == StatType.points)
+		else if (type == StatType.points)
 			return getPoints(user, Settings.VaultEnabled());
-		else if(type == StatType.score)
+		else if (type == StatType.score)
 			return getScore(user);
-		else if(type == StatType.killstreak)
+		else if (type == StatType.killstreak)
 			return getHighestKillStreak(user);
-		else if(type == StatType.playingtime)
+		else if (type == StatType.playingtime)
 			return getPlayingTime(user);
-		else return 0;
+		else
+			return 0;
 	}
+
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
@@ -189,7 +193,7 @@ public class Stats {
 	public static int getPoints(String name, boolean useVault) {
 		name = name.toLowerCase();
 		if (useVault)
-			return (int)Main.economy.getBalance(name);
+			return (int) Main.economy.getBalance(name);
 		else if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Points"));
 		else
@@ -211,13 +215,12 @@ public class Stats {
 			{
 				int price = cPoints - points;
 				Main.economy.withdrawPlayer(name, price);
-			}
-			else{
+			} else
+			{
 				int depo = points - cPoints;
 				Main.economy.depositPlayer(name, depo);
 			}
-		}
-		else if (Settings.MySQLEnabled())
+		} else if (Settings.MySQLEnabled())
 			setMySQLStats(name, "Points", points);
 		else
 		{
@@ -235,8 +238,8 @@ public class Stats {
 	 */
 	private static Integer getMySQLStats(String name, String stat) {
 		name = name.toLowerCase();
-		return	MySQLManager.getInt("Infected", stat, name);
-		}
+		return MySQLManager.getInt("Infected", stat, name);
+	}
 
 	/**
 	 * Attempts to set Stats to MySQL (Untested)

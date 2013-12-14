@@ -13,8 +13,8 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedEndGame extends Event {
 
-
 	private boolean didHumansWin;
+
 	public InfectedEndGame(boolean didHumansWin)
 	{
 		this.didHumansWin = didHumansWin;
@@ -29,32 +29,37 @@ public class InfectedEndGame extends Event {
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 	/**
 	 * @return the players
 	 */
 	public ArrayList<Player> getPlayers() {
 		return Lobby.getInGame();
 	}
+
 	/**
 	 * @return the zombies
 	 */
 	public ArrayList<Player> getZombies() {
 		return Lobby.getZombies();
 	}
+
 	/**
 	 * @return the Humans
 	 */
 	public ArrayList<Player> getHumans() {
 		return Lobby.getHumans();
 	}
-	public boolean didHumansWin(){
+
+	public boolean didHumansWin() {
 		return didHumansWin;
 	}
+
 	/**
 	 * @return active arena
 	 */
 	public Arena getArena() {
 		return Lobby.getActiveArena();
 	}
-	
+
 }

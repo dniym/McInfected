@@ -6,12 +6,15 @@ import java.util.List;
 
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+
 /**
- * If anyone wants to use this class for their own plugin go ahead, this is a class you can also find in my gists(On Github).
- * If you have any suggestions/additions that you think would help Infected feel free to message me or fork the gist
+ * If anyone wants to use this class for their own plugin go ahead, this is a
+ * class you can also find in my gists(On Github). If you have any
+ * suggestions/additions that you think would help Infected feel free to message
+ * me or fork the gist
  * 
  * @author Sniperz
- *
  */
 
 @SuppressWarnings("deprecation")

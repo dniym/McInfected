@@ -2,11 +2,6 @@
 package me.sniperzciinema.infected.Handlers;
 
 import java.util.ArrayList;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Main;
@@ -27,6 +22,12 @@ import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.Files;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 
 public class Lobby {
@@ -310,6 +311,7 @@ public class Lobby {
 
 			currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
 			{
+
 				@Override
 				public void run() {
 					if (getTimeLeft() != 0)

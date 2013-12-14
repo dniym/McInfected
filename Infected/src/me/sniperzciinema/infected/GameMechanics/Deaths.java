@@ -3,31 +3,50 @@ package me.sniperzciinema.infected.GameMechanics;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Enums.DeathType;
+import me.sniperzciinema.infected.Events.InfectedDeathEvent;
+import me.sniperzciinema.infected.Extras.Pictures;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.KillMessages;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 
 public class Deaths {
 
-	// TODO: Readd death event
-
 	public static void playerDies(DeathType death, Player killer, Player killed) {
-		
-		for(Player u : Lobby.getInGame()){
+
+		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed);
+		Bukkit.getPluginManager().callEvent(e);
+
+		for (Player u : Lobby.getInGame())
+		{
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
+		String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
+		if (Settings.PictureEnabled() && Lobby.getHumans().size() < 1)
+		{
+			killMessage = KillMessages.getKillMessage(killer, killed, death, false);
+			String[] face = Pictures.getZombie();
+			face[2] = face[2] + "     " + killMessage;
+			face[3] = face[3] + ChatColor.RED + ChatColor.ITALIC + "     You have become Infected";
 
-		String killMessage = KillMessages.getKillMessage(killer, killed, death);
-		
-		for (Player u : Lobby.getInGame())
-			u.sendMessage(killMessage);
+			killed.sendMessage(face);
+
+			for (Player u : Lobby.getInGame())
+				if (u != killed)
+					u.sendMessage(killMessage);
+
+		} else
+			for (Player u : Lobby.getInGame())
+				u.sendMessage(killMessage);
 
 		InfPlayer InfKiller = null;
 		InfPlayer InfKilled = null;
@@ -48,7 +67,6 @@ public class Deaths {
 
 			if (InfKilled.getTeam() == Team.Human)
 			{
-				
 				InfKilled.Infect();
 
 				if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)

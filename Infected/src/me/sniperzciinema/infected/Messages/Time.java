@@ -3,6 +3,7 @@ package me.sniperzciinema.infected.Messages;
 
 import me.sniperzciinema.infected.Tools.Files;
 
+
 public class Time {
 
 	// Method to take the time from seconds and convert it into a nice looking
@@ -33,6 +34,7 @@ public class Time {
 		}
 		return times;
 	}
+
 	public static String getOnlineTime(String player) {
 		Long time = Files.getPlayers().getLong("Players." + player.toLowerCase() + ".Time");
 		Long seconds = time;

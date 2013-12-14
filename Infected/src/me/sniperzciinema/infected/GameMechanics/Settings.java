@@ -16,6 +16,7 @@ public class Settings {
 	public static boolean DisguisesEnabled() {
 		return Files.getConfig().getBoolean("Addons.Disguise Support.Enabled");
 	}
+
 	public static boolean PictureEnabled() {
 		return Files.getConfig().getBoolean("Addons.Picture Support.Enabled");
 	}
@@ -30,10 +31,6 @@ public class Settings {
 
 	public static boolean FactionsEnabled() {
 		return Files.getConfig().getBoolean("Addons.Factions Support.Enabled");
-	}
-
-	public static boolean TagAPIEnabled() {
-		return Files.getConfig().getBoolean("Addons.TagAPI Support.Enabled");
 	}
 
 	public static boolean CrackShotEnabled() {

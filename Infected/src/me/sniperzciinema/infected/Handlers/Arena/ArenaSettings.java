@@ -88,21 +88,23 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Enchant");
 	}
+
 	public boolean canInteract() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Can Interact"))
 			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Can Interact");
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Interact");
-	}	
+	}
+
 	public Boolean canBreakBlock(Team team, int id) {
-		if(Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
 			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks.Global").contains(id);
-		else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks."+team.toString()))
-			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks."+team.toString()).contains(id);
-		else if(Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(id))
+		else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()))
+			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()).contains(id);
+		else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(id))
 			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(id);
 		else
-			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks."+team.toString()).contains(id);
+			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(id);
 	}
 
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////
@@ -122,16 +124,16 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getStringList("Settings.Global.Rewards.Items");
 	}
+
 	// /////////////////////////////////////////////////////////-POTIONS-////////////////////////////////////////////////////////
-	
+
 	public ArrayList<PotionEffect> getAlphaPotionEffects() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Infecting.Alpha Potion Effects"))
 			return PotionHandler.getPotions(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Infecting.Alpha Potion Effects"));
 		else
 			return PotionHandler.getPotions(Files.getConfig().getStringList("Settings.Global.Infecting.Alpha Potion Effects"));
 	}
-	
+
 	// /////////////////////////////////////////////////////////-LIST-////////////////////////////////////////////////////////
 
 }
-

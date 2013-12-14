@@ -7,9 +7,9 @@ import me.sniperzciinema.infected.Main;
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Grenades.Grenade;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
-import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -32,7 +32,6 @@ public class GrenadeListener implements Listener {
 
 	public Main Main = new Main();
 	public ArrayList<String> item = new ArrayList<String>();
-
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerReThrowEvent(PlayerPickupItemEvent event) {
@@ -72,26 +71,27 @@ public class GrenadeListener implements Listener {
 
 						@Override
 						public void run() {
-							if(Lobby.getGameState() == GameState.Started){
-							grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
-							for (Player u : Lobby.getInGame())
+							if (Lobby.getGameState() == GameState.Started)
 							{
-								if (grenadeItem.getLocation().distance(u.getLocation()) <= grenade.getRange())
+								grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
+								for (Player u : Lobby.getInGame())
 								{
+									if (grenadeItem.getLocation().distance(u.getLocation()) <= grenade.getRange())
+									{
 
-									u.playEffect(EntityEffect.HURT);
-									if (u.getHealth() - grenade.getDamage() <= 0)
-									{
-										if (u == p)
-											Deaths.playerDies(DeathType.Other, p, u);
-										else
-											Deaths.playerDies(DeathType.Grenade, p, u);
-									} else
-									{
-										u.damage(grenade.getDamage(), p);
+										u.playEffect(EntityEffect.HURT);
+										if (u.getHealth() - grenade.getDamage() <= 0)
+										{
+											if (u == p)
+												Deaths.playerDies(DeathType.Other, p, u);
+											else
+												Deaths.playerDies(DeathType.Grenade, p, u);
+										} else
+										{
+											u.damage(grenade.getDamage(), p);
+										}
 									}
 								}
-							}
 							}
 							Location loc = grenadeItem.getLocation();
 							p.getWorld().createExplosion(loc, 0.0F, false);

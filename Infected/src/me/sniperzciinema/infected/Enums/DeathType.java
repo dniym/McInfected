@@ -4,7 +4,8 @@ package me.sniperzciinema.infected.Enums;
 public enum DeathType
 {
 
-	Arrow("Arrow"), Melee("Melee"), Grenade("Grenade"), Gun("Gun"), Other("Other");
+	Arrow("Arrow"), Melee("Melee"), Grenade("Grenade"), Gun("Gun"), Other(
+			"Other");
 
 	private String string;
 
@@ -12,9 +13,9 @@ public enum DeathType
 	{
 		string = s;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return string;
 	}
 };

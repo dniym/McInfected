@@ -28,14 +28,14 @@ import me.sniperzciinema.infected.Tools.UpdateInfoSigns;
 import me.sniperzciinema.infected.Tools.Updater;
 import net.milkbowl.vault.economy.Economy;
 
-import code.husky.mysql.MySQL;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import code.husky.mysql.MySQL;
 
 
 public class Main extends JavaPlugin {
@@ -47,7 +47,6 @@ public class Main extends JavaPlugin {
 	public static boolean update = false;
 	public static String updateName = "";
 	public static File file;
-
 
 	// Plugin Addons
 	public static Plugin Disguiser;
@@ -61,7 +60,7 @@ public class Main extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		me = this;
-		
+
 		System.out.println("===== Infected =====");
 		try
 		{
@@ -119,7 +118,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(SignListener, this);
 		pm.registerEvents(TeleportFix, this);
 		AddonManager.getAddons();
-		
+
 		// Do the info signs (Updating the info)
 		if (Settings.InfoSignsEnabled())
 			UpdateInfoSigns.update();

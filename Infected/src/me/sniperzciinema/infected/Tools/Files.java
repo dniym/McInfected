@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Files {
 
-
 	// Set up all the needed things for files
 	public static YamlConfiguration classes = null;
 	public static File classesFile = null;
@@ -32,18 +31,19 @@ public class Files {
 	public static YamlConfiguration signs = null;
 	public static File signsFile = null;
 
-	
-	
-	public static FileConfiguration getConfig(){
+	public static FileConfiguration getConfig() {
 		return Main.me.getConfig();
 	}
-	public static void saveConfig(){
+
+	public static void saveConfig() {
 		Main.me.saveConfig();
 	}
-	public static void reloadConfig(){
+
+	public static void reloadConfig() {
 		Main.me.reloadConfig();
 	}
-	public static void saveAll(){
+
+	public static void saveAll() {
 		saveConfig();
 		saveClasses();
 		saveArenas();
@@ -53,7 +53,8 @@ public class Files {
 		saveGrenades();
 		saveSigns();
 	}
-	public static void reloadAll(){
+
+	public static void reloadAll() {
 		reloadConfig();
 		reloadClasses();
 		reloadArenas();
@@ -63,8 +64,9 @@ public class Files {
 		reloadGrenades();
 		reloadSigns();
 	}
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Reload Abilities File
 	public static void reloadClasses() {
@@ -78,7 +80,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!classesFile.exists())
+			if (!classesFile.exists())
 				classes.setDefaults(defConfig);
 		}
 	}
@@ -116,7 +118,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!arenasFile.exists())
+			if (!arenasFile.exists())
 				arenas.setDefaults(defConfig);
 		}
 	}
@@ -153,7 +155,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!grenadesFile.exists())
+			if (!grenadesFile.exists())
 				grenades.setDefaults(defConfig);
 		}
 	}
@@ -177,8 +179,9 @@ public class Files {
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + grenadesFile, ex);
 		}
 	}
-	
-	//////////////////////////////////////////////////////////////////////////////////////   SHOP
+
+	// ////////////////////////////////////////////////////////////////////////////////////
+	// SHOP
 
 	// Reload Arenas File
 	public static void reloadShop() {
@@ -192,7 +195,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!shopFile.exists())
+			if (!shopFile.exists())
 				shop.setDefaults(defConfig);
 		}
 	}
@@ -217,9 +220,9 @@ public class Files {
 		}
 	}
 
-	
-	////////////////////////////////////////////////////////////////////////////////    MESSAGES
-	
+	// //////////////////////////////////////////////////////////////////////////////
+	// MESSAGES
+
 	// Reload Arenas File
 	public static void reloadMessages() {
 		if (messages == null)
@@ -232,7 +235,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-				messages.setDefaults(defConfig);
+			messages.setDefaults(defConfig);
 		}
 	}
 
@@ -255,7 +258,9 @@ public class Files {
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + messagesFile, ex);
 		}
 	}
-	//======================================================================================  PLAYERS
+
+	// ======================================================================================
+	// PLAYERS
 
 	// Reload Kills File
 	public static void reloadPlayers() {
@@ -269,7 +274,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!playerFile.exists())
+			if (!playerFile.exists())
 				playerF.setDefaults(defConfig);
 		}
 	}
@@ -296,10 +301,9 @@ public class Files {
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + playerFile, ex);
 		}
 	}
-	
-	
-	//================================================================================       Signs
-	
+
+	// ================================================================================
+	// Signs
 
 	// Reload Kills File
 	public static void reloadSigns() {
@@ -313,7 +317,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if(!signsFile.exists())
+			if (!signsFile.exists())
 				signs.setDefaults(defConfig);
 		}
 	}

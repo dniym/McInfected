@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffect;
 
 public class PotionEffects {
 
-
 	public static void applyClassEffects(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 

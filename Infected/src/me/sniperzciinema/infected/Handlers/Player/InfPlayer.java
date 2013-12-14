@@ -1,8 +1,8 @@
 
 package me.sniperzciinema.infected.Handlers.Player;
 
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Disguise.Disguises;
@@ -11,11 +11,11 @@ import me.sniperzciinema.infected.GameMechanics.Equip;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Classes.InfClass;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
-import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Potions.PotionEffects;
 import me.sniperzciinema.infected.Messages.Msgs;
@@ -28,7 +28,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.kitteh.tag.TagAPI;
 
 
 public class InfPlayer {
@@ -59,14 +58,17 @@ public class InfPlayer {
 	{
 		name = p.getName();
 		player = p;
-		
+
 	}
-	public ScoreBoard getScoreBoard(){
+
+	public ScoreBoard getScoreBoard() {
 		return ScoreBoard;
 	}
-	public boolean isInGame(){
+
+	public boolean isInGame() {
 		return Lobby.isInGame(player);
 	}
+
 	/**
 	 * Saves: <li>Location - Name - Gamemode - Level - Exp - Health - Food -
 	 * Inventory - Armor</li> Clears: <li>Armor - Inventory Sets: <li>Gamemode
@@ -84,8 +86,8 @@ public class InfPlayer {
 		inventory = player.getInventory().getContents();
 		armor = player.getInventory().getArmorContents();
 		clearEquipment();
-		setInfClass(Team.Human, InfClassManager.getDefaultClass(Team.Human)); 
-		setInfClass(Team.Zombie, InfClassManager.getDefaultClass(Team.Zombie)); 
+		setInfClass(Team.Human, InfClassManager.getDefaultClass(Team.Human));
+		setInfClass(Team.Zombie, InfClassManager.getDefaultClass(Team.Zombie));
 
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setLevel(0);
@@ -93,10 +95,11 @@ public class InfPlayer {
 		player.setHealth(20);
 		player.setFoodLevel(20);
 	}
+
 	/**
 	 * Clears the players armor and inventory
 	 */
-	public void clearEquipment(){
+	public void clearEquipment() {
 
 		player.getInventory().clear();
 		player.getInventory().setArmorContents(null);
@@ -124,11 +127,12 @@ public class InfPlayer {
 		player.setFallDistance(0F);
 		p.teleport(location);
 		p.setFallDistance(0F);
+		setTeam(Team.Human);
 		Lobby.getHumans().remove(p);
 		Lobby.getZombies().remove(p);
 		Lobby.getInGame().remove(p);
-		if(getVote() != null)
-			getVote().setVotes(getVote().getVotes()-getAllowedVotes());
+		if (getVote() != null)
+			getVote().setVotes(getVote().getVotes() - getAllowedVotes());
 		killstreak = 0;
 		location = null;
 		gamemode = null;
@@ -141,9 +145,6 @@ public class InfPlayer {
 		vote = null;
 		timeIn = 0;
 		fullLeave();
-
-		if (Settings.TagAPIEnabled())
-			TagAPI.refreshPlayer(player);
 
 		player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 	}
@@ -168,7 +169,7 @@ public class InfPlayer {
 
 			for (Player u : Lobby.getInGame())
 				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
-			
+
 			// If theres only one person left in the lobby, end the game
 			if (Lobby.getInGame().size() <= 1)
 			{
@@ -229,7 +230,7 @@ public class InfPlayer {
 
 		}
 		for (Player u : Lobby.getInGame())
-		// Update the scoreboard stats
+			// Update the scoreboard stats
 			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
 	}
 
@@ -238,7 +239,7 @@ public class InfPlayer {
 	 */
 	public void disguise() {
 		if (Settings.DisguisesEnabled())
-			if(!Disguises.isPlayerDisguised(player))
+			if (!Disguises.isPlayerDisguised(player))
 				Disguises.disguisePlayer(player);
 	}
 
@@ -269,17 +270,15 @@ public class InfPlayer {
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
 		clearEquipment();
-		
+		setTeam(Team.Human);
+
 		player.setFlying(false);
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
 
-		if (Settings.TagAPIEnabled())
-			TagAPI.refreshPlayer(player);
-
-		if(!SaveItemHandler.getItems(player).isEmpty())
+		if (!SaveItemHandler.getItems(player).isEmpty())
 			player.getInventory().addItem(SaveItemHandler.getItems(player).toArray(new ItemStack[0]));
-		
+
 		unDisguise();
 		killstreak = 0;
 		vote = null;
@@ -306,9 +305,6 @@ public class InfPlayer {
 		p.setFallDistance(0F);
 		p.teleport(LocationHandler.getPlayerLocation(loc));
 		p.setFallDistance(0F);
-		
-		if (Settings.TagAPIEnabled())
-			TagAPI.refreshPlayer(player);
 
 		for (PotionEffect reffect : player.getActivePotionEffects())
 			player.removePotionEffect(reffect.getType());
@@ -334,8 +330,6 @@ public class InfPlayer {
 		Equip.equipToZombie(player);
 		PotionEffects.applyClassEffects(player);
 		disguise();
-		if (Settings.TagAPIEnabled())
-			TagAPI.refreshPlayer(player);
 
 		getScoreBoard().showProperBoard();
 		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
@@ -703,12 +697,12 @@ public class InfPlayer {
 	public void setInfChatting(boolean isInfChatting) {
 		this.isInfChatting = isInfChatting;
 	}
+
 	public int getHighestKillStreak() {
 		return Stats.getHighestKillStreak(name);
 	}
-	
+
 	/**
-	 * 
 	 * @return how many votes they have
 	 */
 	public int getAllowedVotes() {

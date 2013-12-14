@@ -4,14 +4,14 @@ package me.sniperzciinema.infected.Handlers.Arena;
 import java.util.HashMap;
 import java.util.List;
 
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
+import me.sniperzciinema.infected.Messages.StringUtil;
+import me.sniperzciinema.infected.Tools.Files;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
-import me.sniperzciinema.infected.Messages.StringUtil;
-import me.sniperzciinema.infected.Tools.Files;
 
 
 public class Arena {
@@ -201,9 +201,9 @@ public class Arena {
 	 *            the block to set
 	 */
 	public void setBlock(String s) {
-		if(s.equals("0"))
+		if (s.equals("0"))
 			Files.getArenas().set("Arenas." + name + ".Block", "395");
-		else		
+		else
 			Files.getArenas().set("Arenas." + name + ".Block", s);
 	}
 

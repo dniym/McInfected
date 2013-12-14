@@ -15,6 +15,7 @@ import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -158,11 +159,11 @@ public class Game {
 			toInfect = 1;
 		}
 		String[] face = null;
-		
+
 		while (Lobby.getZombies().size() != toInfect)
 		{
 			Player alpha = Lobby.getInGame().get(new Random().nextInt(Lobby.getInGame().size()));
-			
+
 			if (Settings.PictureEnabled())
 			{
 				face = Pictures.getZombie();
@@ -170,13 +171,12 @@ public class Game {
 				face[3] = face[3] + ChatColor.RED + ChatColor.ITALIC + "     Infect all the humans to win";
 
 				alpha.sendMessage(face);
-			}
-			else
+			} else
 				alpha.sendMessage(Msgs.Game_Alpha_You.getString());
-			
+
 			InfPlayerManager.getInfPlayer(alpha).Infect();
 
-			if (Settings.PictureEnabled())	
+			if (Settings.PictureEnabled())
 			{
 				face = Pictures.getHuman();
 				face[2] = face[2] + "     " + Msgs.Game_Survivor.getString();
@@ -185,9 +185,9 @@ public class Game {
 			for (Player u : Lobby.getInGame())
 				if (u != alpha)
 				{
-					if (Settings.PictureEnabled())		
+					if (Settings.PictureEnabled())
 						u.sendMessage(face);
-					 else
+					else
 						u.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
 				}
 

@@ -14,12 +14,6 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedStartVote extends Event {
 
-	
-	
-	public InfectedStartVote()
-	{
-	}
-
 	private static final HandlerList handlers = new HandlerList();
 
 	public HandlerList getHandlers() {
@@ -29,6 +23,7 @@ public class InfectedStartVote extends Event {
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 	/**
 	 * @return the players
 	 */
@@ -42,12 +37,12 @@ public class InfectedStartVote extends Event {
 	public int getTimeLimit() {
 		return Settings.getVotingTime();
 	}
-	
+
 	/**
 	 * @return all arenas
 	 */
 	public ArrayList<Arena> getArenas() {
 		return Lobby.getArenas();
 	}
-	
+
 }

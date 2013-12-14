@@ -18,7 +18,8 @@ public class ScoreBoardToggle implements Listener {
 	// Show rankings when a player sneaks
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent e) {
-		if(Lobby.isInGame(e.getPlayer())){
+		if (Lobby.isInGame(e.getPlayer()))
+		{
 			InfPlayer ip = InfPlayerManager.getInfPlayer(e.getPlayer());
 			ip.getScoreBoard().switchShowing();
 			ip.getScoreBoard().showProperBoard();

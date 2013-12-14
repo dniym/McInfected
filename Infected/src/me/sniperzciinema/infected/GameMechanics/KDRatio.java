@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected.GameMechanics;
 
-
 public class KDRatio {
 
 	public static Double KD(String user) {

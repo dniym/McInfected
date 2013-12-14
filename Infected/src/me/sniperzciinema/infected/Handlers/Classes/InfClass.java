@@ -28,7 +28,8 @@ public class InfClass {
 	public InfClass(String name, Team team, ItemStack helmet,
 			ItemStack chestplate, ItemStack leggings, ItemStack boots,
 			ArrayList<ItemStack> items, ArrayList<PotionEffect> effects,
-			ArrayList<PotionEffect> transfereffects, HashMap<Integer, ItemStack> killstreaks, String disguise)
+			ArrayList<PotionEffect> transfereffects,
+			HashMap<Integer, ItemStack> killstreaks, String disguise)
 	{
 		this.name = name;
 		this.helmet = helmet;
@@ -186,7 +187,8 @@ public class InfClass {
 	}
 
 	/**
-	 * @param disguise the disguise to set
+	 * @param disguise
+	 *            the disguise to set
 	 */
 	public void setDisguise(String disguise) {
 		this.disguise = disguise;
@@ -200,7 +202,8 @@ public class InfClass {
 	}
 
 	/**
-	 * @param killstreaks the killstreaks to set
+	 * @param killstreaks
+	 *            the killstreaks to set
 	 */
 	public void setKillstreaks(HashMap<Integer, ItemStack> killstreaks) {
 		this.killstreaks = killstreaks;

@@ -105,13 +105,14 @@ public class Menus {
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 						Arena arena;
 						int votes = IP.getAllowedVotes();
-						if(ChatColor.stripColor(event.getName()).equalsIgnoreCase("Random")){
+						if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Random"))
+						{
 							int i;
 							Random r = new Random();
 							i = r.nextInt(Lobby.getArenas().size());
 							arena = Lobby.getArenas().get(i);
-						}
-						else{
+						} else
+						{
 							arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
 						}
 						arena.setVotes(arena.getVotes() + votes);
@@ -119,7 +120,7 @@ public class Menus {
 
 						for (Player u : Lobby.getInGame())
 						{
-							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", arena.getName()) + ChatColor.GRAY+(votes != 0 ? " (x" + votes + ")" : ""));
+							u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (votes != 0 ? " (x" + votes + ")" : ""));
 							InfPlayer up = InfPlayerManager.getInfPlayer(u);
 							up.getScoreBoard().showProperBoard();
 						}
@@ -131,7 +132,8 @@ public class Menus {
 		{
 
 			if (Lobby.isArenaValid(arena.getName()))
-				menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(
+						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 			else
 				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 
@@ -178,12 +180,11 @@ public class Menus {
 								IP.setPoints(points - price, Settings.VaultEnabled());
 
 								p.getInventory().addItem(is);
-								
-								if(Lobby.isInGame(p))
+
+								if (Lobby.isInGame(p))
 									if (!GrenadeManager.isGrenade(is.getTypeId()) && Settings.saveItem(is.getTypeId()))
 										SaveItemHandler.saveItems(p, is);
-							
-								
+
 							} else
 								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						} else

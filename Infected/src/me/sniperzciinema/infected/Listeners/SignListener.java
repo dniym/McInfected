@@ -5,11 +5,11 @@ import java.util.List;
 
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
-import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
@@ -252,10 +252,10 @@ public class SignListener implements Listener {
 							{
 								if (iPrice <= points)
 								{
-									IP.setPoints(IP.getPoints(useVault)-iPrice, useVault);
+									IP.setPoints(IP.getPoints(useVault) - iPrice, useVault);
 									p.getInventory().addItem(stack);
 									p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", stack.getItemMeta().getDisplayName() == null ? StringUtil.getWord(stack.getType().name()) : stack.getItemMeta().getDisplayName()));
-									if(Lobby.isInGame(p))
+									if (Lobby.isInGame(p))
 										if (!GrenadeManager.isGrenade(stack.getTypeId()) && Settings.saveItem(stack.getTypeId()))
 											SaveItemHandler.saveItems(p, stack);
 								} else

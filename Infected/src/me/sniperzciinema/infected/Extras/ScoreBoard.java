@@ -5,8 +5,8 @@ import java.util.List;
 
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
-import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
+import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Messages.ScoreBoardVariables;
 
@@ -29,39 +29,44 @@ public class ScoreBoard {
 		this.ip = ip;
 	}
 
-	public enum ScoreBoards{Regular, Stats};
+	public enum ScoreBoards
+	{
+		Regular, Stats
+	};
+
 	private ScoreBoards showing = ScoreBoards.Regular;
-	
+
 	/**
-	 * 
 	 * @return the scoreboard theyre seeing
 	 */
-	public ScoreBoards getShowing(){
+	public ScoreBoards getShowing() {
 		return showing;
 	}
+
 	/**
 	 * Toggles the scoreboard they're seeing
 	 */
-	public void switchShowing(){
-		if(getShowing() == ScoreBoards.Regular)
+	public void switchShowing() {
+		if (getShowing() == ScoreBoards.Regular)
 			showing = ScoreBoards.Stats;
 		else
 			showing = ScoreBoards.Regular;
 	}
+
 	/**
 	 * Shows proper scoreboard for what they're SUPPOSED to see
 	 */
-	public void showProperBoard(){
-		if(showing == ScoreBoards.Regular)
+	public void showProperBoard() {
+		if (showing == ScoreBoards.Regular)
 			showRegular();
 		else
 			showStats();
 	}
-	
+
 	/**
 	 * Force seeing regular
 	 */
-	public void showRegular(){
+	public void showRegular() {
 		showing = ScoreBoards.Regular;
 		Player player = ip.getPlayer();
 
@@ -80,7 +85,6 @@ public class ScoreBoard {
 
 			// Now set all the scores and the title
 			ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Rankings");
-
 
 			if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
 			{
@@ -121,11 +125,11 @@ public class ScoreBoard {
 					}
 				}
 			}
-			
+
 			player.setScoreboard(sb);
 		}
 	}
-	
+
 	/**
 	 * Force showing stats
 	 */
@@ -148,7 +152,6 @@ public class ScoreBoard {
 
 			// Now set all the scores and the title
 			ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Stats");
-
 
 			int row = 0;
 			int spaces = 0;
@@ -182,7 +185,7 @@ public class ScoreBoard {
 				score.setScore(list.size() - 1 - row);
 				row++;
 			}
-			
+
 			player.setScoreboard(sb);
 		}
 	}

@@ -1,23 +1,24 @@
 
 package me.sniperzciinema.infected.Listeners;
 
+import me.sniperzciinema.infected.Handlers.Lobby;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.sniperzciinema.infected.Handlers.Lobby;
-
 import com.massivecraft.factions.event.FactionsEventPowerChange;
-import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
 import com.massivecraft.factions.event.FactionsEventPowerChange.PowerChangeReason;
+import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
 
 
 public class FactionsEvents implements Listener {
 
 	@EventHandler
 	public void factionPVP(FactionsEventPvpDisallowed e) {
-		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender())){
-			e.setCancelled(true);	
+		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender()))
+		{
+			e.setCancelled(true);
 		}
 	}
 

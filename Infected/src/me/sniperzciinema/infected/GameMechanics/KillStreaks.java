@@ -1,3 +1,4 @@
+
 package me.sniperzciinema.infected.GameMechanics;
 
 import me.sniperzciinema.infected.Enums.Events;
@@ -28,7 +29,8 @@ public class KillStreaks {
 				for (Player u : Lobby.getInGame())
 					u.sendMessage(Msgs.Game_KillStreak_Value.getString("<player>", p.getName(), "<killstreak>", String.valueOf(KillStreak)));
 
-			if (IP.getInfClass(IP.getTeam()).getKillstreaks().containsKey(IP.getKillstreak())){
+			if (IP.getInfClass(IP.getTeam()).getKillstreaks().containsKey(IP.getKillstreak()))
+			{
 				p.getInventory().addItem(IP.getInfClass(IP.getTeam()).getKillstreaks().get(IP.getKillstreak()));
 				ItemStack is = IP.getInfClass(IP.getTeam()).getKillstreaks().get(IP.getKillstreak());
 				p.sendMessage(Msgs.Game_KillStreak_Reward.getString("<item>", is.getItemMeta().getDisplayName() != null ? is.getItemMeta().getDisplayName() : StringUtil.getWord(is.getType().name())));

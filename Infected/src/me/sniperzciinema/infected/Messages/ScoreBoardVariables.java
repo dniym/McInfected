@@ -23,7 +23,7 @@ public class ScoreBoardVariables {
 		newString = newString.replaceAll("<points>", String.valueOf(ip.getPoints(Settings.VaultEnabled())));
 		newString = newString.replaceAll("<score>", String.valueOf(ip.getScore()));
 		newString = newString.replaceAll("<players>", String.valueOf(ip.getScore()));
-		
+
 		// Replace color codes
 		newString = ChatColor.translateAlternateColorCodes('&', ChatColor.stripColor(newString));
 

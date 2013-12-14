@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 public class KillMessages {
 
-	public static String getKillMessage(Player killer, Player killed, DeathType death) {
+	public static String getKillMessage(Player killer, Player killed, DeathType death, Boolean prefix) {
 
 		InfPlayer IP = null;
 		Team team = Team.Zombie;
@@ -41,7 +41,7 @@ public class KillMessages {
 			msg = msg.replaceAll("<killer>", killer.getName() + "(" + Stats.getScore(killer.getName()) + ")");
 		if (killed != null)
 			msg = msg.replaceAll("<killed>", killed.getName() + "(" + Stats.getScore(killed.getName()) + ")");
-		return Msgs.Format_Prefix.getString() + msg;
+		return prefix ? Msgs.Format_Prefix.getString() : "" + msg;
 	}
 
 	private static String getKill(Team team, DeathType death) {

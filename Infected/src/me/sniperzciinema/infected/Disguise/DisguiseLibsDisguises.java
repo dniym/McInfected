@@ -22,8 +22,11 @@ public class DisguiseLibsDisguises {
 
 			if (DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()) != null)
 			{
-				MobDisguise md = new MobDisguise(DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()), true);
-				//TODO: Figure our why when i try and show the disguise to the player it crashes the console...
+				MobDisguise md = new MobDisguise(
+						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()),
+						true);
+				// TODO: Figure our why when i try and show the disguise to the
+				// player it crashes the console...
 				DisguiseAPI.disguiseToAll(p, md);
 			} else
 				DisguiseAPI.disguiseToAll(p, new MobDisguise(

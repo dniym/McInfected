@@ -70,7 +70,8 @@ public class IconMenu implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	void onInventoryClose(InventoryCloseEvent event) {
-		if(Lobby.isInGame((Player)event.getPlayer())){
+		if (Lobby.isInGame((Player) event.getPlayer()))
+		{
 			destroy();
 		}
 	}

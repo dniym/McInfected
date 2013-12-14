@@ -9,7 +9,7 @@ import me.sniperzciinema.infected.Main;
 
 
 public class MySQLManager {
-	
+
 	public static int getInt(String tableName, String columnName, String playerName) {
 		try
 		{
@@ -26,7 +26,7 @@ public class MySQLManager {
 			return 0;
 		}
 	}
-	
+
 	public static void update(String tableName, String columnName, int value, String playerName) {
 		try
 		{
@@ -38,8 +38,6 @@ public class MySQLManager {
 			setInt(tableName, columnName, value, playerName);
 		}
 	}
-
-	
 
 	private static void setInt(String tableName, String columnName, int value, String playerName) {
 		try

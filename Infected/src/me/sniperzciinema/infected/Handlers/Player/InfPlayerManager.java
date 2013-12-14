@@ -11,31 +11,32 @@ public class InfPlayerManager {
 
 	private static ArrayList<InfPlayer> players = new ArrayList<InfPlayer>();
 
-	
-
 	/**
 	 * Create InfPlayer
 	 * 
 	 * @param IP
 	 */
 	public static void createInfPlayer(InfPlayer IP) {
-		if(!players.contains(IP))
+		if (!players.contains(IP))
 			players.add(IP);
 	}
+
 	/**
 	 * Create InfPlayer
+	 * 
 	 * @param Player
 	 * @return The new InfPlayer
 	 */
 	public static InfPlayer createInfPlayer(Player p) {
 		InfPlayer IP = new InfPlayer(p);
-		if(!players.contains(IP))
+		if (!players.contains(IP))
 			players.add(IP);
 		return IP;
 	}
 
 	/**
 	 * Remove InfPlayer
+	 * 
 	 * @param Playername
 	 */
 	public static void removeInfPlayer(String playerName) {
@@ -45,15 +46,19 @@ public class InfPlayerManager {
 				players.remove(player);
 		}
 	}
+
 	/**
 	 * Remove InfPlayer
+	 * 
 	 * @param IP
 	 */
 	public static void removeInfPlayer(InfPlayer IP) {
 		players.remove(IP);
 	}
+
 	/**
 	 * Get InfPlayer
+	 * 
 	 * @param playername
 	 */
 	public static InfPlayer getInfPlayer(String playerName) {
@@ -64,8 +69,10 @@ public class InfPlayerManager {
 		}
 		return createInfPlayer(Bukkit.getPlayer(playerName));
 	}
+
 	/**
 	 * Create InfPlayer
+	 * 
 	 * @param Player
 	 */
 	public static InfPlayer getInfPlayer(Player p) {

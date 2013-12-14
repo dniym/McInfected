@@ -13,11 +13,6 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedStartInfecting extends Event {
 
-	
-	public InfectedStartInfecting()
-	{
-	}
-
 	private static final HandlerList handlers = new HandlerList();
 
 	public HandlerList getHandlers() {
@@ -27,6 +22,7 @@ public class InfectedStartInfecting extends Event {
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 	/**
 	 * @return the players
 	 */
@@ -40,12 +36,12 @@ public class InfectedStartInfecting extends Event {
 	public int getTimeLimit() {
 		return Lobby.getActiveArena().getSettings().getInfectingTime();
 	}
-	
+
 	/**
 	 * @return active arena
 	 */
 	public Arena getArena() {
 		return Lobby.getActiveArena();
 	}
-	
+
 }

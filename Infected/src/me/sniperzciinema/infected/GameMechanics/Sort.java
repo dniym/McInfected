@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 
-
 public class Sort {
 
 	private static String getHighest(HashMap<String, Integer> map) {

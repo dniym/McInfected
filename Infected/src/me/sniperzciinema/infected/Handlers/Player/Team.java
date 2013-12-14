@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected.Handlers.Player;
 
-
 public enum Team
 {
 	Human("Human"), Zombie("Zombie"), None("None"), Global("Global");
@@ -12,9 +11,9 @@ public enum Team
 	{
 		string = s;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return string;
 	}
 

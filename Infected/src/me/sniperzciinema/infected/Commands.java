@@ -15,11 +15,11 @@ import me.sniperzciinema.infected.GameMechanics.Sort;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.GameMechanics.Stats.StatType;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Grenades.Grenade;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
-import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
@@ -149,21 +149,18 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Game_Joined_You.getString());
 
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
-						{
 							Lobby.timerStartVote();
-						} else if (Lobby.getGameState() == GameState.Voting)
-						{
+						else if (Lobby.getGameState() == GameState.Voting)
 							p.sendMessage(Msgs.Help_Vote.getString());
-							p.performCommand("Infected Arenas");
 
-						} else if (Lobby.getGameState() == GameState.Infecting)
+						else if (Lobby.getGameState() == GameState.Infecting)
 						{
 							ip.respawn();
 							Equip.equip(p);
+
 						} else if (Lobby.getGameState() == GameState.Started)
 						{
-							ip.respawn();
-							ip.Infect();
+							Deaths.playerDies(DeathType.Other, null, p);
 						}
 					}
 				}
@@ -1061,7 +1058,6 @@ public class Commands implements CommandExecutor {
 					if (Settings.DisguisesEnabled())
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Main.Disguiser.getName());
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.CrackShotEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "TagAPI Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.TagAPIEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.FactionsEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));

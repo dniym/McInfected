@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 
@@ -28,7 +29,7 @@ public class CrackShotApi implements Listener {
 			// If they're in the game
 			if (Lobby.isInGame(victim))
 			{
-				
+
 				// Get the attacker
 				if (e.getPlayer() instanceof Player)
 					killer = e.getPlayer();

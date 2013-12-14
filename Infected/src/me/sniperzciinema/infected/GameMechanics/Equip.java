@@ -60,11 +60,11 @@ public class Equip {
 		// and add the new ones, this way we don't remove purchased/grenades
 		for (ItemStack is : humanClass.getItems())
 			p.getInventory().remove(is.getType());
-		
+
 		for (ItemStack is : p.getInventory().getContents())
-			if(is != null && (is.getType() == humanClass.getBoots().getType() || is.getType() == humanClass.getChestplate().getType() || is.getType() == humanClass.getHelmet().getType() || is.getType() == humanClass.getLeggings().getType()))
+			if (is != null && (is.getType() == humanClass.getBoots().getType() || is.getType() == humanClass.getChestplate().getType() || is.getType() == humanClass.getHelmet().getType() || is.getType() == humanClass.getLeggings().getType()))
 				p.getInventory().remove(is);
-		
+
 		for (ItemStack is : zombieClass.getItems())
 			p.getInventory().addItem(is);
 
@@ -72,7 +72,7 @@ public class Equip {
 		// its none, or if it is the same as default)
 		if (p.getInventory().getHelmet() == null || p.getInventory().getHelmet().getType() == humanClass.getHelmet().getType())
 			p.getInventory().setHelmet(zombieClass.getHelmet());
-		if (p.getInventory().getChestplate() == null ||p.getInventory().getChestplate().getType() == humanClass.getChestplate().getType())
+		if (p.getInventory().getChestplate() == null || p.getInventory().getChestplate().getType() == humanClass.getChestplate().getType())
 			p.getInventory().setChestplate(zombieClass.getChestplate());
 		if (p.getInventory().getLeggings() == null || p.getInventory().getLeggings().getType() == humanClass.getLeggings().getType())
 			p.getInventory().setLeggings(zombieClass.getLeggings());

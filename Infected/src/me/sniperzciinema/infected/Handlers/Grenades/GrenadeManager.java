@@ -17,6 +17,7 @@ public class GrenadeManager {
 		Grenade grenade = new Grenade(id);
 		grenades.add(grenade);
 	}
+
 	public static void addGrenade(Grenade grenade) {
 		grenades.add(grenade);
 	}
@@ -49,6 +50,7 @@ public class GrenadeManager {
 		}
 		return false;
 	}
+
 	public static boolean isGrenade(Grenade g) {
 		return grenades.contains(g);
 	}
@@ -62,11 +64,13 @@ public class GrenadeManager {
 	}
 
 	public static void loadConfigGrenades() {
-		for (String s : Files.getGrenades().getConfigurationSection("Grenades").getKeys(true)){
-			if (!s.contains(".")){
+		for (String s : Files.getGrenades().getConfigurationSection("Grenades").getKeys(true))
+		{
+			if (!s.contains("."))
+			{
 				Grenade g = new Grenade(Integer.valueOf(s));
 
-				if(Settings.logGrenadesEnabled())
+				if (Settings.logGrenadesEnabled())
 					System.out.println("Loaded Grenade " + g.getName());
 				if (!isGrenade(g))
 					addGrenade(g);

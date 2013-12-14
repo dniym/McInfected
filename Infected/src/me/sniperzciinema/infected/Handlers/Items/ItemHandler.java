@@ -25,11 +25,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemHandler {
 
-	/**
-	 * TODO: Look into String.split("[:,-@%]"); -------------------------------
-	 * To see if i can make the order not matter. -----------------------------
-	 * (Only issue I expect is figuring out what value is what) ---------------
-	 */
 	public static Integer getItemID(String Path) {
 		String itemid = null;
 		String string = Path;
