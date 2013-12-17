@@ -41,7 +41,7 @@ public class KillMessages {
 			msg = msg.replaceAll("<killer>", killer.getName() + "(" + Stats.getScore(killer.getName()) + ")");
 		if (killed != null)
 			msg = msg.replaceAll("<killed>", killed.getName() + "(" + Stats.getScore(killed.getName()) + ")");
-		return prefix ? Msgs.Format_Prefix.getString() : "" + msg;
+		return (prefix ? Msgs.Format_Prefix.getString() : "") + msg;
 	}
 
 	private static String getKill(Team team, DeathType death) {

@@ -1,6 +1,8 @@
 
 package me.sniperzciinema.infected.Events;
 
+import me.sniperzciinema.infected.Enums.DeathType;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,11 +12,13 @@ public class InfectedDeathEvent extends Event {
 
 	private Player killer;
 	private Player killed;
+	private DeathType death;
 
-	public InfectedDeathEvent(Player killer, Player killed)
+	public InfectedDeathEvent(Player killer, Player killed, DeathType death)
 	{
 		this.killer = killer;
 		this.killed = killed;
+		this.death = death;
 	}
 
 	private static final HandlerList handlers = new HandlerList();
@@ -42,6 +46,13 @@ public class InfectedDeathEvent extends Event {
 	 */
 	public Player getKilled() {
 		return killed;
+	}
+
+	/**
+	 * @return the death
+	 */
+	public DeathType getDeath() {
+		return death;
 	}
 
 }

@@ -107,7 +107,21 @@ public class InfClassManager {
 
 	public static void loadDefaultClasses() {
 		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Settings.Global.Default Classes.Human"));
+		if(defaultHuman == null){
+			defaultHuman = getClasses(Team.Human).get(0);
+			Files.getConfig().set("Settings.Global.Default Classes.Human", defaultHuman.getName());
+			Files.saveConfig();
+			if (Settings.logClassesEnabled())
+				System.out.println("Invalid default human class. Changed to: " + defaultHuman.getName());
+		}
 		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Settings.Global.Default Classes.Zombie"));
+		if(defaultZombie == null){
+			defaultZombie = getClasses(Team.Zombie).get(0);
+			Files.getConfig().set("Settings.Global.Default Classes.Zombie", defaultZombie.getName());
+			Files.saveConfig();
+			if (Settings.logClassesEnabled())
+				System.out.println("Invalid default zombie class. Changed to: " + defaultZombie.getName());
+		}
 	}
 
 	public static void loadConfigClasses() {

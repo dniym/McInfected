@@ -18,8 +18,8 @@ import org.bukkit.plugin.Plugin;
 
 public class TeleportFix implements Listener {
 
-	private Server server;
 	private Plugin plugin;
+	private Server server;
 
 	private final int TELEPORT_FIX_DELAY = 15; // ticks
 
@@ -45,7 +45,7 @@ public class TeleportFix implements Listener {
 					final List<Player> nearby = Lobby.getInGame();
 
 					// Hide every player
-					updateEntities(player, nearby, false);
+					updateEntities(player, nearby);
 
 					// Then show them again
 					server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
@@ -53,7 +53,7 @@ public class TeleportFix implements Listener {
 
 						@Override
 						public void run() {
-							updateEntities(player, nearby, true);
+							updateEntities(player, nearby);
 						}
 					}, 1);
 				}
@@ -61,37 +61,35 @@ public class TeleportFix implements Listener {
 		}
 	}
 
-	public void updateEntities(Player tpedPlayer, List<Player> players, boolean visible) {
+	public void updateEntities(Player tpedPlayer, List<Player> players) {
 		// Hide or show every player to tpedPlayer
 		// and hide or show tpedPlayer to every player.
 		for (Player player : players)
 		{
 			if (Settings.DisguisesEnabled())
 			{
-				if (visible)
-				{
-					if (!Disguises.isPlayerDisguised(player))
+				if (!Disguises.isPlayerDisguised(player))
+					if (!tpedPlayer.canSee(player))
 						tpedPlayer.showPlayer(player);
-					if (!Disguises.isPlayerDisguised(tpedPlayer))
-						player.showPlayer(tpedPlayer);
-				} else
-				{
-					if (!Disguises.isPlayerDisguised(player))
+					else
 						tpedPlayer.hidePlayer(player);
-					if (!Disguises.isPlayerDisguised(tpedPlayer))
+				if (!Disguises.isPlayerDisguised(tpedPlayer))
+					if (!player.canSee(tpedPlayer))
+						player.showPlayer(tpedPlayer);
+					else
 						player.hidePlayer(tpedPlayer);
-				}
+
 			} else
 			{
-				if (visible)
-				{
+				if (!tpedPlayer.canSee(player))
 					tpedPlayer.showPlayer(player);
-					player.showPlayer(tpedPlayer);
-				} else
-				{
+				else
 					tpedPlayer.hidePlayer(player);
+				if (!player.canSee(tpedPlayer))
+					player.showPlayer(tpedPlayer);
+				else
 					player.hidePlayer(tpedPlayer);
-				}
+
 			}
 		}
 	}

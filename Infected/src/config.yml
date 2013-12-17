@@ -1,9 +1,9 @@
-# Default InfectedV2 Config, Last edited in 2.0.2
+# Default InfectedV2 Config, Last edited in 2.0.3
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
-# Enchantment Ids - www.minecraftwiki.net/wiki/Enchanting
-# Potion Effect Ids - www.minecraftwiki.net/wiki/Potion_effects
+# Enchantment Ids - http://minecraft.gamepedia.com/Enchanting#Enchantments
+# Potion Effect Ids - http://minecraft.gamepedia.com/Potion_effects#List_of_effects
 # #
 # Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
 # This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
@@ -140,8 +140,8 @@ Settings:
       Game Over: 10
 # Default Classes
     Default Classes:
-      Human: Knight
-      Zombie: Assassin
+      Human: Guard
+      Zombie: Regular
     Misc:
 # Should players be able to loose hunger in the arena
       Disable Hunger: true

@@ -17,7 +17,6 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -168,7 +167,7 @@ public class Game {
 			{
 				face = Pictures.getZombie();
 				face[2] = face[2] + "     " + Msgs.Game_Alpha_You.getString();
-				face[3] = face[3] + ChatColor.RED + ChatColor.ITALIC + "     Infect all the humans to win";
+				face[3] = face[3] + "     " + Msgs.Picutre_Infected_To_Win.getString();
 
 				alpha.sendMessage(face);
 			} else
@@ -179,8 +178,8 @@ public class Game {
 			if (Settings.PictureEnabled())
 			{
 				face = Pictures.getHuman();
-				face[2] = face[2] + "     " + Msgs.Game_Survivor.getString();
-				face[3] = face[3] + ChatColor.GREEN + ChatColor.ITALIC + "     Survive to win";
+				face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
+				face[3] = face[3] + "     " + Msgs.Picutre_Survivor_To_Win.getString();
 			}
 			for (Player u : Lobby.getInGame())
 				if (u != alpha)

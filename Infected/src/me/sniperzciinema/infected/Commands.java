@@ -132,7 +132,7 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Lobby_Doesnt_Exist.getString());
 
 					else if (Lobby.getArenas().isEmpty() || !Lobby.isArenaValid(Lobby.getArenas().get(0)))
-						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", "Default"));
+						p.sendMessage(Msgs.Error_Arena_No_Valid.getString());
 
 					else if (Lobby.getInGame().contains(p))
 						p.sendMessage(Msgs.Error_Game_In.getString());
@@ -149,7 +149,15 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Game_Joined_You.getString());
 
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
-							Lobby.timerStartVote();
+
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+							{
+								@Override
+								public void run() {
+									
+									Lobby.timerStartVote();
+								}
+							}, 100L);
 						else if (Lobby.getGameState() == GameState.Voting)
 							p.sendMessage(Msgs.Help_Vote.getString());
 
@@ -681,7 +689,7 @@ public class Commands implements CommandExecutor {
 								p.sendMessage("");
 								p.sendMessage(Msgs.Format_Header.getString("<title>", user));
 								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user, Settings.VaultEnabled()) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
-								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
+								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getOnlineTime((long) Stats.getPlayingTime(user)));
 								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + KDRatio.KD(user));
 								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
 							}
@@ -691,7 +699,7 @@ public class Commands implements CommandExecutor {
 							p.sendMessage("");
 							p.sendMessage(Msgs.Format_Header.getString("<title>", user));
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Points: " + ChatColor.GOLD + Stats.getPoints(user, Settings.VaultEnabled()) + ChatColor.GREEN + "     Score: " + ChatColor.GOLD + Stats.getScore(user));
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getTime((long) Stats.getPlayingTime(user)));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Playing Time: " + ChatColor.GOLD + Time.getOnlineTime((long) Stats.getPlayingTime(user)));
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + KDRatio.KD(user));
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
 						}

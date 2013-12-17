@@ -111,9 +111,11 @@ public class InfPlayer {
 	 */
 	@SuppressWarnings("deprecation")
 	public void leaveInfected() {
+
+		unDisguise();
+		clearEquipment();
+
 		Player p = getPlayer();
-		p.getInventory().clear();
-		p.getInventory().setArmorContents(null);
 		p.setGameMode(gamemode);
 		p.setLevel(level);
 		p.setExp(exp);
@@ -122,8 +124,10 @@ public class InfPlayer {
 		p.getInventory().setContents(inventory);
 		p.getInventory().setArmorContents(armor);
 		p.updateInventory();
+
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
+
 		player.setFallDistance(0F);
 		p.teleport(location);
 		p.setFallDistance(0F);
@@ -309,6 +313,8 @@ public class InfPlayer {
 		for (PotionEffect reffect : player.getActivePotionEffects())
 			player.removePotionEffect(reffect.getType());
 
+		PotionEffects.applyClassEffects(player);
+
 		p.setFallDistance(0F);
 		lastDamager = null;
 	}
@@ -328,6 +334,9 @@ public class InfPlayer {
 		team = Team.Zombie;
 		isWinner = false;
 		Equip.equipToZombie(player);
+		for (PotionEffect reffect : player.getActivePotionEffects())
+			player.removePotionEffect(reffect.getType());
+
 		PotionEffects.applyClassEffects(player);
 		disguise();
 

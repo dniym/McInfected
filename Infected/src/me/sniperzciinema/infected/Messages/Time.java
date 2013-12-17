@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected.Messages;
 
-import me.sniperzciinema.infected.Tools.Files;
 
 
 public class Time {
@@ -35,8 +34,7 @@ public class Time {
 		return times;
 	}
 
-	public static String getOnlineTime(String player) {
-		Long time = Files.getPlayers().getLong("Players." + player.toLowerCase() + ".Time");
+	public static String getOnlineTime(Long time) {
 		Long seconds = time;
 		long minutes = seconds / 60;
 		seconds %= 60;

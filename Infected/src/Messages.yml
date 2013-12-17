@@ -8,6 +8,12 @@ Format:
   InfChat: '&f&l<<&7<team>&8&l-&6&o<player>&f&l>>&7: &e<message>'
   List: '&e&l> &a&o<player>'
   Grenades List: '&x&o<id>. &e<name> &7&l- "&e<cost>'
+Picture:
+  Infected:
+    To Win: '&c&oInfect all the humans to win!'
+  Survivor:
+    To Win: '&b&oSurvive to win!'
+    You: '&f&oYou are a &bSURVIVOR!'
 Command:
   Arena:
     List: '&l&7Arenas: &a<valid> &c<invalid>'
@@ -49,7 +55,7 @@ Error:
     Not A File: '&cThats not a file in Infected... &7Try one of these: &o<files>'
   Game:
     Started: '&e&oThe Games already started'
-    Started: '&e&oThe Games not started'
+    Not Started: '&e&oThe Games not started'
     Not In: '&c&oYou need to be playing Infected to do this...'
     In: '&c&oYou''re already playing Infected'
   Top:
@@ -61,6 +67,7 @@ Error:
     Not Valid: '&c&oThat arena isn''t setup properly!'
     Already Exist: '&c&oThat arena already exists...'
     No Spawns: '&c&oThat arena has no spawns'
+    No Valid: '&c&oThere are no valid arenas'
   Signs:
     Not Valid: '&c&oThat sign isn''t setup properly'
   Already Voted: '&c&oYou''ve already voted for an arena!'
@@ -92,7 +99,7 @@ Game:
   Alpha:
     You: '&f&oYou are a &4ZOMBIE!'
     They: '&7&o<player> &chas fallen to the Infection'
-  Survior: '&f&oYou are a &bSurvivor'
+  Starting In 5: '&xThe game will start in 5 seconds!'
 Help:
   Vote: '&3To vote use &x&o/Infected Vote &3and choose an arena'
   Grenades: '&3To purchase a grenade use &x&o/Infected Grenades [ID] [Amount]'

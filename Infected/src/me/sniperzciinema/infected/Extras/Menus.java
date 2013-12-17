@@ -44,7 +44,7 @@ public class Menus {
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 						if (event.getName().equalsIgnoreCase("None"))
 						{
-							p.sendMessage(Msgs.Menu_Classes_None.getString("<team>", team.toString()));
+							p.sendMessage(Msgs.Classes_None.getString("<team>", team.toString()));
 						} else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + event.getName()))
 						{
 							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", team.toString()));
@@ -61,7 +61,7 @@ public class Menus {
 			menu.setOption(i, item, Class.getName(), (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), team == Team.Zombie && Settings.DisguisesEnabled() ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
 			i++;
 		}
-		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", Msgs.Menu_Classes_None.getString());
+		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", Msgs.Classes_None.getString());
 		menu.open(p);
 	}
 

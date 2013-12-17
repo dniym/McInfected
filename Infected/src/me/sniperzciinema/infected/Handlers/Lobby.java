@@ -375,7 +375,7 @@ public class Lobby {
 								u.sendMessage("");
 								u.sendMessage(Msgs.Format_Line.getString());
 								u.sendMessage("");
-								u.sendMessage(Msgs.Format_Prefix.getString() + "Game Starting in 5 Seconds.");
+								u.sendMessage(Msgs.Game_Starting_In_5.getString());
 								u.sendMessage("");
 								u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
 								u.sendMessage("");

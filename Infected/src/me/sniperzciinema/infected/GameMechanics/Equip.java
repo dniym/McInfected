@@ -23,13 +23,14 @@ public class Equip {
 		// Reset their inventory by: Going through and removing any old items
 		// from the class
 		// and add the new ones, this way we don't remove purchased/grenades
-		for (ItemStack is : Class.getItems())
-		{
-			if (p.getInventory().contains(is.getType()))
-				p.getInventory().remove(is);
-			if (!p.getInventory().contains(is.getType()))
-				p.getInventory().addItem(is);
-		}
+		if (!Class.getItems().isEmpty())
+			for (ItemStack is : Class.getItems())
+			{
+				if (p.getInventory().contains(is.getType()))
+					p.getInventory().remove(is);
+				if (!p.getInventory().contains(is.getType()))
+					p.getInventory().addItem(is);
+			}
 
 		// Only replace the armor if the player hasn't changed it(So if
 		// its none, or if it is the same as default)
@@ -58,15 +59,18 @@ public class Equip {
 		// Reset their inventory by: Going through and removing any old items
 		// from the class
 		// and add the new ones, this way we don't remove purchased/grenades
-		for (ItemStack is : humanClass.getItems())
-			p.getInventory().remove(is.getType());
+		if (!humanClass.getItems().isEmpty())
+			for (ItemStack is : humanClass.getItems())
+				p.getInventory().remove(is.getType());
 
-		for (ItemStack is : p.getInventory().getContents())
-			if (is != null && (is.getType() == humanClass.getBoots().getType() || is.getType() == humanClass.getChestplate().getType() || is.getType() == humanClass.getHelmet().getType() || is.getType() == humanClass.getLeggings().getType()))
-				p.getInventory().remove(is);
+		if (p.getInventory().getContents().length != 0)
+			for (ItemStack is : p.getInventory().getContents())
+				if (is != null && (is.getType() == humanClass.getBoots().getType() || is.getType() == humanClass.getChestplate().getType() || is.getType() == humanClass.getHelmet().getType() || is.getType() == humanClass.getLeggings().getType()))
+					p.getInventory().remove(is);
 
-		for (ItemStack is : zombieClass.getItems())
-			p.getInventory().addItem(is);
+		if (!zombieClass.getItems().isEmpty())
+			for (ItemStack is : zombieClass.getItems())
+				p.getInventory().addItem(is);
 
 		// Only replace the armor if the player hasn't changed it(So if
 		// its none, or if it is the same as default)

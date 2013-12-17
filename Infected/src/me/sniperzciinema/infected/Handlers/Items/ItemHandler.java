@@ -271,17 +271,19 @@ public class ItemHandler {
 	// Loop through a list of these Item Codes and make a ItemStack[]
 	public static ArrayList<ItemStack> getItemStackList(List<String> list) {
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-		for (String string : list)
-			items.add(getItemStack(string));
+		if (!list.isEmpty())
+			for (String string : list)
+				items.add(getItemStack(string));
 
 		return items;
 	}
 
 	public static HashMap<Integer, ItemStack> getItemHashMap(Configuration config, String path) {
 		HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
-		for (String string : config.getConfigurationSection(path).getKeys(true))
-			if (!string.contains("."))
-				killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
+		if (config.getConfigurationSection(path) != null)
+			for (String string : config.getConfigurationSection(path).getKeys(true))
+				if (!string.contains("."))
+					killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
 
 		return killstreaks;
 	}

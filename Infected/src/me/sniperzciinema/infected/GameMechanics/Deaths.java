@@ -11,9 +11,9 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.KillMessages;
+import me.sniperzciinema.infected.Messages.Msgs;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -22,28 +22,23 @@ public class Deaths {
 
 	public static void playerDies(DeathType death, Player killer, Player killed) {
 
-		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed);
+		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed, death);
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (Player u : Lobby.getInGame())
-		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(u);
-			up.getScoreBoard().showProperBoard();
-		}
 		String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
-		if (Settings.PictureEnabled() && Lobby.getHumans().size() < 1)
+
+		if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getHumans().size() > 1)
 		{
 			killMessage = KillMessages.getKillMessage(killer, killed, death, false);
 			String[] face = Pictures.getZombie();
 			face[2] = face[2] + "     " + killMessage;
-			face[3] = face[3] + ChatColor.RED + ChatColor.ITALIC + "     You have become Infected";
+			face[3] = face[3] + Msgs.Picutre_Infected_To_Win.getString();
 
 			killed.sendMessage(face);
 
 			for (Player u : Lobby.getInGame())
 				if (u != killed)
-					u.sendMessage(killMessage);
-
+					u.sendMessage(Msgs.Format_Prefix + killMessage);
 		} else
 			for (Player u : Lobby.getInGame())
 				u.sendMessage(killMessage);
@@ -78,6 +73,12 @@ public class Deaths {
 				InfKilled.respawn();
 				Equip.equip(killed);
 			}
+		}
+
+		for (Player u : Lobby.getInGame())
+		{
+			InfPlayer up = InfPlayerManager.getInfPlayer(u);
+			up.getScoreBoard().showProperBoard();
 		}
 
 	}
