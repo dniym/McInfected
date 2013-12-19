@@ -18,18 +18,18 @@ public class Time {
 			if (minutes == 0)
 				times = "N/A";
 			if (minutes == 1)
-				times = minutes + " Minute";
+				times = minutes + " " + Msgs.Format_Time_Minute.getString();
 			else
-				times = minutes + " Minutes";
+				times = minutes + " " + Msgs.Format_Time_Minutes.getString();
 		} else if (minutes == 0)
 		{
 			if (seconds <= 1)
-				times = seconds + " Second";
+				times = seconds + " " + Msgs.Format_Time_Second.getString();
 			else
-				times = seconds + " Seconds";
+				times = seconds + " " + Msgs.Format_Time_Seconds.getString();
 		} else
 		{
-			times = minutes + " Minutes " + seconds + " Seconds";
+			times = minutes + " " + Msgs.Format_Time_Minutes.getString() + " " + seconds + " "+ Msgs.Format_Time_Seconds.getString();
 		}
 		return times;
 	}

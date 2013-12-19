@@ -73,7 +73,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onInfectedCommand(InfectedCommandEvent event) {
 		if (event.getArgs().length >= 1)
 		{
-			if (event.getArgs()[0].equalsIgnoreCase("Rank") || event.getArgs()[0].equalsIgnoreCase("Ranks") && event.getP() != null)
+			if (event.getArgs()[0].equalsIgnoreCase("Rank") ||event.getArgs()[0].equalsIgnoreCase("Rank") || event.getArgs()[0].equalsIgnoreCase("Ranks") && event.getP() != null)
 			{
 				event.setCancelled(true);
 				

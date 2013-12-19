@@ -47,7 +47,7 @@ public class InfClass {
 	/**
 	 * @return the transfereffects
 	 */
-	public ArrayList<PotionEffect> getContacteffects() {
+	public ArrayList<PotionEffect> getContactEffects() {
 		return transfereffects;
 	}
 
@@ -55,7 +55,7 @@ public class InfClass {
 	 * @param transfereffects
 	 *            the transfereffects to set
 	 */
-	public void setContacteffects(ArrayList<PotionEffect> transfereffects) {
+	public void setContactEffects(ArrayList<PotionEffect> transfereffects) {
 		this.transfereffects = transfereffects;
 	}
 

@@ -74,10 +74,15 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Game_Over_Humans_Win.getString());
 				StringBuilder winnersS = new StringBuilder();
+				int i = 0;
 				for (String s : winners)
 				{
+					i++;
 					winnersS.append(s);
-					winnersS.append(", ");
+					if(i == winners.size())
+						winnersS.append(".");
+					else
+						winnersS.append(", ");
 				}
 				u.sendMessage(Msgs.Game_Over_Winners.getString("<winners>", winnersS.toString()));
 				u.sendMessage("");
@@ -167,7 +172,7 @@ public class Game {
 			{
 				face = Pictures.getZombie();
 				face[2] = face[2] + "     " + Msgs.Game_Alpha_You.getString();
-				face[3] = face[3] + "     " + Msgs.Picutre_Infected_To_Win.getString();
+				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
 
 				alpha.sendMessage(face);
 			} else
@@ -179,7 +184,7 @@ public class Game {
 			{
 				face = Pictures.getHuman();
 				face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
-				face[3] = face[3] + "     " + Msgs.Picutre_Survivor_To_Win.getString();
+				face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
 			}
 			for (Player u : Lobby.getInGame())
 				if (u != alpha)

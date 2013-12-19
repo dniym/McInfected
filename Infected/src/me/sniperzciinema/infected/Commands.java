@@ -17,6 +17,7 @@ import me.sniperzciinema.infected.GameMechanics.Stats.StatType;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
+import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.Grenade;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
@@ -110,6 +111,9 @@ public class Commands implements CommandExecutor {
 
 					else if (!Lobby.getInGame().contains(p))
 						p.sendMessage(Msgs.Error_Game_Not_In.getString());
+					
+					else if (Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Started)
+						p.sendMessage(Msgs.Error_Game_Started.getString());
 
 					else
 						Menus.chooseClassTeam(p);
@@ -581,6 +585,10 @@ public class Commands implements CommandExecutor {
 								System.out.println("===== Infected =====");
 								Files.reloadAll();
 								AddonManager.getAddons();
+
+								InfClassManager.loadConfigClasses();
+								GrenadeManager.loadConfigGrenades();
+								
 								System.out.println("====================");
 								sender.sendMessage(Msgs.Command_Admin_Reload.getString());
 

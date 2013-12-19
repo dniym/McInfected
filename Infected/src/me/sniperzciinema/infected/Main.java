@@ -159,7 +159,7 @@ public class Main extends JavaPlugin {
 			}
 		else if (Settings.logAreansEnabled())
 			System.out.println("Couldn't Find Any Arenas");
-
+		
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 

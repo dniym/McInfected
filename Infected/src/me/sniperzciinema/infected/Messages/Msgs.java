@@ -16,6 +16,10 @@ public enum Msgs
 	Format_List("Format.List")/* <player> */,
 	Format_InfChat("Format.InfChat")/* <team>, <player>, <message> */,
 	Format_Grenades_List("Format.Grenades List")/* <id>, <name>, <cost> */,
+	Format_Time_Second("Format.Time.Second"),
+	Format_Time_Seconds("Format.Time.Seconds"),
+	Format_Time_Minute("Format.Time.Minute"),
+	Format_Time_Minutes("Format.Time.Minutes"),
 	Command_Arena_List("Command.Arena.List")/* <valid>, <invalid> */,
 	Command_Arena_Created("Command.Arena.Created")/* <arena> */,
 	Command_Arena_Removed("Command.Arena.Removed")/* <arena> */,
@@ -60,6 +64,8 @@ public enum Msgs
 	Error_Sign_Not_Valid("Error.Sign.Not Valid"),
 	Error_Already_Voted("Error.Already Voted"),
 	Menu_Classes_Click_To_Choose("Menu.Classes.Click To Choose"),
+	Menu_Classes_Click_For_None("Menu.Classes.Click For None"),
+	Menu_Classes_Click_To_Return("Menu.Classes.Click To Return"),
 	Menu_Team_Choose("Menu.Team.Choose")/* <team> */,
 	Menu_Vote_Choose("Menu.Vote.Choose"),
 	Menu_Vote_Random("Menu.Vote.Random"),
@@ -104,8 +110,9 @@ public enum Msgs
 	Grenades_Bought("Grenades.Bought"),
 	Grenades_Cost_Not_Enough("Grenades.Cost.Not Enough"),
 	Grenades_Invalid_Id("Grenades.Invalid Id"),
-	Picutre_Infected_To_Win("Picture.Infected.To Win"),
-	Picutre_Survivor_To_Win("Picture.Survivor.To Win"),
+	Picture_Infected_To_Win("Picture.Infected.To Win"),
+	Picture_Infected_You("Picture.Infected.You"),
+	Picture_Survivor_To_Win("Picture.Survivor.To Win"),
 	Picture_Survivor_You("Picture.Survivor.You");
 
 	private String string;

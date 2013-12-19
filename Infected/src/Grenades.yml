@@ -29,7 +29,6 @@
 #  - "2:5:3"
 #  - "15:1:2"
 # =============================================== #
-Use: true
 Can Only Humans Use Grenades: false
 Grenades:
   341:

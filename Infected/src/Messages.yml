@@ -7,10 +7,16 @@ Format:
   Prefix: '&0>>&4Infected&0<<&x'
   InfChat: '&f&l<<&7<team>&8&l-&6&o<player>&f&l>>&7: &e<message>'
   List: '&e&l> &a&o<player>'
-  Grenades List: '&x&o<id>. &e<name> &7&l- "&e<cost>'
+  Grenades List: '&x&o<id>. &e<name> &7&l- &e<cost>'
+  Time:
+    Second: 'Second'
+    Seconds: 'Seconds'
+    Minute: 'Minute'
+    Minutes: 'Minutes'
 Picture:
   Infected:
     To Win: '&c&oInfect all the humans to win!'
+    You: '&f&oYou have become a &4ZOMBIE!'
   Survivor:
     To Win: '&b&oSurvive to win!'
     You: '&f&oYou are a &bSURVIVOR!'
@@ -85,7 +91,7 @@ Game:
     Voting: '&e&oVoting Ends in &a<time>'
     Infecting: '&e&oThe &cInfection &egoes viral in &a<time>'
     Game: '&a<time> &e&oleft in this game'
-  Players Left: '&1Humans &a<humans> &8|| &4Zombies &c<zombies>'
+  Players Left: '&2Humans &a<humans> &8|| &4Zombies &c<zombies>'
   Info:
     Arena: '&6<arena> &f- &2Created By: &7<creator>'
   Death:
@@ -97,7 +103,7 @@ Game:
     Winners: '&aThe survivors are: &7<winners>'
     Zombies Win: '&cAll Humans have been Infected'
   Alpha:
-    You: '&f&oYou are a &4ZOMBIE!'
+    You: '&f&oYou are an &4Alpha Zombie!'
     They: '&7&o<player> &chas fallen to the Infection'
   Starting In 5: '&xThe game will start in 5 seconds!'
 Help:
@@ -122,6 +128,7 @@ Menu:
     Choose: '&eClick to choose classes for &x&o<team>'
   Classes:
     Click To Choose: '&eClick to choose this class'
+    Click For None: '&eClick to choose the default class'
   Vote:
     Choose: '&7Click to vote for this arena'
     Random: '&fClick to vote for a random arena'
@@ -179,5 +186,5 @@ Kills:
 Suicides:
   Human:
     - "&x<killed> &6 has died"
-  Zombies:
+  Zombie:
     - "&x<killed> &6 has become infected"

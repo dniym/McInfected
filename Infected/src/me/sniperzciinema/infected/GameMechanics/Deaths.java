@@ -25,24 +25,29 @@ public class Deaths {
 		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed, death);
 		Bukkit.getPluginManager().callEvent(e);
 
-		String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
-
-		if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getHumans().size() > 1)
+		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
 		{
-			killMessage = KillMessages.getKillMessage(killer, killed, death, false);
-			String[] face = Pictures.getZombie();
-			face[2] = face[2] + "     " + killMessage;
-			face[3] = face[3] + Msgs.Picutre_Infected_To_Win.getString();
-
-			killed.sendMessage(face);
-
-			for (Player u : Lobby.getInGame())
-				if (u != killed)
-					u.sendMessage(Msgs.Format_Prefix + killMessage);
 		} else
-			for (Player u : Lobby.getInGame())
-				u.sendMessage(killMessage);
+		{
+			String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
 
+			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getHumans().size() > 1)
+			{
+				killMessage = KillMessages.getKillMessage(killer, killed, death, false);
+				String[] face = Pictures.getZombie();
+				face[2] = face[2] + "     " + Msgs.Picture_Infected_You.getString();
+				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
+
+				killed.sendMessage(face);
+
+				for (Player u : Lobby.getInGame())
+					if (u != killed)
+						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
+			} else
+				for (Player u : Lobby.getInGame())
+					u.sendMessage(killMessage);
+
+		}
 		InfPlayer InfKiller = null;
 		InfPlayer InfKilled = null;
 		if (killer != null)

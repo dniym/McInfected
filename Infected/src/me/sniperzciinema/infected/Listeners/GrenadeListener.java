@@ -101,10 +101,10 @@ public class GrenadeListener implements Listener {
 						}
 					}, grenade.getDelay() * 20);
 				}
-			}
 			event.setCancelled(true);
 			event.setUseInteractedBlock(Result.DENY);
 			event.setUseItemInHand(Result.DENY);
+			}
 		}
 	}
 

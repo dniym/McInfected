@@ -13,6 +13,7 @@ import me.sniperzciinema.infected.Messages.RandomChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -109,20 +110,32 @@ public class ScoreBoard {
 
 			} else if (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
 			{
-				ob.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote for your map!");
+				ob.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote For An Arena!");
+				int i = 1;
 				for (Arena arena : Lobby.getArenas())
 				{
 					if (Lobby.isArenaValid(arena))
 					{
 						Score score;
 						if (arena == Lobby.getActiveArena())
-							score = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD + ">" + arena.getName()));
+							score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName()));
 						else
 							score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName()));
+						if (i > 15)
+						{
+							for (OfflinePlayer op : sb.getPlayers())
+							{
+								if (ob.getScore(op).getScore() == 0)
+								{
+									sb.resetScores(op);
+									break;
 
+								}
+							}
+						}
 						score.setScore(1);
 						score.setScore(arena.getVotes());
-
+						i++;
 					}
 				}
 			}
@@ -191,6 +204,7 @@ public class ScoreBoard {
 		}
 	}
 }
+
 
 class ScoreBoardVariables {
 

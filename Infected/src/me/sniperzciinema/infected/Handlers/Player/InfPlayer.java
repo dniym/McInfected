@@ -135,8 +135,10 @@ public class InfPlayer {
 		Lobby.getHumans().remove(p);
 		Lobby.getZombies().remove(p);
 		Lobby.getInGame().remove(p);
+		
 		if (getVote() != null)
 			getVote().setVotes(getVote().getVotes() - getAllowedVotes());
+		
 		killstreak = 0;
 		location = null;
 		gamemode = null;
@@ -148,8 +150,12 @@ public class InfPlayer {
 		armor = null;
 		vote = null;
 		timeIn = 0;
+		
 		fullLeave();
 
+		for(Player u : Lobby.getInGame())
+			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
+			
 		player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 	}
 

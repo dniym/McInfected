@@ -20,7 +20,7 @@ public class PotionEffects {
 	public static void addEffectOnContact(Player p, Player u) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
-		for (PotionEffect PE : IP.getInfClass(IP.getTeam()).getContacteffects())
+		for (PotionEffect PE : IP.getInfClass(IP.getTeam()).getContactEffects())
 			u.addPotionEffect(PE);
 	}
 

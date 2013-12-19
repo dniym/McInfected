@@ -36,15 +36,24 @@ public class Menus {
 		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		IconMenu menu = new IconMenu(
 				ChatColor.GREEN + p.getName() + "-" + team.toString() + " Classes",
-				((InfClassManager.getHumanClasses().size() / 9) * 9) + 9,
+				((InfClassManager.getHumanClasses().size()+2 / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{
 
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
-						if (event.getName().equalsIgnoreCase("None"))
+						if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("None"))
 						{
 							p.sendMessage(Msgs.Classes_None.getString("<team>", team.toString()));
+						}else if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
+						{
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+							{
+
+								public void run() {
+									chooseClassTeam(p);
+								}
+							}, 2);
 						} else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + event.getName()))
 						{
 							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", team.toString()));
@@ -58,10 +67,26 @@ public class Menus {
 		for (InfClass Class : (team == Team.Human ? InfClassManager.getHumanClasses() : InfClassManager.getZombieClasses()))
 		{
 			ItemStack item = Class.getItems().get(0);
-			menu.setOption(i, item, Class.getName(), (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), team == Team.Zombie && Settings.DisguisesEnabled() ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
+			menu.setOption(i, item, Class.getName(),
+					
+					(team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + Msgs.Menu_Classes_Click_To_Choose.getString(),
+					"",
+					ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), 
+					ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), 
+					ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), 
+					ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), 
+					"",
+					ChatColor.AQUA + "Potion Effect:",
+					ChatColor.WHITE + (Class.getEffects().isEmpty() ? "" :StringUtil.getWord(Class.getEffects().get(0).getType().getName().toString())),
+					"",
+					ChatColor.AQUA + "Transfer Effect:",
+					ChatColor.WHITE + (Class.getContactEffects().isEmpty() ? "" : StringUtil.getWord(Class.getContactEffects().get(0).getType().getName().toString())),
+					"",
+					team == Team.Zombie && Settings.DisguisesEnabled() ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
 			i++;
 		}
-		menu.setOption(i, new ItemStack(Material.REDSTONE_WIRE), "None", Msgs.Classes_None.getString());
+		menu.setOption(i, new ItemStack(Material.BAKED_POTATO), "None", Msgs.Menu_Classes_Click_For_None.getString());
+		menu.setOption(i+1, new ItemStack(Material.SPONGE), "Return", Msgs.Menu_Classes_Click_To_Return.getString());
 		menu.open(p);
 	}
 

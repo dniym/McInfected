@@ -93,6 +93,10 @@ Settings:
      - " "
      - "&6&lBest Streak:"
      - "&6&o<highestkillstreak>"
+# Commands to allowed in the arena
+    Allowed Commands:
+    - /list
+    - /tell
 # Global Settings can be just copied and pasted into an arenas settings then you have settings per arena
   Global:
 # All the time limits (Seconds)
@@ -104,10 +108,6 @@ Settings:
     Percent to Infect:
       Enabled: true
       Percent: 20
-# Commands to allow in the arena
-    Allowed Commands:
-    - /list
-    - /tell
 # Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
     Breakable Blocks:
       Global:

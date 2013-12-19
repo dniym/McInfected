@@ -125,6 +125,8 @@ public class InfClassManager {
 	}
 
 	public static void loadConfigClasses() {
+		humanClasses = new ArrayList<InfClass>();
+		zombieClasses = new ArrayList<InfClass>();
 		for (String s : Files.getClasses().getConfigurationSection("Classes.Human").getKeys(true))
 		{
 			String name = "0";

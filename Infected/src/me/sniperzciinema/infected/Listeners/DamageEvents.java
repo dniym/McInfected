@@ -184,7 +184,7 @@ public class DamageEvents implements Listener {
 							}
 							// If the damage wasn't enough to kill them, lets
 							// see what contact effects we need to apply
-							else if (!IPK.getInfClass(IPK.getTeam()).getContacteffects().isEmpty())
+							else if (!IPK.getInfClass(IPK.getTeam()).getContactEffects().isEmpty())
 								PotionEffects.addEffectOnContact(killer, victim);
 						}
 					}

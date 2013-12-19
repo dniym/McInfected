@@ -64,6 +64,7 @@ public class GrenadeManager {
 	}
 
 	public static void loadConfigGrenades() {
+		grenades = new ArrayList<Grenade>();
 		for (String s : Files.getGrenades().getConfigurationSection("Grenades").getKeys(true))
 		{
 			if (!s.contains("."))
