@@ -1,10 +1,10 @@
-# Default Message.yml, Last Edited in v2.0.0
+# Default Message.yml, Last Edited in v2.0.5
 # If you want to write "don't", write "don''t" instead (note the doubled apostrophe)
 # Due to me never being able to decide on a color, Infected supports "Random Color Codes" '&x' is for a random color and '&y' is for a random format
 Format:
   Header: '&x&y>&e&o&m---------------««&4&l<title>&e&o&m»»---------------&x&y<'
   Line: '&x&y>&e&m-------------------------------------------&x&y<'
-  Prefix: '&0>>&4Infected&0<<&x'
+  Prefix: '&e&l«&4&lInfected&e&l»&c'
   InfChat: '&f&l<<&7<team>&8&l-&6&o<player>&f&l>>&7: &e<message>'
   List: '&e&l> &a&o<player>'
   Grenades List: '&x&o<id>. &e<name> &7&l- &e<cost>'

@@ -121,6 +121,7 @@ public class InfPlayer {
 		p.setExp(exp);
 		p.setHealth(health);
 		p.setFoodLevel(food);
+		p.setFireTicks(0);
 		p.getInventory().setContents(inventory);
 		p.getInventory().setArmorContents(armor);
 		p.updateInventory();
