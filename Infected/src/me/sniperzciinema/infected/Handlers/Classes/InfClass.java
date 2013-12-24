@@ -17,6 +17,7 @@ public class InfClass {
 	private ItemStack chestplate;
 	private ItemStack leggings;
 	private ItemStack boots;
+	private ItemStack icon;
 	private ArrayList<ItemStack> items;
 	private ArrayList<PotionEffect> effects;
 	private ArrayList<PotionEffect> transfereffects;
@@ -29,13 +30,15 @@ public class InfClass {
 			ItemStack chestplate, ItemStack leggings, ItemStack boots,
 			ArrayList<ItemStack> items, ArrayList<PotionEffect> effects,
 			ArrayList<PotionEffect> transfereffects,
-			HashMap<Integer, ItemStack> killstreaks, String disguise)
+			HashMap<Integer, ItemStack> killstreaks, String disguise,
+			ItemStack icon)
 	{
 		this.name = name;
 		this.helmet = helmet;
 		this.chestplate = chestplate;
 		this.leggings = leggings;
 		this.boots = boots;
+		this.setIcon(icon);
 		this.items = items;
 		this.effects = effects;
 		this.transfereffects = transfereffects;
@@ -207,6 +210,24 @@ public class InfClass {
 	 */
 	public void setKillstreaks(HashMap<Integer, ItemStack> killstreaks) {
 		this.killstreaks = killstreaks;
+	}
+
+	/**
+	 * @return the icon
+	 */
+	public ItemStack getIcon() {
+		if (icon == null)
+			return items.get(0);
+		else
+			return icon;
+	}
+
+	/**
+	 * @param icon
+	 *            the icon to set
+	 */
+	public void setIcon(ItemStack icon) {
+		this.icon = icon;
 	}
 
 }

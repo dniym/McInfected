@@ -21,9 +21,10 @@ public class InfClassManager {
 	private static InfClass defaultHuman;
 	private static InfClass defaultZombie;
 
-	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects, HashMap<Integer, ItemStack> killstreaks, String disguise) {
+	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects, HashMap<Integer, ItemStack> killstreaks, String disguise, ItemStack icon) {
 		InfClass IC = new InfClass(name, team, helmet, chestplate, leggings,
-				boots, items, effects, transfereffects, killstreaks, disguise);
+				boots, items, effects, transfereffects, killstreaks, disguise,
+				icon);
 		if (team == Team.Human)
 			humanClasses.add(IC);
 		else
@@ -107,7 +108,8 @@ public class InfClassManager {
 
 	public static void loadDefaultClasses() {
 		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Settings.Global.Default Classes.Human"));
-		if(defaultHuman == null){
+		if (defaultHuman == null)
+		{
 			defaultHuman = getClasses(Team.Human).get(0);
 			Files.getConfig().set("Settings.Global.Default Classes.Human", defaultHuman.getName());
 			Files.saveConfig();
@@ -115,7 +117,8 @@ public class InfClassManager {
 				System.out.println("Invalid default human class. Changed to: " + defaultHuman.getName());
 		}
 		defaultZombie = getClass(Team.Zombie, Files.getConfig().getString("Settings.Global.Default Classes.Zombie"));
-		if(defaultZombie == null){
+		if (defaultZombie == null)
+		{
 			defaultZombie = getClasses(Team.Zombie).get(0);
 			Files.getConfig().set("Settings.Global.Default Classes.Zombie", defaultZombie.getName());
 			Files.saveConfig();
@@ -134,6 +137,7 @@ public class InfClassManager {
 			String chestplate = "0";
 			String leggings = "0";
 			String boots = "0";
+			String icon = "0";
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			String disguise = null;
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
@@ -146,6 +150,7 @@ public class InfClassManager {
 				chestplate = Files.getClasses().getString("Classes.Human." + s + ".Chestplate");
 				leggings = Files.getClasses().getString("Classes.Human." + s + ".Leggings");
 				boots = Files.getClasses().getString("Classes.Human." + s + ".Boots");
+				icon = Files.getClasses().getString("Classes.Human." + s + ".Icon");
 				items = ItemHandler.getItemStackList(Files.getClasses().getStringList("Classes.Human." + s + ".Items"));
 				disguise = Files.getClasses().getString("Classes.Human." + s + ".Disguise");
 				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Potion Effects"));
@@ -156,7 +161,8 @@ public class InfClassManager {
 						ItemHandler.getItemStack(chestplate),
 						ItemHandler.getItemStack(leggings),
 						ItemHandler.getItemStack(boots), items, effects,
-						transfereffects, killstreaks, disguise);
+						transfereffects, killstreaks, disguise,
+						ItemHandler.getItemStack(icon));
 
 				if (Settings.logClassesEnabled())
 					System.out.println("Loaded Human Class: " + IC.getName());
@@ -171,6 +177,7 @@ public class InfClassManager {
 			String chestplate = "0";
 			String leggings = "0";
 			String boots = "0";
+			String icon = "0";
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			String disguise = null;
 			ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
@@ -183,6 +190,7 @@ public class InfClassManager {
 				chestplate = Files.getClasses().getString("Classes.Zombie." + s + ".Chestplate");
 				leggings = Files.getClasses().getString("Classes.Zombie." + s + ".Leggings");
 				boots = Files.getClasses().getString("Classes.Zombie." + s + ".Boots");
+				icon = Files.getClasses().getString("Classes.Zombie." + s + ".Icon");
 				items = ItemHandler.getItemStackList(Files.getClasses().getStringList("Classes.Zombie." + s + ".Items"));
 				disguise = Files.getClasses().getString("Classes.Zombie." + s + ".Disguise");
 				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Zombie." + s + ".Potion Effects"));
@@ -194,7 +202,8 @@ public class InfClassManager {
 						ItemHandler.getItemStack(chestplate),
 						ItemHandler.getItemStack(leggings),
 						ItemHandler.getItemStack(boots), items, effects,
-						transfereffects, killstreaks, disguise);
+						transfereffects, killstreaks, disguise,
+						ItemHandler.getItemStack(icon));
 
 				if (Settings.logClassesEnabled())
 					System.out.println("Loaded Zombie Class: " + IC.getName());

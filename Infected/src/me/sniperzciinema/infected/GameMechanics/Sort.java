@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
 import me.sniperzciinema.infected.GameMechanics.Stats.StatType;
+import me.sniperzciinema.infected.Tools.Files;
+import me.sniperzciinema.infected.Tools.MySQLManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -34,11 +36,21 @@ public class Sort {
 		// Get all the players and put them and their score in a new hashmap for
 		// Player, Score
 		String[] top = { " ", " ", " ", " ", " " };
-		for (Player p : Bukkit.getOnlinePlayers())
-			players.put(p.getName(), Stats.getStat(type, p.getName()));
-
+		
+			for (Player p : Bukkit.getOnlinePlayers())
+				players.put(p.getName(), Stats.getStat(type, p.getName()));
+		
+			if(Settings.MySQLEnabled())
+				for(String playerName : MySQLManager.getPlayers("Infected"))
+					players.put(playerName, Stats.getStat(type, playerName));
+						
+			else
+				for(String playerName : Files.getPlayers().getConfigurationSection("Players").getKeys(false)){
+					players.put(playerName, Stats.getStat(type, playerName));
+			
+		}
 		int place = 0;
-		while (place != howMany - 1)
+		while (place != howMany)
 		{
 			// If the list still has players in it, find the top player
 

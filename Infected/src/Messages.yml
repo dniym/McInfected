@@ -59,13 +59,14 @@ Error:
     Unkown Command: '&c&oInfected has no clue what command you want, but try looking into ''/Infected Help''!'
     Cant Use Command: '&c&oInfected was warned you''d try this so we blocked this command!'
     Not A File: '&cThats not a file in Infected... &7Try one of these: &o<files>'
+    Not A Path: '&cThats not a valid path in the selected file!'
   Game:
     Started: '&e&oThe Games already started'
     Not Started: '&e&oThe Games not started'
     Not In: '&c&oYou need to be playing Infected to do this...'
     In: '&c&oYou''re already playing Infected'
   Top:
-    Not Stat: '&c&oInfected doesn''t watch for that...'
+    Not Stat: '&c&oInvalid Stat &b(<Kills/Deaths/Points/Score/Time/KillStreak>)'
   Lobby:
     Doesnt Exist: '&c&oInfected is in dier need of a lobby first...'
   Arena:
@@ -116,7 +117,7 @@ Help:
   Create: '&3To create an arena use &x&o/Infected Create <Arena> [Creator]'
   Remove: '&3To remove an arena use &x&o/Infected Remove <Arena>'
   SetArena: '&3To select an arena to edit use &x&o/Infected SetArena <Arena>'
-  Top: '&3To see from the top list of players use &x&o/Infected Top <stats>'
+  Top: '&3To see from the top list of players use &x&o/Infected Top <Kills/Deaths/Points/Score/Time/KillStreak>'
   Files: '&3To modify Infected''s Files use &x&o/Infected Files <File> [Path] [NewValue]'
 Classes:
   None: '&7You have chosen the &x&odefault class'
@@ -129,6 +130,7 @@ Menu:
   Classes:
     Click To Choose: '&eClick to choose this class'
     Click For None: '&eClick to choose the default class'
+    Click To Return: '&eClick to return to &f&lTeam Selection'
   Vote:
     Choose: '&7Click to vote for this arena'
     Random: '&fClick to vote for a random arena'

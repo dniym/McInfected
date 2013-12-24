@@ -22,6 +22,7 @@
 Classes:
   Human: 
     Guard:
+      Icon: '268'
       Helmet: '306'
       Chestplate: '303'
       Leggings: '304'
@@ -38,6 +39,7 @@ Classes:
         '5': '268-19'
         '7': '305-2' 
     Knight:
+      Icon: '314'
       Helmet: '314'
       Chestplate: '315'
       Leggings: '316'
@@ -58,6 +60,7 @@ Classes:
         '10': '261,10'
   Zombie: 
     Regular:
+      Icon: '367'
       Disguise: Zombie
       Helmet: '298'
       Chestplate: '299'
@@ -70,6 +73,7 @@ Classes:
       KillStreaks:
         '10': '276-1'
     Bones:
+      Icon: '352'
       Disguise: Skeleton
       Helmet: '298'
       Chestplate: '299-7'

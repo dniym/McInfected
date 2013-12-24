@@ -80,7 +80,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!classesFile.exists())
+			if (!classesFile.exists() || classesFile.length() == 0)
 				classes.setDefaults(defConfig);
 		}
 	}
@@ -118,7 +118,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!arenasFile.exists())
+			if (!arenasFile.exists() || arenasFile.length() == 0)
 				arenas.setDefaults(defConfig);
 		}
 	}
@@ -155,7 +155,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!grenadesFile.exists())
+			if (!grenadesFile.exists() || grenadesFile.length() == 0)
 				grenades.setDefaults(defConfig);
 		}
 	}
@@ -195,7 +195,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!shopFile.exists())
+			if (!shopFile.exists() || shopFile.length() == 0)
 				shop.setDefaults(defConfig);
 		}
 	}
@@ -274,7 +274,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!playerFile.exists())
+			if (!playerFile.exists() || playerFile.length() == 0)
 				playerF.setDefaults(defConfig);
 		}
 	}
@@ -317,7 +317,7 @@ public class Files {
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!signsFile.exists())
+			if (!signsFile.exists() || signsFile.length() == 0)
 				signs.setDefaults(defConfig);
 		}
 	}

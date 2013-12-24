@@ -12,6 +12,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -19,59 +21,59 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
-		
+
 		List<String> list = Settings.AllowedCommands();
-		if(!list.contains("/join"))
+		if (!list.contains("/join"))
 			list.add("/join");
-		if(!list.contains("/leave"))
+		if (!list.contains("/leave"))
 			list.add("/leave");
-		if(!list.contains("/vote"))
+		if (!list.contains("/vote"))
 			list.add("/vote");
-		if(!list.contains("/chat"))
+		if (!list.contains("/chat"))
 			list.add("/chat");
-		if(!list.contains("/classes"))
+		if (!list.contains("/classes"))
 			list.add("/classes");
-		if(!list.contains("/join"))
+		if (!list.contains("/join"))
 			list.add("/join");
-		if(!list.contains("/shop"))
+		if (!list.contains("/shop"))
 			list.add("/shop");
-		if(!list.contains("/store"))
+		if (!list.contains("/store"))
 			list.add("/store");
-		if(!list.contains("/grenade"))
+		if (!list.contains("/grenade"))
 			list.add("/grenade");
-		if(!list.contains("/grenades"))
+		if (!list.contains("/grenades"))
 			list.add("/grenades");
-		if(!list.contains("/files"))
+		if (!list.contains("/files"))
 			list.add("/files");
-		if(!list.contains("/admin"))
+		if (!list.contains("/admin"))
 			list.add("/admin");
-		if(!list.contains("/list"))
+		if (!list.contains("/list"))
 			list.add("/list");
-		if(!list.contains("/stats"))
+		if (!list.contains("/stats"))
 			list.add("/stats");
-		if(!list.contains("/top"))
+		if (!list.contains("/top"))
 			list.add("/top");
-		if(!list.contains("/arenas"))
+		if (!list.contains("/arenas"))
 			list.add("/arenas");
-		if(!list.contains("/help"))
+		if (!list.contains("/help"))
 			list.add("/help");
-		if(!list.contains("/setlobby"))
+		if (!list.contains("/setlobby"))
 			list.add("/setlobby");
-		if(!list.contains("/tplobby"))
+		if (!list.contains("/tplobby"))
 			list.add("/tplobby");
-		if(!list.contains("/create"))
+		if (!list.contains("/create"))
 			list.add("/create");
-		if(!list.contains("/remove"))
+		if (!list.contains("/remove"))
 			list.add("/remove");
-		if(!list.contains("/addspawn"))
+		if (!list.contains("/addspawn"))
 			list.add("/addspawn");
-		if(!list.contains("/delspawn"))
+		if (!list.contains("/delspawn"))
 			list.add("/delspawn");
-		if(!list.contains("/spawns"))
+		if (!list.contains("/spawns"))
 			list.add("/spawns");
-		if(!list.contains("/tpspawn"))
+		if (!list.contains("/tpspawn"))
 			list.add("/tpspawn");
-		
+
 		Files.getConfig().set("Settings.Misc.Allowed Commands", list);
 		Files.saveConfig();
 	}
@@ -86,6 +88,16 @@ public class Main extends JavaPlugin implements Listener {
 			event.getPlayer().performCommand("infected join");
 			event.setJoinMessage("");
 		}
+	}
+
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		event.setQuitMessage("");
+	}
+
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event) {
+		event.setLeaveMessage("");
 	}
 
 	@EventHandler
@@ -134,65 +146,65 @@ public class Main extends JavaPlugin implements Listener {
 		} else
 		{
 			if (msg.equalsIgnoreCase("/Join"))
-				msg =  "/Infected Join";
+				msg = "/Infected Join";
 			if (msg.equalsIgnoreCase("/Rank"))
-				msg =  "/Infected Rank";
+				msg = "/Infected Rank";
 			if (msg.equalsIgnoreCase("/Ranks"))
-				msg =  "/Infected Ranks";
+				msg = "/Infected Ranks";
 			if (msg.equalsIgnoreCase("/Leave"))
-				msg =  "/Infected Leave";
+				msg = "/Infected Leave";
 			if (msg.equalsIgnoreCase("/Vote"))
-				msg =  "/Infected Vote";
+				msg = "/Infected Vote";
 			if (msg.equalsIgnoreCase("/Chat"))
-				msg =  "/Infected Chat";
+				msg = "/Infected Chat";
 			if (msg.equalsIgnoreCase("/Files"))
-				msg =  "/Infected Files";
+				msg = "/Infected Files";
 			if (msg.equalsIgnoreCase("/Grenades"))
-				msg =  "/Infected Grenades";
+				msg = "/Infected Grenades";
 			if (msg.equalsIgnoreCase("/Grenade"))
-				msg =  "/Infected Grenade";
+				msg = "/Infected Grenade";
 			if (msg.equalsIgnoreCase("/Shop"))
-				msg =  "/Infected Shop";
+				msg = "/Infected Shop";
 			if (msg.equalsIgnoreCase("/Store"))
-				msg =  "/Infected Store";
+				msg = "/Infected Store";
 			if (msg.equalsIgnoreCase("/Classes"))
-				msg =  "/Infected Classes";
+				msg = "/Infected Classes";
 			if (msg.equalsIgnoreCase("/Info"))
-				msg =  "/Infected Info";
+				msg = "/Infected Info";
 			if (msg.equalsIgnoreCase("/Suicide"))
-				msg =  "/Infected Suicide";
+				msg = "/Infected Suicide";
 			if (msg.equalsIgnoreCase("/SetLobby"))
-				msg =  "/Infected SetLobby";
+				msg = "/Infected SetLobby";
 			if (msg.equalsIgnoreCase("/List"))
-				msg =  "/Infected List";
+				msg = "/Infected List";
 			if (msg.equalsIgnoreCase("/Help"))
-				msg =  "/Infected Help";
+				msg = "/Infected Help";
 			if (msg.equalsIgnoreCase("/Start"))
-				msg =  "/Infected Start";
+				msg = "/Infected Start";
 			if (msg.equalsIgnoreCase("/End"))
-				msg =  "/Infected End";
+				msg = "/Infected End";
 			if (msg.equalsIgnoreCase("/Arenas"))
-				msg =  "/Infected Arenas";
+				msg = "/Infected Arenas";
 			if (msg.equalsIgnoreCase("/Admin"))
-				msg =  "/Infected Admin";
+				msg = "/Infected Admin";
 			if (msg.equalsIgnoreCase("/Stats"))
-				msg =  "/Infected Stats";
+				msg = "/Infected Stats";
 			if (msg.equalsIgnoreCase("/TpLobby"))
-				msg =  "/Infected TpLobby";
+				msg = "/Infected TpLobby";
 			if (msg.equalsIgnoreCase("/TpLobby"))
-				msg =  "/Infected SetSpawn";
+				msg = "/Infected SetSpawn";
 			if (msg.equalsIgnoreCase("/TpLobby"))
-				msg =  "/Infected DelSpawn";
+				msg = "/Infected DelSpawn";
 			if (msg.equalsIgnoreCase("/Spawns"))
-				msg =  "/Infected Spawns";
+				msg = "/Infected Spawns";
 			if (msg.equalsIgnoreCase("/Create"))
-				msg =  "/Infected Create";
+				msg = "/Infected Create";
 			if (msg.equalsIgnoreCase("/Remove"))
-				msg =  "/Infected Remove";
+				msg = "/Infected Remove";
 			if (msg.equalsIgnoreCase("/Top"))
-				msg =  "/Infected Top";
+				msg = "/Infected Top";
 			if (msg.equalsIgnoreCase("/SetArena"))
-				msg =  "/Infected SetArena";
+				msg = "/Infected SetArena";
 		}
 		event.setMessage(msg);
 	}

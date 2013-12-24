@@ -3,10 +3,12 @@ package me.sniperzciinema.infected.Tools;
 
 import java.util.Arrays;
 
+import me.sniperzciinema.infected.Main;
 import me.sniperzciinema.infected.Handlers.Lobby;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -60,25 +62,26 @@ public class IconMenu implements Listener {
 		player.openInventory(inventory);
 	}
 
-	public void destroy() {
+	public void destroy(){
 		HandlerList.unregisterAll(this);
-		handler = null;
-		plugin = null;
-		optionNames = null;
-		optionIcons = null;
+		this.name = "";
+		this.handler = null;
+		this.optionNames = null;
+		this.optionIcons = null;
+		
+		Bukkit.getServer().getPluginManager().registerEvents(this, Main.me);
 	}
-
 	@EventHandler(priority = EventPriority.MONITOR)
 	void onInventoryClose(InventoryCloseEvent event) {
-		if (Lobby.isInGame((Player) event.getPlayer()))
+		if (Lobby.isInGame((Player) event.getPlayer()) && event.getInventory().getTitle().contains(event.getPlayer().getName()))
 		{
-			destroy();
+			event.getInventory().clear();
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	void onInventoryClick(InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name))
+		if (event.getInventory().getTitle().equals(name) && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR)
 		{
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
@@ -112,7 +115,6 @@ public class IconMenu implements Listener {
 		private int position;
 		private String name;
 		private boolean close;
-		private boolean destroy;
 
 		public OptionClickEvent(Player player, int position, String name)
 		{
@@ -120,7 +122,6 @@ public class IconMenu implements Listener {
 			this.position = position;
 			this.name = name;
 			this.close = true;
-			this.destroy = false;
 		}
 
 		public Player getPlayer() {
@@ -139,17 +140,10 @@ public class IconMenu implements Listener {
 			return close;
 		}
 
-		public boolean willDestroy() {
-			return destroy;
-		}
-
 		public void setWillClose(boolean close) {
 			this.close = close;
 		}
 
-		public void setWillDestroy(boolean destroy) {
-			this.destroy = destroy;
-		}
 	}
 
 	private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {

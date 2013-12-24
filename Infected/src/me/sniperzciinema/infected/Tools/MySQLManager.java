@@ -4,6 +4,7 @@ package me.sniperzciinema.infected.Tools;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import me.sniperzciinema.infected.Main;
 
@@ -50,6 +51,28 @@ public class MySQLManager {
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	public static ArrayList<String> getPlayers(String tableName) {
+		try
+		{
+			Statement statement = Main.connection.createStatement();
+			ResultSet set = statement.executeQuery("SELECT * FROM `infected` ");
+			ArrayList<String> players = new ArrayList<String>();
+			while (true)
+			{
+				set.next();
+				players.add(set.getString("Player"));
+				if (set.isLast())
+					break;
+			}
+			set.close();
+			return players;
+		} catch (SQLException e)
+		{
+			ArrayList<String> nope = new ArrayList<String>();
+			return nope;
 		}
 	}
 }

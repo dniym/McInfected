@@ -209,6 +209,10 @@ public class ItemHandler {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemStack(String location) {
+		
+		if(location == null)
+			return null;
+		
 		ItemStack is = null;
 		if (Material.getMaterial(getItemID(location)) != null)
 			is = new ItemStack(Material.getMaterial(getItemID(location)),

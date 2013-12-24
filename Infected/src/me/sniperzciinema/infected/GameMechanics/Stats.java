@@ -10,7 +10,7 @@ public class Stats {
 
 	public enum StatType
 	{
-		kills, deaths, points, score, killstreak, playingtime;
+		kills, deaths, points, score, killstreak, time;
 	};
 
 	public static int getStat(StatType type, String user) {
@@ -24,7 +24,7 @@ public class Stats {
 			return getScore(user);
 		else if (type == StatType.killstreak)
 			return getHighestKillStreak(user);
-		else if (type == StatType.playingtime)
+		else if (type == StatType.time)
 			return getPlayingTime(user);
 		else
 			return 0;

@@ -50,6 +50,7 @@ public enum Msgs
 	Error_Misc_Not_Player("Error.Misc.Not Player"),
 	Error_Misc_Unkown_Command("Error.Misc.Unkown Command"),
 	Error_Misc_Not_A_File("Error.Misc.Not A File")/* <files> */,
+	Error_Misc_Not_A_Path("Error.Misc.Not A Path"),
 	Error_Game_Started("Error.Game.Started"),
 	Error_Game_Not_Started("Error.Game.Not Started"),
 	Error_Game_Not_In("Error.Game.Not In"),

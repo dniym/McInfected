@@ -111,7 +111,7 @@ public class Commands implements CommandExecutor {
 
 					else if (!Lobby.getInGame().contains(p))
 						p.sendMessage(Msgs.Error_Game_Not_In.getString());
-					
+
 					else if (Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Started)
 						p.sendMessage(Msgs.Error_Game_Started.getString());
 
@@ -156,9 +156,10 @@ public class Commands implements CommandExecutor {
 
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 							{
+
 								@Override
 								public void run() {
-									
+
 									Lobby.timerStartVote();
 								}
 							}, 100L);
@@ -588,7 +589,7 @@ public class Commands implements CommandExecutor {
 
 								InfClassManager.loadConfigClasses();
 								GrenadeManager.loadConfigGrenades();
-								
+
 								System.out.println("====================");
 								sender.sendMessage(Msgs.Command_Admin_Reload.getString());
 
@@ -917,29 +918,26 @@ public class Commands implements CommandExecutor {
 
 					else
 					{
-						if (args.length != 1)
+						if (args.length == 2)
 						{
-
 							String stat = args[1].toLowerCase();
-							if (StatType.valueOf(stat) == null)
-								sender.sendMessage(Msgs.Error_Top_Not_Stat.getString("<stats>", String.valueOf(StatType.values())));
-							else
+							System.out.println(stat);
+							if (stat.equals("kills") || stat.equals("deaths") || stat.equals("score") || stat.equals("time") || stat.equals("points") || stat.equals("killstreak"))
 							{
 								StatType type = StatType.valueOf(stat);
 
 								int i = 1;
+								sender.sendMessage(Msgs.Format_Header.getString("<title>", "Top " + stat.toString()));
 								for (String name : Sort.topStats(type, 5))
 								{
 									if (name != " ")
 									{
 										if (i == 1)
-											sender.sendMessage("" + ChatColor.YELLOW + i + ". " + name + " - " + Stats.getStat(type, name));
-										else if (i == 2)
-											sender.sendMessage("" + ChatColor.GRAY + i + ". " + name + " - " + Stats.getStat(type, name));
-										else if (i == 3)
-											sender.sendMessage("" + ChatColor.GOLD + i + ". " + name + " - " + Stats.getStat(type, name));
+											sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.GOLD + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
+										else if (i == 2 || i == 3)
+											sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.GRAY + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
 										else
-											sender.sendMessage("" + ChatColor.WHITE + i + ". " + name + " - " + Stats.getStat(type, name));
+											sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.WHITE + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.DARK_GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
 									}
 									i++;
 
@@ -947,7 +945,8 @@ public class Commands implements CommandExecutor {
 										break;
 								}
 
-							}
+							} else
+								sender.sendMessage(Msgs.Error_Top_Not_Stat.getString());
 						} else
 							sender.sendMessage(Msgs.Help_Top.getString());
 					}
@@ -1041,25 +1040,32 @@ public class Commands implements CommandExecutor {
 
 							if (config != null)
 							{
-								sender.sendMessage(Msgs.Command_Files_Changed.getString("<path>", path, "<value>", config.getString(path), "<newvalue>", newvalue));
-								if (newvalue.equalsIgnoreCase("True") || newvalue.equalsIgnoreCase("False"))
-									config.set(path.replaceAll("_", " "), Boolean.valueOf(newvalue.toUpperCase()));
-								else if (newvalue.startsWith(String.valueOf('[')) && newvalue.endsWith("]"))
+								if (config.get(path) != null)
 								{
-									p.sendMessage("List");
-									String[] list = (newvalue.replaceAll("\\[", "").replaceAll("]", "")).split(",");
-									config.set(path, list);
+									sender.sendMessage(Msgs.Command_Files_Changed.getString("<path>", path, "<value>", config.getString(path), "<newvalue>", newvalue));
+									if (newvalue.equalsIgnoreCase("True") || newvalue.equalsIgnoreCase("False"))
+										config.set(path.replaceAll("_", " "), Boolean.valueOf(newvalue.toUpperCase()));
+									else if (newvalue.startsWith(String.valueOf('[')) && newvalue.endsWith("]"))
+									{
+										p.sendMessage("List");
+										String[] list = (newvalue.replaceAll("\\[", "").replaceAll("]", "")).split(",");
+										config.set(path, list);
+									} else
+										try
+										{
+											int i = Integer.valueOf(newvalue);
+											config.set(path, i);
+										} catch (Exception ex)
+										{
+											config.set(path, newvalue);
+										}
+									Files.saveAll();
 								} else
-									try
-									{
-										int i = Integer.valueOf(newvalue);
-										config.set(path, i);
-									} catch (Exception ex)
-									{
-										config.set(path, newvalue);
-									}
-								Files.saveAll();
-							}
+									sender.sendMessage(Msgs.Error_Misc_Not_A_Path.getString());
+
+							} else
+								sender.sendMessage(Msgs.Help_Files.getString("<files>", "Config, Abilities, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
+
 						} else
 							sender.sendMessage(Msgs.Help_Files.getString("<files>", "Config, Abilities, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
 					}
