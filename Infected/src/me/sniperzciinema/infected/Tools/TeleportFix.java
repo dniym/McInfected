@@ -66,6 +66,8 @@ public class TeleportFix implements Listener {
 		// and hide or show tpedPlayer to every player.
 		for (Player player : players)
 		{
+			// If disguises are enabled only toggle the player if they're
+			// disguised
 			if (Settings.DisguisesEnabled())
 			{
 				if (!Disguises.isPlayerDisguised(player))

@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Desktop/Minecraft Servers/Infected Test Server/plugins/Infected.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/bukkit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/bukkit-1.7.2-R0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/craftbukkit-1.7.2-R0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

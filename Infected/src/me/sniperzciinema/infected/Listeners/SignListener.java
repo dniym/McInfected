@@ -33,6 +33,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * The Signs Listener
+ * 
+ */
 
 public class SignListener implements Listener {
 

@@ -6,6 +6,11 @@ import org.bukkit.ChatColor;
 
 public class Pictures {
 
+	/**
+	 * Player.sendMessage(Pictures.getZombie())
+	 * 
+	 * @return A zombie face using utf-8 characters
+	 */
 	public static String[] getZombie() {
 		String[] face = { "", "", "", "", "", "", "", "", "", "" };
 		String block = "▓";
@@ -22,6 +27,11 @@ public class Pictures {
 		return face;
 	}
 
+	/**
+	 * Player.sendMessage(Pictures.getHuman())
+	 * 
+	 * @return Notch's face using utf-8 characters
+	 */
 	public static String[] getHuman() {
 		String[] face = { "", "", "", "", "", "", "", "", "", "" };
 		String block = "▓";

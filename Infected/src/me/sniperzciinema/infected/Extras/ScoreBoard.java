@@ -56,7 +56,8 @@ public class ScoreBoard {
 	}
 
 	/**
-	 * Shows proper scoreboard for what they're SUPPOSED to see
+	 * Shows proper scoreboard for what they're SUPPOSED to see(Also used to
+	 * update a scoreboard)
 	 */
 	public void showProperBoard() {
 		if (showing == ScoreBoards.Regular)
@@ -66,7 +67,7 @@ public class ScoreBoard {
 	}
 
 	/**
-	 * Force seeing regular
+	 * Force seeing the regular scoreboard(Votes, Players)
 	 */
 	public void showRegular() {
 		showing = ScoreBoards.Regular;
@@ -145,7 +146,8 @@ public class ScoreBoard {
 	}
 
 	/**
-	 * Force showing stats
+	 * Force showing the stats scoreboard (Layout is set in the config (Mainly
+	 * because i was to lazy to make it myself...))
 	 */
 	public void showStats() {
 		showing = ScoreBoards.Stats;
@@ -208,6 +210,15 @@ public class ScoreBoard {
 
 class ScoreBoardVariables {
 
+	/**
+	 * Replace the regular line of text with the one that is all fancy
+	 * 
+	 * @param string
+	 *            - The line of text
+	 * @param user
+	 *            - the player who will see this line
+	 * @return The new line with the variables replaced and color added
+	 */
 	public static String getLine(String string, Player user) {
 
 		InfPlayer ip = InfPlayerManager.getInfPlayer(user);

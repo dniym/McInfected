@@ -1,12 +1,13 @@
 
 package me.sniperzciinema.infected.Messages;
 
-
-
 public class Time {
 
-	// Method to take the time from seconds and convert it into a nice looking
-	// message
+	/**
+	 * 
+	 * @param Time
+	 * @return the Time in the game format
+	 */
 	public static String getTime(Long Time) {
 		String times = null;
 		Long time = Time;
@@ -29,11 +30,16 @@ public class Time {
 				times = seconds + " " + Msgs.Format_Time_Seconds.getString();
 		} else
 		{
-			times = minutes + " " + Msgs.Format_Time_Minutes.getString() + " " + seconds + " "+ Msgs.Format_Time_Seconds.getString();
+			times = minutes + " " + Msgs.Format_Time_Minutes.getString() + " " + seconds + " " + Msgs.Format_Time_Seconds.getString();
 		}
 		return times;
 	}
 
+	/**
+	 * 
+	 * @param time
+	 * @return the time in a stats format
+	 */
 	public static String getOnlineTime(Long time) {
 		Long seconds = time;
 		long minutes = seconds / 60;

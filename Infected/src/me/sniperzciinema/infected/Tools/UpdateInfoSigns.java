@@ -16,6 +16,9 @@ import org.bukkit.block.Sign;
 
 public class UpdateInfoSigns {
 
+	/**
+	 * Update all signs every few seconds(Set in the config)
+	 */
 	public static void update() {
 
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()

@@ -3,6 +3,11 @@ package me.sniperzciinema.infected.GameMechanics;
 
 public class KDRatio {
 
+	/**
+	 * @param user
+	 *            - The players name
+	 * @return Their kill/death Ratio
+	 */
 	public static Double KD(String user) {
 		int kills = Stats.getKills(user);
 		int deaths = Stats.getDeaths(user);

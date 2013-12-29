@@ -4,8 +4,16 @@ package me.sniperzciinema.infected.Enums;
 public enum DeathType
 {
 
-	Arrow("Arrow"), Melee("Melee"), Grenade("Grenade"), Gun("Gun"), Other(
-			"Other");
+	// All the death possible death types.
+
+	// Other includes, suicides, lava, falling, joining well the game is
+	// going(As we need to infect the player)
+
+	Arrow("Arrow"),
+	Melee("Melee"),
+	Grenade("Grenade"),
+	Gun("Gun"),
+	Other("Other");
 
 	private String string;
 

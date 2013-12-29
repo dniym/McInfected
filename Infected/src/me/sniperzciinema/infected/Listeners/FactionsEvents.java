@@ -12,14 +12,16 @@ import com.massivecraft.factions.event.FactionsEventPowerChange.PowerChangeReaso
 import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
 
 
+/**
+ * The Factions Api Listener
+ * 
+ */
 public class FactionsEvents implements Listener {
 
 	@EventHandler
 	public void factionPVP(FactionsEventPvpDisallowed e) {
 		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender()))
-		{
 			e.setCancelled(true);
-		}
 	}
 
 	@EventHandler

@@ -16,6 +16,10 @@ import org.bukkit.event.Listener;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 
+/**
+ * The CrackShot Api Listener
+ * 
+ */
 public class CrackShotApi implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)

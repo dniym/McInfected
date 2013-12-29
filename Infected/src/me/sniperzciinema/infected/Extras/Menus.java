@@ -32,11 +32,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Menus {
 
+	/**
+	 * Opens a Inventory GUI that allows the player to choose a team to view
+	 * their classes
+	 * 
+	 * @param team
+	 *            - The teams classes will be shown
+	 * @param p
+	 *            - the player who will see the menu
+	 */
 	public static void chooseClass(final Team team, final Player p) {
 		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + p.getName().substring(0, Math.min(13, p.getName().length())) + " - Choose a Class",
-				((InfClassManager.getHumanClasses().size() / 9) * 9) + 18,
+				((InfClassManager.getClasses(team).size() / 9) * 9) + 18,
 				new IconMenu.OptionClickEventHandler()
 				{
 
@@ -67,7 +76,7 @@ public class Menus {
 					}
 				}, Main.me);
 		int i = 0;
-		for (InfClass Class : (team == Team.Human ? InfClassManager.getHumanClasses() : InfClassManager.getZombieClasses()))
+		for (InfClass Class : InfClassManager.getClasses(team))
 		{
 			ItemStack item = Class.getIcon();
 			menu.setOption(i, item, Class.getName(),
@@ -80,11 +89,16 @@ public class Menus {
 		menu.open(p);
 	}
 
+	/**
+	 * Opens a Inventory GUI that lets the player pick their class
+	 * 
+	 * @param p
+	 *            - the player who will see the menu
+	 */
 	public static void chooseClassTeam(final Player p) {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + p.getName().substring(0, Math.min(14, p.getName().length())) + " - Choose a Team",
-				9,
-				new IconMenu.OptionClickEventHandler()
+				9, new IconMenu.OptionClickEventHandler()
 				{
 
 					@Override
@@ -108,6 +122,13 @@ public class Menus {
 		menu.open(p);
 	}
 
+	/**
+	 * Opens a Inventory GUI that lets the player vote for an arena of their
+	 * choice
+	 * 
+	 * @param p
+	 *            - the player who will see the menu
+	 */
 	// ///////////////////////////////-VOTING-//////////////////////////////////////
 	public static void openVotingMenu(final Player p) {
 		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
@@ -169,6 +190,13 @@ public class Menus {
 		menu.open(p);
 	}
 
+	/**
+	 * Opens a Inventory GUI that allows the player to purchase unique items
+	 * from the shops.yml
+	 * 
+	 * @param p
+	 *            - the player who will see the menu
+	 */
 	// /////////////////////////////////-SHOP-///////////////////////////////////////////
 
 	public static void openShopMenu(final Player p) {
@@ -183,7 +211,8 @@ public class Menus {
 			}
 		}
 
-		IconMenu menu = new IconMenu(RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + p.getName().substring(0, Math.min(18, p.getName().length())) + " - Item Shop",
+		IconMenu menu = new IconMenu(
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + p.getName().substring(0, Math.min(18, p.getName().length())) + " - Item Shop",
 				((shop.size() / 9) * 9) + 9,
 				new IconMenu.OptionClickEventHandler()
 				{

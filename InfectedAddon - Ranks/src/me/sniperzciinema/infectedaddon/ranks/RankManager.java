@@ -5,11 +5,12 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
+import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Tools.Files;
 
 
-public class RanksManager {
+public class RankManager {
 
 	private static ArrayList<Rank> ranks = new ArrayList<Rank>();
 	public static Rank defaultRank;
@@ -29,11 +30,31 @@ public class RanksManager {
 	}
 
 	public static Rank getPlayersRank(Player p) {
-		if (Files.getPlayers().getString("Players." + p.getName().toLowerCase() + ".Rank") != null)
+		if (Settings.MySQLEnabled())
 		{
-			return getRank(Files.getPlayers().getString("Players." + p.getName().toLowerCase() + ".Rank"));
+			return getRank(MySQLManager.getRank(p.getName()));
 		} else
-			return defaultRank;
+		{
+			if (Files.getPlayers().getString("Players." + p.getName().toLowerCase() + ".Rank") != null)
+			{
+				return getRank(Files.getPlayers().getString("Players." + p.getName().toLowerCase() + ".Rank"));
+			} else
+				return defaultRank;
+		}
+	}
+
+	public static Rank getPlayersRank(String name) {
+		if (Settings.MySQLEnabled())
+		{
+			return getRank(MySQLManager.getRank(name));
+		} else
+		{
+			if (Files.getPlayers().getString("Players." + name.toLowerCase() + ".Rank") != null)
+			{
+				return getRank(Files.getPlayers().getString("Players." + name.toLowerCase() + ".Rank"));
+			} else
+				return defaultRank;
+		}
 
 	}
 
@@ -49,8 +70,8 @@ public class RanksManager {
 
 	public static Rank getNextRank(Player p) {
 		Rank rank = getPlayersRank(p);
-		Rank nextrank = new Rank("", "", false, false, maxRank.getScoreNeeded()+1, null,
-				null, null);
+		Rank nextrank = new Rank("", "", false, false,
+				maxRank.getScoreNeeded() + 1, null, null, null);
 		if (rank.isMaxRank())
 			nextrank = null;
 		else
@@ -74,7 +95,13 @@ public class RanksManager {
 	}
 
 	public static void setPlayersRank(Player p, Rank rank) {
-		Files.getPlayers().set("Players." + p.getName().toLowerCase() + ".Rank", rank.getName());
-		Files.savePlayers();
+		if (Settings.MySQLEnabled())
+		{
+			MySQLManager.update(rank.getName(), p.getName());
+		} else
+		{
+			Files.getPlayers().set("Players." + p.getName().toLowerCase() + ".Rank", rank.getName());
+			Files.savePlayers();
+		}
 	}
 }

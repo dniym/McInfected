@@ -17,6 +17,11 @@ public class DisguiseIDisguise {
 
 	public static DisguiseAPI idAPI = Bukkit.getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
 
+	/**
+	 * Disguise the player depending on what their class's disguise is
+	 * 
+	 * @param p
+	 */
 	public static void disguisePlayer(Player p) {
 
 		if (!idAPI.isDisguised(p))
@@ -39,13 +44,23 @@ public class DisguiseIDisguise {
 		}
 	}
 
-	public static void unDisguisePlayer(Player player) {
+	/**
+	 * unDisguise the player
+	 * 
+	 * @param p
+	 */
+	public static void unDisguisePlayer(Player p) {
 
-		idAPI.undisguiseToAll(player);
+		idAPI.undisguiseToAll(p);
 	}
 
-	public static boolean isPlayerDisguised(Player player) {
-		return idAPI.isDisguised(player);
+	/**
+	 * 
+	 * @param p
+	 * @return if the player is disguised
+	 */
+	public static boolean isPlayerDisguised(Player p) {
+		return idAPI.isDisguised(p);
 	}
 
 }

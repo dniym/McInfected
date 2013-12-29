@@ -38,6 +38,10 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 
+/**
+ * The Miscellaneous Listeners for Infected
+ * 
+ */
 public class PlayerListener implements Listener {
 
 	// Check for updates when a player joins, making sure they are OP
@@ -253,6 +257,8 @@ public class PlayerListener implements Listener {
 			}
 	}
 
+	// Prevent throwing potions well in the lobby of Infected, as it just gets
+	// annoying
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowPotion(PlayerInteractEvent e) {
 		if (!e.isCancelled())

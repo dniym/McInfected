@@ -23,6 +23,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 
+/**
+ * The class that listens to all Damages done
+ * 
+ */
 public class DamageEvents implements Listener {
 
 	public Main plugin;
@@ -32,6 +36,7 @@ public class DamageEvents implements Listener {
 		this.plugin = instance;
 	}
 
+	// If the damage isn't done by an Entity attacking or by a projectile
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageEvent e) {
 
@@ -94,6 +99,7 @@ public class DamageEvents implements Listener {
 		}
 	}
 
+	// If the damage is done by a Entity
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
 

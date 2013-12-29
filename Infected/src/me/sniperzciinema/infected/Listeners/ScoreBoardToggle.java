@@ -11,11 +11,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 
-//TODO: Set up breaking/placing blocks to work with listeners
+/**
+ * The Scoreboard Shift Listener
+ * 
+ */
 
 public class ScoreBoardToggle implements Listener {
 
-	// Show rankings when a player sneaks
+	// Show stats when a player sneaks
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))

@@ -61,7 +61,7 @@ public class Main extends JavaPlugin {
 		pm = getServer().getPluginManager();
 		me = this;
 
-		System.out.println("===== Infected =====");
+		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
 		try
 		{
 			Metrics metrics = new Metrics(this);
@@ -126,11 +126,11 @@ public class Main extends JavaPlugin {
 		if (Settings.MySQLEnabled())
 		{
 			System.out.println("Attempting to connect to MySQL");
-			MySQL = new MySQL(this, getConfig().getString("MySQL.Host"),
-					getConfig().getString("MySQL.Port"),
-					getConfig().getString("MySQL.Database"),
-					getConfig().getString("MySQL.Username"),
-					getConfig().getString("MySQL.Password"));
+			MySQL = new MySQL(this, Files.getConfig().getString("MySQL.Host"),
+					Files.getConfig().getString("MySQL.Port"),
+					Files.getConfig().getString("MySQL.Database"),
+					Files.getConfig().getString("MySQL.Username"),
+					Files.getConfig().getString("MySQL.Password"));
 
 			try
 			{
@@ -145,10 +145,10 @@ public class Main extends JavaPlugin {
 				System.out.println("Unable to connect to MySQL");
 			}
 		}
+
 		for (Player u : Bukkit.getOnlinePlayers())
-		{
 			InfPlayerManager.createInfPlayer(u);
-		}
+
 		if (Files.getArenas().getConfigurationSection("Arenas") != null)
 			for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
 			{
@@ -159,11 +159,11 @@ public class Main extends JavaPlugin {
 			}
 		else if (Settings.logAreansEnabled())
 			System.out.println("Couldn't Find Any Arenas");
-		
+
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 
-		System.out.println("====================");
+		System.out.println(Msgs.Format_Line.getString());
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class Main extends JavaPlugin {
 					p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
 					InfPlayerManager.getInfPlayer(p).leaveInfected();
 				}
-		if (getConfig().getBoolean("MySQL.Enable"))
+		if (Settings.MySQLEnabled())
 		{
 			MySQL.closeConnection();
 		}

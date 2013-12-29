@@ -13,6 +13,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class Equip {
 
+	/**
+	 * Equip the player to match with what their class says they should have,
+	 * any items in the inventory that aren't from that class will be ignored.
+	 * 
+	 * Also does their armor
+	 * 
+	 * @param p
+	 *            - The player we're equipping
+	 */
 	@SuppressWarnings("deprecation")
 	public static void equip(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
@@ -47,6 +56,14 @@ public class Equip {
 
 	}
 
+	/**
+	 * Used to change a players armor and items to their zombie class's items
+	 * and armor. Once again ignoring items that aren't from either
+	 * class(Grenades or Purchased Items)
+	 * 
+	 * @param p
+	 *            - The player who just became a Zombie
+	 */
 	@SuppressWarnings("deprecation")
 	public static void equipToZombie(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);

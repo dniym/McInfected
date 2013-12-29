@@ -7,6 +7,10 @@ import java.util.List;
 import me.sniperzciinema.infected.Tools.Files;
 
 
+/**
+ * The class that gets called when ever we need to check a config setting
+ * 
+ */
 public class Settings {
 
 	public static boolean shopsEnabled() {
@@ -97,5 +101,8 @@ public class Settings {
 
 	public static boolean saveItem(int id) {
 		return Files.getShop().getBoolean("Save Items.All") || Files.getShop().getStringList("Save Items.Specific Items").contains(id);
+	}
+	public static int getVaultReward(){
+		return Files.getConfig().getInt("Addons.Vault Support.Reward");
 	}
 }

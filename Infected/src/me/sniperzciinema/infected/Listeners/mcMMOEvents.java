@@ -13,6 +13,10 @@ import com.gmail.nossr50.events.skills.abilities.McMMOPlayerAbilityActivateEvent
 import com.gmail.nossr50.events.skills.unarmed.McMMOPlayerDisarmEvent;
 
 
+/**
+ * The mcMMO Api Listener
+ * 
+ */
 public class mcMMOEvents implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -37,7 +41,7 @@ public class mcMMOEvents implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void mcMMODisarm(McMMOPlayerAbilityActivateEvent e) {
+	public void mcMMOAbilityActivate(McMMOPlayerAbilityActivateEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
 			e.setCancelled(true);
 	}

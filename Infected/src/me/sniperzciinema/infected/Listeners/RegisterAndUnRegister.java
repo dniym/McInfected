@@ -15,11 +15,15 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 
+/**
+ * Creating/Removing the InfPlayers
+ * 
+ */
 public class RegisterAndUnRegister implements Listener {
 
 	// When a player joins the server, create a InfPlayer for them
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onJoinCreateCrankedPlayer(PlayerJoinEvent e) {
+	public void onJoinCreateInfPlayer(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		InfPlayer IP = new InfPlayer(p);
 		InfPlayerManager.createInfPlayer(IP);
@@ -27,7 +31,7 @@ public class RegisterAndUnRegister implements Listener {
 
 	// When a player leaves the server willingly, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onLeaveDeleteCrankedPlayer(final PlayerQuitEvent e) {
+	public void onLeaveDeleteInfPlayer(final PlayerQuitEvent e) {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 		{
 
@@ -42,7 +46,7 @@ public class RegisterAndUnRegister implements Listener {
 
 	// When a player leaves the server by kick, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onKickedDeleteCrankedPlayer(final PlayerKickEvent e) {
+	public void onKickedDeleteInfPlayer(final PlayerKickEvent e) {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 		{
 

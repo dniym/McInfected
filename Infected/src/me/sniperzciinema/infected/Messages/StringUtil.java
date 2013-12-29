@@ -3,8 +3,11 @@ package me.sniperzciinema.infected.Messages;
 
 public class StringUtil {
 
-	// Method to capitalize the first letter of the arena name, and nothing
-	// else(This way when you join caps don't matter)
+	/**
+	 * 
+	 * @param string
+	 * @return the string with a capital first letter and the rest lowercase
+	 */
 	public static String getWord(String string) {
 		if (string != null)
 		{

@@ -62,15 +62,18 @@ public class IconMenu implements Listener {
 		player.openInventory(inventory);
 	}
 
-	public void destroy(){
+	public void destroy() {
 		HandlerList.unregisterAll(this);
 		this.name = "";
 		this.handler = null;
 		this.optionNames = null;
 		this.optionIcons = null;
-		
+
+		// To fix the fact that the Menu being unregistered would prevent others
+		// from using a different menu, i made it just re-register the event
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.me);
 	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	void onInventoryClose(InventoryCloseEvent event) {
 		if (Lobby.isInGame((Player) event.getPlayer()) && event.getInventory().getTitle().contains(event.getPlayer().getName()))

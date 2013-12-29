@@ -31,6 +31,12 @@ public class InfClassManager {
 			zombieClasses.add(IC);
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param team
+	 * @return All the classes loaded for that team
+	 */
 	public static ArrayList<InfClass> getClasses(Team team) {
 		if (team == Team.Human)
 			return humanClasses;
@@ -38,14 +44,13 @@ public class InfClassManager {
 			return zombieClasses;
 	}
 
-	public static ArrayList<InfClass> getHumanClasses() {
-		return humanClasses;
-	}
-
-	public static ArrayList<InfClass> getZombieClasses() {
-		return zombieClasses;
-	}
-
+	/**
+	 * 
+	 * @param team
+	 * @param IC
+	 *            - The InfClass
+	 * @return If the class is loaded
+	 */
 	public static boolean isRegistered(Team team, InfClass IC) {
 		if (team == Team.Human)
 			return humanClasses.contains(IC);
@@ -53,6 +58,12 @@ public class InfClassManager {
 			return zombieClasses.contains(IC);
 	}
 
+	/**
+	 * Adds a InfClass to the classes team
+	 * 
+	 * @param IC
+	 *            - The InfClass
+	 */
 	public static void addClass(InfClass IC) {
 		if (IC.getTeam() == Team.Human)
 			humanClasses.add(IC);
@@ -60,6 +71,12 @@ public class InfClassManager {
 			zombieClasses.add(IC);
 	}
 
+	/**
+	 * 
+	 * @param team
+	 * @param className
+	 * @return The InfClass
+	 */
 	public static InfClass getClass(Team team, String className) {
 		if (team == Team.Human)
 			for (InfClass IC : humanClasses)
@@ -77,6 +94,12 @@ public class InfClassManager {
 		return null;
 	}
 
+	/**
+	 * Unloads the class
+	 * 
+	 * @param IC
+	 *            - The InfClass
+	 */
 	public static void removeClass(InfClass IC) {
 		if (IC.getTeam() == Team.Human)
 			humanClasses.remove(IC);
@@ -84,6 +107,12 @@ public class InfClassManager {
 			zombieClasses.remove(IC);
 	}
 
+	/**
+	 * Unloads the class
+	 * 
+	 * @param team
+	 * @param className
+	 */
 	public static void removeClass(Team team, String className) {
 		if (team == Team.Human)
 			for (InfClass IC : humanClasses)
@@ -99,6 +128,11 @@ public class InfClassManager {
 			}
 	}
 
+	/**
+	 * 
+	 * @param team
+	 * @return The default class for that team
+	 */
 	public static InfClass getDefaultClass(Team team) {
 		if (team == Team.Human)
 			return defaultHuman;
@@ -106,6 +140,9 @@ public class InfClassManager {
 			return defaultZombie;
 	}
 
+	/**
+	 * Load the default classes from the config.yml
+	 */
 	public static void loadDefaultClasses() {
 		defaultHuman = getClass(Team.Human, Files.getConfig().getString("Settings.Global.Default Classes.Human"));
 		if (defaultHuman == null)
@@ -127,6 +164,9 @@ public class InfClassManager {
 		}
 	}
 
+	/**
+	 * Load all the classes from the Classes.yml
+	 */
 	public static void loadConfigClasses() {
 		humanClasses = new ArrayList<InfClass>();
 		zombieClasses = new ArrayList<InfClass>();

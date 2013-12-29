@@ -13,6 +13,11 @@ import org.bukkit.entity.Player;
 
 public class DisguiseLibsDisguises {
 
+	/**
+	 * Disguise the player depending on what their class's disguise is
+	 * 
+	 * @param p
+	 */
 	@SuppressWarnings("deprecation")
 	public static void disguisePlayer(Player p) {
 
@@ -39,14 +44,24 @@ public class DisguiseLibsDisguises {
 		}
 	}
 
-	public static void unDisguisePlayer(Player player) {
+	/**
+	 * unDisguise the player
+	 * 
+	 * @param p
+	 */
+	public static void unDisguisePlayer(Player p) {
 
-		DisguiseAPI.undisguiseToAll(player);
+		DisguiseAPI.undisguiseToAll(p);
 	}
 
+	/**
+	 * 
+	 * @param p
+	 * @return if the player is disguised
+	 */
 	@SuppressWarnings("deprecation")
-	public static boolean isPlayerDisguised(Player player) {
-		return DisguiseAPI.isDisguised(player);
+	public static boolean isPlayerDisguised(Player p) {
+		return DisguiseAPI.isDisguised(p);
 	}
 
 }

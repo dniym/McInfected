@@ -17,10 +17,23 @@ import org.bukkit.entity.Player;
 
 public class KillMessages {
 
+	/**
+	 * 
+	 * @param killer
+	 *            - The Killer
+	 * @param killed
+	 *            - The Killed
+	 * @param death
+	 *            - The DeathType
+	 * @param prefix
+	 *            - Do we want a prefix for this death
+	 * @return The Kill Message
+	 */
 	public static String getKillMessage(Player killer, Player killed, DeathType death, Boolean prefix) {
 
 		InfPlayer IP = null;
 		Team team = Team.Zombie;
+		// Figure out what team the killer was on
 		if (killer != null)
 		{
 			IP = InfPlayerManager.getInfPlayer(killer);
@@ -32,7 +45,7 @@ public class KillMessages {
 			else
 				team = Team.Human;
 		}
-
+		// Get the message
 		String msg = getKill(team, death);
 
 		// Replace color codes, and killer and killed names
@@ -44,9 +57,19 @@ public class KillMessages {
 		return (prefix ? Msgs.Format_Prefix.getString() : "") + msg;
 	}
 
+	/**
+	 * 
+	 * @param team
+	 *            - The killers team
+	 * @param death
+	 *            - The death type
+	 * @return the death message
+	 */
 	private static String getKill(Team team, DeathType death) {
 		String message;
 		List<String> list;
+		// If the death type is other it means they suicided or just joined late
+		// in the game
 		if (death == DeathType.Other)
 			list = Files.getMessages().getStringList("Suicides." + team.toString());
 		else

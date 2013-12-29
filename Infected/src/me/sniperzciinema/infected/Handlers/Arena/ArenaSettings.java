@@ -14,6 +14,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 
+/**
+ * The class resposible for getting the individual arenas settings
+ * 
+ * If the value isn't found for the Arena, it goes to global
+ * 
+ */
 public class ArenaSettings {
 
 	private Arena arena;

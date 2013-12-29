@@ -3,8 +3,13 @@ package me.sniperzciinema.infected.Enums;
 
 public enum Events
 {
-	Kill("Kill"), Death("Death"), GameEnds("Game Ends"), Infected(
-			"Zombies Infect"), Survive("Humans Survive");
+	// Different events that can happen during Infected that rewards points
+	// and/or score
+	Kill("Kill"),
+	Death("Death"),
+	GameEnds("Game Ends"),
+	Infected("Zombies Infect"),
+	Survive("Humans Survive");
 
 	private String string;
 

@@ -18,6 +18,11 @@ public class DisguiseDisguiseCraft {
 
 	private static DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
 
+	/**
+	 * Disguise the player depending on what their class's disguise is
+	 * 
+	 * @param p
+	 */
 	public static void disguisePlayer(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
@@ -38,12 +43,22 @@ public class DisguiseDisguiseCraft {
 		}
 	}
 
-	public static void unDisguisePlayer(Player player) {
+	/**
+	 * unDisguise the player
+	 * 
+	 * @param p
+	 */
+	public static void unDisguisePlayer(Player p) {
 
-		dcAPI.undisguisePlayer(player);
+		dcAPI.undisguisePlayer(p);
 	}
 
-	public static boolean isPlayerDisguised(Player player) {
-		return dcAPI.isDisguised(player);
+	/**
+	 * 
+	 * @param p
+	 * @return if the player is disguised
+	 */
+	public static boolean isPlayerDisguised(Player p) {
+		return dcAPI.isDisguised(p);
 	}
 }

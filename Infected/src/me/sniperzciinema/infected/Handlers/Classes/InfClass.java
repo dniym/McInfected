@@ -25,7 +25,6 @@ public class InfClass {
 	private String disguise;
 	private HashMap<Integer, ItemStack> killstreaks;
 
-	// TODO: Go through and change transfereffect to transfereffect
 	public InfClass(String name, Team team, ItemStack helmet,
 			ItemStack chestplate, ItemStack leggings, ItemStack boots,
 			ArrayList<ItemStack> items, ArrayList<PotionEffect> effects,

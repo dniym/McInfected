@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
+import me.sniperzciinema.infected.Events.InfectedJoinEvent;
 import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.GameMechanics.Equip;
@@ -65,9 +66,9 @@ public class Commands implements CommandExecutor {
 				p = (Player) sender;
 				ip = InfPlayerManager.getInfPlayer(p);
 			}
-			InfectedCommandEvent e = new InfectedCommandEvent(args, p, ip);
-			Bukkit.getPluginManager().callEvent(e);
-			if (!e.isCancelled())
+			InfectedCommandEvent ce = new InfectedCommandEvent(args, p, ip);
+			Bukkit.getPluginManager().callEvent(ce);
+			if (!ce.isCancelled())
 			{
 				if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 				{
@@ -143,6 +144,9 @@ public class Commands implements CommandExecutor {
 
 					else
 					{
+						InfectedJoinEvent je = new InfectedJoinEvent(p);
+						Bukkit.getPluginManager().callEvent(je);
+						
 						for (Player u : Lobby.getInGame())
 							u.sendMessage(Msgs.Game_Joined_They.getString("<player>", p.getName()));
 

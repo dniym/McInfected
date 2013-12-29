@@ -26,6 +26,12 @@ import org.bukkit.potion.PotionEffect;
 
 public class Game {
 
+	/**
+	 * End the game and depending on who won, do things...
+	 * 
+	 * @param DidHumansWin
+	 *            - Did the humans win
+	 */
 	public static void endGame(Boolean DidHumansWin) {
 		Lobby.setGameState(GameState.InLobby);
 
@@ -51,13 +57,15 @@ public class Game {
 				for (ItemStack is : Lobby.getActiveArena().getSettings().getRewordItems())
 					IV.addItem(is);
 			}
-			// TODO: If winner add money
-			// Main.economy.depositPlayer(playing.getName(), rewardMoney);
 
 			ArrayList<String> winners = new ArrayList<String>();
 			for (final Player u : Lobby.getInGame())
 				if (InfPlayerManager.getInfPlayer(u).isWinner())
+				{
+					if (Settings.VaultEnabled())
+						Main.economy.depositPlayer(u.getName(), Settings.getVaultReward());
 					winners.add(u.getName());
+				}
 
 			for (final Player u : Lobby.getInGame())
 			{
@@ -79,7 +87,7 @@ public class Game {
 				{
 					i++;
 					winnersS.append(s);
-					if(i == winners.size())
+					if (i == winners.size())
 						winnersS.append(".");
 					else
 						winnersS.append(", ");
@@ -148,10 +156,21 @@ public class Game {
 
 	}
 
+	/**
+	 * 
+	 * @param p
+	 *            - The Player
+	 */
 	public static void leaveGame(Player p) {
 		InfPlayerManager.getInfPlayer(p).leaveInfected();
 	}
 
+	/**
+	 * Choose the Alpha zombies(Apperently this feature doesn't work yet, will
+	 * fix it when I get internet and can actually test on a live server)
+	 * 
+	 * TODO: Fix the choosing percent of Alpha Zombies
+	 */
 	public static void chooseAlphas() {
 
 		int toInfect = 1;

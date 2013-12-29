@@ -28,6 +28,10 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 
+/**
+ * The Listener for Infected's grenades
+ * 
+ */
 public class GrenadeListener implements Listener {
 
 	public Main Main = new Main();
@@ -36,10 +40,13 @@ public class GrenadeListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerReThrowEvent(PlayerPickupItemEvent event) {
 		if (!event.isCancelled())
+			// If this item is a thrown grenade
 			if (GrenadeManager.isThrownGrenade(event.getItem().getUniqueId()))
 				if (event.getPlayer().hasPermission("Infected.Grenades"))
+					// Make sure they have nothing in their hands
 					if (event.getPlayer().getItemInHand().getType() == Material.AIR)
 					{
+						// Throw the item in the direction they're looking
 						event.getItem().setVelocity(event.getPlayer().getEyeLocation().getDirection());
 						event.setCancelled(true);
 					}
@@ -49,6 +56,8 @@ public class GrenadeListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowEvent(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();
+		// Make sure they clicked with the mouse, and that the item in their
+		// hand is in fact a grenade
 		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(p.getItemInHand().getTypeId()))
 		{
 			if (Lobby.getGameState() == GameState.Started && Lobby.isInGame(p))
@@ -58,9 +67,10 @@ public class GrenadeListener implements Listener {
 				if (p.hasPermission("Infected.Grenades") || p.hasPermission("Infected.Grenades." + grenade.getName()))
 				{
 
+					// Create a new Item and throw it in the direction the
+					// player is looking
 					final Item grenadeItem = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(
 							Material.getMaterial(grenade.getId())));
-
 					grenadeItem.setVelocity(event.getPlayer().getEyeLocation().getDirection());
 
 					p.updateInventory();
@@ -73,6 +83,8 @@ public class GrenadeListener implements Listener {
 						public void run() {
 							if (Lobby.getGameState() == GameState.Started)
 							{
+								// Play an effect then get every player in it's
+								// range and do the damage
 								grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
 								for (Player u : Lobby.getInGame())
 								{
@@ -93,6 +105,7 @@ public class GrenadeListener implements Listener {
 									}
 								}
 							}
+							// Create an explosion effect and remove the grenade
 							Location loc = grenadeItem.getLocation();
 							p.getWorld().createExplosion(loc, 0.0F, false);
 
@@ -101,9 +114,10 @@ public class GrenadeListener implements Listener {
 						}
 					}, grenade.getDelay() * 20);
 				}
-			event.setCancelled(true);
-			event.setUseInteractedBlock(Result.DENY);
-			event.setUseItemInHand(Result.DENY);
+				// Prevent anything else they may have done
+				event.setCancelled(true);
+				event.setUseInteractedBlock(Result.DENY);
+				event.setUseItemInHand(Result.DENY);
 			}
 		}
 	}

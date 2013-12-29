@@ -13,6 +13,15 @@ public class Stats {
 		kills, deaths, points, score, killstreak, time;
 	};
 
+	/**
+	 * From a StatType get the value for the player
+	 * 
+	 * @param type
+	 *            - The StatType
+	 * @param user
+	 *            - The player
+	 * @return the value
+	 */
 	public static int getStat(StatType type, String user) {
 		if (type == StatType.kills)
 			return getKills(user);
@@ -230,7 +239,8 @@ public class Stats {
 	}
 
 	/**
-	 * Attempts to get Stats from MySQL (Untested)
+	 * 
+	 * Gets the value of the stat for the player's name
 	 * 
 	 * @param name
 	 * @param stat
@@ -242,7 +252,7 @@ public class Stats {
 	}
 
 	/**
-	 * Attempts to set Stats to MySQL (Untested)
+	 * Sets the value of the stat to the player's name
 	 * 
 	 * @param name
 	 * @param stat
