@@ -100,7 +100,6 @@ public class InfPlayer {
 	 * Clears the players armor and inventory
 	 */
 	public void clearEquipment() {
-
 		player.getInventory().clear();
 		player.getInventory().setArmorContents(null);
 	}
@@ -136,10 +135,10 @@ public class InfPlayer {
 		Lobby.getHumans().remove(p);
 		Lobby.getZombies().remove(p);
 		Lobby.getInGame().remove(p);
-		
+
 		if (getVote() != null)
 			getVote().setVotes(getVote().getVotes() - getAllowedVotes());
-		
+
 		killstreak = 0;
 		location = null;
 		gamemode = null;
@@ -151,12 +150,12 @@ public class InfPlayer {
 		armor = null;
 		vote = null;
 		timeIn = 0;
-		
+
 		fullLeave();
 
-		for(Player u : Lobby.getInGame())
+		for (Player u : Lobby.getInGame())
 			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
-			
+
 		player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 	}
 
@@ -280,10 +279,18 @@ public class InfPlayer {
 		player.setFireTicks(0);
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
-		clearEquipment();
+
+		player.getInventory().setArmorContents(null);
+
+		if (!getInfClass(team).getItems().isEmpty())
+			for (ItemStack is : getInfClass(team).getItems())
+				if (player.getInventory().contains(is.getType()))
+					player.getInventory().remove(is);
+
 		setTeam(Team.Human);
 
 		player.setFlying(false);
+
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
 

@@ -13,15 +13,15 @@ public class PotionEffects {
 	public static void applyClassEffects(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
-		for (PotionEffect PE : IP.getInfClass(IP.getTeam()).getEffects())
-			p.addPotionEffect(PE);
+		if (!IP.getInfClass(IP.getTeam()).getEffects().isEmpty())
+			for (PotionEffect PE : IP.getInfClass(IP.getTeam()).getEffects())
+				p.addPotionEffect(PE);
 	}
 
 	public static void addEffectOnContact(Player p, Player u) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-
-		for (PotionEffect PE : IP.getInfClass(IP.getTeam()).getContactEffects())
-			u.addPotionEffect(PE);
+		if (!IP.getInfClass(IP.getTeam()).getContactEffects().isEmpty())
+			for (PotionEffect PE : IP.getInfClass(IP.getTeam()).getContactEffects())
+				u.addPotionEffect(PE);
 	}
-
 }

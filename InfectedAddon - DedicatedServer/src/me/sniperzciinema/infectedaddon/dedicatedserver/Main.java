@@ -5,15 +5,24 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.GameMechanics.Settings;
+import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Lobby.GameState;
+import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Messages.RandomChatColor;
+import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.Files;
+import me.sniperzciinema.infectedaddon.ranks.RankManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -75,6 +84,9 @@ public class Main extends JavaPlugin implements Listener {
 			list.add("/tpspawn");
 
 		Files.getConfig().set("Settings.Misc.Allowed Commands", list);
+
+		Files.getConfig().addDefault("Dedicated Server.Chat", true);
+		Files.getConfig().addDefault("Dedicated Server.MOTD", true);
 		Files.saveConfig();
 	}
 
@@ -104,6 +116,25 @@ public class Main extends JavaPlugin implements Listener {
 	public void onPlayerTryToLeave(InfectedCommandEvent event) {
 		if (event.getArgs()[0].equalsIgnoreCase("Leave") && !event.getP().hasPermission("InfectedAddon.ByPass"))
 			event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerTalk(AsyncPlayerChatEvent event) {
+		if (Files.getConfig().getBoolean("Dedicated Server.Chat"))
+		{
+			if (Bukkit.getPluginManager().getPlugin("InfectedAddon-Ranks") != null)
+				event.setFormat("§7§l«§4[" + RankManager.getPlayersRank(event.getPlayer()).getPrefix() + "§4]§f§l %s§8(" + InfPlayerManager.getInfPlayer(event.getPlayer()).getScore() + ")§7§l»§r %s");
+			else
+				event.setFormat("§7§l«§f§l%s§8(" + InfPlayerManager.getInfPlayer(event.getPlayer()).getScore() + ")§7§l»§r %s");
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onServerPing(ServerListPingEvent event) {
+		if (Files.getConfig().getBoolean("Dedicated Server.MOTD"))
+		{
+			event.setMotd(RandomChatColor.getColor() + "[====== §a§lGame State:§b§o " + Lobby.getGameState().toString() + RandomChatColor.getColor() + " ======]" + "\n" + RandomChatColor.getColor() + "[====== " + (Lobby.getGameState() != GameState.InLobby ? "§e§lTime Left: §f§o" + Time.getTime((long) Lobby.getTimeLeft()) : "§f§lHurry and Join!") + RandomChatColor.getColor() + " ======]");
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

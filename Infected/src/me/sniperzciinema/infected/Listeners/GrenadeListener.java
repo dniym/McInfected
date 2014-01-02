@@ -10,6 +10,7 @@ import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Grenades.Grenade;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
+import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -26,6 +27,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 
 /**
@@ -42,14 +44,18 @@ public class GrenadeListener implements Listener {
 		if (!event.isCancelled())
 			// If this item is a thrown grenade
 			if (GrenadeManager.isThrownGrenade(event.getItem().getUniqueId()))
+			{
 				if (event.getPlayer().hasPermission("Infected.Grenades"))
+				{
 					// Make sure they have nothing in their hands
 					if (event.getPlayer().getItemInHand().getType() == Material.AIR)
 					{
 						// Throw the item in the direction they're looking
 						event.getItem().setVelocity(event.getPlayer().getEyeLocation().getDirection());
-						event.setCancelled(true);
 					}
+				}
+				event.setCancelled(true);
+			}
 	}
 
 	@SuppressWarnings({ "deprecation", "static-access" })
@@ -64,7 +70,7 @@ public class GrenadeListener implements Listener {
 			{
 				final Grenade grenade = GrenadeManager.getGrenade(p.getItemInHand().getTypeId());
 
-				if (p.hasPermission("Infected.Grenades") || p.hasPermission("Infected.Grenades." + grenade.getName()))
+				if (p.hasPermission("Infected.Grenades"))
 				{
 
 					// Create a new Item and throw it in the direction the
@@ -72,6 +78,11 @@ public class GrenadeListener implements Listener {
 					final Item grenadeItem = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(
 							Material.getMaterial(grenade.getId())));
 					grenadeItem.setVelocity(event.getPlayer().getEyeLocation().getDirection());
+
+					if (p.getItemInHand().getAmount() != 1)
+						p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
+					else
+						p.getInventory().remove(p.getItemInHand());
 
 					p.updateInventory();
 					GrenadeManager.addThrownGrenade(grenadeItem.getUniqueId());
@@ -90,17 +101,21 @@ public class GrenadeListener implements Listener {
 								{
 									if (grenadeItem.getLocation().distance(u.getLocation()) <= grenade.getRange())
 									{
-
-										u.playEffect(EntityEffect.HURT);
-										if (u.getHealth() - grenade.getDamage() <= 0)
+										if (InfPlayerManager.getInfPlayer(p).getTeam() != InfPlayerManager.getInfPlayer(u).getTeam() || (grenade.isDamageThrower() && p == u))
 										{
-											if (u == p)
-												Deaths.playerDies(DeathType.Other, p, u);
-											else
-												Deaths.playerDies(DeathType.Grenade, p, u);
-										} else
-										{
-											u.damage(grenade.getDamage(), p);
+											u.playEffect(EntityEffect.HURT);
+											if (u.getHealth() - grenade.getDamage() <= 0D)
+											{
+												if (u == p)
+													Deaths.playerDies(DeathType.Other, p, u);
+												else
+													Deaths.playerDies(DeathType.Grenade, p, u);
+											} else
+											{
+												u.damage(grenade.getDamage());
+												for (PotionEffect pe : grenade.getEffects())
+													u.addPotionEffect(pe);
+											}
 										}
 									}
 								}
@@ -114,11 +129,12 @@ public class GrenadeListener implements Listener {
 						}
 					}, grenade.getDelay() * 20);
 				}
-				// Prevent anything else they may have done
-				event.setCancelled(true);
-				event.setUseInteractedBlock(Result.DENY);
-				event.setUseItemInHand(Result.DENY);
-			}
+
+			}// Prevent anything else they may have done
+			event.setCancelled(true);
+			event.setUseInteractedBlock(Result.DENY);
+			event.setUseItemInHand(Result.DENY);
+			p.updateInventory();
 		}
 	}
 

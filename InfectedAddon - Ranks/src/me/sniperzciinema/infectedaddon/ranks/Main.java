@@ -160,12 +160,17 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onInfectedGameEnd(InfectedEndGame event) {
 		for (Player u : event.getPlayers())
+		{
 			if (RankManager.canRankUp(u))
 				RankManager.setPlayersRank(u, RankManager.getNextRank(u));
+			
+			else if (RankManager.canRankDown(u))
+				RankManager.setPlayersRank(u, RankManager.getLastRank(u));
+		}
 	}
 
 	@EventHandler
-	public void onInfectedJoin(InfectedCommandEvent e) {
+	public void onInfectedJoinOrLeave(InfectedCommandEvent e) {
 		if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("join"))
 		{
 			Player p = e.getP();
@@ -173,21 +178,23 @@ public class Main extends JavaPlugin implements Listener {
 			if (RankManager.canRankUp(p))
 				RankManager.setPlayersRank(p, RankManager.getNextRank(p));
 
+			else if (RankManager.canRankDown(p))
+				RankManager.setPlayersRank(p, RankManager.getLastRank(p));
+
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
 			ip.setInfClass(Team.Human, RankManager.getPlayersRank(p).getHumanClass());
 			ip.setInfClass(Team.Zombie, RankManager.getPlayersRank(p).getZombieClass());
 			addPermissions(p);
-		}
-	}
 
-	@EventHandler
-	public void onInfectedLeave(InfectedCommandEvent e) {
-		if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("leave"))
+		} else if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("leave"))
 		{
 			Player p = e.getP();
 
 			if (RankManager.canRankUp(p))
 				RankManager.setPlayersRank(p, RankManager.getNextRank(p));
+
+			else if (RankManager.canRankDown(p))
+				RankManager.setPlayersRank(p, RankManager.getLastRank(p));
 
 			removePermissions(p);
 		}

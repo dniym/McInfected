@@ -23,9 +23,12 @@ public class Deaths {
 	/**
 	 * used to process a players death
 	 * 
-	 * @param death - The death type
-	 * @param killer - the killer as a player
-	 * @param killed - the killed as a player
+	 * @param death
+	 *            - The death type
+	 * @param killer
+	 *            - the killer as a player
+	 * @param killed
+	 *            - the killed as a player
 	 */
 	public static void playerDies(DeathType death, Player killer, Player killed) {
 		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed, death);

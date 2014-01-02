@@ -3,6 +3,7 @@ package me.sniperzciinema.infected;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
@@ -100,7 +101,7 @@ public class Commands implements CommandExecutor {
 
 						for (Player u : Bukkit.getOnlinePlayers())
 							if (ip.getTeam() == InfPlayerManager.getInfPlayer(p).getTeam() || u.hasPermission("Infected.Chat.Spy"))
-								u.sendMessage(Msgs.Format_InfChat.getString("<team>", ip.getTeam().toString(), "<player>", p.getName(), "<message>", message.toString()));
+								u.sendMessage(Msgs.Format_InfChat.getString("<team>", ip.getTeam().toString(), "<player>", p.getName(), "<score>", String.valueOf(ip.getScore()), "<message>", message.toString()));
 					}
 				}
 
@@ -146,27 +147,27 @@ public class Commands implements CommandExecutor {
 					{
 						InfectedJoinEvent je = new InfectedJoinEvent(p);
 						Bukkit.getPluginManager().callEvent(je);
-						
+
 						for (Player u : Lobby.getInGame())
 							u.sendMessage(Msgs.Game_Joined_They.getString("<player>", p.getName()));
 
 						ip.setInfo();
 						Lobby.addPlayerInGame(p);
-						ip.tpToLobby();
+						if(Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
+							ip.tpToLobby();
 
 						p.sendMessage(Msgs.Game_Joined_You.getString());
 
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
-
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 							{
-
 								@Override
 								public void run() {
 
 									Lobby.timerStartVote();
 								}
 							}, 100L);
+						
 						else if (Lobby.getGameState() == GameState.Voting)
 							p.sendMessage(Msgs.Help_Vote.getString());
 
@@ -302,16 +303,7 @@ public class Commands implements CommandExecutor {
 								p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 						} else
 						{
-							p.sendMessage(Msgs.Format_Header.getString("<title>", "Grenades"));
-
-							int i = 1;
-							for (Grenade g : GrenadeManager.getGrenades())
-							{
-								p.sendMessage(Msgs.Format_Grenades_List.getString("<id>", String.valueOf(i), "<name>", g.getName(), "<cost>", String.valueOf(g.getCost())));
-								i++;
-							}
-
-							p.sendMessage(Msgs.Help_Grenades.getString());
+							Menus.openGrenadesMenu(p);
 						}
 					}
 				}
@@ -500,8 +492,51 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Already_Voted.getString());
 
 					else
-						Menus.openVotingMenu(p);
+					{
+						// If the user didn't specify an arena, open the voting
+						// GUI
+						if (args.length == 1)
+						{
+							Menus.openVotingMenu(p);
+						} else
+						{
+							// Check if the user voted for Random
+							Arena arena;
+							if (args[1].equalsIgnoreCase("Random"))
+							{
+								int i;
+								Random r = new Random();
+								i = r.nextInt(Lobby.getArenas().size());
+								arena = Lobby.getArenas().get(i);
+								while (!Lobby.isArenaValid(arena))
+								{
+									i = r.nextInt(Lobby.getArenas().size());
+									arena = Lobby.getArenas().get(i);
+								}
+							} else
+							{
+								// Assign arena to what ever the user said
+								arena = Lobby.getArena(args[1]);
+							}
+							// If its a valid arena, let the user vote and set
+							// everything
+							if (Lobby.isArenaValid(arena))
+							{
+								arena.setVotes(arena.getVotes() + ip.getAllowedVotes());
+								ip.setVote(arena);
 
+								for (Player u : Lobby.getInGame())
+								{
+									u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (ip.getAllowedVotes() != 0 ? " (x" + ip.getAllowedVotes() + ")" : ""));
+									InfPlayer up = InfPlayerManager.getInfPlayer(u);
+									up.getScoreBoard().showProperBoard();
+								}
+							}
+							// If its not a valid arena tell them that
+							else
+								p.sendMessage(Msgs.Error_Arena_Not_Valid.getString());
+						}
+					}
 				}
 
 				// //////////////////////////////////////////////////-START-////////////////////////////////////////////

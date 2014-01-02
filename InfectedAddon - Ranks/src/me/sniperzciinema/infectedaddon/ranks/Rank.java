@@ -3,9 +3,9 @@ package me.sniperzciinema.infectedaddon.ranks;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 import me.sniperzciinema.infected.Handlers.Classes.InfClass;
+
+import org.bukkit.ChatColor;
 
 
 public class Rank {

@@ -19,7 +19,8 @@ public class AddonManager {
 	 * Go through all the plugins Infected supports, and if any are there and it
 	 * has been enabled in the config, enable the support for that plugin
 	 * 
-	 * (Vault, Crackshot, Factions, mcMMO, LibsDisguises, DisguiseCraft, iDisguise)
+	 * (Vault, Crackshot, Factions, mcMMO, LibsDisguises, DisguiseCraft,
+	 * iDisguise)
 	 */
 	public static void getAddons() {
 

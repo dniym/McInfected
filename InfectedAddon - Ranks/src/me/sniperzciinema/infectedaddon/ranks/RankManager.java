@@ -3,11 +3,11 @@ package me.sniperzciinema.infectedaddon.ranks;
 
 import java.util.ArrayList;
 
-import org.bukkit.entity.Player;
-
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Tools.Files;
+
+import org.bukkit.entity.Player;
 
 
 public class RankManager {
@@ -87,8 +87,34 @@ public class RankManager {
 		return nextrank;
 	}
 
+	public static Rank getLastRank(Player p) {
+		Rank rank = getPlayersRank(p);
+		Rank lastrank = new Rank("", "", false, false,
+				defaultRank.getScoreNeeded() + 1, null, null, null);
+		if (rank.isDefaultRank())
+			lastrank = null;
+		else
+		{
+			for (Rank r : ranks)
+			{
+				// If r has a smaller score then the current rank and if r has a
+				// bigger score then the other rank
+				if (r.getScoreNeeded() < rank.getScoreNeeded() && r.getScoreNeeded() > lastrank.getScoreNeeded())
+					lastrank = r;
+			}
+		}
+		return lastrank;
+	}
+
 	public static boolean canRankUp(Player p) {
 		if (!getPlayersRank(p).isMaxRank() && InfPlayerManager.getInfPlayer(p).getScore() >= getNextRank(p).getScoreNeeded())
+			return true;
+		else
+			return false;
+	}
+
+	public static boolean canRankDown(Player p) {
+		if (!getPlayersRank(p).isDefaultRank() && InfPlayerManager.getInfPlayer(p).getScore() < getLastRank(p).getScoreNeeded())
 			return true;
 		else
 			return false;

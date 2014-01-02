@@ -18,7 +18,7 @@ public class Time {
 		{
 			if (minutes == 0)
 				times = "N/A";
-			if (minutes == 1)
+			else if (minutes == 1)
 				times = minutes + " " + Msgs.Format_Time_Minute.getString();
 			else
 				times = minutes + " " + Msgs.Format_Time_Minutes.getString();

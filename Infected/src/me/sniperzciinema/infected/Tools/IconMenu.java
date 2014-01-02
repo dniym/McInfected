@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -91,18 +92,21 @@ public class IconMenu implements Listener {
 			if (slot >= 0 && slot < size && optionNames[slot] != null)
 			{
 				Plugin plugin = this.plugin;
-				OptionClickEvent e = new OptionClickEvent(
-						(Player) event.getWhoClicked(), slot, optionNames[slot]);
+				final OptionClickEvent e = new OptionClickEvent(
+						(Player) event.getWhoClicked(), slot,
+						optionNames[slot], event.getClick());
 				handler.onOptionClick(e);
 				final Player p = (Player) event.getWhoClicked();
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 				{
 
 					public void run() {
-						p.closeInventory();
+						if (e.willClose())
+							p.closeInventory();
 					}
 				}, 1);
-				destroy();
+				if (e.willClose())
+					destroy();
 			}
 		}
 	}
@@ -118,13 +122,16 @@ public class IconMenu implements Listener {
 		private int position;
 		private String name;
 		private boolean close;
+		private ClickType click;
 
-		public OptionClickEvent(Player player, int position, String name)
+		public OptionClickEvent(Player player, int position, String name,
+				ClickType clickType)
 		{
 			this.player = player;
 			this.position = position;
 			this.name = name;
 			this.close = true;
+			this.click = clickType;
 		}
 
 		public Player getPlayer() {
@@ -145,6 +152,13 @@ public class IconMenu implements Listener {
 
 		public void setWillClose(boolean close) {
 			this.close = close;
+		}
+
+		/**
+		 * @return the click
+		 */
+		public ClickType getClick() {
+			return click;
 		}
 
 	}

@@ -59,7 +59,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
-			if (!Lobby.getActiveArena().getSettings().canDropBlocks())
+			if (Lobby.getActiveArena().getSettings().droppingItemsDisabled())
 				e.setCancelled(true);
 	}
 
@@ -121,7 +121,7 @@ public class PlayerListener implements Listener {
 			// If they are playing and the game has started
 			if (Lobby.isInGame(e.getPlayer()) && Lobby.getGameState() == GameState.Started)
 			{
-				if (Lobby.getActiveArena().getSettings().canInteract())
+				if (!Lobby.getActiveArena().getSettings().interactDisabled())
 				{
 
 					if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
@@ -226,7 +226,7 @@ public class PlayerListener implements Listener {
 		if (!e.isCancelled())
 		{
 			Player p = (Player) e.getEntity();
-			if (Lobby.isInGame(p) && Lobby.getActiveArena().getSettings().canLooseHunger())
+			if (Lobby.isInGame(p) && Lobby.getActiveArena().getSettings().hungerDisabled())
 				e.setCancelled(true);
 		}
 	}
@@ -235,7 +235,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerTryEnchant(PrepareItemEnchantEvent e) {
 		Player p = e.getEnchanter();
-		if (Lobby.isInGame(p) && !Lobby.getActiveArena().getSettings().canEnchant())
+		if (Lobby.isInGame(p) && Lobby.getActiveArena().getSettings().enchantDisabled())
 			e.setCancelled(true);
 	}
 

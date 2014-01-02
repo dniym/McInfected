@@ -10,6 +10,7 @@ import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Classes.InfClass;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infected.Handlers.Grenades.Grenade;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
@@ -54,6 +55,15 @@ public class Menus {
 						if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("None"))
 						{
 							p.sendMessage(Msgs.Classes_None.getString("<team>", team.toString()));
+
+							if(event.getClick().isRightClick()){
+								Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+								{
+									public void run() {
+										chooseClass(team, p);
+									}
+								}, 2);
+							}
 						} else if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
 						{
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
@@ -61,14 +71,24 @@ public class Menus {
 
 								public void run() {
 									chooseClassTeam(p);
+
 								}
-							}, 3);
+							}, 2);
 						} else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + event.getName()))
 						{
 							if (InfClassManager.isRegistered(team, InfClassManager.getClass(team, event.getName())))
 							{
 								p.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", team.toString()));
 								IP.setInfClass(team, InfClassManager.getClass(team, ChatColor.stripColor(event.getName())));
+
+								if(event.getClick().isRightClick()){
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+									{
+										public void run() {
+											chooseClass(team, p);
+										}
+									}, 2);
+								}
 							}
 
 						} else
@@ -108,6 +128,7 @@ public class Menus {
 
 							public void run() {
 								chooseClass(Team.valueOf(ChatColor.stripColor(event.getName())), p);
+
 							}
 						}, 2);
 					}
@@ -168,6 +189,7 @@ public class Menus {
 								InfPlayer up = InfPlayerManager.getInfPlayer(u);
 								up.getScoreBoard().showProperBoard();
 							}
+
 						} else
 						{
 							event.setWillClose(false);
@@ -240,6 +262,15 @@ public class Menus {
 									if (!GrenadeManager.isGrenade(is.getTypeId()) && Settings.saveItem(is.getTypeId()))
 										SaveItemHandler.saveItems(p, is);
 
+								if(event.getClick().isRightClick()){
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+									{
+										public void run() {
+											openShopMenu(p);
+										}
+									}, 2);
+								}
+
 							} else
 								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						} else
@@ -256,6 +287,70 @@ public class Menus {
 		for (String item : shop)
 		{
 			menu.setOption(i, ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + item + ".Item Code")), item, Msgs.Menu_Shop_Click_To_Buy.getString("<price>", String.valueOf(Files.getShop().getInt("Custom Items." + item + ".GUI Price"))));
+			i++;
+		}
+		menu.open(p);
+	}
+
+	/**
+	 * Opens a Inventory GUI that allows the player to purchase unique grenades
+	 * from the Grenades.yml
+	 * 
+	 * @param p
+	 *            - the player who will see the menu
+	 */
+	// /////////////////////////////////-SHOP-///////////////////////////////////////////
+
+	public static void openGrenadesMenu(final Player p) {
+
+		final InfPlayer IP = InfPlayerManager.getInfPlayer(p);
+		ArrayList<String> shop = new ArrayList<String>();
+		IconMenu menu = new IconMenu(
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + p.getName().substring(0, Math.min(15, p.getName().length())) + " - Grenade Shop",
+				((shop.size() / 9) * 9) + 9,
+				new IconMenu.OptionClickEventHandler()
+				{
+
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onOptionClick(IconMenu.OptionClickEvent event) {
+						Grenade grenade = GrenadeManager.getGrenade(ChatColor.stripColor(event.getName()));
+						int price = grenade.getCost();
+						int points = IP.getPoints(Settings.VaultEnabled());
+						ItemStack is = grenade.getItemStack();
+
+						if (price <= points)
+						{
+							if (p.hasPermission("Infected.Grenades"))
+							{
+								p.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
+								IP.setPoints(points - price, Settings.VaultEnabled());
+
+								p.getInventory().addItem(is);
+
+								if(event.getClick().isRightClick()){
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+									{
+										public void run() {
+											openGrenadesMenu(p);
+										}
+									}, 2);
+								}
+
+							} else
+								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+						} else
+						{
+							p.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
+						}
+						p.updateInventory();
+
+					}
+				}, Main.me);
+		int i = 0;
+		for (Grenade grenade : GrenadeManager.getGrenades())
+		{
+			menu.setOption(i, grenade.getItemStack(), grenade.getName(), "§7§lCost: §f§o" + String.valueOf(grenade.getCost()), "", "§4§lDamage: §c§o" + grenade.getDamage(), "§9§lRange: §b§o" + grenade.getRange(), "§2§lDelay: §a§o" + grenade.getDelay());
 			i++;
 		}
 		menu.open(p);

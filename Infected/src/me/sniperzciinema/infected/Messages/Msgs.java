@@ -15,7 +15,6 @@ public enum Msgs
 	Format_Prefix("Format.Prefix"),
 	Format_List("Format.List")/* <player> */,
 	Format_InfChat("Format.InfChat")/* <team>, <player>, <message> */,
-	Format_Grenades_List("Format.Grenades List")/* <id>, <name>, <cost> */,
 	Format_Time_Second("Format.Time.Second"),
 	Format_Time_Seconds("Format.Time.Seconds"),
 	Format_Time_Minute("Format.Time.Minute"),
@@ -94,7 +93,6 @@ public enum Msgs
 	Game_Info_Arena("Game.Info.Arena")/* < arena > , < creator > */,
 	Game_End_Not_Enough_Players("Game.End.Not Enough Players"),
 	Help_Vote("Help.Vote"),
-	Help_Grenades("Help.Grenades"),
 	Help_Lists("Help.Lists")/* <lists> */,
 	Help_TpSpawn("Help.TpSpawn"),
 	Help_DelSpawn("Help.DelSpawn"),
@@ -130,7 +128,7 @@ public enum Msgs
 			String message = (string.startsWith("Format") || string.startsWith("Picture") || string.startsWith("Menu") || (Settings.PictureEnabled() && (string.startsWith("Game.Alpha") || string.startsWith("Game.Survior"))) ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 			int i = 0;
 			String replace = null;
-				
+
 			for (String variable : variables)
 			{
 				if (i == 0)

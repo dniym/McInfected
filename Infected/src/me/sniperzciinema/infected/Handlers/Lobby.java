@@ -53,7 +53,23 @@ public class Lobby {
 
 	public enum GameState
 	{
-		InLobby, Voting, Infecting, Started, Disabled;
+		InLobby("In Lobby"),
+		Voting("Voting"),
+		Loading("Loading Arena"),
+		Infecting("Infecting"),
+		Started("Started"),
+		Disabled("Disabled");
+
+		private String s;
+
+		private GameState(String string)
+		{
+			s = string;
+		}
+
+		public String toString() {
+			return s;
+		}
 	};
 
 	public Lobby()
@@ -218,7 +234,10 @@ public class Lobby {
 
 	// Check if the arena is avalid
 	public static boolean isArenaValid(Arena arena) {
-		return !arena.getSpawns().isEmpty();
+		if (arena == null)
+			return false;
+		else
+			return !arena.getSpawns().isEmpty();
 	}
 
 	public static void resetArena(Arena arena) {
@@ -380,6 +399,7 @@ public class Lobby {
 								u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
 								u.sendMessage("");
 								u.sendMessage(Msgs.Format_Line.getString());
+								Lobby.setGameState(GameState.Loading);
 								stopTimer();
 							}
 							currentGameTimer = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()

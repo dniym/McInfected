@@ -31,41 +31,41 @@
 # =============================================== #
 Can Only Humans Use Grenades: false
 Grenades:
-  341:
-    Name: Stun
+  Stun:
+    Item Id: 341
     Cost: 20
     Delay: 3
     Range: 3
     Damage: 1
-    Damage Self: true
-    Effects:
+    Damage Thrower: true
+    Potion Effects:
     - "2:5:3"
     - "15:1:2"
-  332:
-    Name: Flash
+  Flash:
+    Item Id: 332
     Cost: 20
     Delay: 3
     Range: 3
     Damage: 1
-    Damage Self: true
-    Effects:
+    Damage Thrower: true
+    Potion Effects:
     - "2:1:2"
     - "15:5:3"
-  385:
-    Name: Frag
+  Frag:
+    Item Id: 385
     Cost: 25
     Delay: 3
     Range: 4
     Damage: 10
-    Damage Self: true
+    Damage Thrower: true
     Effects:
     - "2:1:1"
-  55:
-    Name: Health
+  Health Pack:
+    Item Id: 390
     Cost: 30
     Delay: 1
     Range: 2
     Damage: -10
-    Damage Self: true
+    Damage Thrower: true
     Effects:
     - "15:1:1"

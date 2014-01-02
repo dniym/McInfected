@@ -1,4 +1,4 @@
-# Default InfectedV2 Config, Last edited in 2.0.3
+# Default InfectedV2 Config, Last edited in 2.0.7
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -11,7 +11,14 @@
 # #
 # See Infecteds config page for help
 # http://dev.bukkit.org/server-mods/infected-core
-# #   
+# #
+# To allow higher ranks votes to be more influential you can add "Infected.Vote.vip" to a player, and that'll make the players votes count twice
+# And "Infected.Vote.staff" will make their's count 3 times 
+#    Votes:
+#      Extra Votes:
+#        vip: 2
+#        staff: 3
+# #
 # # +======================================================+ #
 # # |                Infected Settings                     | #
 # # +======================================================+ #
@@ -148,9 +155,9 @@ Settings:
 # Should players be able to enchant in the arena
       Disable Enchanting: true
 # Should players be able to open doors, use levers, etc in arenas
-      Allow Interacting: true
+      Disable Interacting: false
 # Should players be able to drop items
-      Allow Dropping Items: false
+      Disable Dropping Items: true
 # The rewards for playing a game(Items)
     Rewards:
     - 351:2,3

@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="C:/Users/Randy/Desktop/Minecraft Servers/Infected Test Server/plugins/Infected.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/bukkit-1.7.2-R0.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/craftbukkit-1.7.2-R0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Desktop/Minecraft Servers/Infected Test Server/plugins/InfectedAddon-Ranks.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

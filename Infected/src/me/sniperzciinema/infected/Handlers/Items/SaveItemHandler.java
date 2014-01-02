@@ -16,6 +16,7 @@ public class SaveItemHandler {
 		List<ItemStack> list = getItems(p);
 		list.add(is);
 		Files.getPlayers().set("Players." + p.getName().toLowerCase() + ".Saved Inventory", list);
+		Files.savePlayers();
 	}
 
 	@SuppressWarnings("unchecked")

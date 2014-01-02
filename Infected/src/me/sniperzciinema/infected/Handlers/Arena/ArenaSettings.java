@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 
 
 /**
- * The class resposible for getting the individual arenas settings
+ * The class responsible for getting the individual arenas settings
  * 
  * If the value isn't found for the Arena, it goes to global
  * 
@@ -74,32 +74,32 @@ public class ArenaSettings {
 
 	// ////////////////////////////////////////////////-BOOLEANS-////////////////////////////////////////////////////
 
-	public boolean canDropBlocks() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Can Drop Blocks"))
-			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Can Drop Items");
+	public boolean droppingItemsDisabled() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Disable Dropping Items"))
+			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Disable Dropping Items");
 		else
-			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Drop Items");
+			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Dropping Items");
 	}
 
-	public boolean canLooseHunger() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Can Loose Hunger"))
-			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Can Loose Hunger");
+	public boolean hungerDisabled() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Disable Hunger"))
+			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Disable Hunger");
 		else
-			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Loose Hunger");
+			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Hunger");
 	}
 
-	public boolean canEnchant() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Can Enchant"))
-			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Can Enchant");
+	public boolean enchantDisabled() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Disable Enchant"))
+			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Disable Enchant");
 		else
-			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Enchant");
+			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Enchant");
 	}
 
-	public boolean canInteract() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Can Interact"))
-			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Can Interact");
+	public boolean interactDisabled() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Disable Interacting"))
+			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Disable Interacting");
 		else
-			return Files.getConfig().getBoolean("Settings.Global.Misc.Can Interact");
+			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Interacting");
 	}
 
 	public Boolean canBreakBlock(Team team, int id) {

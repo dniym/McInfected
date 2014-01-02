@@ -3,6 +3,7 @@ description: Infected Dedicated Server Addon
 main: me.sniperzciinema.infectedaddon.dedicatedserver.Main
 version: 0.3
 author: xXSniperzzXx_SD
+softdepend: [InfectedAddon-Ranks]
 depend: [Infected]
 permissions:
   InfectedAddon.ByPass:
