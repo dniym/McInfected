@@ -4,6 +4,7 @@ package me.sniperzciinema.infectedaddon.dedicatedserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
@@ -30,92 +31,103 @@ import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class Main extends JavaPlugin implements Listener {
+public class InfectedServer extends JavaPlugin implements Listener {
 
 	public boolean update;
 	public String updateName;
+	public int neededInfectedVersion = 207;
+	public String neededInfectedName = "Infected v2.0.7";
 
 	public void onEnable() {
-		getServer().getPluginManager().registerEvents(this, this);
-
-		List<String> list = Settings.AllowedCommands();
-		if (!list.contains("/join"))
-			list.add("/join");
-		if (!list.contains("/leave"))
-			list.add("/leave");
-		if (!list.contains("/vote"))
-			list.add("/vote");
-		if (!list.contains("/chat"))
-			list.add("/chat");
-		if (!list.contains("/classes"))
-			list.add("/classes");
-		if (!list.contains("/join"))
-			list.add("/join");
-		if (!list.contains("/shop"))
-			list.add("/shop");
-		if (!list.contains("/store"))
-			list.add("/store");
-		if (!list.contains("/grenade"))
-			list.add("/grenade");
-		if (!list.contains("/grenades"))
-			list.add("/grenades");
-		if (!list.contains("/files"))
-			list.add("/files");
-		if (!list.contains("/admin"))
-			list.add("/admin");
-		if (!list.contains("/list"))
-			list.add("/list");
-		if (!list.contains("/stats"))
-			list.add("/stats");
-		if (!list.contains("/top"))
-			list.add("/top");
-		if (!list.contains("/arenas"))
-			list.add("/arenas");
-		if (!list.contains("/help"))
-			list.add("/help");
-		if (!list.contains("/setlobby"))
-			list.add("/setlobby");
-		if (!list.contains("/tplobby"))
-			list.add("/tplobby");
-		if (!list.contains("/create"))
-			list.add("/create");
-		if (!list.contains("/remove"))
-			list.add("/remove");
-		if (!list.contains("/addspawn"))
-			list.add("/addspawn");
-		if (!list.contains("/delspawn"))
-			list.add("/delspawn");
-		if (!list.contains("/spawns"))
-			list.add("/spawns");
-		if (!list.contains("/tpspawn"))
-			list.add("/tpspawn");
-
-		Files.getConfig().set("Settings.Misc.Allowed Commands", list);
-
-		Files.getConfig().addDefault("Dedicated Server.Chat", true);
-		Files.getConfig().addDefault("Dedicated Server.MOTD", true);
-
-		List<String> leaveOnCmd = new ArrayList<String>();
-		leaveOnCmd.add("/lobby");
-		leaveOnCmd.add("/hub");
-		Files.getConfig().addDefault("Dedicated Server.Leave On Command", leaveOnCmd);
-
-		Files.saveConfig();
-
-		if (Settings.checkForUpdates())
+		if (Integer.valueOf(Infected.version.replaceAll(".", "")) < neededInfectedVersion)
+		{
+			this.getLogger().severe("Invalid Infected Version, Please Update to " + neededInfectedName);
+			getServer().getPluginManager().disablePlugin(this);
+		
+		} else
 		{
 
-			Updater updater = new Updater(this, 70529, this.getFile(),
-					Updater.UpdateType.NO_DOWNLOAD, true);
+			getServer().getPluginManager().registerEvents(this, this);
 
-			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			updateName = updater.getLatestName();
+			List<String> list = Settings.AllowedCommands();
+			if (!list.contains("/join"))
+				list.add("/join");
+			if (!list.contains("/leave"))
+				list.add("/leave");
+			if (!list.contains("/vote"))
+				list.add("/vote");
+			if (!list.contains("/chat"))
+				list.add("/chat");
+			if (!list.contains("/classes"))
+				list.add("/classes");
+			if (!list.contains("/join"))
+				list.add("/join");
+			if (!list.contains("/shop"))
+				list.add("/shop");
+			if (!list.contains("/store"))
+				list.add("/store");
+			if (!list.contains("/grenade"))
+				list.add("/grenade");
+			if (!list.contains("/grenades"))
+				list.add("/grenades");
+			if (!list.contains("/files"))
+				list.add("/files");
+			if (!list.contains("/admin"))
+				list.add("/admin");
+			if (!list.contains("/list"))
+				list.add("/list");
+			if (!list.contains("/stats"))
+				list.add("/stats");
+			if (!list.contains("/top"))
+				list.add("/top");
+			if (!list.contains("/arenas"))
+				list.add("/arenas");
+			if (!list.contains("/help"))
+				list.add("/help");
+			if (!list.contains("/setlobby"))
+				list.add("/setlobby");
+			if (!list.contains("/tplobby"))
+				list.add("/tplobby");
+			if (!list.contains("/create"))
+				list.add("/create");
+			if (!list.contains("/remove"))
+				list.add("/remove");
+			if (!list.contains("/addspawn"))
+				list.add("/addspawn");
+			if (!list.contains("/delspawn"))
+				list.add("/delspawn");
+			if (!list.contains("/spawns"))
+				list.add("/spawns");
+			if (!list.contains("/tpspawn"))
+				list.add("/tpspawn");
 
-			if (update)
+			Files.getConfig().set("Settings.Misc.Allowed Commands", list);
+
+			Files.getConfig().addDefault("Dedicated Server.Chat", true);
+			Files.getConfig().addDefault("Dedicated Server.MOTD", true);
+
+			List<String> leaveOnCmd = new ArrayList<String>();
+			leaveOnCmd.add("/lobby");
+			leaveOnCmd.add("/hub");
+			Files.getConfig().addDefault("Dedicated Server.Leave On Command", leaveOnCmd);
+
+			Files.saveConfig();
+
+			if (Settings.checkForUpdates())
 			{
-				System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
-				for (Player player : Bukkit.getOnlinePlayers())
-					player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+
+				Updater updater = new Updater(this, 70529, this.getFile(),
+						Updater.UpdateType.NO_DOWNLOAD, true);
+
+				update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				updateName = updater.getLatestName();
+
+				if (update)
+				{
+					System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
+					for (Player player : Bukkit.getOnlinePlayers())
+						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+				}
 			}
 		}
 
