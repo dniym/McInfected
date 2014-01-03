@@ -26,7 +26,7 @@ public class RankManager {
 			if (rank.getName().equals(rankName))
 				return rank;
 		}
-		return null;
+		return defaultRank;
 	}
 
 	public static Rank getPlayersRank(Player p) {

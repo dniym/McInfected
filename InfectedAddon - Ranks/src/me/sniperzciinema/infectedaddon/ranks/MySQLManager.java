@@ -15,7 +15,7 @@ public class MySQLManager {
 		{
 			Statement statement = Main.connection.createStatement();
 			ResultSet set = statement.executeQuery("SELECT " + "Rank" + " FROM " + "Infected_Ranks" + " WHERE Player = '" + playerName + "';");
-			
+
 			set.next();
 			String rank = set.getString("Rank");
 			set.close();

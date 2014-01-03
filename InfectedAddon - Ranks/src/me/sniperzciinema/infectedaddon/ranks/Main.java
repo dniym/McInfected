@@ -16,6 +16,7 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
+import me.sniperzciinema.infected.Messages.RandomChatColor;
 import me.sniperzciinema.infected.Tools.Files;
 import net.milkbowl.vault.permission.Permission;
 
@@ -26,6 +27,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,6 +44,9 @@ public class Main extends JavaPlugin implements Listener {
 	public Permission perms;
 	public static MySQL MySQL = null;
 	public static Connection connection = null;
+
+	public boolean update;
+	public String updateName;
 
 	public void onEnable() {
 		me = this;
@@ -92,6 +97,23 @@ public class Main extends JavaPlugin implements Listener {
 			} catch (Exception e)
 			{
 				System.out.println("Unable to connect to MySQL");
+			}
+		}
+
+		if (Settings.checkForUpdates())
+		{
+
+			Updater updater = new Updater(this, 70530, this.getFile(),
+					Updater.UpdateType.NO_DOWNLOAD, true);
+
+			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+			updateName = updater.getLatestName();
+
+			if (update)
+			{
+				System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
+				for (Player player : Bukkit.getOnlinePlayers())
+					player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
 			}
 		}
 
@@ -163,7 +185,7 @@ public class Main extends JavaPlugin implements Listener {
 		{
 			if (RankManager.canRankUp(u))
 				RankManager.setPlayersRank(u, RankManager.getNextRank(u));
-			
+
 			else if (RankManager.canRankDown(u))
 				RankManager.setPlayersRank(u, RankManager.getLastRank(u));
 		}
@@ -171,7 +193,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onInfectedJoinOrLeave(InfectedCommandEvent e) {
-		if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("join"))
+		if (e.getArgs().length >= 1 && !e.isCancelled() && e.getArgs()[0].toLowerCase().equals("join"))
 		{
 			Player p = e.getP();
 
@@ -184,9 +206,10 @@ public class Main extends JavaPlugin implements Listener {
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
 			ip.setInfClass(Team.Human, RankManager.getPlayersRank(p).getHumanClass());
 			ip.setInfClass(Team.Zombie, RankManager.getPlayersRank(p).getZombieClass());
+
 			addPermissions(p);
 
-		} else if (!e.isCancelled() && e.getArgs()[0].toLowerCase().equals("leave"))
+		} else if (e.getArgs().length >= 1 && !e.isCancelled() && e.getArgs()[0].toLowerCase().equals("leave"))
 		{
 			Player p = e.getP();
 
@@ -197,6 +220,16 @@ public class Main extends JavaPlugin implements Listener {
 				RankManager.setPlayersRank(p, RankManager.getLastRank(p));
 
 			removePermissions(p);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (update && player.hasPermission("Infected.Admin"))
+		{
+			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + updateName);
+			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infectedaddon-ranks/");
 		}
 	}
 

@@ -18,8 +18,10 @@ public class Rank {
 	private List<String> permissions;
 	private boolean maxRank;
 	private boolean defaultRank;
-	
-	public Rank(String name, String prefix, boolean defaultRank, boolean maxRank, int scoreNeeded, InfClass human, InfClass zombie, List<String> list)
+
+	public Rank(String name, String prefix, boolean defaultRank,
+			boolean maxRank, int scoreNeeded, InfClass human, InfClass zombie,
+			List<String> list)
 	{
 		this.setName(name);
 		this.setPrefix(prefix);
@@ -39,7 +41,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -53,7 +56,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param scoreNeeded the scoreNeeded to set
+	 * @param scoreNeeded
+	 *            the scoreNeeded to set
 	 */
 	public void setScoreNeeded(int scoreNeeded) {
 		this.scoreNeeded = scoreNeeded;
@@ -67,7 +71,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param humanClass the humanClass to set
+	 * @param humanClass
+	 *            the humanClass to set
 	 */
 	public void setHumanClass(InfClass humanClass) {
 		this.humanClass = humanClass;
@@ -81,7 +86,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param zombieClass the zombieClass to set
+	 * @param zombieClass
+	 *            the zombieClass to set
 	 */
 	public void setZombieClass(InfClass zombieClass) {
 		this.zombieClass = zombieClass;
@@ -95,7 +101,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param list the permissions to set
+	 * @param list
+	 *            the permissions to set
 	 */
 	public void setPermissions(List<String> list) {
 		this.permissions = list;
@@ -109,7 +116,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param maxRank the maxRank to set
+	 * @param maxRank
+	 *            the maxRank to set
 	 */
 	public void setMaxRank(boolean maxRank) {
 		this.maxRank = maxRank;
@@ -123,7 +131,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param defaultRank the defaultRank to set
+	 * @param defaultRank
+	 *            the defaultRank to set
 	 */
 	public void setDefaultRank(boolean defaultRank) {
 		this.defaultRank = defaultRank;
@@ -137,7 +146,8 @@ public class Rank {
 	}
 
 	/**
-	 * @param prefix the prefix to set
+	 * @param prefix
+	 *            the prefix to set
 	 */
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
