@@ -5,15 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import me.sniperzciinema.infected.Main;
-
 
 public class MySQLManager {
 
 	public static String getRank(String playerName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = InfectedRanks.connection.createStatement();
 			ResultSet set = statement.executeQuery("SELECT " + "Rank" + " FROM " + "Infected_Ranks" + " WHERE Player = '" + playerName + "';");
 
 			set.next();
@@ -30,7 +28,7 @@ public class MySQLManager {
 	public static void update(String rank, String playerName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = InfectedRanks.connection.createStatement();
 			statement.execute("UPDATE " + "Infected_Ranks" + " SET " + "Rank" + "=" + rank + " WHERE Player ='" + playerName + "';");
 			statement.close();
 		} catch (SQLException e)
@@ -42,7 +40,7 @@ public class MySQLManager {
 	private static void setRank(String rank, String playerName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = InfectedRanks.connection.createStatement();
 			statement.execute("INSERT INTO " + "Infected_Ranks" + " (`Player`, `" + "Rank" + "`) VALUES ('" + playerName + "', '" + rank + "');");
 
 			statement.close();

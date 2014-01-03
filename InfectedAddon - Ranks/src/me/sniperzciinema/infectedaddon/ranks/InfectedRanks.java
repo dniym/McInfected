@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.logging.Level;
 
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Events.InfectedEndGame;
 import me.sniperzciinema.infected.GameMechanics.Settings;
@@ -35,7 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import code.husky.mysql.MySQL;
 
 
-public class Main extends JavaPlugin implements Listener {
+public class InfectedRanks extends JavaPlugin implements Listener {
 
 	// Set up all the needed things for files
 	public YamlConfiguration ranks = null;
@@ -47,73 +48,84 @@ public class Main extends JavaPlugin implements Listener {
 
 	public boolean update;
 	public String updateName;
+	public int neededInfectedVersion = 207;
+	public String neededInfectedName = "Infected v2.0.7";
 
 	public void onEnable() {
-		me = this;
-		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null)
+		if (Integer.valueOf(Infected.version.replaceAll(".", "")) < neededInfectedVersion)
 		{
-			perms = permissionProvider.getProvider();
-		}
+			this.getLogger().severe("Invalid Infected Version, Please Update to " + neededInfectedName);
+			getServer().getPluginManager().disablePlugin(this);
 
-		getRanks().options().copyDefaults(true);
-		saveRanks();
-
-		for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
+		} else
 		{
-			if (!s.contains("."))
+			me = this;
+			RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+			if (permissionProvider != null)
 			{
-				RankManager.addRank(new Rank(
-						s,
-						getRanks().getString("Ranks." + s + ".Prefix"),
-						getRanks().getBoolean("Ranks." + s + ".Default"),
-						getRanks().getBoolean("Ranks." + s + ".Max"),
-						getRanks().getInt("Ranks." + s + ".Score"),
-						InfClassManager.getClass(Team.Human, getRanks().getString("Ranks." + s + ".Class.Human")),
-						InfClassManager.getClass(Team.Zombie, getRanks().getString("Ranks." + s + ".Class.Zombie")),
-						getRanks().getStringList("Ranks." + s + ".Permissions")));
+				perms = permissionProvider.getProvider();
 			}
-		}
-		RankManager.getPresets();
 
-		getServer().getPluginManager().registerEvents(this, this);
+			getRanks().options().copyDefaults(true);
+			saveRanks();
 
-		if (Settings.MySQLEnabled())
-		{
-			System.out.println("Attempting to connect to MySQL");
-			MySQL = new MySQL(this, Files.getConfig().getString("MySQL.Host"),
-					Files.getConfig().getString("MySQL.Port"),
-					Files.getConfig().getString("MySQL.Database"),
-					Files.getConfig().getString("MySQL.Username"),
-					Files.getConfig().getString("MySQL.Password"));
-
-			try
+			for (String s : getRanks().getConfigurationSection("Ranks").getKeys(true))
 			{
-				connection = MySQL.openConnection();
-				Statement statement = connection.createStatement();
-
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected_Ranks" + " (Player VARCHAR(20), Rank VARCHAR(20));");
-				System.out.println("MySQL Table has been loaded");
-			} catch (Exception e)
-			{
-				System.out.println("Unable to connect to MySQL");
+				if (!s.contains("."))
+				{
+					RankManager.addRank(new Rank(
+							s,
+							getRanks().getString("Ranks." + s + ".Prefix"),
+							getRanks().getBoolean("Ranks." + s + ".Default"),
+							getRanks().getBoolean("Ranks." + s + ".Max"),
+							getRanks().getInt("Ranks." + s + ".Score"),
+							InfClassManager.getClass(Team.Human, getRanks().getString("Ranks." + s + ".Class.Human")),
+							InfClassManager.getClass(Team.Zombie, getRanks().getString("Ranks." + s + ".Class.Zombie")),
+							getRanks().getStringList("Ranks." + s + ".Permissions")));
+				}
 			}
-		}
+			RankManager.getPresets();
 
-		if (Settings.checkForUpdates())
-		{
+			getServer().getPluginManager().registerEvents(this, this);
 
-			Updater updater = new Updater(this, 70530, this.getFile(),
-					Updater.UpdateType.NO_DOWNLOAD, true);
-
-			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			updateName = updater.getLatestName();
-
-			if (update)
+			if (Settings.MySQLEnabled())
 			{
-				System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
-				for (Player player : Bukkit.getOnlinePlayers())
-					player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+				System.out.println("Attempting to connect to MySQL");
+				MySQL = new MySQL(this,
+						Files.getConfig().getString("MySQL.Host"),
+						Files.getConfig().getString("MySQL.Port"),
+						Files.getConfig().getString("MySQL.Database"),
+						Files.getConfig().getString("MySQL.Username"),
+						Files.getConfig().getString("MySQL.Password"));
+
+				try
+				{
+					connection = MySQL.openConnection();
+					Statement statement = connection.createStatement();
+
+					statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected_Ranks" + " (Player VARCHAR(20), Rank VARCHAR(20));");
+					System.out.println("MySQL Table has been loaded");
+				} catch (Exception e)
+				{
+					System.out.println("Unable to connect to MySQL");
+				}
+			}
+
+			if (Settings.checkForUpdates())
+			{
+
+				Updater updater = new Updater(this, 70530, this.getFile(),
+						Updater.UpdateType.NO_DOWNLOAD, true);
+
+				update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				updateName = updater.getLatestName();
+
+				if (update)
+				{
+					System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
+					for (Player player : Bukkit.getOnlinePlayers())
+						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+				}
 			}
 		}
 
