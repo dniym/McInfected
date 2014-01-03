@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infectedaddon.dedicatedserver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
@@ -8,12 +9,15 @@ import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.RandomChatColor;
 import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infectedaddon.ranks.RankManager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,6 +31,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class Main extends JavaPlugin implements Listener {
+
+	public boolean update;
+	public String updateName;
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -87,7 +94,31 @@ public class Main extends JavaPlugin implements Listener {
 
 		Files.getConfig().addDefault("Dedicated Server.Chat", true);
 		Files.getConfig().addDefault("Dedicated Server.MOTD", true);
+
+		List<String> leaveOnCmd = new ArrayList<String>();
+		leaveOnCmd.add("/lobby");
+		leaveOnCmd.add("/hub");
+		Files.getConfig().addDefault("Dedicated Server.Leave On Command", leaveOnCmd);
+
 		Files.saveConfig();
+
+		if (Settings.checkForUpdates())
+		{
+
+			Updater updater = new Updater(this, 70529, this.getFile(),
+					Updater.UpdateType.NO_DOWNLOAD, true);
+
+			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+			updateName = updater.getLatestName();
+
+			if (update)
+			{
+				System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
+				for (Player player : Bukkit.getOnlinePlayers())
+					player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+			}
+		}
+
 	}
 
 	public void onDisable() {
@@ -99,6 +130,11 @@ public class Main extends JavaPlugin implements Listener {
 		{
 			event.getPlayer().performCommand("infected join");
 			event.setJoinMessage("");
+		}
+		if (update && event.getPlayer().hasPermission("Infected.Admin"))
+		{
+			event.getPlayer().sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + updateName);
+			event.getPlayer().sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infectedaddon-dedicated-server/");
 		}
 	}
 
@@ -114,7 +150,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerTryToLeave(InfectedCommandEvent event) {
-		if (event.getArgs()[0].equalsIgnoreCase("Leave") && !event.getP().hasPermission("InfectedAddon.ByPass"))
+		if (event.getArgs().length >= 1 && event.getArgs()[0].equalsIgnoreCase("Leave") && !event.getP().hasPermission("InfectedAddon.ByPass"))
 			event.setCancelled(true);
 	}
 
@@ -237,6 +273,9 @@ public class Main extends JavaPlugin implements Listener {
 			if (msg.equalsIgnoreCase("/SetArena"))
 				msg = "/Infected SetArena";
 		}
+		if (Files.getConfig().getStringList("Dedicated Server.Leave On Command").contains(msg.toLowerCase()))
+			InfPlayerManager.getInfPlayer(event.getPlayer()).leaveInfected();
+
 		event.setMessage(msg);
 	}
 }

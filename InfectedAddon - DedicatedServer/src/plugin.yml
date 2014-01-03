@@ -1,7 +1,7 @@
 name: InfectedAddon-DedicatedServer
 description: Infected Dedicated Server Addon
 main: me.sniperzciinema.infectedaddon.dedicatedserver.Main
-version: 0.3
+version: 0.5
 author: xXSniperzzXx_SD
 softdepend: [InfectedAddon-Ranks]
 depend: [Infected]
