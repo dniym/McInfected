@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.Listeners;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 
@@ -32,7 +32,7 @@ public class RegisterAndUnRegister implements Listener {
 	// When a player leaves the server willingly, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onLeaveDeleteInfPlayer(final PlayerQuitEvent e) {
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 		{
 
 			@Override
@@ -47,7 +47,7 @@ public class RegisterAndUnRegister implements Listener {
 	// When a player leaves the server by kick, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onKickedDeleteInfPlayer(final PlayerKickEvent e) {
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 		{
 
 			@Override

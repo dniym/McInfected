@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,15 +32,15 @@ public class Files {
 	public static File signsFile = null;
 
 	public static FileConfiguration getConfig() {
-		return Main.me.getConfig();
+		return Infected.me.getConfig();
 	}
 
 	public static void saveConfig() {
-		Main.me.saveConfig();
+		Infected.me.saveConfig();
 	}
 
 	public static void reloadConfig() {
-		Main.me.reloadConfig();
+		Infected.me.reloadConfig();
 	}
 
 	public static void saveAll() {

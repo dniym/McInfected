@@ -4,7 +4,7 @@ package me.sniperzciinema.infected.Extras;
 import java.util.ArrayList;
 import java.util.Random;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
@@ -57,7 +57,7 @@ public class Menus {
 							p.sendMessage(Msgs.Classes_None.getString("<team>", team.toString()));
 
 							if(event.getClick().isRightClick()){
-								Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
 									public void run() {
 										chooseClass(team, p);
@@ -66,7 +66,7 @@ public class Menus {
 							}
 						} else if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
 						{
-							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
 
 								public void run() {
@@ -82,7 +82,7 @@ public class Menus {
 								IP.setInfClass(team, InfClassManager.getClass(team, ChatColor.stripColor(event.getName())));
 
 								if(event.getClick().isRightClick()){
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 									{
 										public void run() {
 											chooseClass(team, p);
@@ -94,7 +94,7 @@ public class Menus {
 						} else
 							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					}
-				}, Main.me);
+				}, Infected.me);
 		int i = 0;
 		for (InfClass Class : InfClassManager.getClasses(team))
 		{
@@ -123,7 +123,7 @@ public class Menus {
 
 					@Override
 					public void onOptionClick(final IconMenu.OptionClickEvent event) {
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 						{
 
 							public void run() {
@@ -132,7 +132,7 @@ public class Menus {
 							}
 						}, 2);
 					}
-				}, Main.me);
+				}, Infected.me);
 
 		ItemStack zombie = new ItemStack(Material.SKULL_ITEM);
 		zombie.setDurability((short) 2);
@@ -195,7 +195,7 @@ public class Menus {
 							event.setWillClose(false);
 						}
 					}
-				}, Main.me);
+				}, Infected.me);
 		int place = 0;
 		for (Arena arena : Lobby.getArenas())
 		{
@@ -263,7 +263,7 @@ public class Menus {
 										SaveItemHandler.saveItems(p, is);
 
 								if(event.getClick().isRightClick()){
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 									{
 										public void run() {
 											openShopMenu(p);
@@ -282,7 +282,7 @@ public class Menus {
 						p.updateInventory();
 
 					}
-				}, Main.me);
+				}, Infected.me);
 		int i = 0;
 		for (String item : shop)
 		{
@@ -329,7 +329,7 @@ public class Menus {
 								p.getInventory().addItem(is);
 
 								if(event.getClick().isRightClick()){
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 									{
 										public void run() {
 											openGrenadesMenu(p);
@@ -346,7 +346,7 @@ public class Menus {
 						p.updateInventory();
 
 					}
-				}, Main.me);
+				}, Infected.me);
 		int i = 0;
 		for (Grenade grenade : GrenadeManager.getGrenades())
 		{

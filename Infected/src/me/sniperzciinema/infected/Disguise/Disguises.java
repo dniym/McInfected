@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.Disguise;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Tools.Files;
 
@@ -18,13 +18,13 @@ public class Disguises {
 	 */
 	public static void disguisePlayer(Player player) {
 
-		if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
+		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			DisguiseDisguiseCraft.disguisePlayer(player);
 
-		else if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
 			DisguiseIDisguise.disguisePlayer(player);
 
-		else if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
 			DisguiseLibsDisguises.disguisePlayer(player);
 	}
 
@@ -35,13 +35,13 @@ public class Disguises {
 	 */
 	public static void unDisguisePlayer(Player player) {
 
-		if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
+		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			DisguiseDisguiseCraft.unDisguisePlayer(player);
 
-		else if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
 			DisguiseIDisguise.unDisguisePlayer(player);
 
-		else if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
 			DisguiseLibsDisguises.unDisguisePlayer(player);
 	}
 
@@ -55,13 +55,13 @@ public class Disguises {
 
 		boolean disguised = false;
 
-		if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
+		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			disguised = DisguiseDisguiseCraft.isPlayerDisguised(player);
 
-		else if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
 			disguised = DisguiseIDisguise.isPlayerDisguised(player);
 
-		else if (Main.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
 			disguised = DisguiseLibsDisguises.isPlayerDisguised(player);
 
 		return disguised;
@@ -74,13 +74,13 @@ public class Disguises {
 	public static void getDisguisePlugin() {
 
 		if (Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") != null)
-			Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft");
+			Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft");
 
 		else if (Bukkit.getServer().getPluginManager().getPlugin("iDisguise") != null)
-			Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("iDisguise");
+			Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("iDisguise");
 
 		else if (Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") != null)
-			Main.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises");
+			Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises");
 
 		else
 		{
@@ -90,9 +90,9 @@ public class Disguises {
 			Files.getConfig().set("Addons.Disguise Support.Enabled", false);
 			Files.saveConfig();
 		}
-		if (Main.Disguiser != null)
+		if (Infected.Disguiser != null)
 			if (Settings.logAddonsEnabled())
-				System.out.println("For Disguise Support we're using " + Main.Disguiser);
+				System.out.println("For Disguise Support we're using " + Infected.Disguiser);
 
 	}
 }

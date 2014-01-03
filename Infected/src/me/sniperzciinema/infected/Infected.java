@@ -39,7 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import code.husky.mysql.MySQL;
 
 
-public class Main extends JavaPlugin {
+public class Infected extends JavaPlugin {
 
 	// Initialize all the variables
 	public static String version = null;

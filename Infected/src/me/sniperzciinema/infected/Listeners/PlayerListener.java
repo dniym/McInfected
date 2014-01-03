@@ -2,7 +2,7 @@
 package me.sniperzciinema.infected.Listeners;
 
 import me.sniperzciinema.infected.Game;
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
@@ -48,9 +48,9 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (Main.update && player.hasPermission("Infected.Admin"))
+		if (Infected.update && player.hasPermission("Infected.Admin"))
 		{
-			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + Main.updateName);
+			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + Infected.updateName);
 			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
 		}
 	}

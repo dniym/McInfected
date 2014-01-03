@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.Tools;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
@@ -21,7 +21,7 @@ public class UpdateInfoSigns {
 	 */
 	public static void update() {
 
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
 		{
 
 			@Override

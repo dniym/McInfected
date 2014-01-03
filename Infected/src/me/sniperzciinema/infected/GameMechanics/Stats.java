@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.GameMechanics;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infected.Tools.MySQLManager;
 
@@ -202,7 +202,7 @@ public class Stats {
 	public static int getPoints(String name, boolean useVault) {
 		name = name.toLowerCase();
 		if (useVault)
-			return (int) Main.economy.getBalance(name);
+			return (int) Infected.economy.getBalance(name);
 		else if (Settings.MySQLEnabled())
 			return Integer.valueOf(getMySQLStats(name, "Points"));
 		else
@@ -223,11 +223,11 @@ public class Stats {
 			if (cPoints > points)
 			{
 				int price = cPoints - points;
-				Main.economy.withdrawPlayer(name, price);
+				Infected.economy.withdrawPlayer(name, price);
 			} else
 			{
 				int depo = points - cPoints;
-				Main.economy.depositPlayer(name, depo);
+				Infected.economy.depositPlayer(name, depo);
 			}
 		} else if (Settings.MySQLEnabled())
 			setMySQLStats(name, "Points", points);

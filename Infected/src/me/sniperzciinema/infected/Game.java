@@ -65,7 +65,7 @@ public class Game {
 				if (InfPlayerManager.getInfPlayer(u).isWinner())
 				{
 					if (Settings.VaultEnabled())
-						Main.economy.depositPlayer(u.getName(), Settings.getVaultReward());
+						Infected.economy.depositPlayer(u.getName(), Settings.getVaultReward());
 					winners.add(u.getName());
 				}
 
@@ -101,7 +101,7 @@ public class Game {
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			}
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 			{
 
 				@Override
@@ -135,7 +135,7 @@ public class Game {
 			}
 		}
 		Lobby.reset();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 		{
 
 			@Override
@@ -143,7 +143,7 @@ public class Game {
 				for (Player u : Lobby.getInGame())
 					InfPlayerManager.getInfPlayer(u).tpToLobby();
 
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 				{
 
 					@Override

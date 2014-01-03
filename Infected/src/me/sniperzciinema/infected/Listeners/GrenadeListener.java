@@ -3,7 +3,7 @@ package me.sniperzciinema.infected.Listeners;
 
 import java.util.ArrayList;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.Handlers.Lobby;
@@ -36,7 +36,7 @@ import org.bukkit.potion.PotionEffect;
  */
 public class GrenadeListener implements Listener {
 
-	public Main Main = new Main();
+	public Infected Main = new Infected();
 	public ArrayList<String> item = new ArrayList<String>();
 
 	@EventHandler(priority = EventPriority.NORMAL)

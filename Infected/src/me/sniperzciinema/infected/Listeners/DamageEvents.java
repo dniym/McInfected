@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.Listeners;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.Handlers.Lobby;
@@ -29,9 +29,9 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
  */
 public class DamageEvents implements Listener {
 
-	public Main plugin;
+	public Infected plugin;
 
-	public DamageEvents(Main instance)
+	public DamageEvents(Infected instance)
 	{
 		this.plugin = instance;
 	}

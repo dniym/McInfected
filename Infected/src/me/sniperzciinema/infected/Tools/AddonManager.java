@@ -1,7 +1,7 @@
 
 package me.sniperzciinema.infected.Tools;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Disguise.Disguises;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Listeners.CrackShotApi;
@@ -35,7 +35,7 @@ public class AddonManager {
 				RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
 				if (economyProvider != null)
-					Main.economy = economyProvider.getProvider();
+					Infected.economy = economyProvider.getProvider();
 
 				else
 				{
@@ -70,7 +70,7 @@ public class AddonManager {
 			} else
 			{
 				CrackShotApi CSApi = new CrackShotApi();
-				Bukkit.getPluginManager().registerEvents(CSApi, Main.me);
+				Bukkit.getPluginManager().registerEvents(CSApi, Infected.me);
 
 				if (Settings.logAddonsEnabled())
 					System.out.println("CrackShot support has been enabled!");
@@ -91,7 +91,7 @@ public class AddonManager {
 			} else
 			{
 				FactionsEvents FactionsEvents = new FactionsEvents();
-				Bukkit.getPluginManager().registerEvents(FactionsEvents, Main.me);
+				Bukkit.getPluginManager().registerEvents(FactionsEvents, Infected.me);
 
 				if (Settings.logAddonsEnabled())
 					System.out.println("Factions support has been enabled!");
@@ -112,7 +112,7 @@ public class AddonManager {
 			} else
 			{
 				mcMMOEvents mcMMOEvents = new mcMMOEvents();
-				Bukkit.getPluginManager().registerEvents(mcMMOEvents, Main.me);
+				Bukkit.getPluginManager().registerEvents(mcMMOEvents, Infected.me);
 
 				if (Settings.logAddonsEnabled())
 					System.out.println("mcMMO support has been enabled!");

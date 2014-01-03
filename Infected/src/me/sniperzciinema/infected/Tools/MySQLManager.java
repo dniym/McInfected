@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 
 
 public class MySQLManager {
@@ -23,7 +23,7 @@ public class MySQLManager {
 	public static int getInt(String tableName, String columnName, String playerName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = Infected.connection.createStatement();
 			ResultSet set = statement.executeQuery("SELECT " + columnName + " FROM " + tableName + " WHERE Player = '" + playerName + "';");
 			int i = 0;
 			set.next();
@@ -54,7 +54,7 @@ public class MySQLManager {
 	public static void update(String tableName, String columnName, int value, String playerName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = Infected.connection.createStatement();
 			statement.execute("UPDATE " + tableName + " SET " + columnName + "=" + value + " WHERE Player ='" + playerName + "';");
 			statement.close();
 		} catch (SQLException e)
@@ -77,7 +77,7 @@ public class MySQLManager {
 	private static void setInt(String tableName, String columnName, int value, String playerName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = Infected.connection.createStatement();
 			statement.execute("INSERT INTO " + tableName + " (`Player`, `" + columnName + "`) VALUES ('" + playerName + "', '" + value + "');");
 
 			statement.close();
@@ -97,7 +97,7 @@ public class MySQLManager {
 	public static ArrayList<String> getPlayers(String tableName) {
 		try
 		{
-			Statement statement = Main.connection.createStatement();
+			Statement statement = Infected.connection.createStatement();
 			ResultSet set = statement.executeQuery("SELECT * FROM `infected` ");
 			ArrayList<String> players = new ArrayList<String>();
 			while (true)

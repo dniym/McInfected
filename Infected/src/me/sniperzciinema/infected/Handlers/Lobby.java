@@ -4,7 +4,7 @@ package me.sniperzciinema.infected.Handlers;
 import java.util.ArrayList;
 
 import me.sniperzciinema.infected.Game;
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Events.InfectedStartGame;
 import me.sniperzciinema.infected.Events.InfectedStartInfecting;
 import me.sniperzciinema.infected.Events.InfectedStartVote;
@@ -328,7 +328,7 @@ public class Lobby {
 				u.sendMessage(Msgs.Format_Line.getString());
 			}
 
-			currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+			currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
 			{
 
 				@Override
@@ -402,7 +402,7 @@ public class Lobby {
 								Lobby.setGameState(GameState.Loading);
 								stopTimer();
 							}
-							currentGameTimer = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+							currentGameTimer = Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
 
 								@Override
@@ -438,7 +438,7 @@ public class Lobby {
 
 		InfectingTime = getActiveArena().getSettings().getInfectingTime();
 		TimeLeft = InfectingTime;
-		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
 		{
 
 			@Override
@@ -511,7 +511,7 @@ public class Lobby {
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
-		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.me, new Runnable()
+		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
 		{
 
 			@Override

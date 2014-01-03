@@ -3,7 +3,7 @@ package me.sniperzciinema.infected.Tools;
 
 import java.util.Arrays;
 
-import me.sniperzciinema.infected.Main;
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Handlers.Lobby;
 
 import org.bukkit.Bukkit;
@@ -72,7 +72,7 @@ public class IconMenu implements Listener {
 
 		// To fix the fact that the Menu being unregistered would prevent others
 		// from using a different menu, i made it just re-register the event
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.me);
+		Bukkit.getServer().getPluginManager().registerEvents(this, Infected.me);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

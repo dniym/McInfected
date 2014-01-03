@@ -48,9 +48,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Commands extends JavaPlugin implements CommandExecutor {
 
-	Main plugin;
+	Infected plugin;
 
-	public Commands(Main plugin)
+	public Commands(Infected plugin)
 	{
 		this.plugin = plugin;
 	}
@@ -158,7 +158,7 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 						p.sendMessage(Msgs.Game_Joined_You.getString());
 
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
-							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
 
 								@Override
@@ -1082,7 +1082,7 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 					p.sendMessage(Msgs.Format_Header.getString("<title>", " Addons "));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.DisguisesEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					if (Settings.DisguisesEnabled())
-						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Main.Disguiser.getName());
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Plugin:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Infected.Disguiser.getName());
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "CrackShot Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.CrackShotEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.FactionsEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
@@ -1096,11 +1096,11 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 					{
 						p.sendMessage("");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
-						if (Main.update)
-							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Main.updateName);
+						if (Infected.update)
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Infected.updateName);
 						p.sendMessage("");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_RED + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "Sniperz");
-						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Main.version);
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Infected.version);
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.WHITE + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Addons type: /Infected Addons");
