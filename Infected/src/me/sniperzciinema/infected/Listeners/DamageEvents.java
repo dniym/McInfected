@@ -83,15 +83,18 @@ public class DamageEvents implements Listener {
 							// they're the killer
 							if (IPV.getLastDamager() != null)
 							{
+								e.setDamage(0);
 								Player killer = IPV.getLastDamager();
+								
 								// Not really sure how they died? Just say melee
 								Deaths.playerDies(DeathType.Melee, killer, victim);
-								e.setDamage(0);
 							}
 							// Other wise, they just died by "Other"
 							else
+							{
+								e.setDamage(0);
 								Deaths.playerDies(DeathType.Other, null, victim);
-
+							}
 						}
 					}
 				}

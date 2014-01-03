@@ -50,10 +50,12 @@ public class Game {
 			for (Player u : Lobby.getInGame())
 			{
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
+				
 				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
 				for (ItemStack stack : IP.getInventory())
 					if (stack != null)
 						IV.addItem(stack);
+				
 				for (ItemStack is : Lobby.getActiveArena().getSettings().getRewordItems())
 					IV.addItem(is);
 			}
@@ -94,7 +96,7 @@ public class Game {
 				}
 				u.sendMessage(Msgs.Game_Over_Winners.getString("<winners>", winnersS.toString()));
 				u.sendMessage("");
-				u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage(Lobby.getActiveArena() == null ? "Really? You couldn't even wait for a map to be voted for?" : Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());

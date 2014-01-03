@@ -106,4 +106,8 @@ public class Settings {
 	public static int getVaultReward() {
 		return Files.getConfig().getInt("Addons.Vault Support.Reward");
 	}
+
+	public static boolean checkForUpdates() {
+		return Files.getConfig().getBoolean("Check For Updates.Enabled");
+	}
 }

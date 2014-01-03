@@ -186,6 +186,7 @@ public class Arena {
 			for (Location loc : this.getChests().keySet())
 				if (loc.getBlock().getType() == Material.CHEST)
 					this.setChest(loc, this.getChest(loc));
+		
 		setVotes(0);
 	}
 

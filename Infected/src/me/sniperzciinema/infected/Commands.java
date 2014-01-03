@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -9,6 +8,7 @@ import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Events.InfectedJoinEvent;
 import me.sniperzciinema.infected.Extras.Menus;
+import me.sniperzciinema.infected.Extras.TabCompletionHelper;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.GameMechanics.Equip;
 import me.sniperzciinema.infected.GameMechanics.KDRatio;
@@ -36,7 +36,6 @@ import me.sniperzciinema.infected.Tools.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,10 +43,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class Commands implements CommandExecutor {
+public class Commands extends JavaPlugin implements CommandExecutor {
 
 	Main plugin;
 
@@ -153,7 +152,7 @@ public class Commands implements CommandExecutor {
 
 						ip.setInfo();
 						Lobby.addPlayerInGame(p);
-						if(Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
+						if (Lobby.getGameState() != GameState.Started && Lobby.getGameState() != GameState.Infecting)
 							ip.tpToLobby();
 
 						p.sendMessage(Msgs.Game_Joined_You.getString());
@@ -161,13 +160,14 @@ public class Commands implements CommandExecutor {
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
 							{
+
 								@Override
 								public void run() {
 
 									Lobby.timerStartVote();
 								}
 							}, 100L);
-						
+
 						else if (Lobby.getGameState() == GameState.Voting)
 							p.sendMessage(Msgs.Help_Vote.getString());
 
@@ -431,44 +431,9 @@ public class Commands implements CommandExecutor {
 							sender.sendMessage(Msgs.Format_Line.getString());
 						} else
 						{
-							if (p != null && Settings.useBookForHelp())
-							{
-								ItemStack is = new ItemStack(
-										Material.WRITTEN_BOOK);
-								BookMeta b = (BookMeta) is.getItemMeta();
-								ArrayList<String> pages = new ArrayList<String>();
-								pages.add(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + " Infected Player\n" + "     Commands" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Join\n" + ChatColor.GOLD + " - Join Infected\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Leave\n" + ChatColor.GOLD + " - Leave Infected\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Vote <Arena>\n" + ChatColor.GOLD + " - Vote for a map\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Grenades [Id]\n" + ChatColor.GOLD + " - See the purchasable grenades\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Suicide \n" + ChatColor.GOLD + " - Suicide if your stuck");
-								pages.add(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + " Infected Player\n" + "   Commands (2)" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Chat <Msg>\n" + ChatColor.GOLD + " - Chat in your team's chat\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Stats [Player]\n" + ChatColor.GOLD + " - Check a player's stats\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Arenas\n" + ChatColor.GOLD + " - See all possible arenas\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Top <Category>\n" + ChatColor.GOLD + " - Check the top 5 players");
-								pages.add(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + " Infected Player\n" + "   Commands (3)" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Info\n" + ChatColor.GOLD + " - See The current status\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Classes\n" + ChatColor.GOLD + " - Choose a class\n");
-								if (p.hasPermission("Infected.SetUp"))
-									pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " Infected Admin\n" + "     Commands" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetLobby\n" + ChatColor.DARK_AQUA + " - Set the main lobby\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Create <Arena>\n" + ChatColor.DARK_AQUA + " - Create an arena\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Remove <Arena>\n" + ChatColor.DARK_AQUA + " - Remove an Arena\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetArena <Arena>\n" + ChatColor.DARK_AQUA + " - Select an arena\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetSpawn\n" + ChatColor.DARK_AQUA + " - Set the spawn");
-								if (p.hasPermission("Infected.SetUp"))
-									pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " Infected Admin\n" + "   Commands (2)" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn <ID>\n" + ChatColor.DARK_AQUA + " - Teleport to the spawn ID(Number)\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "DelSpawn <ID>\n" + ChatColor.DARK_AQUA + " - Remove the spawn ID(Number)\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Spawns\n" + ChatColor.DARK_AQUA + " - List how many spawns an arena has\n" + ChatColor.GREEN + " /Inf TpLobby" + ChatColor.DARK_GRAY + ". Tp to the lobby.\n");
-								if (p.hasPermission("Infected.Admin"))
-									pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " Infected Force\n" + "     Commands" + "\n\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Start\n" + ChatColor.BLACK + " - Force the game to start\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "End\n" + ChatColor.BLACK + " - Force the game to end\n" + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Refresh\n" + ChatColor.BLACK + " - Force all the ps to refresh eachother\n");
-								if (p.hasPermission("Infected.Admin"))
-									pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "       Menu" + "\n\n" + ChatColor.AQUA + "/Inf Admin Points <Player> <#>\n" + ChatColor.BLACK + "/Inf Admin Score <Player> <#>\n" + ChatColor.BLUE + "/Inf Admin KStats <Player> <#>\n" + ChatColor.DARK_AQUA + "/Inf Admin DStats <Player> <#>\n" + ChatColor.DARK_GREEN + "/Inf Admin Kick <Player>\n" + ChatColor.DARK_BLUE + "/Inf Admin Reload\n");
-								if (p.hasPermission("Infected.Admin"))
-									pages.add(ChatColor.GREEN + "" + ChatColor.BOLD + " Infected Admin\n" + "     Menu (2)" + "\n\n" + ChatColor.DARK_PURPLE + "/Inf Admin Reset <Player>\n" + ChatColor.GOLD + "/Inf Admin Shutdown\n" + ChatColor.LIGHT_PURPLE + "/Inf Admin Code\n");
-								if (p.hasPermission("Infected.SetUp"))
-									pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " How To Set Up \n" + "     Infected" + "\n\n" + ChatColor.RED + "1. " + ChatColor.DARK_GRAY + "Build a lobby\n" + ChatColor.RED + "2. " + ChatColor.DARK_GRAY + "Set the lobby spawn point where you're standing using the" + ChatColor.GREEN + " /Inf SetLobby" + ChatColor.DARK_GRAY + " command\n" + ChatColor.RED + "3. " + ChatColor.DARK_GRAY + "Build an arena\n");
-								if (p.hasPermission("Infected.SetUp"))
-									pages.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + " How To Set Up \n" + "  Infected (2)" + "\n\n" + ChatColor.RED + "4. " + ChatColor.DARK_GRAY + "Create the arena on Infected using " + ChatColor.GREEN + " /Inf Create <Arena Name>\n" + ChatColor.RED + "5. " + ChatColor.DARK_GRAY + "Set the first arena spawn point where you're standing using " + ChatColor.GREEN + " /Inf SetSpawn" + ChatColor.DARK_GRAY + ". You can keep retyping this command to set more spawn points.\n");
-								b.setAuthor(ChatColor.DARK_AQUA + "SniperzCiinema(xXSniperzzXx_SD)");
-								b.setTitle(ChatColor.DARK_RED + "Infected Help Book");
-								b.setPages(pages);
-								is.setItemMeta(b);
-								if (!p.getInventory().contains(is))
-									p.getInventory().addItem(is);
-								else
-									p.sendMessage(Msgs.Format_Prefix.getString() + "You already have the help book!");
-
-							} else
-							{
-								p.sendMessage("");
-								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
-								p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help 1");
-							}
+							p.sendMessage("");
+							p.sendMessage(Msgs.Format_Header.getString("<title>", "Help"));
+							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help 1/2");
 						}
 					}
 				}
@@ -1147,5 +1112,22 @@ public class Commands implements CommandExecutor {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+		if (cmd.getName().equalsIgnoreCase("Infected"))
+		{
+			if (args.length == 1)
+				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Help", "Join", "Leave", "Vote", "Shop", "Grenades", "Classes", "Stats", "Info", "Chat", "Arenas", "Top", "Suicide", "Admin" });
+			else if (args.length == 2 && args[0].equalsIgnoreCase("Admin"))
+				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Points", "Score", "Kills", "Deaths", "Kick", "Shutdown", "Reload", "Code" });
+			else if (args.length == 2 && args[0].equalsIgnoreCase("Admin"))
+				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Points", "Score", "Kills", "Deaths", "Kick", "Shutdown", "Reload", "Code" });
+			else
+				return null;
+		}
+
+		return null;
 	}
 }

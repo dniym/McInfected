@@ -45,7 +45,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerListener implements Listener {
 
 	// Check for updates when a player joins, making sure they are OP
-	@EventHandler
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (Main.update && player.hasPermission("Infected.Admin"))
@@ -54,7 +54,7 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
 		}
 	}
-
+	
 	// If a player attempts to drop an item in game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
@@ -86,7 +86,7 @@ public class PlayerListener implements Listener {
 			{
 				e.getBlock().getDrops().clear();
 				// Does the config say they can break it?
-				if (Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
+				if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
 				{
 					Location loc = e.getBlock().getLocation();
 					// Lets make sure this block wasn't a placed one, if so
@@ -128,8 +128,7 @@ public class PlayerListener implements Listener {
 					{
 						Block b = e.getClickedBlock();
 						// Make sure the chest isn't already saved, if it isn't
-						// save
-						// it
+						// save it
 						if (e.getClickedBlock().getType() == Material.CHEST)
 						{
 							Chest chest = (Chest) b.getState();

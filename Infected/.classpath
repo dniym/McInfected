@@ -7,10 +7,10 @@
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/Factions.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/DisguiseCraft.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/mcMMO.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/CrackShot.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/LibsDisguises.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/iDisguise.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/bukkit-1.7.2-R0.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/craftbukkit-1.7.2-R0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/CrackShot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Randy/Documents/Downloads/Dependancies/LibsDisguises.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -269,6 +269,16 @@ public class InfPlayer {
 	 */
 	public void tpToLobby() {
 
+		player.getInventory().setArmorContents(null);
+		
+		if (!getInfClass(team).getItems().isEmpty())
+			for (ItemStack is : getInfClass(team).getItems())
+				player.getInventory().remove(is.getType());
+
+		setTeam(Team.Human);
+
+		player.setFlying(false);
+
 		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
 		player.setLevel(0);
 		player.setExp(0.0F);
@@ -279,17 +289,6 @@ public class InfPlayer {
 		player.setFireTicks(0);
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
-
-		player.getInventory().setArmorContents(null);
-
-		if (!getInfClass(team).getItems().isEmpty())
-			for (ItemStack is : getInfClass(team).getItems())
-				if (player.getInventory().contains(is.getType()))
-					player.getInventory().remove(is);
-
-		setTeam(Team.Human);
-
-		player.setFlying(false);
 
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());

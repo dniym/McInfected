@@ -19,6 +19,7 @@ import me.sniperzciinema.infected.Listeners.RegisterAndUnRegister;
 import me.sniperzciinema.infected.Listeners.ScoreBoardToggle;
 import me.sniperzciinema.infected.Listeners.SignListener;
 import me.sniperzciinema.infected.Messages.Msgs;
+import me.sniperzciinema.infected.Messages.RandomChatColor;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
@@ -87,7 +88,7 @@ public class Main extends JavaPlugin {
 		PluginDescriptionFile pdf = getDescription();
 		version = pdf.getVersion();
 
-		if (getConfig().getBoolean("Check For Updates.Enable"))
+		if (Settings.checkForUpdates())
 		{
 
 			file = this.getFile();
@@ -98,25 +99,22 @@ public class Main extends JavaPlugin {
 			updateName = updater.getLatestName();
 
 			if (update)
-				System.out.println("You need to update Infected to: " + updater.getLatestFileVersion());
+			{
+				System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
+				for (Player player : Bukkit.getOnlinePlayers())
+					player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+			}
 		}
 
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new Commands(this));
-		PlayerListener PlayerListener = new PlayerListener();
-		SignListener SignListener = new SignListener();
-		GrenadeListener GrenadeListener = new GrenadeListener();
-		TeleportFix TeleportFix = new TeleportFix(this);
-		DamageEvents DamageEvents = new DamageEvents(this);
-		ScoreBoardToggle ScoreBoardToggle = new ScoreBoardToggle();
-		RegisterAndUnRegister RegisterAndUnRegister = new RegisterAndUnRegister();
-		pm.registerEvents(ScoreBoardToggle, this);
-		pm.registerEvents(DamageEvents, this);
-		pm.registerEvents(PlayerListener, this);
-		pm.registerEvents(RegisterAndUnRegister, this);
-		pm.registerEvents(GrenadeListener, this);
-		pm.registerEvents(SignListener, this);
-		pm.registerEvents(TeleportFix, this);
+		pm.registerEvents(new ScoreBoardToggle(), this);
+		pm.registerEvents(new DamageEvents(this), this);
+		pm.registerEvents(new PlayerListener(), this);
+		pm.registerEvents(new RegisterAndUnRegister(), this);
+		pm.registerEvents(new GrenadeListener(), this);
+		pm.registerEvents(new SignListener(), this);
+		pm.registerEvents(new TeleportFix(this), this);
 		AddonManager.getAddons();
 
 		// Do the info signs (Updating the info)
@@ -164,19 +162,27 @@ public class Main extends JavaPlugin {
 		GrenadeManager.loadConfigGrenades();
 
 		System.out.println(Msgs.Format_Line.getString());
+
 	}
 
 	@Override
 	public void onDisable() {
 
-		// On disable reset players with everything from before
-		if (!Lobby.getInGame().isEmpty())
-			for (Player p : Bukkit.getOnlinePlayers())
-				if (Lobby.isInGame(p))
-				{
-					p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
-					InfPlayerManager.getInfPlayer(p).leaveInfected();
-				}
+		try
+		{
+			// On disable reset players with everything from before
+			if (!Lobby.getInGame().isEmpty())
+				for (Player p : Bukkit.getOnlinePlayers())
+					if (Lobby.isInGame(p))
+					{
+						p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
+						InfPlayerManager.getInfPlayer(p).leaveInfected();
+					}
+		} catch (Exception e)
+		{
+			// If theres no one in Infected it seems to not be able to find the
+			// Lobby class when checking if the game is empty
+		}
 		if (Settings.MySQLEnabled())
 		{
 			MySQL.closeConnection();
