@@ -52,7 +52,7 @@ public class InfectedRanks extends JavaPlugin implements Listener {
 	public String neededInfectedName = "Infected v2.0.7";
 
 	public void onEnable() {
-		if (Integer.valueOf(Infected.version.replaceAll(".", "")) < neededInfectedVersion)
+		if (Integer.valueOf(Infected.me.getDescription().getVersion().replaceAll("\\.", "")) < neededInfectedVersion)
 		{
 			this.getLogger().severe("Invalid Infected Version, Please Update to " + neededInfectedName);
 			getServer().getPluginManager().disablePlugin(this);
@@ -148,6 +148,8 @@ public class InfectedRanks extends JavaPlugin implements Listener {
 
 				if (RankManager.canRankUp(p))
 					RankManager.setPlayersRank(p, RankManager.getNextRank(p));
+				else if (RankManager.canRankDown(p))
+					RankManager.setPlayersRank(p, RankManager.getLastRank(p));
 
 				Rank rank = RankManager.getPlayersRank(p);
 				Rank nextRank = RankManager.getNextRank(p);

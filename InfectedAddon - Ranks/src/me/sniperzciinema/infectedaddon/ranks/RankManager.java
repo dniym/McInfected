@@ -70,18 +70,17 @@ public class RankManager {
 
 	public static Rank getNextRank(Player p) {
 		Rank rank = getPlayersRank(p);
-		Rank nextrank = new Rank("", "", false, false,
-				maxRank.getScoreNeeded() + 1, null, null, null);
-		if (rank.isMaxRank())
-			nextrank = null;
-		else
+		Rank nextrank = maxRank;
+		if (!rank.isMaxRank())
 		{
 			for (Rank r : ranks)
 			{
 				// If r has a bigger score then the current rank and if r has a
 				// smaller score then the other rank
 				if (r.getScoreNeeded() > rank.getScoreNeeded() && r.getScoreNeeded() < nextrank.getScoreNeeded())
+				{
 					nextrank = r;
+				}
 			}
 		}
 		return nextrank;
@@ -89,11 +88,8 @@ public class RankManager {
 
 	public static Rank getLastRank(Player p) {
 		Rank rank = getPlayersRank(p);
-		Rank lastrank = new Rank("", "", false, false,
-				defaultRank.getScoreNeeded() + 1, null, null, null);
-		if (rank.isDefaultRank())
-			lastrank = null;
-		else
+		Rank lastrank = defaultRank;
+		if (!rank.isDefaultRank())
 		{
 			for (Rank r : ranks)
 			{
@@ -107,6 +103,7 @@ public class RankManager {
 	}
 
 	public static boolean canRankUp(Player p) {
+		//If the player isn't max rank and the player score is greater or equal to the next rank
 		if (!getPlayersRank(p).isMaxRank() && InfPlayerManager.getInfPlayer(p).getScore() >= getNextRank(p).getScoreNeeded())
 			return true;
 		else
@@ -114,7 +111,8 @@ public class RankManager {
 	}
 
 	public static boolean canRankDown(Player p) {
-		if (!getPlayersRank(p).isDefaultRank() && InfPlayerManager.getInfPlayer(p).getScore() < getLastRank(p).getScoreNeeded())
+		//If the players rank isn't default and the players score is less then their current ranks score
+		if (!getPlayersRank(p).isDefaultRank() && InfPlayerManager.getInfPlayer(p).getScore() < getPlayersRank(p).getScoreNeeded())
 			return true;
 		else
 			return false;
