@@ -80,6 +80,7 @@ public class IconMenu implements Listener {
 		if (Lobby.isInGame((Player) event.getPlayer()) && event.getInventory().getTitle().contains(event.getPlayer().getName()))
 		{
 			event.getInventory().clear();
+			destroy();
 		}
 	}
 
