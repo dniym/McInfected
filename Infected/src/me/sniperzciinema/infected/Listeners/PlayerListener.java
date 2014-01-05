@@ -54,7 +54,7 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
 		}
 	}
-	
+
 	// If a player attempts to drop an item in game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
@@ -82,19 +82,23 @@ public class PlayerListener implements Listener {
 			}
 			// When players break blocks, before we do anything, are they in the
 			// started game?
-			else if (Lobby.isInGame(e.getPlayer()) && Lobby.getGameState() == GameState.Started)
+			else if (Lobby.isInGame(e.getPlayer()))
 			{
-				e.getBlock().getDrops().clear();
-				// Does the config say they can break it?
-				if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
+				if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
 				{
-					Location loc = e.getBlock().getLocation();
-					// Lets make sure this block wasn't a placed one, if so
-					// we'll just remove it
-					if (!Lobby.getActiveArena().getBlocks().containsKey(loc))
-						Lobby.getActiveArena().setBlock(loc, e.getBlock().getType());
-					else
-						Lobby.getActiveArena().removeBlock(loc);
+					// Does the config say they can break it?
+					if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
+					{
+						Location loc = e.getBlock().getLocation();
+						// Lets make sure this block wasn't a placed one, if so
+						// we'll just remove it
+						if (!Lobby.getActiveArena().getBlocks().containsKey(loc))
+							Lobby.getActiveArena().setBlock(loc, e.getBlock().getType());
+						else
+							Lobby.getActiveArena().removeBlock(loc);
+						e.getBlock().setType(Material.AIR);
+					} else
+						e.setCancelled(true);
 				} else
 					e.setCancelled(true);
 			}
@@ -197,13 +201,14 @@ public class PlayerListener implements Listener {
 
 	}
 
-	// Stop "Living Entities" from targetting the players in Infectedhj
+	// Stop "Living Entities" from targetting the players in Infected if its
+	// enabled and the player isn't human
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityAtkPlayerLivingEntity(EntityTargetLivingEntityEvent e) {
 		if (e.getTarget() instanceof Player)
 		{
 			Player p = (Player) e.getTarget();
-			if (Lobby.isInGame(p))
+			if (Lobby.isInGame(p) && Lobby.getGameState() == GameState.Started && !Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && !Lobby.isHuman(p))
 				e.setCancelled(true);
 		}
 	}
@@ -214,7 +219,7 @@ public class PlayerListener implements Listener {
 		if (e.getTarget() instanceof Player)
 		{
 			Player p = (Player) e.getTarget();
-			if (Lobby.isInGame(p))
+			if (Lobby.isInGame(p) && Lobby.getGameState() == GameState.Started && !Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && !Lobby.isHuman(p))
 				e.setCancelled(true);
 		}
 	}

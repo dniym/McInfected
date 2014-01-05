@@ -216,9 +216,8 @@ public class InfClass {
 	 */
 	public ItemStack getIcon() {
 		if (icon == null)
-			return items.get(0);
-		else
-			return icon;
+			icon = items.get(0).clone();
+		return icon;
 	}
 
 	/**

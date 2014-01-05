@@ -101,16 +101,30 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Interacting");
 	}
+	
+	public boolean hostileMobsTargetHumans() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Hostile Mobs Target Humans"))
+			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Hostile Mobs Target Humans");
+		else
+			return Files.getConfig().getBoolean("Settings.Global.Hostile Mobs Target Humans");
+	}
 
 	public Boolean canBreakBlock(Team team, int id) {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
-			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks.Global").contains(id);
-		else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()))
-			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()).contains(id);
-		else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(id))
-			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(id);
-		else
-			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(id);
+		String ids = String.valueOf(id);
+		if(Files.getArenas().contains("Arenas."+arena.getName()+".Breakable Blocks." + team.toString())){
+			return Files.getArenas().getStringList("Arenas."+arena.getName()+".Breakable Blocks." + team.toString()).contains(ids);
+		}
+		else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
+		{
+			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks.Global").contains(ids);
+		}
+		else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
+		{
+			return true;
+		} else
+		{
+			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(ids);
+		}
 	}
 
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////

@@ -106,6 +106,7 @@ Settings:
     - /tell
 # Global Settings can be just copied and pasted into an arenas settings then you have settings per arena
   Global:
+    Hostile Mobs Target Humans: false
 # All the time limits (Seconds)
     Time:
       Voting: 30
@@ -118,11 +119,11 @@ Settings:
 # Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
     Breakable Blocks:
       Global:
-      - '121'
+      - 121
       Zombie:
-      - '170'
+      - 170
       Human:
-      - '153'
+      - 153
 # The points(Store/Grenades/Etc) a player is rewarded upon certain events
     Points:
       Use: true

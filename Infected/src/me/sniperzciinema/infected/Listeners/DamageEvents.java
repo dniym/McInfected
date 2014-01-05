@@ -85,7 +85,7 @@ public class DamageEvents implements Listener {
 							{
 								e.setDamage(0);
 								Player killer = IPV.getLastDamager();
-								
+
 								// Not really sure how they died? Just say melee
 								Deaths.playerDies(DeathType.Melee, killer, victim);
 							}
@@ -199,8 +199,18 @@ public class DamageEvents implements Listener {
 					}
 				} else
 				{
-					e.setDamage(0);
-					e.setCancelled(true);
+					if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans())
+					{
+						// If it was enough to kill the player
+						if (victim.getHealth() - e.getDamage() <= 0)
+						{
+							Deaths.playerDies(DeathType.Other, null, victim);
+
+						}
+					} else{
+						e.setDamage(0);
+						e.setCancelled(true);
+					}
 				}
 
 			}

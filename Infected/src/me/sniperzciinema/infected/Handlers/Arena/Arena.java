@@ -10,6 +10,7 @@ import me.sniperzciinema.infected.Tools.Files;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -177,7 +178,7 @@ public class Arena {
 	public void reset() {
 		if (!this.getBlocks().isEmpty())
 			for (Location loc : this.getBlocks().keySet())
-				this.setBlock(loc, this.getBlock(loc));
+				loc.getBlock().setType(getBlock(loc));
 
 		this.getBlocks().clear();
 
@@ -185,7 +186,9 @@ public class Arena {
 		if (!this.getChests().isEmpty())
 			for (Location loc : this.getChests().keySet())
 				if (loc.getBlock().getType() == Material.CHEST)
-					this.setChest(loc, this.getChest(loc));
+					((Chest)loc.getBlock()).getBlockInventory().setContents(getChests().get(loc).getContents());
+
+		this.getChests().clear();
 		
 		setVotes(0);
 	}

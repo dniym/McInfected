@@ -66,11 +66,17 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 				p = (Player) sender;
 				ip = InfPlayerManager.getInfPlayer(p);
 			}
+
 			InfectedCommandEvent ce = new InfectedCommandEvent(args, p, ip);
 			Bukkit.getPluginManager().callEvent(ce);
 			if (!ce.isCancelled())
 			{
-				if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+				if (args[0].equalsIgnoreCase("Test"))
+				{
+					Lobby.setGameState(GameState.Started);
+					Lobby.addPlayerInGame(p);
+					Lobby.addHuman(p);
+				} else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 				{
 					if (p == null)
 						sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
