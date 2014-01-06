@@ -119,9 +119,9 @@ public class ScoreBoard {
 					{
 						Score score;
 						if (arena == Lobby.getActiveArena())
-							score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName()));
+							score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName().substring(0, Math.min(11, arena.getName().length()))));
 						else
-							score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName()));
+							score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName().substring(0, Math.min(12, arena.getName().length()))));
 						if (i > 15)
 						{
 							for (OfflinePlayer op : sb.getPlayers())

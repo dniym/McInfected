@@ -593,14 +593,27 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 							// RELOAD
 							else if (args[1].equalsIgnoreCase("Reload"))
 							{
-								System.out.println("===== Infected =====");
+								System.out.println(Msgs.Format_Header.getString("<title>", "Infected"));
+								
+								if (Files.getArenas().getConfigurationSection("Arenas") != null)
+									for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
+									{
+										Arena arena = new Arena(StringUtil.getWord(a));
+										Lobby.addArena(arena);
+										if (Settings.logAreansEnabled())
+											System.out.println("Loaded Arena: " + arena.getName());
+									}
+								else if (Settings.logAreansEnabled())
+									System.out.println("Couldn't Find Any Arenas");
+
+								
 								Files.reloadAll();
 								AddonManager.getAddons();
 
 								InfClassManager.loadConfigClasses();
 								GrenadeManager.loadConfigGrenades();
-
-								System.out.println("====================");
+								
+								System.out.println(Msgs.Format_Line.getString());
 								sender.sendMessage(Msgs.Command_Admin_Reload.getString());
 
 							}

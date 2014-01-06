@@ -185,13 +185,15 @@ public class Lobby {
 	}
 
 	public static Arena addArena(Arena arena) {
-		arenas.add(arena);
+		if (!arenas.contains(arena))
+			arenas.add(arena);
 		return arena;
 	}
 
 	public static Arena addArena(String arenaName) {
 		Arena arena = new Arena(StringUtil.getWord(arenaName));
-		arenas.add(arena);
+		if (arenas.contains(arena))
+			arenas.add(arena);
 		return arena;
 	}
 
