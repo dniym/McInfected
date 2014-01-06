@@ -100,9 +100,9 @@ public class Infected extends JavaPlugin {
 
 			if (update)
 			{
-				System.out.println("You need to update InfectedAddon-Dedicated Server to: " + updater.getLatestFileVersion());
 				for (Player player : Bukkit.getOnlinePlayers())
-					player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
+					if(player.hasPermission("Infected.Admin"))
+						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
 			}
 		}
 
