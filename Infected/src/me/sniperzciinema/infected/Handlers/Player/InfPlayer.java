@@ -6,6 +6,7 @@ import java.util.Random;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Disguise.Disguises;
+import me.sniperzciinema.infected.Events.InfectedLeaveEvent;
 import me.sniperzciinema.infected.Extras.ScoreBoard;
 import me.sniperzciinema.infected.GameMechanics.Equip;
 import me.sniperzciinema.infected.GameMechanics.Settings;
@@ -19,7 +20,9 @@ import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Potions.PotionEffects;
 import me.sniperzciinema.infected.Messages.Msgs;
+import me.sniperzciinema.infected.Tools.IconMenu;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -111,52 +114,58 @@ public class InfPlayer {
 	@SuppressWarnings("deprecation")
 	public void leaveInfected() {
 
-		unDisguise();
-		clearEquipment();
+		InfectedLeaveEvent le = new InfectedLeaveEvent(player);
+		Bukkit.getPluginManager().callEvent(le);
+		if (!le.isCancelled())
+		{
+			unDisguise();
+			clearEquipment();
 
-		Player p = getPlayer();
-		p.setGameMode(gamemode);
-		p.setLevel(level);
-		p.setExp(exp);
-		p.setHealth(health);
-		p.setFoodLevel(food);
-		p.setFireTicks(0);
-		p.getInventory().setContents(inventory);
-		p.getInventory().setArmorContents(armor);
-		p.updateInventory();
+			Player p = getPlayer();
+			p.setGameMode(gamemode);
+			p.setLevel(level);
+			p.setExp(exp);
+			p.setHealth(health);
+			p.setFoodLevel(food);
+			p.setFireTicks(0);
+			p.getInventory().setContents(inventory);
+			p.getInventory().setArmorContents(armor);
+			p.updateInventory();
 
-		for (PotionEffect effect : player.getActivePotionEffects())
-			player.removePotionEffect(effect.getType());
+			for (PotionEffect effect : player.getActivePotionEffects())
+				player.removePotionEffect(effect.getType());
 
-		player.setFallDistance(0F);
-		p.teleport(location);
-		p.setFallDistance(0F);
-		setTeam(Team.Human);
-		Lobby.getHumans().remove(p);
-		Lobby.getZombies().remove(p);
-		Lobby.getInGame().remove(p);
+			player.setFallDistance(0F);
+			p.teleport(location);
+			p.setFallDistance(0F);
+			setTeam(Team.Human);
+			Lobby.getHumans().remove(p);
+			Lobby.getZombies().remove(p);
+			Lobby.getInGame().remove(p);
 
-		if (getVote() != null)
-			getVote().setVotes(getVote().getVotes() - getAllowedVotes());
+			if (getVote() != null)
+				getVote().setVotes(getVote().getVotes() - getAllowedVotes());
 
-		killstreak = 0;
-		location = null;
-		gamemode = null;
-		level = 0;
-		exp = 0;
-		health = 20;
-		food = 20;
-		inventory = null;
-		armor = null;
-		vote = null;
-		timeIn = 0;
+			killstreak = 0;
+			location = null;
+			gamemode = null;
+			level = 0;
+			exp = 0;
+			health = 20;
+			food = 20;
+			inventory = null;
+			armor = null;
+			vote = null;
+			timeIn = 0;
 
-		fullLeave();
+			fullLeave();
 
-		for (Player u : Lobby.getInGame())
-			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
+			for (Player u : Lobby.getInGame())
+				if (u != player)
+					InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
 
-		player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+		}
 	}
 
 	public void fullLeave() {
@@ -239,9 +248,6 @@ public class InfPlayer {
 			}
 
 		}
-		for (Player u : Lobby.getInGame())
-			// Update the scoreboard stats
-			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
 	}
 
 	/**
@@ -270,7 +276,7 @@ public class InfPlayer {
 	public void tpToLobby() {
 
 		player.getInventory().setArmorContents(null);
-		
+
 		if (!getInfClass(team).getItems().isEmpty())
 			for (ItemStack is : getInfClass(team).getItems())
 				player.getInventory().remove(is.getType());
@@ -736,6 +742,10 @@ public class InfPlayer {
 				votes = node.getValue();
 		}
 		return votes;
+	}
+	
+	public void openMenu(Player player, IconMenu menu){
+		menu.open(player);
 	}
 
 }

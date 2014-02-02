@@ -57,13 +57,17 @@ public class SignListener implements Listener {
 					Sign sign = ((Sign) b.getState());
 
 					// Lets make sure it's an Infected Class sign
-					if (sign.getLine(0).contains("[Infected]") && sign.getLine(1).contains("Class"))
+					if (sign.getLine(0).contains("[Infected]") && (sign.getLine(1).contains("Class") || sign.getLine(1).contains("Classes")))
 					{
 						// Make sure classes are enabled
 
 						InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 						String className = ChatColor.stripColor(sign.getLine(2));
-						Team team = Team.valueOf(ChatColor.stripColor(sign.getLine(3)));
+						Team team = null;
+						if(sign.getLine(3).contains("Zombie"))
+							team = Team.Zombie;
+						else
+							team = Team.Human;
 
 						// If className is "None" well set the back to the
 						// default class
@@ -77,7 +81,7 @@ public class SignListener implements Listener {
 						else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
 						{
 							IP.setInfClass(team, InfClassManager.getClass(team, className));
-							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className));
+							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className, "<team>", team.toString()));
 						} else
 						{
 							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
@@ -194,7 +198,7 @@ public class SignListener implements Listener {
 					if (Settings.shopsEnabled())
 					{
 						Sign sign = ((Sign) b.getState());
-						if (sign.getLine(0).contains("[Infected]") && !sign.getLine(1).contains("Playing") && !sign.getLine(1).contains("CmdSet") && !sign.getLine(1).toLowerCase().contains("click to use") && !sign.getLine(1).contains("Class"))
+						if (sign.getLine(0).contains("[Infected]") && !sign.getLine(1).contains("Playing") && !sign.getLine(1).contains("CmdSet") && !sign.getLine(1).toLowerCase().contains("click to use") && !sign.getLine(1).contains("Class") && !sign.getLine(1).contains("Classes"))
 						{
 							boolean useVault = false;
 
@@ -288,7 +292,7 @@ public class SignListener implements Listener {
 		{
 
 			Player p = event.getPlayer();
-			if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class"))
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class") && !event.getLine(1).contains("Classes"))
 			{
 				// Make sure everything checks out as good
 				if (!p.hasPermission("Infected.Setup"))
@@ -505,7 +509,7 @@ public class SignListener implements Listener {
 		if (!event.isCancelled())
 		{
 			Player player = event.getPlayer();
-			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Class"))
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && (event.getLine(1).equalsIgnoreCase("Class") || event.getLine(1).equalsIgnoreCase("Classes")) )
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{

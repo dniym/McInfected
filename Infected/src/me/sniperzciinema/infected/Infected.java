@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
@@ -55,14 +56,19 @@ public class Infected extends JavaPlugin {
 
 	public static MySQL MySQL = null;
 	public static Connection connection = null;
+	
+	//Create the menus
+	public static Menus Menus;
 
 	@Override
 	public void onEnable() {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		me = this;
+		Menus = new Menus();
 
 		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
+		
 		try
 		{
 			Metrics metrics = new Metrics(this);
@@ -101,7 +107,7 @@ public class Infected extends JavaPlugin {
 			if (update)
 			{
 				for (Player player : Bukkit.getOnlinePlayers())
-					if(player.hasPermission("Infected.Admin"))
+					if (player.hasPermission("Infected.Admin"))
 						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
 			}
 		}
@@ -167,7 +173,6 @@ public class Infected extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-
 		try
 		{
 			// On disable reset players with everything from before

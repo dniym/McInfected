@@ -8,7 +8,6 @@ import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Events.InfectedJoinEvent;
 import me.sniperzciinema.infected.Extras.Menus;
-import me.sniperzciinema.infected.Extras.TabCompletionHelper;
 import me.sniperzciinema.infected.GameMechanics.Deaths;
 import me.sniperzciinema.infected.GameMechanics.Equip;
 import me.sniperzciinema.infected.GameMechanics.KDRatio;
@@ -32,6 +31,7 @@ import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
+import me.sniperzciinema.infected.Tools.TabCompletionHelper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,12 +71,7 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 			Bukkit.getPluginManager().callEvent(ce);
 			if (!ce.isCancelled())
 			{
-				if (args[0].equalsIgnoreCase("Test"))
-				{
-					Lobby.setGameState(GameState.Started);
-					Lobby.addPlayerInGame(p);
-					Lobby.addHuman(p);
-				} else if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
+				if (args.length >= 1 && args[0].equalsIgnoreCase("Chat"))
 				{
 					if (p == null)
 						sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
@@ -123,7 +118,7 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Game_Started.getString());
 
 					else
-						Menus.chooseClassTeam(p);
+						Infected.Menus.teamMenu.open(p);
 				}
 
 				// ///////////////////////////////////////////-JOIN-//////////////////////////////////////////
@@ -246,9 +241,7 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 					else
-					{
-						Menus.openShopMenu(p);
-					}
+						Infected.Menus.shopMenu.open(p);
 				}
 				// /////////////////////////////////////////////////-GRENADES-///////////////////////////////////////////////
 				else if (args.length > 0 && (args[0].equalsIgnoreCase("Grenades") || args[0].equalsIgnoreCase("Grenade")))
@@ -308,9 +301,7 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 							} else
 								p.sendMessage(Msgs.Grenades_Invalid_Id.getString());
 						} else
-						{
-							Menus.openGrenadesMenu(p);
-						}
+							Infected.Menus.grenadeMenu.open(p);
 					}
 				}
 
@@ -467,9 +458,8 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 						// If the user didn't specify an arena, open the voting
 						// GUI
 						if (args.length == 1)
-						{
-							Menus.openVotingMenu(p);
-						} else
+							Infected.Menus.voteMenu.open(p);
+						else
 						{
 							// Check if the user voted for Random
 							Arena arena;
@@ -594,27 +584,31 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 							else if (args[1].equalsIgnoreCase("Reload"))
 							{
 								System.out.println(Msgs.Format_Header.getString("<title>", "Infected"));
-								
+
 								if (Files.getArenas().getConfigurationSection("Arenas") != null)
 									for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
 									{
-										Arena arena = new Arena(StringUtil.getWord(a));
+										Arena arena = new Arena(
+												StringUtil.getWord(a));
 										Lobby.addArena(arena);
+
 										if (Settings.logAreansEnabled())
 											System.out.println("Loaded Arena: " + arena.getName());
 									}
 								else if (Settings.logAreansEnabled())
 									System.out.println("Couldn't Find Any Arenas");
 
-								
 								Files.reloadAll();
 								AddonManager.getAddons();
 
 								InfClassManager.loadConfigClasses();
 								GrenadeManager.loadConfigGrenades();
-								
+
 								System.out.println(Msgs.Format_Line.getString());
 								sender.sendMessage(Msgs.Command_Admin_Reload.getString());
+
+								Infected.Menus.destroyAllMenus();
+								Infected.Menus = new Menus();
 
 							}
 							// CODE
@@ -1139,8 +1133,6 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 		{
 			if (args.length == 1)
 				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Help", "Join", "Leave", "Vote", "Shop", "Grenades", "Classes", "Stats", "Info", "Chat", "Arenas", "Top", "Suicide", "Admin" });
-			else if (args.length == 2 && args[0].equalsIgnoreCase("Admin"))
-				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Points", "Score", "Kills", "Deaths", "Kick", "Shutdown", "Reload", "Code" });
 			else if (args.length == 2 && args[0].equalsIgnoreCase("Admin"))
 				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Points", "Score", "Kills", "Deaths", "Kick", "Shutdown", "Reload", "Code" });
 			else

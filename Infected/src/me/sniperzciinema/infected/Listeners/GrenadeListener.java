@@ -128,13 +128,13 @@ public class GrenadeListener implements Listener {
 							grenadeItem.remove();
 						}
 					}, grenade.getDelay() * 20);
+				// Prevent anything else they may have done
+				event.setCancelled(true);
+				event.setUseInteractedBlock(Result.DENY);
+				event.setUseItemInHand(Result.DENY);
+				p.updateInventory();
 				}
-
-			}// Prevent anything else they may have done
-			event.setCancelled(true);
-			event.setUseInteractedBlock(Result.DENY);
-			event.setUseItemInHand(Result.DENY);
-			p.updateInventory();
+			}
 		}
 	}
 

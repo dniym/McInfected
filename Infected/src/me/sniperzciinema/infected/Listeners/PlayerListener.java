@@ -123,29 +123,37 @@ public class PlayerListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if (!e.isCancelled())
 			// If they are playing and the game has started
-			if (Lobby.isInGame(e.getPlayer()) && Lobby.getGameState() == GameState.Started)
+			if (Lobby.isInGame(e.getPlayer()))
 			{
-				if (!Lobby.getActiveArena().getSettings().interactDisabled())
-				{
-
-					if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
-					{
-						Block b = e.getClickedBlock();
-						// Make sure the chest isn't already saved, if it isn't
-						// save it
-						if (e.getClickedBlock().getType() == Material.CHEST)
-						{
-							Chest chest = (Chest) b.getState();
-							if (Lobby.getActiveArena().getChests().containsKey(chest.getLocation()))
-								Lobby.getActiveArena().setChest(chest.getLocation(), chest.getBlockInventory());
-						}
-					}
-				} else
-				{
-					e.setUseInteractedBlock(Result.DENY);
-					e.setUseItemInHand(Result.DENY);
+				if (e.getClickedBlock().getRelative(e.getBlockFace()).getType() == Material.FIRE && !Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), 51))
 					e.setCancelled(true);
 
+				if (Lobby.getGameState() == GameState.Started)
+				{
+
+					if (!Lobby.getActiveArena().getSettings().interactDisabled())
+					{
+
+						if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
+						{
+							Block b = e.getClickedBlock();
+							// Make sure the chest isn't already saved, if
+							// it isn't
+							// save it
+							if (e.getClickedBlock().getType() == Material.CHEST)
+							{
+								Chest chest = (Chest) b.getState();
+								if (Lobby.getActiveArena().getChests().containsKey(chest.getLocation()))
+									Lobby.getActiveArena().setChest(chest.getLocation(), chest.getBlockInventory());
+							}
+						}
+					} else
+					{
+						e.setUseInteractedBlock(Result.DENY);
+						e.setUseItemInHand(Result.DENY);
+						e.setCancelled(true);
+
+					}
 				}
 			}
 	}
@@ -208,8 +216,12 @@ public class PlayerListener implements Listener {
 		if (e.getTarget() instanceof Player)
 		{
 			Player p = (Player) e.getTarget();
-			if (Lobby.isInGame(p) && Lobby.getGameState() == GameState.Started && !Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && !Lobby.isHuman(p))
+			if (Lobby.isInGame(p))
+			{
 				e.setCancelled(true);
+				if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && Lobby.isHuman(p) && Lobby.getGameState() == GameState.Started)
+					e.setCancelled(false);
+			}
 		}
 	}
 
@@ -219,8 +231,12 @@ public class PlayerListener implements Listener {
 		if (e.getTarget() instanceof Player)
 		{
 			Player p = (Player) e.getTarget();
-			if (Lobby.isInGame(p) && Lobby.getGameState() == GameState.Started && !Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && !Lobby.isHuman(p))
+			if (Lobby.isInGame(p))
+			{
 				e.setCancelled(true);
+				if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && Lobby.isHuman(p) && Lobby.getGameState() == GameState.Started)
+					e.setCancelled(false);
+			}
 		}
 	}
 

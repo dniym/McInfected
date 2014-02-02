@@ -73,76 +73,68 @@ public class ScoreBoard {
 		showing = ScoreBoards.Regular;
 		Player player = ip.getPlayer();
 
-		// Make sure the player is in an arena before setting
-		// If they aren't clear their scoreboard, because they just left
-		if (!ip.isInGame())
+		// Create a new scoreboard
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+		Scoreboard sb = manager.getNewScoreboard();
+		Objective ob = sb.registerNewObjective("Infected", "dummy");
+		ob.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+		// Now set all the scores and the title
+		ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Rankings");
+
+		if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
 		{
-			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-		} else
-		{
-			// Create a new scoreboard
-			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard sb = manager.getNewScoreboard();
-			Objective ob = sb.registerNewObjective("Infected", "dummy");
-			ob.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-			// Now set all the scores and the title
-			ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Rankings");
-
-			if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
+			ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
+			Score score = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
+			if (Lobby.getHumans().size() != 0)
+				score.setScore(Lobby.getHumans().size());
+			else
 			{
-				ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
-				Score score = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
-				if (Lobby.getHumans().size() != 0)
-					score.setScore(Lobby.getHumans().size());
-				else
-				{
-					score.setScore(1);
-					score.setScore(0);
-				}
-				Score score2 = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Zombies:"));
-				if (Lobby.getZombies().size() != 0)
-					score2.setScore(Lobby.getZombies().size());
-				else
-				{
-					score2.setScore(1);
-					score2.setScore(0);
-				}
-
-			} else if (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
+				score.setScore(1);
+				score.setScore(0);
+			}
+			Score score2 = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Zombies:"));
+			if (Lobby.getZombies().size() != 0)
+				score2.setScore(Lobby.getZombies().size());
+			else
 			{
-				ob.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote For An Arena!");
-				int i = 1;
-				for (Arena arena : Lobby.getArenas())
-				{
-					if (Lobby.isArenaValid(arena))
-					{
-						Score score;
-						if (arena == Lobby.getActiveArena())
-							score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName().substring(0, Math.min(11, arena.getName().length()))));
-						else
-							score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName().substring(0, Math.min(12, arena.getName().length()))));
-						if (i > 15)
-						{
-							for (OfflinePlayer op : sb.getPlayers())
-							{
-								if (ob.getScore(op).getScore() == 0)
-								{
-									sb.resetScores(op);
-									break;
-
-								}
-							}
-						}
-						score.setScore(1);
-						score.setScore(arena.getVotes());
-						i++;
-					}
-				}
+				score2.setScore(1);
+				score2.setScore(0);
 			}
 
-			player.setScoreboard(sb);
+		} else if (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
+		{
+			ob.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote For An Arena!");
+			int i = 1;
+			for (Arena arena : Lobby.getArenas())
+			{
+				if (Lobby.isArenaValid(arena))
+				{
+					Score score;
+					if (arena == Lobby.getActiveArena())
+						score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName().substring(0, Math.min(11, arena.getName().length()))));
+					else
+						score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName().substring(0, Math.min(12, arena.getName().length()))));
+					if (i > 15)
+					{
+						for (OfflinePlayer op : sb.getPlayers())
+						{
+							if (ob.getScore(op).getScore() == 0)
+							{
+								sb.resetScores(op);
+								break;
+
+							}
+						}
+					}
+					score.setScore(1);
+					score.setScore(arena.getVotes());
+					i++;
+				}
+			}
 		}
+
+		player.setScoreboard(sb);
 	}
 
 	/**
@@ -153,57 +145,49 @@ public class ScoreBoard {
 		showing = ScoreBoards.Stats;
 		Player player = ip.getPlayer();
 
-		// Make sure the player is in an arena before setting
-		// If they aren't clear their scoreboard, because they just left
-		if (!ip.isInGame())
+		// Create a new scoreboard
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+		Scoreboard sb = manager.getNewScoreboard();
+		Objective ob = sb.registerNewObjective("Infected", "dummy");
+		ob.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+		// Now set all the scores and the title
+		ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Stats");
+
+		int row = 0;
+		int spaces = 0;
+
+		List<String> list = Settings.getScoreBoardRows();
+
+		for (@SuppressWarnings("unused")
+		// loop through all the list
+		String s : list)
 		{
-			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-		} else
-		{
-			// Create a new scoreboard
-			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard sb = manager.getNewScoreboard();
-			Objective ob = sb.registerNewObjective("Infected", "dummy");
-			ob.setDisplaySlot(DisplaySlot.SIDEBAR);
+			Score score = null;
 
-			// Now set all the scores and the title
-			ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Stats");
+			// Get the string my using the row
+			String line = list.get(row);
 
-			int row = 0;
-			int spaces = 0;
-
-			List<String> list = Settings.getScoreBoardRows();
-
-			for (@SuppressWarnings("unused")
-			// loop through all the list
-			String s : list)
+			// If the line is just a space, set the offline player to a
+			// color code
+			// This way it'll show as a blank line, and not be merged with
+			// similar color codes
+			if (ScoreBoardVariables.getLine(line, player).equalsIgnoreCase(" "))
 			{
-				Score score = null;
+				String space = "&" + spaces;
+				spaces++;
+				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(space, player)));
+			} else
+			{
+				// If its just a regular message, just set it
+				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(line, player)));
 
-				// Get the string my using the row
-				String line = list.get(row);
-
-				// If the line is just a space, set the offline player to a
-				// color code
-				// This way it'll show as a blank line, and not be merged with
-				// similar color codes
-				if (ScoreBoardVariables.getLine(line, player).equalsIgnoreCase(" "))
-				{
-					String space = "&" + spaces;
-					spaces++;
-					score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(space, player)));
-				} else
-				{
-					// If its just a regular message, just set it
-					score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(line, player)));
-
-				}
-				score.setScore(list.size() - 1 - row);
-				row++;
 			}
-
-			player.setScoreboard(sb);
+			score.setScore(list.size() - 1 - row);
+			row++;
 		}
+
+		player.setScoreboard(sb);
 	}
 }
 

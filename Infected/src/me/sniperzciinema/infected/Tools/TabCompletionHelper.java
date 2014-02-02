@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.infected.Extras;
+package me.sniperzciinema.infected.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
