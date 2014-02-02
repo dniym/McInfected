@@ -65,7 +65,6 @@ public class Infected extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		me = this;
-		Menus = new Menus();
 
 		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
 		
@@ -167,6 +166,8 @@ public class Infected extends JavaPlugin {
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 
+		Menus = new Menus();
+		
 		System.out.println(Msgs.Format_Line.getString());
 
 	}

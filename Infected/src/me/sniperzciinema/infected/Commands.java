@@ -153,11 +153,14 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 
 						ip.setInfo();
 						Lobby.addPlayerInGame(p);
+						
+						//If the game isn't started and isn't infecting then the players are all still in the lobby
 						if (Lobby.getGameState() != GameState.Started && Lobby.getGameState() != GameState.Infecting)
 							ip.tpToLobby();
 
 						p.sendMessage(Msgs.Game_Joined_You.getString());
 
+						//If the game hasn't started and there's enough players for an autostart, start the timer
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
@@ -169,15 +172,19 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 								}
 							}, 100L);
 
+						//If voting has started, tell the new player how to vote
 						else if (Lobby.getGameState() == GameState.Voting)
 							p.sendMessage(Msgs.Help_Vote.getString());
 
+						//If it's already looking for the first infected, respawn them as a human and equip them
 						else if (Lobby.getGameState() == GameState.Infecting)
 						{
 							ip.respawn();
 							Equip.equip(p);
 
-						} else if (Lobby.getGameState() == GameState.Started)
+						} 
+						//If the game has started already make the player a zombie
+						else if (Lobby.getGameState() == GameState.Started)
 						{
 							Deaths.playerDies(DeathType.Other, null, p);
 						}

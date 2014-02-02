@@ -33,7 +33,8 @@ public class Deaths {
 	public static void playerDies(DeathType death, Player killer, Player killed) {
 		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed, death);
 		Bukkit.getPluginManager().callEvent(e);
-
+		
+		// --> Picture deaths
 		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
 		{
 		} else
@@ -46,7 +47,6 @@ public class Deaths {
 				String[] face = Pictures.getZombie();
 				face[2] = face[2] + "     " + Msgs.Picture_Infected_You.getString();
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
-
 				killed.sendMessage(face);
 
 				for (Player u : Lobby.getInGame())
@@ -55,8 +55,9 @@ public class Deaths {
 			} else
 				for (Player u : Lobby.getInGame())
 					u.sendMessage(killMessage);
-
 		}
+		// <--
+		
 		InfPlayer InfKiller = null;
 		InfPlayer InfKilled = null;
 		if (killer != null)
