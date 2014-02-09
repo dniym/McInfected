@@ -31,8 +31,6 @@ import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
-import me.sniperzciinema.infected.Tools.TabCompletionHelper;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -43,17 +41,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class Commands extends JavaPlugin implements CommandExecutor {
+public class Commands implements CommandExecutor {
 
-	Infected plugin;
-
-	public Commands(Infected plugin)
-	{
-		this.plugin = plugin;
-	}
+	
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -1132,20 +1124,5 @@ public class Commands extends JavaPlugin implements CommandExecutor {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("Infected"))
-		{
-			if (args.length == 1)
-				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Help", "Join", "Leave", "Vote", "Shop", "Grenades", "Classes", "Stats", "Info", "Chat", "Arenas", "Top", "Suicide", "Admin" });
-			else if (args.length == 2 && args[0].equalsIgnoreCase("Admin"))
-				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, new String[] { "Points", "Score", "Kills", "Deaths", "Kick", "Shutdown", "Reload", "Code" });
-			else
-				return null;
-		}
-
-		return null;
 	}
 }

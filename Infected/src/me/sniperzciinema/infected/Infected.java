@@ -112,7 +112,7 @@ public class Infected extends JavaPlugin {
 		}
 
 		// Get the Commands class and the Listener
-		getCommand("Infected").setExecutor(new Commands(this));
+		getCommand("Infected").setExecutor(new Commands());
 		pm.registerEvents(new ScoreBoardToggle(), this);
 		pm.registerEvents(new DamageEvents(this), this);
 		pm.registerEvents(new PlayerListener(), this);

@@ -36,7 +36,6 @@ import org.bukkit.potion.PotionEffect;
  */
 public class GrenadeListener implements Listener {
 
-	public Infected Main = new Infected();
 	public ArrayList<String> item = new ArrayList<String>();
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -87,7 +86,7 @@ public class GrenadeListener implements Listener {
 					p.updateInventory();
 					GrenadeManager.addThrownGrenade(grenadeItem.getUniqueId());
 
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.me, new Runnable()
+					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 					{
 
 						@Override
