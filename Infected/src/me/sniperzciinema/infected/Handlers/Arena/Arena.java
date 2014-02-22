@@ -1,10 +1,12 @@
 
 package me.sniperzciinema.infected.Handlers.Arena;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
+import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Tools.Files;
 
@@ -59,8 +61,12 @@ public class Arena {
 	 * @param spawns
 	 *            the spawns to set
 	 */
-	public void setSpawns(List<String> spawns) {
-		Files.getArenas().set("Arenas." + name + ".Spawns", spawns);
+	public void setSpawns(List<String> spawns, Team team) {
+		if (team == Team.Zombie || team == Team.Human)
+			Files.getArenas().set("Arenas." + name + "." + team.toString() + " Spawns", spawns);
+		else
+			Files.getArenas().set("Arenas." + name + ".Spawns", spawns);
+
 		Files.saveArenas();
 	}
 
@@ -69,8 +75,23 @@ public class Arena {
 	 * 
 	 * @return the spawns
 	 */
-	public List<String> getSpawns() {
-		return Files.getArenas().getStringList("Arenas." + name + ".Spawns");
+	public List<String> getSpawns(Team team) {
+		List<String> spawns = Files.getArenas().getStringList("Arenas." + name + ".Spawns");
+
+		if (team != Team.Global && team != Team.None)
+			spawns.addAll(Files.getArenas().getStringList("Arenas." + name + "." + team.toString() + " Spawns"));
+
+		return spawns;
+	}
+
+	public List<String> getExactSpawns(Team team) {
+		List<String> spawns = new ArrayList<String>();
+		if (team == Team.Global || team == Team.None)
+			spawns.addAll(Files.getArenas().getStringList("Arenas." + name + ".Spawns"));
+		else
+			spawns.addAll(Files.getArenas().getStringList("Arenas." + name + "." + team.toString() + " Spawns"));
+
+		return spawns;
 	}
 
 	/**
@@ -186,10 +207,10 @@ public class Arena {
 		if (!this.getChests().isEmpty())
 			for (Location loc : this.getChests().keySet())
 				if (loc.getBlock().getType() == Material.CHEST)
-					((Chest)loc.getBlock()).getBlockInventory().setContents(getChests().get(loc).getContents());
+					((Chest) loc.getBlock()).getBlockInventory().setContents(getChests().get(loc).getContents());
 
 		this.getChests().clear();
-		
+
 		setVotes(0);
 	}
 

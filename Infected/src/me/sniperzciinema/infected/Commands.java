@@ -31,6 +31,7 @@ import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,8 +45,6 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class Commands implements CommandExecutor {
-
-	
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -145,14 +144,16 @@ public class Commands implements CommandExecutor {
 
 						ip.setInfo();
 						Lobby.addPlayerInGame(p);
-						
-						//If the game isn't started and isn't infecting then the players are all still in the lobby
+
+						// If the game isn't started and isn't infecting then
+						// the players are all still in the lobby
 						if (Lobby.getGameState() != GameState.Started && Lobby.getGameState() != GameState.Infecting)
 							ip.tpToLobby();
 
 						p.sendMessage(Msgs.Game_Joined_You.getString());
 
-						//If the game hasn't started and there's enough players for an autostart, start the timer
+						// If the game hasn't started and there's enough players
+						// for an autostart, start the timer
 						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
@@ -164,21 +165,24 @@ public class Commands implements CommandExecutor {
 								}
 							}, 100L);
 
-						//If voting has started, tell the new player how to vote
+						// If voting has started, tell the new player how to
+						// vote
 						else if (Lobby.getGameState() == GameState.Voting)
 							p.sendMessage(Msgs.Help_Vote.getString());
 
-						//If it's already looking for the first infected, respawn them as a human and equip them
+						// If it's already looking for the first infected,
+						// respawn them as a human and equip them
 						else if (Lobby.getGameState() == GameState.Infecting)
 						{
 							ip.respawn();
 							Equip.equip(p);
 
-						} 
-						//If the game has started already make the player a zombie
+						}
+						// If the game has started already make the player a
+						// zombie without calling any deaths(Event and stats)
 						else if (Lobby.getGameState() == GameState.Started)
 						{
-							Deaths.playerDies(DeathType.Other, null, p);
+							Deaths.playerDiesWithoutDeathStat(DeathType.Other, p);
 						}
 					}
 				}
@@ -407,10 +411,10 @@ public class Commands implements CommandExecutor {
 								if (sender.hasPermission("Infected.SetUp"))
 								{
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetLobby" + ChatColor.WHITE + " - Set the main lobby");
-									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetSpawn" + ChatColor.WHITE + " - Set the spawn for the selected arena");
-									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Spawns" + ChatColor.WHITE + " - List the number of spawns for a map");
-									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn [#]" + ChatColor.WHITE + " - Tp to a spawn ID");
-									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "DelSpawn [ #]" + ChatColor.WHITE + " - Delete the spawn ID");
+									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetSpawn [Global/Human/Zombie]" + ChatColor.WHITE + " - Set the spawn for the selected arena");
+									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Spawns [Global/Human/Zombie]" + ChatColor.WHITE + " - List the number of spawns for a map");
+									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn [Global/Human/Zombie] [#]" + ChatColor.WHITE + " - Tp to a spawn ID");
+									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "DelSpawn [Global/Human/Zombie] [ #]" + ChatColor.WHITE + " - Delete the spawn ID");
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetArena [Arena]" + ChatColor.WHITE + " - Select an arena");
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Create [Arena]" + ChatColor.WHITE + " - Create an arena");
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Remove[Arena]" + ChatColor.WHITE + " - Remove an Arena");
@@ -584,19 +588,7 @@ public class Commands implements CommandExecutor {
 							{
 								System.out.println(Msgs.Format_Header.getString("<title>", "Infected"));
 
-								if (Files.getArenas().getConfigurationSection("Arenas") != null)
-									for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
-									{
-										Arena arena = new Arena(
-												StringUtil.getWord(a));
-										Lobby.addArena(arena);
-
-										if (Settings.logAreansEnabled())
-											System.out.println("Loaded Arena: " + arena.getName());
-									}
-								else if (Settings.logAreansEnabled())
-									System.out.println("Couldn't Find Any Arenas");
-
+								Lobby.loadAllArenas();
 								Files.reloadAll();
 								AddonManager.getAddons();
 
@@ -742,18 +734,18 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 					else if (ip.getCreating() == null)
-						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+						p.sendMessage(Msgs.Error_Arena_None_Set.getString());
 
 					else
 					{
-						if (args.length != 1)
+						if (args.length == 3 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
 						{
-
+							Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 							Arena a = Lobby.getArena(ip.getCreating());
-							int i = Integer.valueOf(args[1]) - 1;
-							if (i < a.getSpawns().size())
+							int i = Integer.valueOf(args[2]) - 1;
+							if (i < a.getSpawns(team).size())
 							{
-								p.teleport(LocationHandler.getPlayerLocation(a.getSpawns().get(i)));
+								p.teleport(LocationHandler.getPlayerLocation(a.getSpawns(team).get(i)));
 								sender.sendMessage(Msgs.Command_Spawn_Spawns.getString("<spawns>", String.valueOf(i + 1)));
 							} else
 								sender.sendMessage(Msgs.Help_TpSpawn.getString());
@@ -788,27 +780,26 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 					else if (ip.getCreating() == null)
-						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+						p.sendMessage(Msgs.Error_Arena_None_Set.getString());
 
 					else
 					{
-						if (args.length != 1)
+						if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
 						{
+							Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 
 							Arena a = Lobby.getArena(ip.getCreating());
 							int i = Integer.valueOf(args[1]) - 1;
-							if (i < a.getSpawns().size())
+							if (i < a.getSpawns(team).size())
 							{
-								List<String> spawns = a.getSpawns();
+								List<String> spawns = a.getExactSpawns(team);
 								spawns.remove(i);
-								a.setSpawns(spawns);
+								a.setSpawns(spawns, team);
 								p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<spawn>", String.valueOf(i + 1)));
 							} else
 								p.sendMessage(Msgs.Help_DelSpawn.getString());
 						} else
-						{
 							p.sendMessage(Msgs.Help_DelSpawn.getString());
-						}
 					}
 				}
 
@@ -822,12 +813,17 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 					else if (ip.getCreating() == null)
-						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+						p.sendMessage(Msgs.Error_Arena_None_Set.getString());
 
 					else
 					{
 						Arena a = Lobby.getArena(ip.getCreating());
-						p.sendMessage(Msgs.Command_Spawn_Spawns.getString("<spawns", String.valueOf(a.getSpawns().size())));
+						if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+						{
+							Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
+							p.sendMessage(Msgs.Command_Spawn_Spawns.getString("<team>", team.toString(), "<spawns>", String.valueOf(a.getExactSpawns(team).size())));
+						} else
+							p.sendMessage(Msgs.Help_Spawns.getString());
 					}
 				}
 
@@ -841,18 +837,24 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 					else if (ip.getCreating() == null)
-						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString());
+						p.sendMessage(Msgs.Error_Arena_None_Set.getString());
 
 					else
 					{
-						Location l = p.getLocation();
-						String s = LocationHandler.getLocationToString(l);
-						Arena a = Lobby.getArena(ip.getCreating());
-						List<String> list = a.getSpawns();
-						list.add(s);
-						a.setSpawns(list);
+						if (args.length == 2 && args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human"))
+						{
+							Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 
-						p.sendMessage(Msgs.Command_Spawn_Set.getString("<spawn>", String.valueOf(list.size())));
+							Location l = p.getLocation();
+							String s = LocationHandler.getLocationToString(l);
+							Arena a = Lobby.getArena(ip.getCreating());
+							List<String> list = a.getExactSpawns(team);
+							list.add(s);
+							a.setSpawns(list, team);
+
+							p.sendMessage(Msgs.Command_Spawn_Set.getString("<spawn>", String.valueOf(list.size())));
+						} else
+							p.sendMessage(Msgs.Help_SetSpawn.getString());
 					}
 				}
 

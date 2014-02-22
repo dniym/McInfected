@@ -33,7 +33,7 @@ public class Deaths {
 	public static void playerDies(DeathType death, Player killer, Player killed) {
 		InfectedDeathEvent e = new InfectedDeathEvent(killer, killed, death);
 		Bukkit.getPluginManager().callEvent(e);
-		
+
 		// --> Picture deaths
 		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
 		{
@@ -57,7 +57,7 @@ public class Deaths {
 					u.sendMessage(killMessage);
 		}
 		// <--
-		
+
 		InfPlayer InfKiller = null;
 		InfPlayer InfKilled = null;
 		if (killer != null)
@@ -74,6 +74,61 @@ public class Deaths {
 			InfKilled.updateStats(0, 1);
 
 			KillStreaks.handle(true, killed);
+
+			if (InfKilled.getTeam() == Team.Human)
+			{
+				InfKilled.Infect();
+
+				if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
+					Game.endGame(false);
+
+			} else
+			{
+				killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
+				InfKilled.respawn();
+				Equip.equip(killed);
+			}
+		}
+
+		for (Player u : Lobby.getInGame())
+		{
+			InfPlayer up = InfPlayerManager.getInfPlayer(u);
+			up.getScoreBoard().showProperBoard();
+		}
+
+	}
+
+	public static void playerDiesWithoutDeathStat(DeathType death, Player killed) {
+
+		// --> Picture deaths
+		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
+		{
+		} else
+		{
+			String killMessage = KillMessages.getKillMessage(null, killed, death, true);
+
+			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getHumans().size() > 1)
+			{
+				killMessage = KillMessages.getKillMessage(null, killed, death, false);
+				String[] face = Pictures.getZombie();
+				face[2] = face[2] + "     " + Msgs.Picture_Infected_You.getString();
+				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
+				killed.sendMessage(face);
+
+				for (Player u : Lobby.getInGame())
+					if (u != killed)
+						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
+			} else
+				for (Player u : Lobby.getInGame())
+					u.sendMessage(killMessage);
+		}
+		// <--
+
+		InfPlayer InfKilled = null;
+
+		if (killed != null)
+		{
+			InfKilled = InfPlayerManager.getInfPlayer(killed);
 
 			if (InfKilled.getTeam() == Team.Human)
 			{

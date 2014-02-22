@@ -33,7 +33,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Menus {
 
-	//Create all the menus
+	// Create all the menus
 	public IconMenu teamMenu;
 	public IconMenu classHumanMenu;
 	public IconMenu classZombieMenu;
@@ -41,7 +41,8 @@ public class Menus {
 	public IconMenu shopMenu;
 	public IconMenu grenadeMenu;
 
-	//When the class gets loaded create all the IconMenus and store them for later use
+	// When the class gets loaded create all the IconMenus and store them for
+	// later use
 	public Menus()
 	{
 		teamMenu = getTeamMenu();
@@ -51,10 +52,12 @@ public class Menus {
 		shopMenu = getShopMenu();
 		grenadeMenu = getGrenadeMenu();
 	}
-	public void destroyMenu(IconMenu menu){
+
+	public void destroyMenu(IconMenu menu) {
 		menu.destroy();
 	}
-	public void destroyAllMenus(){
+
+	public void destroyAllMenus() {
 		teamMenu.destroy();
 		classHumanMenu.destroy();
 		classZombieMenu.destroy();
@@ -283,6 +286,7 @@ public class Menus {
 
 						} else
 						{
+							event.getPlayer().sendMessage(Msgs.Error_Arena_Not_Valid.getString());
 							event.setWillClose(false);
 						}
 					}
@@ -291,15 +295,12 @@ public class Menus {
 		for (Arena arena : Lobby.getArenas())
 		{
 
-			if (Lobby.isArenaValid(arena.getName()))
-				menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(
-						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
-			else
-				menu.setOption(place, new ItemStack(Material.REDSTONE_BLOCK), ChatColor.DARK_RED + arena.getName(), "", ChatColor.RED + "This arena isn't playable!", ChatColor.RED + "      It's Missing Spawns!", ChatColor.GRAY + "--------------------------", "", "" + ChatColor.GREEN + ChatColor.STRIKETHROUGH + Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GRAY + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+			menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(
+					Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Creator: " + arena.getCreator(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 
 			place++;
 		}
-		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", Msgs.Menu_Vote_Random.getString());
+		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", "", Msgs.Menu_Vote_Random.getString());
 
 		return menu;
 	}

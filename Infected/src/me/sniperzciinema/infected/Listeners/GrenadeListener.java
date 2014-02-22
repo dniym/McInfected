@@ -57,7 +57,7 @@ public class GrenadeListener implements Listener {
 			}
 	}
 
-	@SuppressWarnings({ "deprecation", "static-access" })
+	@SuppressWarnings({ "deprecation" })
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowEvent(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();
@@ -127,11 +127,11 @@ public class GrenadeListener implements Listener {
 							grenadeItem.remove();
 						}
 					}, grenade.getDelay() * 20);
-				// Prevent anything else they may have done
-				event.setCancelled(true);
-				event.setUseInteractedBlock(Result.DENY);
-				event.setUseItemInHand(Result.DENY);
-				p.updateInventory();
+					// Prevent anything else they may have done
+					event.setCancelled(true);
+					event.setUseInteractedBlock(Result.DENY);
+					event.setUseItemInHand(Result.DENY);
+					p.updateInventory();
 				}
 			}
 		}

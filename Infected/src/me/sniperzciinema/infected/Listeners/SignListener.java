@@ -64,7 +64,7 @@ public class SignListener implements Listener {
 						InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 						String className = ChatColor.stripColor(sign.getLine(2));
 						Team team = null;
-						if(sign.getLine(3).contains("Zombie"))
+						if (sign.getLine(3).contains("Zombie"))
 							team = Team.Zombie;
 						else
 							team = Team.Human;
@@ -509,7 +509,7 @@ public class SignListener implements Listener {
 		if (!event.isCancelled())
 		{
 			Player player = event.getPlayer();
-			if (event.getLine(0).equalsIgnoreCase("[Infected]") && (event.getLine(1).equalsIgnoreCase("Class") || event.getLine(1).equalsIgnoreCase("Classes")) )
+			if (event.getLine(0).equalsIgnoreCase("[Infected]") && (event.getLine(1).equalsIgnoreCase("Class") || event.getLine(1).equalsIgnoreCase("Classes")))
 			{
 				if (!player.hasPermission("Infected.Setup"))
 				{

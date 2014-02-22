@@ -9,7 +9,6 @@ import java.sql.Statement;
 import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
-import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
@@ -21,7 +20,6 @@ import me.sniperzciinema.infected.Listeners.ScoreBoardToggle;
 import me.sniperzciinema.infected.Listeners.SignListener;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.RandomChatColor;
-import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infected.Tools.Metrics;
@@ -56,8 +54,8 @@ public class Infected extends JavaPlugin {
 
 	public static MySQL MySQL = null;
 	public static Connection connection = null;
-	
-	//Create the menus
+
+	// Create the menus
 	public static Menus Menus;
 
 	@Override
@@ -67,7 +65,7 @@ public class Infected extends JavaPlugin {
 		me = this;
 
 		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
-		
+
 		try
 		{
 			Metrics metrics = new Metrics(this);
@@ -152,28 +150,20 @@ public class Infected extends JavaPlugin {
 		for (Player u : Bukkit.getOnlinePlayers())
 			InfPlayerManager.createInfPlayer(u);
 
-		if (Files.getArenas().getConfigurationSection("Arenas") != null)
-			for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
-			{
-				Arena arena = new Arena(StringUtil.getWord(a));
-				Lobby.addArena(arena);
-				if (Settings.logAreansEnabled())
-					System.out.println("Loaded Arena: " + arena.getName());
-			}
-		else if (Settings.logAreansEnabled())
-			System.out.println("Couldn't Find Any Arenas");
+		Lobby.loadAllArenas();
 
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 
 		Menus = new Menus();
-		
+
 		System.out.println(Msgs.Format_Line.getString());
 
 	}
 
 	@Override
 	public void onDisable() {
+		Infected.Menus.destroyAllMenus();
 		try
 		{
 			// On disable reset players with everything from before

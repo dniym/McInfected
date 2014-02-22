@@ -168,8 +168,8 @@ public class InfClassManager {
 	 * Load all the classes from the Classes.yml
 	 */
 	public static void loadConfigClasses() {
-		humanClasses = new ArrayList<InfClass>();
-		zombieClasses = new ArrayList<InfClass>();
+		humanClasses.clear();
+		zombieClasses.clear();
 		for (String s : Files.getClasses().getConfigurationSection("Classes.Human").getKeys(true))
 		{
 			String name = "0";

@@ -143,6 +143,9 @@ public class InfPlayer {
 			Lobby.getZombies().remove(p);
 			Lobby.getInGame().remove(p);
 
+			if (Lobby.getGameState() == GameState.Started)
+				Stats.setPlayingTime(getName(), Stats.getPlayingTime(getName()) + getPlayingTime());
+
 			if (getVote() != null)
 				getVote().setVotes(getVote().getVotes() - getAllowedVotes());
 
@@ -322,8 +325,8 @@ public class InfPlayer {
 		p.setFoodLevel(20);
 		p.setFireTicks(0);
 		Random r = new Random();
-		int i = r.nextInt(Lobby.getActiveArena().getSpawns().size());
-		String loc = Lobby.getActiveArena().getSpawns().get(i);
+		int i = r.nextInt(Lobby.getActiveArena().getSpawns(team).size());
+		String loc = Lobby.getActiveArena().getSpawns(team).get(i);
 
 		p.setFallDistance(0F);
 		p.teleport(LocationHandler.getPlayerLocation(loc));
@@ -743,8 +746,8 @@ public class InfPlayer {
 		}
 		return votes;
 	}
-	
-	public void openMenu(Player player, IconMenu menu){
+
+	public void openMenu(Player player, IconMenu menu) {
 		menu.open(player);
 	}
 

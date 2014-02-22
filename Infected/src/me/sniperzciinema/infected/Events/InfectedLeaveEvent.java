@@ -11,7 +11,7 @@ public class InfectedLeaveEvent extends Event implements Cancellable {
 
 	private Player p;
 	private boolean b = false;
-	
+
 	public InfectedLeaveEvent(Player p)
 	{
 		this.p = p;
@@ -41,7 +41,7 @@ public class InfectedLeaveEvent extends Event implements Cancellable {
 
 	@Override
 	public void setCancelled(boolean b) {
-		this.b = b;	
+		this.b = b;
 	}
 
 }

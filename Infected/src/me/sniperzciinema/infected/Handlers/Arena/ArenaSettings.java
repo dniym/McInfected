@@ -101,7 +101,7 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Interacting");
 	}
-	
+
 	public boolean hostileMobsTargetHumans() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Hostile Mobs Target Humans"))
 			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Hostile Mobs Target Humans");
@@ -111,14 +111,13 @@ public class ArenaSettings {
 
 	public Boolean canBreakBlock(Team team, int id) {
 		String ids = String.valueOf(id);
-		if(Files.getArenas().contains("Arenas."+arena.getName()+".Breakable Blocks." + team.toString())){
-			return Files.getArenas().getStringList("Arenas."+arena.getName()+".Breakable Blocks." + team.toString()).contains(ids);
-		}
-		else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()))
+		{
+			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()).contains(ids);
+		} else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
 		{
 			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks.Global").contains(ids);
-		}
-		else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
+		} else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
 		{
 			return true;
 		} else

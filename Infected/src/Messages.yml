@@ -2,9 +2,9 @@
 # If you want to write "don't", write "don''t" instead (note the doubled apostrophe)
 # Due to me never being able to decide on a color, Infected supports "Random Color Codes" '&x' is for a random color and '&y' is for a random format
 Format:
-  Header: '&x&y>&e&o&m---------------««&4&l<title>&e&o&m»»---------------&x&y<'
+  Header: '&x&y>&e&o&m---------------<<&4&l<title>&e&o&m>>---------------&x&y<'
   Line: '&x&y>&e&m-------------------------------------------&x&y<'
-  Prefix: '&e&l«&4&lInfected&e&l»&c'
+  Prefix: '&e&l{&4&lInfected&e&l}&c'
   InfChat: '&f&l<<&7<team>&8&l-&6&o<player>&f&l>>&7: &e<message>'
   List: '&e&l> &a&o<player>'
   Grenades List: '&x&o<id>. &e<name> &7&l- &e<cost>'
@@ -29,7 +29,7 @@ Command:
   Spawn:
     Set: '&e&oSpawn &l<spawn> &e&ohas been set at your location'
     Tp: '&e&oYou have been teleported to spawn &l<spawn> &e&o.'
-    Spawns: '&e&oI counted a total of &l<spawn> &e&ospawns for this arena'
+    Spawns: '&e&oI counted a total of &l<spawns> <team> &e&ospawns for this arena'
     Deleted: '&cSpawn &o<spawn> &chas been deleted'
   Lobby:
     Set: '&3The &lLobby&3 has been set.'
@@ -71,6 +71,7 @@ Error:
     Doesnt Exist: '&c&oInfected is in dier need of a lobby first...'
   Arena:
     Doesnt Exist: '&c&oThat arena has never existed...'
+    None Set: '&c&oYou still have to select an arena!'
     Not Valid: '&c&oThat arena isn''t setup properly!'
     Already Exist: '&c&oThat arena already exists...'
     No Spawns: '&c&oThat arena has no spawns'
@@ -111,9 +112,10 @@ Help:
   Vote: '&3To vote use &x&o/Infected Vote &3and choose an arena'
   Grenades: '&3To purchase a grenade use &x&o/Infected Grenades [ID] [Amount]'
   Lists: '&3To view a list use &x&o/Infected List <Playing/Humans/Zombies>'
-  TpSpawn: '&3To teleport to a spawn set an arena and use &x&o/Infected TpSpawn <ID>'
-  DelSpawn: '&3To delete a spawn set an arena and use &x&o/Infected DelSpawn <ID>'
-  SetSpawn: '&3To set a spawn set an arena and keep using &x&o/Infected SetSpawn'
+  TpSpawn: '&3To teleport to a spawn set an arena and use &x&o/Infected TpSpawn <Human/Zombie/Global> <ID>'
+  DelSpawn: '&3To delete a spawn set an arena and use &x&o/Infected DelSpawn <Human/Zombie/Global> <ID>'
+  SetSpawn: '&3To set a spawn set an arena and keep using &x&o/Infected SetSpawn <Human/Zombie/Global>'
+  Spawns: '&3To see how many spawns an arena has use &x&o/Infected Spawns <Human/Zombie/Global>'
   Create: '&3To create an arena use &x&o/Infected Create <Arena> [Creator]'
   Remove: '&3To remove an arena use &x&o/Infected Remove <Arena>'
   SetArena: '&3To select an arena to edit use &x&o/Infected SetArena <Arena>'
@@ -132,8 +134,8 @@ Menu:
     Click For None: '&eClick to choose the default class'
     Click To Return: '&eClick to return to &f&lTeam Selection'
   Vote:
-    Choose: '&7Click to vote for this arena'
-    Random: '&fClick to vote for a random arena'
+    Choose: '&5Click to vote for this arena'
+    Random: '&cClick to vote for a random arena'
 Shop:
   Bought Item: '&eYou have just bought &x&o<item>'
   Cost:

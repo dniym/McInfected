@@ -208,6 +208,8 @@ public class Lobby {
 
 	public static void removeArena(Arena arena) {
 		arenas.remove(arena);
+		Files.getArenas().set("Arenas." + arena.getName(), null);
+		Files.saveArenas();
 	}
 
 	public static void removeArena(String arenaName) {
@@ -239,7 +241,12 @@ public class Lobby {
 		if (arena == null)
 			return false;
 		else
-			return !arena.getSpawns().isEmpty();
+		{
+			if (arena.getSpawns(Team.Global).isEmpty() && !arena.getSpawns(Team.Zombie).isEmpty() && !arena.getSpawns(Team.Human).isEmpty())
+				return true;
+			else
+				return !arena.getSpawns(Team.Global).isEmpty();
+		}
 	}
 
 	public static void resetArena(Arena arena) {
@@ -564,6 +571,22 @@ public class Lobby {
 				}
 			}
 		}, 0L, 20L);
+	}
+
+	public static void loadAllArenas() {
+		arenas.clear();
+		if (Files.getArenas().getConfigurationSection("Arenas") != null)
+			for (String a : Files.getArenas().getConfigurationSection("Arenas").getKeys(false))
+			{
+				Arena arena = new Arena(StringUtil.getWord(a));
+				addArena(arena);
+
+				if (Settings.logAreansEnabled())
+					System.out.println("Loaded Arena: " + arena.getName());
+			}
+		else if (Settings.logAreansEnabled())
+			System.out.println("Couldn't Find Any Arenas");
+
 	}
 
 }

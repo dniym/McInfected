@@ -207,7 +207,8 @@ public class DamageEvents implements Listener {
 							Deaths.playerDies(DeathType.Other, null, victim);
 
 						}
-					} else{
+					} else
+					{
 						e.setDamage(0);
 						e.setCancelled(true);
 					}

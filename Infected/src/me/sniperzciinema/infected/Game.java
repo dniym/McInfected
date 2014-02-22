@@ -50,12 +50,12 @@ public class Game {
 			for (Player u : Lobby.getInGame())
 			{
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
-				
+
 				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
 				for (ItemStack stack : IP.getInventory())
 					if (stack != null)
 						IV.addItem(stack);
-				
+
 				for (ItemStack is : Lobby.getActiveArena().getSettings().getRewordItems())
 					IV.addItem(is);
 			}
