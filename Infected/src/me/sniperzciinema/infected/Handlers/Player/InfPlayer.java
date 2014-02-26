@@ -146,7 +146,7 @@ public class InfPlayer {
 			if (Lobby.getGameState() == GameState.Started)
 				Stats.setPlayingTime(getName(), Stats.getPlayingTime(getName()) + getPlayingTime());
 
-			if (getVote() != null)
+			if (getVote() != null && (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState()== GameState.Voting))
 				getVote().setVotes(getVote().getVotes() - getAllowedVotes());
 
 			killstreak = 0;

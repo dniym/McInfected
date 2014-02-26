@@ -66,7 +66,7 @@ public class Menus {
 		grenadeMenu.destroy();
 	}
 
-	private IconMenu getTeamMenu() {
+	public IconMenu getTeamMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Choose a Team",
 				9, new IconMenu.OptionClickEventHandler()
@@ -98,9 +98,9 @@ public class Menus {
 		return menu;
 	}
 
-	private IconMenu getClassHumanMenu() {
+	public IconMenu getClassHumanMenu() {
 		IconMenu menu = new IconMenu(
-				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Choose a Class",
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Human Classes",
 				((InfClassManager.getClasses(Team.Human).size() / 9) * 9) + 18,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -171,9 +171,9 @@ public class Menus {
 		return menu;
 	}
 
-	private IconMenu getClassZombieMenu() {
+	public IconMenu getClassZombieMenu() {
 		IconMenu menu = new IconMenu(
-				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Choose a Class",
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Zombie Classes",
 				((InfClassManager.getClasses(Team.Zombie).size() / 9) * 9) + 18,
 				new IconMenu.OptionClickEventHandler()
 				{
@@ -244,7 +244,7 @@ public class Menus {
 		return menu;
 	}
 
-	private IconMenu getVoteMenu() {
+	public IconMenu getVoteMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Vote for an Arena",
 				((Lobby.getArenas().size() / 9) * 9) + 9,
@@ -305,7 +305,7 @@ public class Menus {
 		return menu;
 	}
 
-	private IconMenu getShopMenu() {
+	public IconMenu getShopMenu() {
 		ArrayList<String> shop = new ArrayList<String>();
 		for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
 		{
@@ -379,7 +379,7 @@ public class Menus {
 		return menu;
 	}
 
-	private IconMenu getGrenadeMenu() {
+	public IconMenu getGrenadeMenu() {
 		ArrayList<String> shop = new ArrayList<String>();
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Grenade Shop",

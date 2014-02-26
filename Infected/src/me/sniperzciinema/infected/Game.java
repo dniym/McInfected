@@ -33,8 +33,9 @@ public class Game {
 	 *            - Did the humans win
 	 */
 	public static void endGame(Boolean DidHumansWin) {
-		Lobby.setGameState(GameState.InLobby);
 
+		Lobby.setGameState(GameState.GameOver);
+		
 		InfectedEndGame e = new InfectedEndGame(DidHumansWin);
 		Bukkit.getPluginManager().callEvent(e);
 
@@ -42,7 +43,7 @@ public class Game {
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 			IP.getScoreBoard().showProperBoard();
-
+			Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			KillStreaks.handle(true, u);
 		}
 		if (DidHumansWin)
@@ -96,21 +97,10 @@ public class Game {
 				}
 				u.sendMessage(Msgs.Game_Over_Winners.getString("<winners>", winnersS.toString()));
 				u.sendMessage("");
-				u.sendMessage(Lobby.getActiveArena() == null ? "Really? You couldn't even wait for a map to be voted for?" : Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
+				u.sendMessage(Lobby.getActiveArena().getName() == null ? "Really? You couldn't even wait for a map to be voted for?" : Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
-				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			}
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
-			{
-
-				@Override
-				public void run() {
-					for (Player u : Lobby.getInGame())
-						InfPlayerManager.getInfPlayer(u).tpToLobby();
-				}
-			}, 100L);
-
 		} else
 		{
 			for (final Player u : Lobby.getInGame())
@@ -131,7 +121,6 @@ public class Game {
 				u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", Lobby.getActiveArena().getName(), "<creator>", Lobby.getActiveArena().getCreator()));
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
-				Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			}
 		}
 		Lobby.reset();
@@ -140,6 +129,8 @@ public class Game {
 
 			@Override
 			public void run() {
+
+				Lobby.setGameState(GameState.InLobby);
 				for (Player u : Lobby.getInGame())
 					InfPlayerManager.getInfPlayer(u).tpToLobby();
 
@@ -176,16 +167,16 @@ public class Game {
 	public static void chooseAlphas() {
 
 		int toInfect = 1;
-		float percent = Lobby.getActiveArena().getSettings().getAlphaPercent() / 10;
-		float inGame = Lobby.getInGame().size();
-		toInfect = (int) (inGame * percent);
+		int inGame = Lobby.getInGame().size();
+		float percent = Lobby.getActiveArena().getSettings().getAlphaPercent() / 100;
+		toInfect = (int)(inGame * percent);
 		if (toInfect == 0)
 		{
 			toInfect = 1;
 		}
 		String[] face = null;
 
-		while (Lobby.getZombies().size() != toInfect)
+		while (!(Lobby.getZombies().size() >= toInfect))
 		{
 			Player alpha = Lobby.getInGame().get(new Random().nextInt(Lobby.getInGame().size()));
 

@@ -66,10 +66,10 @@ public class ArenaSettings {
 	}
 
 	public int getAlphaPercent() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Percent to Infect"))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Percent to Intect");
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Percent to Infect.Percent"))
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Percent to Intect.Percent");
 		else
-			return Files.getConfig().getInt("Settings.Global.Percent to Infect");
+			return Files.getConfig().getInt("Settings.Global.Percent to Infect.Percent");
 	}
 
 	// ////////////////////////////////////////////////-BOOLEANS-////////////////////////////////////////////////////

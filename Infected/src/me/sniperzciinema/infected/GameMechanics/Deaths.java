@@ -98,18 +98,18 @@ public class Deaths {
 
 	}
 
-	public static void playerDiesWithoutDeathStat(DeathType death, Player killed) {
+	public static void playerDiesWithoutDeathStat(Player killed) {
+
+		InfPlayer InfKilled =  InfPlayerManager.getInfPlayer(killed);
 
 		// --> Picture deaths
-		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
+		if (InfKilled.getTeam() != Team.Zombie)
 		{
-		} else
-		{
-			String killMessage = KillMessages.getKillMessage(null, killed, death, true);
+			String killMessage = KillMessages.getKillMessage(null, killed, DeathType.Other, true);
 
-			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getHumans().size() > 1)
+			if (Settings.PictureEnabled())
 			{
-				killMessage = KillMessages.getKillMessage(null, killed, death, false);
+				killMessage = KillMessages.getKillMessage(null, killed, DeathType.Other, false);
 				String[] face = Pictures.getZombie();
 				face[2] = face[2] + "     " + Msgs.Picture_Infected_You.getString();
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
@@ -124,15 +124,10 @@ public class Deaths {
 		}
 		// <--
 
-		InfPlayer InfKilled = null;
-
-		if (killed != null)
-		{
-			InfKilled = InfPlayerManager.getInfPlayer(killed);
-
 			if (InfKilled.getTeam() == Team.Human)
 			{
 				InfKilled.Infect();
+				InfKilled.respawn();
 
 				if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
 					Game.endGame(false);
@@ -143,7 +138,6 @@ public class Deaths {
 				InfKilled.respawn();
 				Equip.equip(killed);
 			}
-		}
 
 		for (Player u : Lobby.getInGame())
 		{

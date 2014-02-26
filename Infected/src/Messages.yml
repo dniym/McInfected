@@ -1,4 +1,4 @@
-# Default Message.yml, Last Edited in v2.0.5
+# Default Message.yml, Last Edited in v2.1.3
 # If you want to write "don't", write "don''t" instead (note the doubled apostrophe)
 # Due to me never being able to decide on a color, Infected supports "Random Color Codes" '&x' is for a random color and '&y' is for a random format
 Format:
@@ -27,10 +27,10 @@ Command:
     Removed: '&f&l<arena> &6&ohas been remove.'
     Set: '&f&l<arena> &6&ohas been selected.'
   Spawn:
-    Set: '&e&oSpawn &l<spawn> &e&ohas been set at your location'
-    Tp: '&e&oYou have been teleported to spawn &l<spawn> &e&o.'
+    Set: '&e&o<team> spawn &l<spawn> &e&ohas been set at your location'
+    Tp: '&e&oYou have been teleported to <team> spawn &l<spawn> &e&o.'
     Spawns: '&e&oI counted a total of &l<spawns> <team> &e&ospawns for this arena'
-    Deleted: '&cSpawn &o<spawn> &chas been deleted'
+    Deleted: '&c<team> spawn &o<spawn> &chas been deleted'
   Lobby:
     Set: '&3The &lLobby&3 has been set.'
     Tp: '&a&lYou &3have been teleported to the Lobby'

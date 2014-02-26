@@ -58,6 +58,7 @@ public class Lobby {
 		Loading("Loading Arena"),
 		Infecting("Infecting"),
 		Started("Started"),
+		GameOver("Game Over"),
 		Disabled("Disabled");
 
 		private String s;
@@ -258,7 +259,6 @@ public class Lobby {
 
 	public static void reset() {
 		stopTimer();
-		Lobby.setGameState(GameState.InLobby);
 		for (Arena a : Lobby.getArenas())
 			a.setVotes(0);
 
@@ -442,8 +442,11 @@ public class Lobby {
 		InfectedStartInfecting e = new InfectedStartInfecting();
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (Player u : getInGame())
-			InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
+		for (Player u : getInGame()){
+			InfPlayer ip = InfPlayerManager.getInfPlayer(u);
+			ip.getScoreBoard().showProperBoard();
+			ip.setTimeIn(System.currentTimeMillis() / 1000);
+		}
 
 		InfectingTime = getActiveArena().getSettings().getInfectingTime();
 		TimeLeft = InfectingTime;
@@ -490,8 +493,6 @@ public class Lobby {
 						for (Player u : getInGame())
 						{
 							InfPlayer ip = InfPlayerManager.getInfPlayer(u);
-							ip.setTimeIn(System.currentTimeMillis() / 1000);
-							InfPlayerManager.getInfPlayer(u).setTimeIn(System.currentTimeMillis() / 1000);
 							if (!Lobby.isHuman(u) && !Lobby.isZombie(u))
 							{
 								Lobby.addHuman(u);

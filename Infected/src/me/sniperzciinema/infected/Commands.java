@@ -154,7 +154,7 @@ public class Commands implements CommandExecutor {
 
 						// If the game hasn't started and there's enough players
 						// for an autostart, start the timer
-						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
+						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers()){
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
 
@@ -164,7 +164,7 @@ public class Commands implements CommandExecutor {
 									Lobby.timerStartVote();
 								}
 							}, 100L);
-
+						}
 						// If voting has started, tell the new player how to
 						// vote
 						else if (Lobby.getGameState() == GameState.Voting)
@@ -174,15 +174,16 @@ public class Commands implements CommandExecutor {
 						// respawn them as a human and equip them
 						else if (Lobby.getGameState() == GameState.Infecting)
 						{
+							ip.setTimeIn(System.currentTimeMillis() / 1000);
 							ip.respawn();
 							Equip.equip(p);
-
 						}
 						// If the game has started already make the player a
 						// zombie without calling any deaths(Event and stats)
 						else if (Lobby.getGameState() == GameState.Started)
 						{
-							Deaths.playerDiesWithoutDeathStat(DeathType.Other, p);
+							ip.setTimeIn(System.currentTimeMillis() / 1000);
+							Deaths.playerDiesWithoutDeathStat(p);
 						}
 					}
 				}
@@ -795,7 +796,7 @@ public class Commands implements CommandExecutor {
 								List<String> spawns = a.getExactSpawns(team);
 								spawns.remove(i);
 								a.setSpawns(spawns, team);
-								p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<spawn>", String.valueOf(i + 1)));
+								p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
 							} else
 								p.sendMessage(Msgs.Help_DelSpawn.getString());
 						} else
@@ -852,7 +853,7 @@ public class Commands implements CommandExecutor {
 							list.add(s);
 							a.setSpawns(list, team);
 
-							p.sendMessage(Msgs.Command_Spawn_Set.getString("<spawn>", String.valueOf(list.size())));
+							p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
 						} else
 							p.sendMessage(Msgs.Help_SetSpawn.getString());
 					}
@@ -881,16 +882,21 @@ public class Commands implements CommandExecutor {
 							{
 								p.sendMessage(Msgs.Help_SetSpawn.getString());
 
-								if (args.length == 3)
-									Files.getArenas().set("Arenas." + arena + ".Creator", args[2]);
-								else
-									Files.getArenas().set("Arenas." + arena + ".Creator", "Unkown");
+								
 								Arena a = new Arena(arena);
 								Lobby.addArena(a);
+								
+								Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
+								Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+								
+								if (args.length == 3)
+									a.setCreator(args[2]);
+								else
+									a.setCreator("Unkown");
+								
 								Block b = p.getLocation().add(0, -1, 0).getBlock();
 								a.setBlock(ItemHandler.getItemStackToString(b.getState().getData().toItemStack()));
 
-								Files.saveArenas();
 								ip.setCreating(arena);
 								p.sendMessage(Msgs.Command_Arena_Created.getString("<arena>", arena));
 							}

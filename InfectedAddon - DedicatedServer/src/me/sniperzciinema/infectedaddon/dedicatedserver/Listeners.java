@@ -13,6 +13,7 @@ import me.sniperzciinema.infectedaddon.ranks.RankManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,16 +33,19 @@ public class Listeners implements Listener {
 		{
 			event.getPlayer().performCommand("infected join");
 			event.setJoinMessage("");
-		}
+		} 
 		if (InfectedServer.update && event.getPlayer().hasPermission("Infected.Admin"))
 		{
 			event.getPlayer().sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + InfectedServer.updateName);
-			event.getPlayer().sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infectedaddon-dedicated-server/");
 		}
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (event.getPlayer().hasPermission("InfectedAddon.ByPass"))
+			for (Player player : Bukkit.getOnlinePlayers())
+				if (!Lobby.isInGame(player))
+					player.sendMessage(ChatColor.YELLOW + event.getPlayer().getName() + " has left the server.");
 		event.setQuitMessage("");
 	}
 

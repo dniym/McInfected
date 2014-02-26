@@ -51,7 +51,6 @@ public class PlayerListener implements Listener {
 		if (Infected.update && player.hasPermission("Infected.Admin"))
 		{
 			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + Infected.updateName);
-			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "Download it at: http://dev.bukkit.org/server-mods/infected-core/");
 		}
 	}
 
