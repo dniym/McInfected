@@ -324,6 +324,21 @@ public class Commands implements CommandExecutor {
 						p.sendMessage(Msgs.Command_Lobby_Set.getString());
 					}
 				}
+				// /////////////////////////////////////////////////////-SETLEAVE-/////////////////////////////////////
+				else if (args.length > 0 && args[0].equalsIgnoreCase("SetLeave"))
+				{
+					if (p == null)
+						sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
+					else if (!p.hasPermission("Infected.Setup"))
+						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+					else
+					{
+						Lobby.setLeave(p.getLocation());
+						p.sendMessage(Msgs.Command_Leave_Location_Set.getString());
+					}
+				}
 
 				// ////////////////////////////////////////////////////-LIST-/////////////////////////////////////////////
 				else if (args.length > 0 && args[0].equalsIgnoreCase("List"))
@@ -412,6 +427,7 @@ public class Commands implements CommandExecutor {
 								if (sender.hasPermission("Infected.SetUp"))
 								{
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetLobby" + ChatColor.WHITE + " - Set the main lobby");
+									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetLeave" + ChatColor.WHITE + " - Set the leave location");
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetSpawn [Global/Human/Zombie]" + ChatColor.WHITE + " - Set the spawn for the selected arena");
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Spawns [Global/Human/Zombie]" + ChatColor.WHITE + " - List the number of spawns for a map");
 									p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn [Global/Human/Zombie] [#]" + ChatColor.WHITE + " - Tp to a spawn ID");
@@ -771,6 +787,22 @@ public class Commands implements CommandExecutor {
 					}
 				}
 
+				// /////////////////////////////////////////////-TPLEAVE-////////////////////////////////////
+				else if (args.length > 0 && args[0].equalsIgnoreCase("TpLeave"))
+				{
+					if (p == null)
+						sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
+
+					else if (!p.hasPermission("Infected.Setup"))
+						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+					else
+					{
+						p.teleport(Lobby.getLeave());
+						p.sendMessage(Msgs.Command_Leave_Location_Tp.getString());
+					}
+				}
+
 				// ////////////////////////////////////-DELSPAWN-////////////////////////////////////////////
 				else if (args.length > 0 && args[0].equalsIgnoreCase("DelSpawn"))
 				{
@@ -1107,7 +1139,8 @@ public class Commands implements CommandExecutor {
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Factions Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.FactionsEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-					p.sendMessage(Msgs.Format_Line.getString());
+					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Infected-Ranks Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Bukkit.getPluginManager().getPlugin("InfectedAddon-Ranks") != null ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
+						p.sendMessage(Msgs.Format_Line.getString());
 				}
 				// ///////////////////////////////////////////////-ELSE-//////////////////////////////////////////////
 				else

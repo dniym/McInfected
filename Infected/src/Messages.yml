@@ -34,6 +34,9 @@ Command:
   Lobby:
     Set: '&3The &lLobby&3 has been set.'
     Tp: '&a&lYou &3have been teleported to the Lobby'
+  Leave Location:
+    Set: '&3The &lLeave location&3 has been set.'
+    Tp: '&a&lYou &3have been teleported to the out of &lInfected &3location'
   Vote: '&f&l<player> &e&ohas voted for <arena>'
   InfChat: '&aYou have toggled <state> your teams chat'
   Info:

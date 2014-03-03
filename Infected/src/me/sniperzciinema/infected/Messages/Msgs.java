@@ -25,6 +25,8 @@ public enum Msgs
 	Command_Arena_Set("Command.Arena.Set")/* <arena> */,
 	Command_Lobby_Set("Command.Lobby.Set"),
 	Command_Lobby_Tp("Command.Lobby.Tp"),
+	Command_Leave_Location_Set("Command.Leave Location.Set"),
+	Command_Leave_Location_Tp("Command.Leave Location.Tp"),
 	Command_Spawn_Set("Command.Spawn.Set")/* <spawn> */,
 	Command_Spawn_Tp("Command.Spawn.Tp")/* <spawn> */,
 	Command_Spawn_Spawns("Command.Spawn.Spawns")/* <spawns> */,

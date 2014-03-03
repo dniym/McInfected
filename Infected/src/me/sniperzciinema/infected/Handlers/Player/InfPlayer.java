@@ -136,7 +136,10 @@ public class InfPlayer {
 				player.removePotionEffect(effect.getType());
 
 			player.setFallDistance(0F);
-			p.teleport(location);
+			if(Lobby.getLeave() != null)
+				p.teleport(location);
+			else
+				p.teleport(Lobby.getLeave());
 			p.setFallDistance(0F);
 			setTeam(Team.Human);
 			Lobby.getHumans().remove(p);

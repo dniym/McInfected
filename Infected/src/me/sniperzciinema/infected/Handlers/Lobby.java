@@ -590,4 +590,16 @@ public class Lobby {
 
 	}
 
+	public static Location getLeave() {
+		if(Files.getConfig().getString("Leave") == null)
+			return null;
+		else
+			return LocationHandler.getPlayerLocation(Files.getConfig().getString("Leave"));
+	}
+
+	public static void setLeave(Location loc) {
+		Files.getConfig().set("Leave", LocationHandler.getLocationToString(loc));
+		Files.saveConfig();
+	}
+
 }
