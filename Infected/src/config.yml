@@ -1,4 +1,4 @@
-# Default InfectedV2 Config, Last edited in 2.0.7
+# Default InfectedV2 Config, Last edited in 2.1.5
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -18,6 +18,8 @@
 #      Extra Votes:
 #        vip: 2
 #        staff: 3
+# Points and Score Modifiers and pretty much the same setup as extra votes, except that it multiplies the points/score by the modifier number 
+# and the permissions are "Infected.Points.vip" or "Infected.Score.vip"
 # #
 # # +======================================================+ #
 # # |                Infected Settings                     | #
@@ -75,6 +77,12 @@ Settings:
       Extra Votes:
         vip: 2
         staff: 3
+# To allow certain ranks to have more points rewarded
+    Points Modifiers:
+      vip: 2
+# To allow certain ranks to have more score rewarded
+    Score Modifiers:
+      vip: 2
 # Info Signs, every "Refresh Time"(seconds) the signs will be updated
     Info Signs:
       Enabled: true
@@ -82,6 +90,8 @@ Settings:
 # How many players needed for it to automatically start
     Automatic Start:
       Minimum Players: 3
+# Should players be prevented from editing their inventory
+    Prevent Editing Inventory: false
 # Should we prevent players from joining once a game has started
     Prevent Joining During Game: false
     ScoreBoard Stats:

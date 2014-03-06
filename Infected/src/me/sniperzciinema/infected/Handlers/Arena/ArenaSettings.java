@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
+import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Handlers.Potions.PotionHandler;
 import me.sniperzciinema.infected.Tools.Files;
@@ -51,18 +52,18 @@ public class ArenaSettings {
 			return Files.getConfig().getInt("Settings.Global.Time.Voting");
 	}
 
-	public int getScorePer(Events e) {
+	public int getScorePer(InfPlayer ip, Events e) {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Score." + e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString());
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString())*ip.getScoreModifier();
 		else
-			return Files.getConfig().getInt("Settings.Global.Score." + e.toString());
+			return Files.getConfig().getInt("Settings.Global.Score." + e.toString())*ip.getScoreModifier();
 	}
 
-	public int getPointsPer(Events e) {
+	public int getPointsPer(InfPlayer ip, Events e) {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Points." + e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString());
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString())*ip.getPointsModifier();
 		else
-			return Files.getConfig().getInt("Settings.Global.Points." + e.toString());
+			return Files.getConfig().getInt("Settings.Global.Points." + e.toString())*ip.getPointsModifier();
 	}
 
 	public int getAlphaPercent() {

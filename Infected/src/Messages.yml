@@ -63,6 +63,8 @@ Error:
     Cant Use Command: '&c&oInfected was warned you''d try this so we blocked this command!'
     Not A File: '&cThats not a file in Infected... &7Try one of these: &o<files>'
     Not A Path: '&cThats not a valid path in the selected file!'
+    Joining While Game Started: '&cJoining whille a game is in progress has been disabled!'
+    Editing Inventory: '&cEdting you inventory while in a game has been disabled!'
   Game:
     Started: '&e&oThe Games already started'
     Not Started: '&e&oThe Games not started'

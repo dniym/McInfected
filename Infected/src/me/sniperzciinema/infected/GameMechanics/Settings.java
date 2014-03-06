@@ -45,6 +45,14 @@ public class Settings {
 		return Files.getConfig().getInt("Settings.Misc.Automatic Start.Minimum Players");
 	}
 
+	public static boolean isJoiningDuringGamePrevented() {
+		return Files.getConfig().getBoolean("Settings.Misc.Prevent Joining During Game");
+	}
+	
+	public static boolean isEditingInventoryPrevented() {
+		return Files.getConfig().getBoolean("Settings.Misc.Prevent Editing Inventory");
+	}
+
 	public static boolean MySQLEnabled() {
 		return Files.getConfig().getBoolean("MySQL.Enabled");
 	}
@@ -71,6 +79,25 @@ public class Settings {
 		for (String node : Files.getConfig().getConfigurationSection("Settings.Misc.Votes.Extra Votes").getKeys(true))
 			if (!node.contains("."))
 				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Votes.Extra Votes." + node));
+
+		return nodes;
+	}
+	public static HashMap<String, Integer> getPointsModifiers() {
+		HashMap<String, Integer> nodes = new HashMap<String, Integer>();
+
+		for (String node : Files.getConfig().getConfigurationSection("Settings.Misc.Points Modifiers").getKeys(true))
+			if (!node.contains("."))
+				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Points Modifiers." + node));
+
+		return nodes;
+	}
+
+	public static HashMap<String, Integer> getScoreModifiers() {
+		HashMap<String, Integer> nodes = new HashMap<String, Integer>();
+
+		for (String node : Files.getConfig().getConfigurationSection("Settings.Misc.Score Modifiers").getKeys(true))
+			if (!node.contains("."))
+				nodes.put(node, Files.getConfig().getInt("Settings.Misc.Score Modifiers." + node));
 
 		return nodes;
 	}

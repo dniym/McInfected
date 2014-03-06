@@ -234,7 +234,10 @@ public class Lobby {
 	// Check if the arena is avalid
 	public static boolean isArenaValid(String name) {
 		name = StringUtil.getWord(name);
-		return !Files.getArenas().getStringList("Arenas." + name + ".Spawns").isEmpty();
+		if (!Files.getArenas().getStringList("Arenas." + name + ".Spawns").isEmpty() || (!Files.getArenas().getStringList("Arenas." + name + ".Zombie Spawns").isEmpty() && !Files.getArenas().getStringList("Arenas." + name + ".Human Spawns").isEmpty()))
+			return true;
+		else
+			return !Files.getArenas().getStringList("Arenas." + name + ".Spawns").isEmpty();
 	}
 
 	// Check if the arena is avalid
@@ -243,7 +246,7 @@ public class Lobby {
 			return false;
 		else
 		{
-			if (arena.getSpawns(Team.Global).isEmpty() && !arena.getSpawns(Team.Zombie).isEmpty() && !arena.getSpawns(Team.Human).isEmpty())
+			if (!arena.getSpawns(Team.Global).isEmpty() || (!arena.getSpawns(Team.Zombie).isEmpty() && !arena.getSpawns(Team.Human).isEmpty()))
 				return true;
 			else
 				return !arena.getSpawns(Team.Global).isEmpty();
@@ -442,7 +445,8 @@ public class Lobby {
 		InfectedStartInfecting e = new InfectedStartInfecting();
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (Player u : getInGame()){
+		for (Player u : getInGame())
+		{
 			InfPlayer ip = InfPlayerManager.getInfPlayer(u);
 			ip.getScoreBoard().showProperBoard();
 			ip.setTimeIn(System.currentTimeMillis() / 1000);
@@ -591,7 +595,7 @@ public class Lobby {
 	}
 
 	public static Location getLeave() {
-		if(Files.getConfig().getString("Leave") == null)
+		if (Files.getConfig().getString("Leave") == null || Files.getConfig().getString("Leave") == "")
 			return null;
 		else
 			return LocationHandler.getPlayerLocation(Files.getConfig().getString("Leave"));

@@ -57,8 +57,8 @@ public class KillStreaks {
 				p.sendMessage(Msgs.Game_KillStreak_Reward.getString("<item>", is.getItemMeta().getDisplayName() != null ? is.getItemMeta().getDisplayName() : StringUtil.getWord(is.getType().name())));
 			}
 			// Now we just update their points and score accordingly
-			IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.Kill), Settings.VaultEnabled());
-			IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Kill));
+			IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Kill), Settings.VaultEnabled());
+			IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.Kill));
 
 			// But now all the survivors and other Infecteds need their share of
 			// the kills points and score
@@ -66,12 +66,12 @@ public class KillStreaks {
 			{
 				if (Lobby.isHuman(u))
 				{
-					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.Survive), Settings.VaultEnabled());
-					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Survive));
+					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Survive), Settings.VaultEnabled());
+					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.Survive));
 				} else
 				{
-					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.Infected), Settings.VaultEnabled());
-					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(Events.Infected));
+					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Infected), Settings.VaultEnabled());
+					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.Infected));
 				}
 
 			}

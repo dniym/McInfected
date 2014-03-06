@@ -53,6 +53,8 @@ public enum Msgs
 	Error_Misc_Not_A_File("Error.Misc.Not A File")/* <files> */,
 	Error_Misc_Not_A_Path("Error.Misc.Not A Path"),
 	Error_Misc_Not_A_Team("Error.Misc.Not A Team"),
+	Error_Misc_Joining_While_Game_Started("Error.Misc.Joining While Game Started"),
+	Error_Misc_Editing_Inventory("Error.Misc.Editing Inventory"),
 	Error_Game_Started("Error.Game.Started"),
 	Error_Game_Not_Started("Error.Game.Not Started"),
 	Error_Game_Not_In("Error.Game.Not In"),

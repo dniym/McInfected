@@ -29,6 +29,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -255,6 +256,14 @@ public class PlayerListener implements Listener {
 	public void PlayerTryEnchant(PrepareItemEnchantEvent e) {
 		Player p = e.getEnchanter();
 		if (Lobby.isInGame(p) && Lobby.getActiveArena().getSettings().enchantDisabled())
+			e.setCancelled(true);
+	}
+	
+	// Block enchantment tables as levels are used as a timer
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void InventoryClick(InventoryClickEvent e) {
+		Player p = (Player)e.getWhoClicked();
+		if (Lobby.isInGame(p) && Settings.isEditingInventoryPrevented())
 			e.setCancelled(true);
 	}
 

@@ -137,9 +137,9 @@ public class InfPlayer {
 
 			player.setFallDistance(0F);
 			if(Lobby.getLeave() != null)
-				p.teleport(location);
-			else
 				p.teleport(Lobby.getLeave());
+			else 
+				p.teleport(location);
 			p.setFallDistance(0F);
 			setTeam(Team.Human);
 			Lobby.getHumans().remove(p);
@@ -748,6 +748,33 @@ public class InfPlayer {
 				votes = node.getValue();
 		}
 		return votes;
+	}
+
+	/**
+	 * @return how many votes they have
+	 */
+	public int getPointsModifier() {
+		int points = 1;
+
+		for (Entry<String, Integer> node : Settings.getPointsModifiers().entrySet())
+		{
+			if (player.hasPermission("Infected.points." + node.getKey()) && node.getValue() > points)
+				points = node.getValue();
+		}
+		return points;
+	}
+	/**
+	 * @return how many votes they have
+	 */
+	public int getScoreModifier() {
+		int score = 1;
+
+		for (Entry<String, Integer> node : Settings.getScoreModifiers().entrySet())
+		{
+			if (player.hasPermission("Infected.points." + node.getKey()) && node.getValue() > score)
+				score = node.getValue();
+		}
+		return score;
 	}
 
 	public void openMenu(Player player, IconMenu menu) {

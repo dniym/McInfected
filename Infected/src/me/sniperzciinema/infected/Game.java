@@ -48,10 +48,14 @@ public class Game {
 		}
 		if (DidHumansWin)
 		{
-			for (Player u : Lobby.getInGame())
-			{
-				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 
+			ArrayList<String> winners = new ArrayList<String>();
+			
+			for (final Player u : Lobby.getInGame())
+			{
+			
+				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
+				
 				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
 				for (ItemStack stack : IP.getInventory())
 					if (stack != null)
@@ -59,21 +63,16 @@ public class Game {
 
 				for (ItemStack is : Lobby.getActiveArena().getSettings().getRewordItems())
 					IV.addItem(is);
-			}
-
-			ArrayList<String> winners = new ArrayList<String>();
-			for (final Player u : Lobby.getInGame())
+				
 				if (InfPlayerManager.getInfPlayer(u).isWinner())
 				{
 					if (Settings.VaultEnabled())
 						Infected.economy.depositPlayer(u.getName(), Settings.getVaultReward());
 					winners.add(u.getName());
 				}
-
-			for (final Player u : Lobby.getInGame())
-			{
-				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
+				
+				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -105,8 +104,10 @@ public class Game {
 		{
 			for (final Player u : Lobby.getInGame())
 			{
-				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(Events.GameEnds), Settings.VaultEnabled());
+				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
+				
+				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
+				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");

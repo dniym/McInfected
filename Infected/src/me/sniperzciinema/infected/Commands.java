@@ -128,9 +128,12 @@ public class Commands implements CommandExecutor {
 					else if (Lobby.getLocation() == null)
 						p.sendMessage(Msgs.Error_Lobby_Doesnt_Exist.getString());
 
-					else if (Lobby.getArenas().isEmpty() || !Lobby.isArenaValid(Lobby.getArenas().get(0)))
+					else if (Lobby.getValidArenas().isEmpty())
 						p.sendMessage(Msgs.Error_Arena_No_Valid.getString());
 
+					else if(Settings.isJoiningDuringGamePrevented() && (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.GameOver))
+							p.sendMessage(Msgs.Error_Misc_Joining_While_Game_Started.getString());
+							
 					else if (Lobby.getInGame().contains(p))
 						p.sendMessage(Msgs.Error_Game_In.getString());
 
