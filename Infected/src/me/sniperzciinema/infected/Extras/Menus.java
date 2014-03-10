@@ -305,14 +305,13 @@ public class Menus {
 		return menu;
 	}
 
+	@SuppressWarnings("deprecation")
 	public IconMenu getShopMenu() {
 		ArrayList<String> shop = new ArrayList<String>();
 		for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
 		{
-			if (!string.contains(".") && ItemHandler.getItemID(Files.getShop().getString("Custom Items." + string + ".Item Code")) != null)
-			{
+			if (!string.contains(".") && Material.getMaterial(Integer.parseInt(Files.getShop().getString("Custom Items." + string + ".Item Code"))) != null)
 				shop.add(string);
-			}
 		}
 
 		IconMenu menu = new IconMenu(
@@ -321,7 +320,6 @@ public class Menus {
 				new IconMenu.OptionClickEventHandler()
 				{
 
-					@SuppressWarnings("deprecation")
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
 

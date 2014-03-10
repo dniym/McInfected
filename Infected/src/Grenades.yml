@@ -1,38 +1,52 @@
-# # Default Grenades.yml, Last Edited in v2.0.3
+# # Default Grenades.yml, Last Edited in v2.1.6
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
 # Enchantment Ids - http://minecraft.gamepedia.com/Enchanting#Enchantments
 # Potion Effect Ids - http://minecraft.gamepedia.com/Potion_effects#List_of_effects
 # #
-# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
-# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
-# You can use "/Infected Admin Code" To return the code for the item in your hand
+# Infected's Item Codes
+# ---------------------
+# id:<item id>
+# data:<item durability>
+# amount:<amount>
+# enchant:<enchantment id>,<enchantment level>
+# name:<item name>
+# lore:<line1|line_2>
+# owner:<Player name> - Used on skulls
+# color:<red>,<green>,<blue> - Used on leather armor(http://www.colorschemer.com/online.html)
 # #
-# # Any grenades not set up like the following examples will cause errors!
-# # Modify what item the grenade should be.
-# 341:
-# #  What should the grenade be called?
-#  Name: Stun
-# #  How much should this grenade cost in the shop?
-#  Cost: 20
-# #  How many seconds should it be before the grenade takes effect?
-#  Delay: 3
-# #  How far should the grenades explosion range be?
-#  Range: 3
-# #  How much damage should this grenade cause?
-# #  Does the grenade damage the thrower if in range?
-#  Damage Self: true
-#  Potion effects.
-# #  To apply a potion effect, use this format: "PotionEffectID:duration-in-seconds:power"
-#  Effects:
+# Examples:
+# id:397 data:3 amount:1 owner:Notch
+# id:269 enchantment:32-3 name:Dwarf lore:Diggy|Diggy|Hole
+# id:299 color:255,204,51 name:Orange_ChestPlate
+# --------------------- 
+# You can use "/Infected Admin Code" To return the code for the item in your hand
+# ------------------------------------------------------------------------
+# Any grenades not set up like the following examples will cause errors!
+# Grenade Name
+#   Stun:
+# The item code for the grenade
+#    Item Id: id:341
+# How much the grenade costs in /Infected Grenades
+#    Cost: 20
+# How long in seconds before it exploads
+#    Delay: 3
+# How many blocks is the grenades blast range
+#    Range: 3
+# How much damage does this grenade do
+#    Damage: 1
+# Can this grenade damage the thrower
+#    Damage Thrower: true
+# Potion effects that get applied to the players hit: "PotionEffectID:duration-in-seconds:power"
+#  Potion Effects:
 #  - "2:5:3"
 #  - "15:1:2"
 # =============================================== #
 Can Only Humans Use Grenades: false
 Grenades:
   Stun:
-    Item Id: 341
+    Item Id: id:341
     Cost: 20
     Delay: 3
     Range: 3
@@ -42,7 +56,7 @@ Grenades:
     - "2:5:3"
     - "15:1:2"
   Flash:
-    Item Id: 332
+    Item Id: id:332
     Cost: 20
     Delay: 3
     Range: 3
@@ -52,20 +66,20 @@ Grenades:
     - "2:1:2"
     - "15:5:3"
   Frag:
-    Item Id: 385
+    Item Id: id:385
     Cost: 25
     Delay: 3
     Range: 4
     Damage: 10
     Damage Thrower: true
-    Effects:
+    Potion Effects:
     - "2:1:1"
   Health Pack:
-    Item Id: 390
+    Item Id: id:390
     Cost: 30
     Delay: 1
     Range: 2
     Damage: -10
     Damage Thrower: true
-    Effects:
+    Potion Effects:
     - "15:1:1"

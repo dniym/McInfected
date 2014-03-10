@@ -1,13 +1,4 @@
-# Default InfectedV2 Config, Last edited in 2.1.5
-# #
-# For more help with ids go here: 
-# Item/Block Ids - Minecraftinfo.com/IDList.htm
-# Enchantment Ids - http://minecraft.gamepedia.com/Enchanting#Enchantments
-# Potion Effect Ids - http://minecraft.gamepedia.com/Potion_effects#List_of_effects
-# #
-# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
-# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
-# You can use "/Infected Admin Code" To return the code for the item in your hand
+# Default Infected Config, Last edited in 2.1.6
 # #
 # See Infecteds config page for help
 # http://dev.bukkit.org/server-mods/infected-core
@@ -171,7 +162,7 @@ Settings:
       Disable Dropping Items: true
 # The rewards for playing a game(Items)
     Rewards:
-    - 351:2,3
-    - 265,2
+    - id:351 data:2 amount:3
+    - id:265 amount:2
 # The command triggered for a player winning a game(Can be used to give special items, money, permissions, etc)
     Command Reward: tell <player> you have won!

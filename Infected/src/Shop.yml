@@ -1,14 +1,28 @@
-# # Default Shop.yml, Last Edited in v2.0.3
+# # Default Shop.yml, Last Edited in v2.1.6
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
 # Enchantment Ids - http://minecraft.gamepedia.com/Enchanting#Enchantments
 # Potion Effect Ids - http://minecraft.gamepedia.com/Potion_effects#List_of_effects
 # #
-# Infected's Item Codes  -----   ItemID:DamageValue,Amount-EnchantmentID@EnchantmentLevel-EnchantmentID@EnchantmentLevel%Item_Name
-# This code HAS to be used in the order shown, in other words no saying the amount of the item you want, then saying the damage value
-# You can use "/Infected Admin Code" To return the code for the item in your hand
+# Infected's Item Codes
+# ---------------------
+# id:<item id>
+# data:<item durability>
+# amount:<amount>
+# enchant:<enchantment id>,<enchantment level>
+# name:<item name>
+# lore:<line1|line_2>
+# owner:<Player name> - Used on skulls
+# color:<red>,<green>,<blue> - Used on leather armor(http://www.colorschemer.com/online.html)
 # #
+# Examples:
+# id:397 data:3 amount:1 owner:Notch
+# id:269 enchantment:32-3 name:Dwarf lore:Diggy|Diggy|Hole
+# id:299 color:255,204,51 name:Orange_ChestPlate
+# --------------------- 
+# You can use "/Infected Admin Code" To return the code for the item in your hand
+# ------------------------------------------------------------------------
 # # Should we save EVERY item a play buys from shop signs
 # Save Items: false
 # # These items will be saved regardless of the option above
@@ -30,14 +44,14 @@ Enabled: true
 Save Items: 
   All: false
   Specific Items:
-  - 827
-  - 276
-  - 991
-  - 0
+  - id:827
+  - id:276
+  - id:991
+  - id:0
 Custom Items:
   StackOfArrow:
-    Item Code: 262,64
+    Item Code: id:262 amount:64
     GUI Price: 10
   BowOfKick:
-    Item Code: 261-49@2
+    Item Code: id:261 encantment:49-2
     GUI Price: 20

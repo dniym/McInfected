@@ -285,7 +285,6 @@ public class SignListener implements Listener {
 
 	// /////////////////////////////////////////////////////////-CREATE_SHOP_SIGN-///////////////////////////////////////////////////////
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateShop(SignChangeEvent event) {
 		if (!event.isCancelled())
@@ -327,30 +326,8 @@ public class SignListener implements Listener {
 						// id or invalid
 						else
 						{
-							int itemId = ItemHandler.getItemID(event.getLine(1));
-							short itemData = ItemHandler.getItemData(event.getLine(1));
-							String price = event.getLine(2);
-							Material material = null;
-
-							for (Material materials : Material.values())
-								if (materials.getId() == itemId)
-								{
-									material = materials;
-									break;
-								}
-							// If the material is a valid minecraft material
-							if (material != null)
-							{
-								event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-								event.setLine(1, ChatColor.GRAY + material.name() + (itemData == 0 ? "" : ":" + itemData));
-								event.setLine(2, ChatColor.GREEN + "Click To Buy");
-								event.setLine(3, ChatColor.DARK_RED + "Cost: " + price);
-
-							} else
-							{
-								p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
-								event.setCancelled(true);
-							}
+							p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
+							event.setCancelled(true);
 
 						}
 					} catch (Exception e)
