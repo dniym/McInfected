@@ -159,6 +159,7 @@ public class Menus {
 		int i = 0;
 		for (InfClass Class : InfClassManager.getClasses(Team.Human))
 		{
+			System.out.println(Class.getIcon().toString());
 			ItemStack item = Class.getIcon();
 			menu.setOption(i, item, Class.getName(),
 
@@ -244,6 +245,7 @@ public class Menus {
 		return menu;
 	}
 
+	@SuppressWarnings("deprecation")
 	public IconMenu getVoteMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Vote for an Arena",
@@ -294,11 +296,12 @@ public class Menus {
 		int place = 0;
 		for (Arena arena : Lobby.getArenas())
 		{
-
-			menu.setOption(place, arena.getBlock() != null ? arena.getBlock() : new ItemStack(
-					Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Creator: " + arena.getCreator(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
-
-			place++;
+			if (Lobby.isArenaValid(arena))
+			{
+				menu.setOption(place, arena.getBlock() != null && arena.getBlock().getTypeId() != 0 ? arena.getBlock() : new ItemStack(
+						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Creator: " + arena.getCreator(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				place++;
+			}
 		}
 		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", "", Msgs.Menu_Vote_Random.getString());
 
@@ -310,7 +313,7 @@ public class Menus {
 		ArrayList<String> shop = new ArrayList<String>();
 		for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
 		{
-			if (!string.contains(".") && Material.getMaterial(Integer.parseInt(Files.getShop().getString("Custom Items." + string + ".Item Code"))) != null)
+			if (!string.contains(".") && ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + string + ".Item Code")).getType() != Material.AIR)
 				shop.add(string);
 		}
 
@@ -342,7 +345,7 @@ public class Menus {
 								player.getInventory().addItem(is);
 
 								if (Lobby.isInGame(player))
-									if (!GrenadeManager.isGrenade(is.getTypeId()) && Settings.saveItem(is.getTypeId()))
+									if (!GrenadeManager.isGrenade(is) && Settings.saveItem(is.getTypeId()))
 										SaveItemHandler.saveItems(player, is);
 
 								if (event.getClickType().isRightClick())
@@ -394,7 +397,7 @@ public class Menus {
 						Grenade grenade = GrenadeManager.getGrenade(ChatColor.stripColor(event.getName()));
 						int price = grenade.getCost();
 						int points = infPlayer.getPoints(Settings.VaultEnabled());
-						ItemStack is = grenade.getItemStack();
+						ItemStack is = grenade.getItem();
 
 						if (price <= points)
 						{
@@ -429,7 +432,7 @@ public class Menus {
 		int i = 0;
 		for (Grenade grenade : GrenadeManager.getGrenades())
 		{
-			menu.setOption(i, grenade.getItemStack(), grenade.getName(), "§7§lCost: §f§o" + String.valueOf(grenade.getCost()), "", "§4§lDamage: §c§o" + grenade.getDamage(), "§9§lRange: §b§o" + grenade.getRange(), "§2§lDelay: §a§o" + grenade.getDelay());
+			menu.setOption(i, grenade.getItem(), grenade.getName(), "§7§lCost: §f§o" + String.valueOf(grenade.getCost()), "", "§4§lDamage: §c§o" + grenade.getDamage(), "§9§lRange: §b§o" + grenade.getRange(), "§2§lDelay: §a§o" + grenade.getDelay());
 			i++;
 		}
 

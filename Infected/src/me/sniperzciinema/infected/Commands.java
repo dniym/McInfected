@@ -274,7 +274,7 @@ public class Commands implements CommandExecutor {
 									if (ip.getPoints(Settings.VaultEnabled()) >= GrenadeManager.getGrenades().get(gi).getCost())
 									{
 										Grenade grenade = GrenadeManager.getGrenades().get(gi);
-										p.getInventory().addItem(grenade.getItemStack());
+										p.getInventory().addItem(grenade.getItem());
 										ip.setPoints(ip.getPoints(Settings.VaultEnabled()) - grenade.getCost(), Settings.VaultEnabled());
 										p.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
 
@@ -296,7 +296,7 @@ public class Commands implements CommandExecutor {
 									if (ip.getPoints(Settings.VaultEnabled()) >= GrenadeManager.getGrenades().get(gi).getCost() * amount)
 									{
 										Grenade grenade = GrenadeManager.getGrenades().get(gi);
-										ItemStack g = grenade.getItemStack();
+										ItemStack g = grenade.getItem();
 										g.setAmount(amount);
 										p.getInventory().addItem(g);
 										ip.setPoints(ip.getPoints(Settings.VaultEnabled()) - (grenade.getCost() * amount), Settings.VaultEnabled());
@@ -831,6 +831,10 @@ public class Commands implements CommandExecutor {
 								List<String> spawns = a.getExactSpawns(team);
 								spawns.remove(i);
 								a.setSpawns(spawns, team);
+								
+								Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
+								Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+								
 								p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
 							} else
 								p.sendMessage(Msgs.Help_DelSpawn.getString());
@@ -877,7 +881,7 @@ public class Commands implements CommandExecutor {
 
 					else
 					{
-						if (args.length == 2 && args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human"))
+						if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
 						{
 							Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 
@@ -888,6 +892,9 @@ public class Commands implements CommandExecutor {
 							list.add(s);
 							a.setSpawns(list, team);
 
+							Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
+							Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+							
 							p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
 						} else
 							p.sendMessage(Msgs.Help_SetSpawn.getString());
@@ -929,8 +936,8 @@ public class Commands implements CommandExecutor {
 								else
 									a.setCreator("Unkown");
 								
-								Block b = p.getLocation().add(0, -1, 0).getBlock();
-								a.setBlock(ItemHandler.getItemStackToString(b.getState().getData().toItemStack()));
+								Block b = p.getLocation().clone().add(0, -1, 0).getBlock();
+								a.setBlock(b.getState().getData().toItemStack());
 
 								ip.setCreating(arena);
 								p.sendMessage(Msgs.Command_Arena_Created.getString("<arena>", arena));
@@ -960,6 +967,10 @@ public class Commands implements CommandExecutor {
 							else
 							{
 								Lobby.removeArena(Lobby.getArena(arena));
+
+								Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
+								Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+								
 								sender.sendMessage(Msgs.Command_Arena_Removed.getString("<arena>", arena));
 								return true;
 							}

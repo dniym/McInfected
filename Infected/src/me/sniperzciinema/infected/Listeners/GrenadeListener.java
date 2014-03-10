@@ -26,7 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 
@@ -63,19 +62,18 @@ public class GrenadeListener implements Listener {
 		final Player p = event.getPlayer();
 		// Make sure they clicked with the mouse, and that the item in their
 		// hand is in fact a grenade
-		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(p.getItemInHand().getTypeId()))
+		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(p.getItemInHand()))
 		{
 			if (Lobby.getGameState() == GameState.Started && Lobby.isInGame(p))
 			{
-				final Grenade grenade = GrenadeManager.getGrenade(p.getItemInHand().getTypeId());
+				final Grenade grenade = GrenadeManager.getGrenade(p.getItemInHand());
 
 				if (p.hasPermission("Infected.Grenades"))
 				{
 
 					// Create a new Item and throw it in the direction the
 					// player is looking
-					final Item grenadeItem = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(
-							Material.getMaterial(grenade.getId())));
+					final Item grenadeItem = p.getWorld().dropItem(p.getEyeLocation(), grenade.getItem());
 					grenadeItem.setVelocity(event.getPlayer().getEyeLocation().getDirection());
 
 					if (p.getItemInHand().getAmount() != 1)

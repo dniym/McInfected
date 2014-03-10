@@ -265,7 +265,7 @@ public class SignListener implements Listener {
 									p.getInventory().addItem(stack);
 									p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", stack.getItemMeta().getDisplayName() == null ? StringUtil.getWord(stack.getType().name()) : stack.getItemMeta().getDisplayName()));
 									if (Lobby.isInGame(p))
-										if (!GrenadeManager.isGrenade(stack.getTypeId()) && Settings.saveItem(stack.getTypeId()))
+										if (!GrenadeManager.isGrenade(stack) && Settings.saveItem(stack.getTypeId()))
 											SaveItemHandler.saveItems(p, stack);
 								} else
 								{

@@ -37,7 +37,7 @@ public class InfClass {
 		this.chestplate = chestplate;
 		this.leggings = leggings;
 		this.boots = boots;
-		this.setIcon(icon);
+		this.icon = icon;
 		this.items = items;
 		this.effects = effects;
 		this.transfereffects = transfereffects;

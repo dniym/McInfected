@@ -42,6 +42,7 @@ public class mcMMOEvents implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void mcMMOAbilityActivate(McMMOPlayerAbilityActivateEvent e) {
+		System.out.println("TEST");
 		if (Lobby.isInGame(e.getPlayer()))
 			e.setCancelled(true);
 	}

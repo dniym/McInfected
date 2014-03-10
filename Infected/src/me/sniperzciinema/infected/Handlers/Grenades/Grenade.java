@@ -3,17 +3,17 @@ package me.sniperzciinema.infected.Handlers.Grenades;
 
 import java.util.ArrayList;
 
-import org.bukkit.Material;
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 
 public class Grenade {
 
 	private String name;
-	private int id;
+	private ItemStack item;
 	private ArrayList<PotionEffect> effects;
 	private double damage;
 	private int delay;
@@ -22,10 +22,10 @@ public class Grenade {
 	private boolean damageThrower;
 	private int cost;
 
-	public Grenade(int id, String name, double damage, int delay, int range,
+	public Grenade(String id, String name, double damage, int delay, int range,
 			int cost, boolean damageThrower, ArrayList<PotionEffect> effects)
 	{
-		this.setId(id);
+		this.item = ItemHandler.getItemStack(id);
 		this.name = name;
 		this.damage = damage;
 		this.delay = delay;
@@ -55,13 +55,11 @@ public class Grenade {
 		this.name = name;
 	}
 
-	public ItemStack getItemStack() {
-		@SuppressWarnings("deprecation")
-		ItemStack is = new ItemStack(Material.getMaterial(getId()));
-		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(getName());
-		is.setItemMeta(im);
-		return is;
+	public ItemStack getItem(){
+		return item;
+	}
+	public void setItem(ItemStack item){
+		this.item = item;
 	}
 
 	/**
@@ -154,20 +152,6 @@ public class Grenade {
 		this.damage = damage;
 	}
 
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return the cost

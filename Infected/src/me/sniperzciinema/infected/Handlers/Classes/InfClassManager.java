@@ -196,6 +196,7 @@ public class InfClassManager {
 				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Potion Effects"));
 				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Transfer Potion Effects"));
 				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Human." + s + ".KillStreaks");
+				
 				InfClass IC = new InfClass(name, Team.Human,
 						ItemHandler.getItemStack(helmet),
 						ItemHandler.getItemStack(chestplate),

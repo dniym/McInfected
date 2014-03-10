@@ -8,7 +8,6 @@ import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Potions.PotionHandler;
 import me.sniperzciinema.infected.Tools.Files;
 
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -18,7 +17,7 @@ public class GrenadeManager {
 	private static ArrayList<Grenade> grenades = new ArrayList<Grenade>();
 	private static ArrayList<UUID> thrownGrenades = new ArrayList<UUID>();
 
-	public static void addGrenade(int id, String name, double damage, int delay, int range, int cost, boolean damageThrower, ArrayList<PotionEffect> effects) {
+	public static void addGrenade(String id, String name, double damage, int delay, int range, int cost, boolean damageThrower, ArrayList<PotionEffect> effects) {
 		Grenade grenade = new Grenade(id, name, damage, delay, range, cost,
 				damageThrower, effects);
 		grenades.add(grenade);
@@ -48,10 +47,10 @@ public class GrenadeManager {
 		return thrownGrenades.contains(uuid);
 	}
 
-	public static boolean isGrenade(int id) {
+	public static boolean isGrenade(ItemStack is) {
 		for (Grenade grenade : grenades)
 		{
-			if (grenade.getId() == id)
+			if (grenade.getItem() == is)
 				return true;
 		}
 		return false;
@@ -61,9 +60,9 @@ public class GrenadeManager {
 		return grenades.contains(g);
 	}
 
-	public static Grenade getGrenade(int id) {
+	public static Grenade getGrenade(ItemStack is) {
 		for (Grenade grenade : grenades)
-			if (grenade.getId() == id)
+			if (grenade.getItem() == is)
 				return grenade;
 
 		return null;
@@ -85,7 +84,7 @@ public class GrenadeManager {
 			{
 
 				String name = s;
-				int id = Files.getGrenades().getInt("Grenades." + s + ".Item Id");
+				String id = Files.getGrenades().getString("Grenades." + s + ".Item Id");
 				double damage = Files.getGrenades().getDouble("Grenades." + s + ".Damage");
 				int delay = Files.getGrenades().getInt("Grenades." + s + ".Delay");
 				int range = Files.getGrenades().getInt("Grenades." + s + ".Range");
@@ -105,14 +104,5 @@ public class GrenadeManager {
 					addGrenade(g);
 			}
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	public static boolean isGrenade(ItemStack is) {
-		for (Grenade grenade : grenades)
-			if (grenade.getId() == is.getTypeId() && (is.getItemMeta().hasDisplayName() && ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase(grenade.getName())))
-				return true;
-
-		return false;
 	}
 }

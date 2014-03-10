@@ -33,68 +33,74 @@ public class ItemHandler {
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemStack(String path) {
 		ItemStack stack = new ItemStack(Material.AIR);
-		if (path.contains(" "))
+		if (path != null)
 		{
-			String[] line = path.split(" ");
-
-			for (String data : line)
+			if (path.contains(" "))
 			{
+				String[] line = path.split(" ");
 
-				if (data.startsWith("id"))
-					stack.setType(Material.getMaterial(Integer.parseInt(data.split(":")[1])));
+				for (String data : line)
+				{
 
-				else if (data.startsWith("amount") || data.startsWith("quantity"))
-					stack.setAmount(Integer.parseInt(data.split(":")[1]));
+					if (data.startsWith("id"))
+						stack.setType(Material.getMaterial(Integer.parseInt(data.split(":")[1])));
 
-				else if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage"))
-					stack.setDurability(Short.parseShort(data.split(":")[1]));
+					else if (data.startsWith("amount") || data.startsWith("quantity"))
+						stack.setAmount(Integer.parseInt(data.split(":")[1]));
 
-				else if (data.startsWith("enchantment") || data.startsWith("enchant"))
-				{
-					String s = data.split(":")[1];
-					if(s.contains("-"))
-						stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s.split("-")[0])), Integer.parseInt(s.split("-")[1]));
-					else
-						stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s)), 1);
-					
-				} else if (data.startsWith("name") || data.startsWith("title"))
-				{
-					ItemMeta im = stack.getItemMeta();
-					im.setDisplayName(StringUtil.format(data.split(":")[1]));
-					stack.setItemMeta(im);
-				} else if (data.startsWith("owner") || data.startsWith("player"))
-				{
-					SkullMeta im = (SkullMeta) stack.getItemMeta();
-					im.setOwner(data.split(":")[1]);
-					stack.setItemMeta(im);
-				} else if (data.startsWith("color") || data.startsWith("colour"))
-				{
-					LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
-					String[] s = data.split(",");
-					int red = Integer.parseInt(s[0]);
-					int green = Integer.parseInt(s[1]);
-					int blue = Integer.parseInt(s[2]);
-					im.setColor(Color.fromRGB(red, green, blue));
-					stack.setItemMeta(im);
-				} else if (data.startsWith("lore") || data.startsWith("desc"))
-				{
-					String s = data.split(":")[1];
-					List<String> lores = new ArrayList<String>();
-					for (String lore : s.split("\\|"))
+					else if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage"))
+						stack.setDurability(Short.parseShort(data.split(":")[1]));
+
+					else if (data.startsWith("enchantment") || data.startsWith("enchant"))
 					{
-						lores.add(StringUtil.format(lore.replace('_', ' ')));
+						String s = data.split(":")[1];
+						if (s.contains("-"))
+							stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s.split("-")[0])), Integer.parseInt(s.split("-")[1]));
+						else
+							stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s)), 1);
+
+					} else if (data.startsWith("name") || data.startsWith("title"))
+					{
+						ItemMeta im = stack.getItemMeta();
+						im.setDisplayName(StringUtil.format(data.split(":")[1]));
+						stack.setItemMeta(im);
+					} else if (data.startsWith("owner") || data.startsWith("player"))
+					{
+						SkullMeta im = (SkullMeta) stack.getItemMeta();
+						im.setOwner(data.split(":")[1]);
+						stack.setItemMeta(im);
+					} else if (data.startsWith("color") || data.startsWith("colour"))
+					{
+						LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
+						String[] s = data.split(",");
+						int red = Integer.parseInt(s[0]);
+						int green = Integer.parseInt(s[1]);
+						int blue = Integer.parseInt(s[2]);
+						im.setColor(Color.fromRGB(red, green, blue));
+						stack.setItemMeta(im);
+					} else if (data.startsWith("lore") || data.startsWith("desc"))
+					{
+						String s = data.split(":")[1];
+						List<String> lores = new ArrayList<String>();
+						for (String lore : s.split("\\|"))
+						{
+							lores.add(StringUtil.format(lore.replace('_', ' ')));
+						}
+						ItemMeta meta = stack.getItemMeta();
+						meta.setLore(lores);
+						stack.setItemMeta(meta);
 					}
-					ItemMeta meta = stack.getItemMeta();
-					meta.setLore(lores);
-					stack.setItemMeta(meta);
+				}
+			} else
+			{
+				if (path.startsWith("id"))
+				{
+					stack.setType(Material.getMaterial(Integer.parseInt(path.split(":")[1])));
+				} else
+				{
+					stack = getOldItemStack(path);
 				}
 			}
-		} else
-		{
-			if(path.startsWith("id"))
-				stack.setType(Material.getMaterial(Integer.parseInt(path.split(":")[1])));
-			else
-				getOldItemStack(path);
 		}
 		return stack;
 	}
@@ -334,7 +340,7 @@ public class ItemHandler {
 		if (i.getTypeId() != 0 && i != null)
 		{
 
-			itemCode = String.valueOf(i.getTypeId());
+			itemCode = "id:"+String.valueOf(i.getTypeId());
 
 			if (i.getDurability() != 0)
 				itemCode = itemCode + " data:" + i.getDurability();
@@ -348,14 +354,15 @@ public class ItemHandler {
 			}
 			if (i.getItemMeta().getDisplayName() != null)
 				itemCode = itemCode + " name:" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("§", "&");
-			
-			if (i.getItemMeta().hasLore()){
+
+			if (i.getItemMeta().hasLore())
+			{
 				itemCode = itemCode + " lore:";
-				for(String string : i.getItemMeta().getLore())
-					itemCode = itemCode + string.replaceAll(" ", "_").replaceAll("§", "&")+"|";
-				itemCode.substring(0, itemCode.length()-2);
+				for (String string : i.getItemMeta().getLore())
+					itemCode = itemCode + string.replaceAll(" ", "_").replaceAll("§", "&") + "|";
+				itemCode.substring(0, itemCode.length() - 2);
 			}
-			if (((LeatherArmorMeta) i.getItemMeta()).getColor() != null)
+			if (i.getType().toString().toLowerCase().contains("leather") && ((LeatherArmorMeta) i.getItemMeta()).getColor() != null)
 			{
 				LeatherArmorMeta im = (LeatherArmorMeta) i.getItemMeta();
 				itemCode = itemCode + " color:" + im.getColor().getRed() + "," + im.getColor().getGreen() + "," + im.getColor().getBlue();

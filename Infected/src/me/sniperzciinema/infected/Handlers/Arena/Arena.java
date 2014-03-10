@@ -225,11 +225,13 @@ public class Arena {
 	 * @param block
 	 *            the block to set
 	 */
-	public void setBlock(String s) {
-		if (s.equals("0"))
-			Files.getArenas().set("Arenas." + name + ".Block", "395");
+	@SuppressWarnings("deprecation")
+	public void setBlock(ItemStack is) {
+		if (is.getType() == null || is.getType().getId() == 0)
+			Files.getArenas().set("Arenas." + name + ".Block", "id:395");
 		else
-			Files.getArenas().set("Arenas." + name + ".Block", s);
+			Files.getArenas().set("Arenas." + name + ".Block", ItemHandler.getItemStackToString(is));
+		Files.saveArenas();
 	}
 
 }
