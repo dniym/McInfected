@@ -262,6 +262,7 @@ public class Lobby {
 
 	public static void reset() {
 		stopTimer();
+		Lobby.setGameState(GameState.InLobby);
 		for (Arena a : Lobby.getArenas())
 			a.setVotes(0);
 

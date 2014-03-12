@@ -32,7 +32,7 @@ public class ItemHandler {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemStack(String path) {
-		ItemStack stack = new ItemStack(Material.AIR);
+		ItemStack stack = new ItemStack(Material.AIR, 1);
 		if (path != null)
 		{
 			if (path.contains(" "))

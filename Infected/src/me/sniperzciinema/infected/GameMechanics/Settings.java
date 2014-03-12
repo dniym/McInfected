@@ -4,7 +4,10 @@ package me.sniperzciinema.infected.GameMechanics;
 import java.util.HashMap;
 import java.util.List;
 
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Tools.Files;
+
+import org.bukkit.inventory.ItemStack;
 
 
 /**
@@ -126,8 +129,8 @@ public class Settings {
 		return Files.getConfig().getBoolean("Logs.Classes");
 	}
 
-	public static boolean saveItem(int id) {
-		return Files.getShop().getBoolean("Save Items.All") || Files.getShop().getStringList("Save Items.Specific Items").contains(id);
+	public static boolean saveItem(ItemStack is) {
+		return Files.getShop().getBoolean("Save Items.All") || Files.getShop().getStringList("Save Items.Specific Items").contains(ItemHandler.getItemStackToString(is));
 	}
 
 	public static int getVaultReward() {

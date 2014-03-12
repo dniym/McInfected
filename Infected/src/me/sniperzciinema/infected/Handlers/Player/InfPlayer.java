@@ -16,6 +16,7 @@ import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Classes.InfClass;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
+import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
 import me.sniperzciinema.infected.Handlers.Items.SaveItemHandler;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Potions.PotionEffects;
@@ -23,6 +24,7 @@ import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.IconMenu;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -136,9 +138,9 @@ public class InfPlayer {
 				player.removePotionEffect(effect.getType());
 
 			player.setFallDistance(0F);
-			if(Lobby.getLeave() != null)
+			if (Lobby.getLeave() != null)
 				p.teleport(Lobby.getLeave());
-			else 
+			else
 				p.teleport(location);
 			p.setFallDistance(0F);
 			setTeam(Team.Human);
@@ -149,7 +151,7 @@ public class InfPlayer {
 			if (Lobby.getGameState() == GameState.Started)
 				Stats.setPlayingTime(getName(), Stats.getPlayingTime(getName()) + getPlayingTime());
 
-			if (getVote() != null && (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState()== GameState.Voting))
+			if (getVote() != null && (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting))
 				getVote().setVotes(getVote().getVotes() - getAllowedVotes());
 
 			killstreak = 0;
@@ -305,8 +307,16 @@ public class InfPlayer {
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
 
-		if (!SaveItemHandler.getItems(player).isEmpty())
-			player.getInventory().addItem(SaveItemHandler.getItems(player).toArray(new ItemStack[0]));
+		if (!SaveItemHandler.getSavedItems(player).isEmpty())
+			try
+			{
+				for (String string : SaveItemHandler.getSavedItems(player))
+					player.getInventory().addItem(ItemHandler.getItemStack(string));
+
+			} catch (Exception e)
+			{
+				player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Tell an Admin that your saved inventory is invalid!");
+			}
 
 		unDisguise();
 		killstreak = 0;
@@ -763,6 +773,7 @@ public class InfPlayer {
 		}
 		return points;
 	}
+
 	/**
 	 * @return how many votes they have
 	 */

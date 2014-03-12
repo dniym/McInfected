@@ -345,8 +345,8 @@ public class Menus {
 								player.getInventory().addItem(is);
 
 								if (Lobby.isInGame(player))
-									if (!GrenadeManager.isGrenade(is) && Settings.saveItem(is.getTypeId()))
-										SaveItemHandler.saveItems(player, is);
+									if (!GrenadeManager.isGrenade(is) && Settings.saveItem(is))
+										SaveItemHandler.saveItem(player, is);
 
 								if (event.getClickType().isRightClick())
 								{

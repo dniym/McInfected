@@ -74,7 +74,7 @@ public class SignListener implements Listener {
 						if (className.equalsIgnoreCase("None"))
 						{
 							IP.setInfClass(Team.Human, InfClassManager.getDefaultClass(team));
-							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", "Default"));
+							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", "Default", "<team>", team.toString()));
 						}
 						// If its anything other then "None" Make sure they
 						// have the permissions needed
@@ -265,8 +265,8 @@ public class SignListener implements Listener {
 									p.getInventory().addItem(stack);
 									p.sendMessage(Msgs.Shop_Bought_Item.getString("<item>", stack.getItemMeta().getDisplayName() == null ? StringUtil.getWord(stack.getType().name()) : stack.getItemMeta().getDisplayName()));
 									if (Lobby.isInGame(p))
-										if (!GrenadeManager.isGrenade(stack) && Settings.saveItem(stack.getTypeId()))
-											SaveItemHandler.saveItems(p, stack);
+										if (!GrenadeManager.isGrenade(stack) && Settings.saveItem(stack))
+											SaveItemHandler.saveItem(p, stack);
 								} else
 								{
 									p.sendMessage(Msgs.Shop_Cost_Not_Enough.getString());
