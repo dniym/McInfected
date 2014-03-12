@@ -63,7 +63,6 @@ public class Infected extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
 		me = this;
-
 		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
 
 		try

@@ -159,7 +159,6 @@ public class Menus {
 		int i = 0;
 		for (InfClass Class : InfClassManager.getClasses(Team.Human))
 		{
-			System.out.println(Class.getIcon().toString());
 			ItemStack item = Class.getIcon();
 			menu.setOption(i, item, Class.getName(),
 
