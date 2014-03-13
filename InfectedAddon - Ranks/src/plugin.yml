@@ -1,7 +1,0 @@
-name: InfectedAddon-Ranks
-description: Infecteds Ranks Addon
-main: me.sniperzciinema.infectedaddon.ranks.InfectedRanks
-version: 0.8
-author: xXSniperzzXx_SD
-depend: [Infected]
-softdepend: [Vault]
