@@ -10,7 +10,7 @@
 # id:<item id>
 # data:<item durability>
 # amount:<amount>
-# enchant:<enchantment id>,<enchantment level>
+# enchant:<enchantment id>-<enchantment level>
 # name:<item name>
 # lore:<line1|line_2>
 # owner:<Player name> - Used on skulls
