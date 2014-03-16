@@ -165,8 +165,11 @@ public class InfPlayer {
 			armor = null;
 			vote = null;
 			timeIn = 0;
+			setInfChatting(false);
 
-			fullLeave();
+			player.sendMessage(Msgs.Game_Left_You.getString());
+
+			manageLeaving();
 
 			for (Player u : Lobby.getInGame())
 				if (u != player)
@@ -176,9 +179,7 @@ public class InfPlayer {
 		}
 	}
 
-	public void fullLeave() {
-
-		player.sendMessage(Msgs.Game_Left_You.getString());
+	public void manageLeaving() {
 
 		// Is there anyone left in the lobby?
 		if (Lobby.getInGame().size() == 0)

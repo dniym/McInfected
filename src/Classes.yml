@@ -18,7 +18,7 @@
 # #
 # Examples:
 # id:397 data:3 amount:1 owner:Notch
-# id:269 enchantment:32-3 name:Dwarf lore:Diggy|Diggy|Hole
+# id:269 enchantment:32-3 enchantment:2 name:Dwarf lore:Diggy|Diggy|Hole
 # id:299 color:255,204,51 name:Orange_ChestPlate
 # --------------------- 
 # You can use "/Infected Admin Code" To return the code for the item in your hand
