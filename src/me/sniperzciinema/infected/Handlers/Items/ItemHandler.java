@@ -72,7 +72,7 @@ public class ItemHandler {
 					} else if (data.startsWith("color") || data.startsWith("colour"))
 					{
 						LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
-						String[] s = data.split(",");
+						String[] s = data.replaceAll("color:", "").replaceAll("colour", "").split(",");
 						int red = Integer.parseInt(s[0]);
 						int green = Integer.parseInt(s[1]);
 						int blue = Integer.parseInt(s[2]);

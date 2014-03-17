@@ -1,9 +1,11 @@
 
 package me.sniperzciinema.infected;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import me.sniperzciinema.infected.Disguise.Disguises;
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Events.InfectedJoinEvent;
@@ -26,6 +28,7 @@ import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
+import me.sniperzciinema.infected.Handlers.Potions.PotionHandler;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.StringUtil;
 import me.sniperzciinema.infected.Messages.Time;
@@ -35,6 +38,7 @@ import me.sniperzciinema.infected.Tools.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,6 +46,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 
 public class Commands implements CommandExecutor {
@@ -130,9 +135,9 @@ public class Commands implements CommandExecutor {
 					else if (Lobby.getValidArenas().isEmpty())
 						p.sendMessage(Msgs.Error_Arena_No_Valid.getString());
 
-					else if(Settings.isJoiningDuringGamePrevented() && (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.GameOver))
-							p.sendMessage(Msgs.Error_Misc_Joining_While_Game_Started.getString());
-							
+					else if (Settings.isJoiningDuringGamePrevented() && (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.GameOver))
+						p.sendMessage(Msgs.Error_Misc_Joining_While_Game_Started.getString());
+
 					else if (Lobby.getInGame().contains(p))
 						p.sendMessage(Msgs.Error_Game_In.getString());
 
@@ -156,7 +161,8 @@ public class Commands implements CommandExecutor {
 
 						// If the game hasn't started and there's enough players
 						// for an autostart, start the timer
-						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers()){
+						if (Lobby.getGameState() == GameState.InLobby && Lobby.getInGame().size() >= Settings.getRequiredPlayers())
+						{
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 							{
 
@@ -830,10 +836,10 @@ public class Commands implements CommandExecutor {
 								List<String> spawns = a.getExactSpawns(team);
 								spawns.remove(i);
 								a.setSpawns(spawns, team);
-								
+
 								Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
 								Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
-								
+
 								p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
 							} else
 								p.sendMessage(Msgs.Help_DelSpawn.getString());
@@ -893,7 +899,7 @@ public class Commands implements CommandExecutor {
 
 							Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
 							Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
-							
+
 							p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
 						} else
 							p.sendMessage(Msgs.Help_SetSpawn.getString());
@@ -923,18 +929,17 @@ public class Commands implements CommandExecutor {
 							{
 								p.sendMessage(Msgs.Help_SetSpawn.getString());
 
-								
 								Arena a = new Arena(arena);
 								Lobby.addArena(a);
-								
+
 								Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
 								Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
-								
+
 								if (args.length == 3)
 									a.setCreator(args[2]);
 								else
 									a.setCreator("Unkown");
-								
+
 								Block b = p.getLocation().clone().add(0, -1, 0).getBlock();
 								a.setBlock(b.getState().getData().toItemStack());
 
@@ -969,7 +974,7 @@ public class Commands implements CommandExecutor {
 
 								Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
 								Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
-								
+
 								sender.sendMessage(Msgs.Command_Arena_Removed.getString("<arena>", arena));
 								return true;
 							}
@@ -1051,6 +1056,64 @@ public class Commands implements CommandExecutor {
 							p.sendMessage(Msgs.Help_SetArena.getString());
 
 					}
+				}
+				// /////////////////////////////////////////////-SETCLASS-/////////////////////////////////////////
+				else if (args.length > 0 && args[0].equalsIgnoreCase("SetClass"))
+				{
+					if (p == null)
+						sender.sendMessage("Msgs.Error_Not_A_Player");
+
+					else if (!p.hasPermission("Infected.SetClass"))
+						p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+
+					else if (args.length == 3 && (args[2].equalsIgnoreCase("Zombie") || args[2].equalsIgnoreCase("Human")))
+					{
+
+						String className = args[1];
+						Team team = args[2].equalsIgnoreCase("Human") ? Team.Human : Team.Zombie;
+
+						String helmet = p.getInventory().getHelmet() != null ? ItemHandler.getItemStackToString(p.getInventory().getHelmet()) : "id:0";
+						String chestplate = p.getInventory().getChestplate() != null ? ItemHandler.getItemStackToString(p.getInventory().getChestplate()) : "id:0";
+						String leggings = p.getInventory().getLeggings() != null ? ItemHandler.getItemStackToString(p.getInventory().getLeggings()) : "id:0";
+						String boots = p.getInventory().getBoots() != null ? ItemHandler.getItemStackToString(p.getInventory().getBoots()) : "id:0";
+
+						ArrayList<String> items = new ArrayList<String>();
+						if (p.getInventory().getContents().length != 0)
+							for (ItemStack im : p.getInventory().getContents())
+								if (im != null)
+									items.add(ItemHandler.getItemStackToString(im));
+
+						String icon = p.getItemInHand().getType() != Material.AIR ? ItemHandler.getItemStackToString(p.getItemInHand()) : "id:276";
+
+						ArrayList<String> potions = new ArrayList<String>();
+						if (!p.getActivePotionEffects().isEmpty())
+							for (PotionEffect pe : p.getActivePotionEffects())
+								potions.add(PotionHandler.getPotionToString(pe));
+
+						Files.getClasses().set("Classes." + team.toString() + "." + className + ".Icon", icon);
+
+						if (Settings.DisguisesEnabled())
+							if (Disguises.isPlayerDisguised(p))
+								Files.getClasses().set("Classes." + team.toString() + "." + className + ".Disguise", Disguises.getDisguise(p));
+
+						Files.getClasses().set("Classes." + team.toString() + "." + className + ".Helmet", helmet);
+						Files.getClasses().set("Classes." + team.toString() + "." + className + ".Chestplate", chestplate);
+						Files.getClasses().set("Classes." + team.toString() + "." + className + ".Leggings", leggings);
+						Files.getClasses().set("Classes." + team.toString() + "." + className + ".Boots", boots);
+						if (!items.isEmpty())
+							Files.getClasses().set("Classes." + team.toString() + "." + className + ".Items", items);
+						if (!potions.isEmpty())
+							Files.getClasses().set("Classes." + team.toString() + "." + className + ".Potion Effects", potions);
+						Files.saveClasses();
+						InfClassManager.loadConfigClasses();
+						Infected.Menus.destroyMenu(Infected.Menus.classHumanMenu);
+						Infected.Menus.destroyMenu(Infected.Menus.classZombieMenu);
+						Infected.Menus = new Menus();
+
+						sender.sendMessage(Msgs.Command_Classes_SetClass.getString("<class>", className, "<team>", team.toString()));
+
+					} else
+						sender.sendMessage(Msgs.Help_SetClass.getString());
 				}
 				// /////////////////////////////////////////////-FILES-/////////////////////////////////////////
 				else if (args.length > 0 && args[0].equalsIgnoreCase("Files"))
@@ -1153,7 +1216,7 @@ public class Commands implements CommandExecutor {
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "mcMMO Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.mcMMOEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Infected-Ranks Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Bukkit.getPluginManager().getPlugin("InfectedAddon-Ranks") != null ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
-						p.sendMessage(Msgs.Format_Line.getString());
+					p.sendMessage(Msgs.Format_Line.getString());
 				}
 				// ///////////////////////////////////////////////-ELSE-//////////////////////////////////////////////
 				else
@@ -1165,9 +1228,9 @@ public class Commands implements CommandExecutor {
 						if (Infected.update)
 							p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Infected.updateName);
 						p.sendMessage("");
-						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_RED + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "Sniperz");
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "SniperzCiinema" + ChatColor.WHITE + ChatColor.ITALIC + "(" + ChatColor.DARK_AQUA + "xXSniperzXx_SD" + ChatColor.WHITE + ")");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Infected.version);
-						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.WHITE + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/QN6Xg5");
+						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.WHITE + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/McInfected");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Help type: /Infected Help");
 						p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.YELLOW + "For Addons type: /Infected Addons");
 						p.sendMessage(Msgs.Format_Line.getString());

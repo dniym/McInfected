@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.api.DisguiseAPI;
+import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 
@@ -44,6 +45,14 @@ public class DisguiseIDisguise {
 		}
 	}
 
+	/**
+	 * 
+	 * @param p
+	 * @return the player's disguise
+	 */
+	public static Disguise getDisguise(Player p){
+		return idAPI.getDisguise(p);
+	}
 	/**
 	 * unDisguise the player
 	 * 

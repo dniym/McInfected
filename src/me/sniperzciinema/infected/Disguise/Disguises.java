@@ -95,4 +95,18 @@ public class Disguises {
 				System.out.println("For Disguise Support we're using " + Infected.Disguiser);
 
 	}
+
+	public static String getDisguise(Player player) {
+		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
+			return DisguiseDisguiseCraft.getDisguise(player).type.name();
+
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+			return DisguiseIDisguise.getDisguise(player).getType().name();
+
+		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+			return DisguiseLibsDisguises.getDisguise(player).getType().name();
+		
+		else
+			return null;
+	}
 }

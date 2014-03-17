@@ -53,6 +53,8 @@ Command:
   Files:
     Value: '&2&o<path> &2has a value of: &7&o<value>'
     Changed: '&2&o<path> &2was changed from a value of &7&o<value> &2 to: &7&o<newvalue>'
+  Classes:
+    SetClass: '&b&lClass: &f<class> &bfor <team>''s has been created'
 Error:
   Misc:
     Not Player: '&c&oYou''re not a player!'
@@ -126,6 +128,7 @@ Help:
   SetArena: '&3To select an arena to edit use &x&o/Infected SetArena <Arena>'
   Top: '&3To see from the top list of players use &x&o/Infected Top <Kills/Deaths/Points/Score/Time/KillStreak>'
   Files: '&3To modify Infected''s Files use &x&o/Infected Files <File> [Path] [NewValue]'
+  SetClass: ' &3To create a class use &x&o/Infected SetClass <ClassName> <Human/Zombie>'
 Classes:
   None: '&7You have chosen the &x&odefault class'
   Chosen: '&cYou have chosen &x&o<class> &cas your &x&o<team> class'

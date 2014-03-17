@@ -52,6 +52,7 @@ permissions:
       Infected.Stats.Other: true
       Infected.Setup: true
       Infected.Force: true
+      Infected.SetClasses: true
 
 # Infected.Classes provides ALL class perms      
   Infected.Classes:

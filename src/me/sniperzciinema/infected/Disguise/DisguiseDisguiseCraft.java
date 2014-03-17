@@ -44,6 +44,14 @@ public class DisguiseDisguiseCraft {
 	}
 
 	/**
+	 * 
+	 * @param p
+	 * @return the player's disguise
+	 */
+	public static Disguise getDisguise(Player p){
+		return dcAPI.getDisguise(p);
+	}
+	/**
 	 * unDisguise the player
 	 * 
 	 * @param p

@@ -2,6 +2,7 @@
 package me.sniperzciinema.infected.Disguise;
 
 import me.libraryaddict.disguise.DisguiseAPI;
+import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
@@ -9,6 +10,7 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Handlers.Player.Team;
 
 import org.bukkit.entity.Player;
+
 
 
 public class DisguiseLibsDisguises {
@@ -44,6 +46,15 @@ public class DisguiseLibsDisguises {
 		}
 	}
 
+	/**
+	 * 
+	 * @param p
+	 * @return the player's disguise
+	 */
+	@SuppressWarnings("deprecation")
+	public static Disguise getDisguise(Player p){
+		return DisguiseAPI.getDisguise(p);
+	}
 	/**
 	 * unDisguise the player
 	 * 

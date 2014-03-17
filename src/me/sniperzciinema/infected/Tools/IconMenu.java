@@ -160,10 +160,19 @@ public class IconMenu implements Listener {
 	}
 
 	private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
-		ItemMeta im = item.getItemMeta();
-		im.setDisplayName(name);
-		im.setLore(Arrays.asList(lore));
-		item.setItemMeta(im);
+		if (item != null)
+		{
+			ItemMeta im = item.getItemMeta();
+			if (im != null)
+			{
+				if (name != null)
+					im.setDisplayName(name);
+				if (lore != null)
+					im.setLore(Arrays.asList(lore));
+
+				item.setItemMeta(im);
+			}
+		}
 		return item;
 	}
 

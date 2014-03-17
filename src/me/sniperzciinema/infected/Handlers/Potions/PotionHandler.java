@@ -20,6 +20,10 @@ import org.bukkit.potion.PotionEffectType;
 @SuppressWarnings("deprecation")
 public class PotionHandler {
 
+	public static String getPotionToString(PotionEffect pe) {
+		return (pe.getType().getId() + ":" + pe.getDuration() + ":" + pe.getAmplifier());
+	}
+
 	public static PotionEffect getPotion(String path) {
 		Integer id = 0;
 		Integer time = 0;
