@@ -1,4 +1,4 @@
-# # Default Shop.yml, Last Edited in v2.1.6
+# # Default Shop.yml, Last Edited in v2.1.8
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -23,34 +23,25 @@
 # --------------------- 
 # You can use "/Infected Admin Code" To return the code for the item in your hand
 # ------------------------------------------------------------------------
-# # Should we save EVERY item a play buys from shop signs
-# Save Items: false
-# # These items will be saved regardless of the option above
-# Save These Items No Matter What:
-# - 827
-# - 991
-# - 0
-# # Create custom items below, the GUI Price requires Use GUI to be enabled
-# Custom Items:
-#   StackOfArrow:
-# Infected's Item code for the Item ("/Infected Admin Code" will return the code for the item in hand)
-#     Item Code: 262,64
-#     GUI Price: 10
-#   BowOfKick:
-#     Item Code: 261-49@2
-#     GUI Price: 20
+# Look at Infected's Pages for help with this file
 # +======================================================+ #
+# Are shops enabled
 Enabled: true
 Save Items: 
+# Do we just save all items?
   All: false
+# What about specific item?
   Specific Items:
   - id:827
   - id:276
   - id:991
   - id:0
 Custom Items:
+# Custom item's name
   StackOfArrow:
+# The items item code
     Item Code: id:262 amount:64
+# The price of the item in the shops gui
     GUI Price: 10
   BowOfKick:
     Item Code: id:261 enchantment:49-2

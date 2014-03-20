@@ -1,8 +1,14 @@
-# # Default Signs.yml, Last Edited in v2.0.0
+# # Default Signs.yml, Last Edited in v2.1.8
 # #
+# ------------------------------------------------------------------------
+# Look at Infected's Pages for help with this file
 # +======================================================+ #
+# Are shops enabled
 Command Sets:
+# The name of the command set
   Knight:
+# What commands does this sign make the server perform
   - manuaddp <player> infected.classes.human.knight
   - tell <player> you have just purchased the knight class
+# Just all the Info Signs
 Info Signs: []

@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 2.1.6
+# Default Infected Config, Last edited in 2.1.8
 # #
 # See Infecteds config page for help
 # http://dev.bukkit.org/server-mods/infected-core
@@ -12,6 +12,9 @@
 # Points and Score Modifiers and pretty much the same setup as extra votes, except that it multiplies the points/score by the modifier number 
 # and the permissions are "Infected.Points.vip" or "Infected.Score.vip"
 # #
+# ------------------------------------------------------------------------
+# Look at Infected's Pages for help with this file
+# +======================================================+ #
 # # +======================================================+ #
 # # |                Infected Settings                     | #
 # # +======================================================+ #

@@ -1,4 +1,4 @@
-# Default Classes.yml, Last Edited in v2.1.6
+# Default Classes.yml, Last Edited in v2.1.8
 # #
 # For more help with ids go here: 
 # Item/Block Ids - Minecraftinfo.com/IDList.htm
@@ -32,23 +32,33 @@
 #       Infected.Class.Human.<ClassName>
 #    Infected.Class.Zombie
 #       Infected.Class.Zombie.<ClassName>
-# =============================================== #
+# ------------------------------------------------------------------------
+# Look at Infected's Pages for help with this file
+# +======================================================+ #
 Classes:
+# The classes Team
   Human: 
+# The class' name
     Guard:
+# The class' icon for the GUI
       Icon: id:268
+# The class' armor
       Helmet: id:306
       Chestplate: id:303
       Leggings: id:304
       Boots: id:305
+# The class' items
       Items:
       - id:268
       - id:261
       - id:262 amount:10
+# The potion effects that get put on players in this class
       Potion Effects:
       - '22:99999:1'
+# Potions that get put on the player's targets
       Transfer Potion Effects:
       - '2:1:1'
+# The class' killstreak item rewards
       KillStreaks:
         '5': id:268 enchantment:19
         '7': id:305 enchantment:2
