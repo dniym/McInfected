@@ -493,12 +493,18 @@ public class SignListener implements Listener {
 					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
 				}
-				Team team = Team.valueOf(event.getLine(3));
+				String line = event.getLine(3) != null ? event.getLine(3) : "";
+				Team team = line.equalsIgnoreCase("Human") ? Team.Human : line.equalsIgnoreCase("Zombie") ? Team.Zombie : null;
 				String className = event.getLine(2);
 
-				if (className.equalsIgnoreCase("None") || InfClassManager.isRegistered(team, InfClassManager.getClass(team, className)))
+				if (team == null || className.equalsIgnoreCase("None") || InfClassManager.isRegistered(team, InfClassManager.getClass(team, className)))
 				{
 
+					if(team == null){
+						if(InfClassManager.isClass(className)){
+							team = InfClassManager.getClass(className).getTeam();
+						}
+					}
 					event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 					event.setLine(1, ChatColor.GRAY + "Class");
 					event.setLine(2, ChatColor.GREEN + className);

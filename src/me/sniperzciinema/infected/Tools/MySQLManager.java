@@ -14,7 +14,7 @@ public class MySQLManager {
 	/**
 	 * 
 	 * @param tableName
-	 *            - Always put "Infected"
+	 *            - The tables name
 	 * @param columnName
 	 *            - The stats name
 	 * @param playerName
@@ -39,13 +39,13 @@ public class MySQLManager {
 
 	/**
 	 * 
-	 * Safley update/set the value
+	 * Safely update/set the value
 	 * 
 	 * Will set the value only if the table doesn't have the player already,
 	 * otherwise it'll just update the players values
 	 * 
 	 * @param tableName
-	 *            - Always put "Infected"
+	 *            - The tables name
 	 * @param columnName
 	 *            - The stats name
 	 * @param value
@@ -68,7 +68,7 @@ public class MySQLManager {
 	 * Force the setting of the players value
 	 * 
 	 * @param tableName
-	 *            - Always put "Infected"
+	 *            - The tables name
 	 * @param columnName
 	 *            - The stats name
 	 * @param value
@@ -91,14 +91,14 @@ public class MySQLManager {
 	/**
 	 * 
 	 * @param tableName
-	 *            - Always put "Infected"
+	 *            - The tables name
 	 * @return All the players in the Infected table
 	 */
 	public static ArrayList<String> getPlayers(String tableName) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			ResultSet set = statement.executeQuery("SELECT * FROM `infected` ");
+			ResultSet set = statement.executeQuery("SELECT * FROM `"+tableName+"` ");
 			ArrayList<String> players = new ArrayList<String>();
 			while (true)
 			{

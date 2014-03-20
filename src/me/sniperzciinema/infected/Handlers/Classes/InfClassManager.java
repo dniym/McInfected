@@ -255,4 +255,26 @@ public class InfClassManager {
 		loadDefaultClasses();
 	}
 
+	public static boolean isClass(String className) {
+		for(InfClass Class : getClasses(Team.Human))
+			if(Class.getName().equalsIgnoreCase(className))
+				return true;
+		for(InfClass Class : getClasses(Team.Zombie))
+			if(Class.getName().equalsIgnoreCase(className))
+				return true;
+		
+		return false;
+	}
+	
+	public static InfClass getClass(String className) {
+		for(InfClass Class : getClasses(Team.Human))
+			if(Class.getName().equalsIgnoreCase(className))
+				return Class;
+		for(InfClass Class : getClasses(Team.Zombie))
+			if(Class.getName().equalsIgnoreCase(className))
+				return Class;
+		
+		return null;
+	}
+
 }
