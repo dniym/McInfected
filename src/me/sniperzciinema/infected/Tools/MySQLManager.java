@@ -98,7 +98,7 @@ public class MySQLManager {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			ResultSet set = statement.executeQuery("SELECT * FROM `"+tableName+"` ");
+			ResultSet set = statement.executeQuery("SELECT * FROM `" + tableName + "` ");
 			ArrayList<String> players = new ArrayList<String>();
 			while (true)
 			{

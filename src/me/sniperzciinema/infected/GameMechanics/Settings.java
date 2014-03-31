@@ -51,7 +51,7 @@ public class Settings {
 	public static boolean isJoiningDuringGamePrevented() {
 		return Files.getConfig().getBoolean("Settings.Misc.Prevent Joining During Game");
 	}
-	
+
 	public static boolean isEditingInventoryPrevented() {
 		return Files.getConfig().getBoolean("Settings.Misc.Prevent Editing Inventory");
 	}
@@ -85,6 +85,7 @@ public class Settings {
 
 		return nodes;
 	}
+
 	public static HashMap<String, Integer> getPointsModifiers() {
 		HashMap<String, Integer> nodes = new HashMap<String, Integer>();
 

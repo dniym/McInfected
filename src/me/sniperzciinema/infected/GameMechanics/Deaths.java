@@ -41,7 +41,7 @@ public class Deaths {
 		{
 			String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
 
-			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getHumans().size() > 1)
+			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getTeam(Team.Human).size() > 1)
 			{
 				killMessage = KillMessages.getKillMessage(killer, killed, death, false);
 				String[] face = Pictures.getZombie();
@@ -49,12 +49,15 @@ public class Deaths {
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
 				killed.sendMessage(face);
 
-				for (Player u : Lobby.getInGame())
+				for (String name : Lobby.getInGame())
+				{
+					Player u = Bukkit.getPlayer(name);
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
+				}
 			} else
-				for (Player u : Lobby.getInGame())
-					u.sendMessage(killMessage);
+				for (String name : Lobby.getInGame())
+					Bukkit.getPlayer(name).sendMessage(killMessage);
 		}
 		// <--
 
@@ -79,7 +82,7 @@ public class Deaths {
 			{
 				InfKilled.Infect();
 
-				if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
+				if (Lobby.getTeam(Team.Human).size() == 0 && Lobby.getGameState() == GameState.Started)
 					Game.endGame(false);
 
 			} else
@@ -90,9 +93,9 @@ public class Deaths {
 			}
 		}
 
-		for (Player u : Lobby.getInGame())
+		for (String name : Lobby.getInGame())
 		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(u);
+			InfPlayer up = InfPlayerManager.getInfPlayer(name);
 			up.getScoreBoard().showProperBoard();
 		}
 
@@ -100,7 +103,7 @@ public class Deaths {
 
 	public static void playerDiesWithoutDeathStat(Player killed) {
 
-		InfPlayer InfKilled =  InfPlayerManager.getInfPlayer(killed);
+		InfPlayer InfKilled = InfPlayerManager.getInfPlayer(killed);
 
 		// --> Picture deaths
 		if (InfKilled.getTeam() != Team.Zombie)
@@ -115,33 +118,36 @@ public class Deaths {
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
 				killed.sendMessage(face);
 
-				for (Player u : Lobby.getInGame())
+				for (String name : Lobby.getInGame())
+				{
+					Player u = Bukkit.getPlayer(name);
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
+				}
 			} else
-				for (Player u : Lobby.getInGame())
-					u.sendMessage(killMessage);
+				for (String name : Lobby.getInGame())
+					Bukkit.getPlayer(name).sendMessage(killMessage);
 		}
 		// <--
 
-			if (InfKilled.getTeam() == Team.Human)
-			{
-				InfKilled.Infect();
-				InfKilled.respawn();
-
-				if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
-					Game.endGame(false);
-
-			} else
-			{
-				killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
-				InfKilled.respawn();
-				Equip.equip(killed);
-			}
-
-		for (Player u : Lobby.getInGame())
+		if (InfKilled.getTeam() == Team.Human)
 		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(u);
+			InfKilled.Infect();
+			InfKilled.respawn();
+
+			if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
+				Game.endGame(false);
+
+		} else
+		{
+			killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
+			InfKilled.respawn();
+			Equip.equip(killed);
+		}
+
+		for (String name : Lobby.getInGame())
+		{
+			InfPlayer up = InfPlayerManager.getInfPlayer(name);
 			up.getScoreBoard().showProperBoard();
 		}
 

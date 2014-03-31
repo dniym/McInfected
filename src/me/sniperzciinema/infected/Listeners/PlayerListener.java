@@ -8,9 +8,11 @@ import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.Files;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,6 +31,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -171,6 +174,28 @@ public class PlayerListener implements Listener {
 		}
 	}
 
+	// If an arrow show in game hits the ground
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onArrowShoot(final ProjectileHitEvent e) {
+
+		if (e.getEntity().getShooter() instanceof Player)
+		{
+			Player player = (Player) e.getEntity().getShooter();
+			if (Lobby.isInGame(player) && Lobby.getGameState() == GameState.Started)
+			{
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+				{
+
+					@Override
+					public void run() {
+						if (e.getEntity() != null)
+							e.getEntity().remove();
+					}
+				}, 1);
+			}
+		}
+	}
+
 	// If the player gets kicked out of the server, do we need to remove them?
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerKick(final PlayerKickEvent e) {
@@ -219,7 +244,7 @@ public class PlayerListener implements Listener {
 			if (Lobby.isInGame(p))
 			{
 				e.setCancelled(true);
-				if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && Lobby.isHuman(p) && Lobby.getGameState() == GameState.Started)
+				if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && Lobby.getPlayersTeam(p) == Team.Human && Lobby.getGameState() == GameState.Started)
 					e.setCancelled(false);
 			}
 		}
@@ -234,7 +259,7 @@ public class PlayerListener implements Listener {
 			if (Lobby.isInGame(p))
 			{
 				e.setCancelled(true);
-				if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && Lobby.isHuman(p) && Lobby.getGameState() == GameState.Started)
+				if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans() && Lobby.getPlayersTeam(p) == Team.Human && Lobby.getGameState() == GameState.Started)
 					e.setCancelled(false);
 			}
 		}
@@ -258,11 +283,11 @@ public class PlayerListener implements Listener {
 		if (Lobby.isInGame(p) && Lobby.getActiveArena().getSettings().enchantDisabled())
 			e.setCancelled(true);
 	}
-	
+
 	// Block enchantment tables as levels are used as a timer
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void InventoryClick(InventoryClickEvent e) {
-		Player p = (Player)e.getWhoClicked();
+		Player p = (Player) e.getWhoClicked();
 		if (Lobby.isInGame(p) && Settings.isEditingInventoryPrevented())
 			e.setCancelled(true);
 	}

@@ -14,6 +14,7 @@ import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
+import me.sniperzciinema.infected.Handlers.Player.Team;
 import me.sniperzciinema.infected.Messages.Msgs;
 
 import org.bukkit.Bukkit;
@@ -35,12 +36,13 @@ public class Game {
 	public static void endGame(Boolean DidHumansWin) {
 
 		Lobby.setGameState(GameState.GameOver);
-		
+
 		InfectedEndGame e = new InfectedEndGame(DidHumansWin);
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (Player u : Lobby.getInGame())
+		for (String name : Lobby.getInGame())
 		{
+			Player u = Bukkit.getPlayer(name);
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 			IP.getScoreBoard().showProperBoard();
 			Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
@@ -50,12 +52,12 @@ public class Game {
 		{
 
 			ArrayList<String> winners = new ArrayList<String>();
-			
-			for (final Player u : Lobby.getInGame())
+
+			for (String name : Lobby.getInGame())
 			{
-			
+				Player u = Bukkit.getPlayer(name);
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
-				
+
 				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
 				for (ItemStack stack : IP.getInventory())
 					if (stack != null)
@@ -63,14 +65,14 @@ public class Game {
 
 				for (ItemStack is : Lobby.getActiveArena().getSettings().getRewordItems())
 					IV.addItem(is);
-				
+
 				if (InfPlayerManager.getInfPlayer(u).isWinner())
 				{
 					if (Settings.VaultEnabled())
 						Infected.economy.depositPlayer(u.getName(), Settings.getVaultReward());
 					winners.add(u.getName());
 				}
-				
+
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
 				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
@@ -102,10 +104,11 @@ public class Game {
 			}
 		} else
 		{
-			for (final Player u : Lobby.getInGame())
+			for (String name : Lobby.getInGame())
 			{
+				Player u = Bukkit.getPlayer(name);
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
-				
+
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
 				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
@@ -132,8 +135,8 @@ public class Game {
 			public void run() {
 
 				Lobby.setGameState(GameState.InLobby);
-				for (Player u : Lobby.getInGame())
-					InfPlayerManager.getInfPlayer(u).tpToLobby();
+				for (String name : Lobby.getInGame())
+					InfPlayerManager.getInfPlayer(name).tpToLobby();
 
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 				{
@@ -170,17 +173,17 @@ public class Game {
 		int toInfect = 1;
 		int inGame = Lobby.getInGame().size();
 		float percent = Lobby.getActiveArena().getSettings().getAlphaPercent() / 100;
-		toInfect = (int)(inGame * percent);
+		toInfect = (int) (inGame * percent);
 		if (toInfect == 0)
 		{
 			toInfect = 1;
 		}
 		String[] face = null;
 
-		while (!(Lobby.getZombies().size() >= toInfect))
+		while (!(Lobby.getTeam(Team.Zombie).size() >= toInfect))
 		{
-			Player alpha = Lobby.getInGame().get(new Random().nextInt(Lobby.getInGame().size()));
-
+			String alphaName = Lobby.getInGame().get(new Random().nextInt(Lobby.getInGame().size()));
+			Player alpha = Bukkit.getPlayer(alphaName);
 			if (Settings.PictureEnabled())
 			{
 				face = Pictures.getZombie();
@@ -199,20 +202,21 @@ public class Game {
 				face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
 				face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
 			}
-			for (Player u : Lobby.getInGame())
-				if (u != alpha)
+			for (String name : Lobby.getInGame())
+				if (!name.equals(alphaName))
 				{
 					if (Settings.PictureEnabled())
-						u.sendMessage(face);
+						Bukkit.getPlayer(name).sendMessage(face);
 					else
-						u.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
+						Bukkit.getPlayer(name).sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
 				}
 
 			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
 				alpha.addPotionEffect(PE);
 		}
-		for (Player u : Lobby.getInGame())
+		for (String name : Lobby.getInGame())
 		{
+			Player u = Bukkit.getPlayer(name);
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}

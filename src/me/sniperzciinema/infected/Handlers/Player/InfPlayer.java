@@ -144,8 +144,6 @@ public class InfPlayer {
 				p.teleport(location);
 			p.setFallDistance(0F);
 			setTeam(Team.Human);
-			Lobby.getHumans().remove(p);
-			Lobby.getZombies().remove(p);
 			Lobby.getInGame().remove(p);
 
 			if (Lobby.getGameState() == GameState.Started)
@@ -171,9 +169,9 @@ public class InfPlayer {
 
 			manageLeaving();
 
-			for (Player u : Lobby.getInGame())
-				if (u != player)
-					InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
+			for (String name : Lobby.getInGame())
+				if (name != this.name)
+					InfPlayerManager.getInfPlayer(name).getScoreBoard().showProperBoard();
 
 			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 		}
@@ -187,25 +185,25 @@ public class InfPlayer {
 
 		// If nothing has started yet, just inform players they left
 		else if (Lobby.getGameState() == GameState.InLobby)
-			for (Player u : Lobby.getInGame())
-				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			for (String name : Lobby.getInGame())
+				Bukkit.getPlayer(name).sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 		// If the game isn't fully started yet, this includes Voting, and before
 		// and Infecteds chosen
 		else if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.Infecting)
 		{
 
-			for (Player u : Lobby.getInGame())
-				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			for (String name : Lobby.getInGame())
+				Bukkit.getPlayer(name).sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 			// If theres only one person left in the lobby, end the game
 			if (Lobby.getInGame().size() <= 1)
 			{
 				Lobby.setGameState(GameState.InLobby);
-				for (Player u : Lobby.getInGame())
+				for (String name : Lobby.getInGame())
 				{
-					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-					InfPlayerManager.getInfPlayer(u).tpToLobby();
+					Bukkit.getPlayer(name).sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+					InfPlayerManager.getInfPlayer(name).tpToLobby();
 				}
 
 				// Reset all the timers, lists, etc(Not including the ones for
@@ -217,17 +215,17 @@ public class InfPlayer {
 		// If the game has fully started
 		else if (Lobby.getGameState() == GameState.Started)
 		{
-			for (Player u : Lobby.getInGame())
-				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			for (String name : Lobby.getInGame())
+				Bukkit.getPlayer(name).sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 			// If theres only one person left in the lobby, end the game
 			if (Lobby.getInGame().size() <= 1)
 			{
 				Lobby.setGameState(GameState.InLobby);
-				for (Player u : Lobby.getInGame())
+				for (String name : Lobby.getInGame())
 				{
-					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-					InfPlayerManager.getInfPlayer(u).tpToLobby();
+					Bukkit.getPlayer(name).sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+					InfPlayerManager.getInfPlayer(name).tpToLobby();
 				}
 
 				// Reset all the timers, lists, etc(Not including the ones for
@@ -236,19 +234,19 @@ public class InfPlayer {
 			}
 
 			// If theres no zombies left
-			else if (Lobby.getZombies().size() == 0)
+			else if (Lobby.getTeam(Team.Zombie).size() == 0)
 				// Choose someone new to be the zombie
 				Game.chooseAlphas();
 
 			// If theres no humans left(Player who left was human, or the new
 			// zombie was the only human)
-			else if (Lobby.getHumans().size() == 0)
+			else if (Lobby.getTeam(Team.Human).size() == 0)
 			{
 				Lobby.setGameState(GameState.InLobby);
-				for (Player u : Lobby.getInGame())
+				for (String name : Lobby.getInGame())
 				{
-					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-					InfPlayerManager.getInfPlayer(u).tpToLobby();
+					Bukkit.getPlayer(name).sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+					InfPlayerManager.getInfPlayer(name).tpToLobby();
 				}
 
 				// Reset all the timers, lists, etc(Not including the ones for
@@ -365,8 +363,6 @@ public class InfPlayer {
 		p.setFoodLevel(20);
 		p.setFireTicks(0);
 		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-		Lobby.addZombie(player);
-		Lobby.delHuman(player);
 		team = Team.Zombie;
 		isWinner = false;
 		Equip.equipToZombie(player);

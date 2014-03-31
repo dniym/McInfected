@@ -8,6 +8,7 @@ import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.StringUtil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,8 +46,8 @@ public class KillStreaks {
 			// To prevent spam we only show when they get 3 or more as a
 			// killstreak
 			if (KillStreak >= 3)
-				for (Player u : Lobby.getInGame())
-					u.sendMessage(Msgs.Game_KillStreak_Value.getString("<player>", p.getName(), "<killstreak>", String.valueOf(KillStreak)));
+				for (String name : Lobby.getInGame())
+					Bukkit.getPlayer(name).sendMessage(Msgs.Game_KillStreak_Value.getString("<player>", p.getName(), "<killstreak>", String.valueOf(KillStreak)));
 
 			// Does their class have a reward for getting a killstreak of this
 			// value
@@ -62,8 +63,9 @@ public class KillStreaks {
 
 			// But now all the survivors and other Infecteds need their share of
 			// the kills points and score
-			for (Player u : Lobby.getInGame())
+			for (String name : Lobby.getInGame())
 			{
+				Player u = Bukkit.getPlayer(name);
 				if (Lobby.isHuman(u))
 				{
 					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Survive), Settings.VaultEnabled());

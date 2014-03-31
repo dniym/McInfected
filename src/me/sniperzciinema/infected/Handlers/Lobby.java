@@ -35,11 +35,8 @@ public class Lobby {
 	// All the Arena Objects
 	private static ArrayList<Arena> arenas = new ArrayList<Arena>();
 	// All the players playing Infected
-	private static ArrayList<Player> inGame = new ArrayList<Player>();
+	private static ArrayList<String> inGame = new ArrayList<String>();
 	// All the humans
-	private static ArrayList<Player> humans = new ArrayList<Player>();
-	// All the zombies
-	private static ArrayList<Player> zombies = new ArrayList<Player>();
 	// What ever arena we're playing on
 	private static Arena activeArena;
 	// The games state
@@ -110,55 +107,69 @@ public class Lobby {
 	}
 
 	public static boolean isInGame(Player p) {
-		return inGame.contains(p);
+		return inGame.contains(p.getName());
 	}
 
 	public static void addPlayerInGame(Player p) {
-		inGame.add(p);
+		inGame.add(p.getName());
 	}
 
 	public static void delPlayerInGame(Player p) {
-		inGame.remove(p);
+		inGame.remove(p.getName());
 	}
 
-	public static ArrayList<Player> getInGame() {
+	public static ArrayList<String> getInGame() {
 		return inGame;
 	}
 
-	public static void addHuman(Player p) {
-		humans.add(p);
-	}
-
-	public static void delHuman(Player p) {
-		humans.remove(p);
+	public static Team getPlayersTeam(Player p) {
+		return InfPlayerManager.getInfPlayer(p).getTeam();
 	}
 
 	public static boolean isHuman(Player p) {
-		return humans.contains(p);
-	}
-
-	public static void delZombie(Player p) {
-		zombies.remove(p);
-	}
-
-	public static void addZombie(Player p) {
-		zombies.add(p);
+		return InfPlayerManager.getInfPlayer(p).getTeam() == Team.Human;
 	}
 
 	public static boolean isZombie(Player p) {
-		return zombies.contains(p);
+		return InfPlayerManager.getInfPlayer(p).getTeam() == Team.Zombie;
+	}
+
+	public static ArrayList<String> getHumans() {
+		return getTeam(Team.Human);
+	}
+
+	public static ArrayList<String> getZombies() {
+		return getTeam(Team.Zombie);
+	}
+
+	/**
+	 * @return the teams list
+	 */
+	public static ArrayList<String> getTeam(Team team) {
+		ArrayList<String> teamList = new ArrayList<String>();
+		for (String name : getInGame())
+		{
+			InfPlayer ip = InfPlayerManager.getInfPlayer(name);
+			if (ip.getTeam() == team)
+				teamList.add(name);
+		}
+		return teamList;
+	}
+
+	/**
+	 * Set the InfPlayer's team
+	 * 
+	 * @param ip
+	 * @param team
+	 */
+	public static void setTeam(InfPlayer ip, Team team) {
+		ip.setTeam(team);
 	}
 
 	public static boolean oppositeTeams(Player p, Player u) {
-		return !((isZombie(p) && isZombie(u)) || (isHuman(p) && isHuman(u))) || (isInGame(p) && !isInGame(u)) || (!isInGame(p) && isInGame(u));
-	}
-
-	public static ArrayList<Player> getHumans() {
-		return humans;
-	}
-
-	public static ArrayList<Player> getZombies() {
-		return zombies;
+		InfPlayer ip = InfPlayerManager.getInfPlayer(p);
+		InfPlayer iu = InfPlayerManager.getInfPlayer(u);
+		return !(ip.getTeam() == iu.getTeam()) || (isInGame(p) && !isInGame(u)) || (!isInGame(p) && isInGame(u));
 	}
 
 	public static ArenaSettings getArenaSettings(Arena arena) {
@@ -268,8 +279,9 @@ public class Lobby {
 
 		resetArena(getActiveArena());
 		setActiveArena(null);
-		getHumans().clear();
-		getZombies().clear();
+		for (String name : getInGame())
+			InfPlayerManager.getInfPlayer(name).setTeam(Team.Human);
+
 	}
 
 	/**
@@ -318,8 +330,9 @@ public class Lobby {
 			InfectedStartVote e = new InfectedStartVote();
 			Bukkit.getPluginManager().callEvent(e);
 
-			for (Player u : getInGame())
+			for (String name : getInGame())
 			{
+				Player u = Bukkit.getPlayer(name);
 				InfPlayer up = InfPlayerManager.getInfPlayer(u);
 				up.getScoreBoard().showProperBoard();
 				u.sendMessage("");
@@ -350,18 +363,19 @@ public class Lobby {
 					{
 						TimeLeft -= 1;
 
-						for (Player u : getInGame())
-							u.setLevel(getTimeLeft());
+						for (String name : getInGame())
+							Bukkit.getPlayer(name).setLevel(getTimeLeft());
 
 						if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 						{
-							for (Player u : getInGame())
-								u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
+							for (String name : getInGame())
+								Bukkit.getPlayer(name).sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
 						}
 						if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 						{
-							for (Player u : getInGame())
+							for (String name : getInGame())
 							{
+								Player u = Bukkit.getPlayer(name);
 								u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
 								u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 								u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
@@ -369,8 +383,9 @@ public class Lobby {
 						}
 						if (TimeLeft == 1)
 
-							for (Player u : getInGame())
+							for (String name : getInGame())
 							{
+								Player u = Bukkit.getPlayer(name);
 								u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 5);
 								u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 5);
 								u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 5);
@@ -385,8 +400,9 @@ public class Lobby {
 							}
 
 							setActiveArena(arena);
-							for (Player u : getInGame())
+							for (String name : getInGame())
 							{
+								Player u = Bukkit.getPlayer(name);
 								InfPlayer up = InfPlayerManager.getInfPlayer(u);
 								up.getScoreBoard().showProperBoard();
 
@@ -421,8 +437,9 @@ public class Lobby {
 								@Override
 								public void run() {
 
-									for (Player u : getInGame())
+									for (String name : getInGame())
 									{
+										Player u = Bukkit.getPlayer(name);
 										u.setGameMode(GameMode.SURVIVAL);
 										InfPlayer up = InfPlayerManager.getInfPlayer(u);
 										up.respawn();
@@ -446,8 +463,9 @@ public class Lobby {
 		InfectedStartInfecting e = new InfectedStartInfecting();
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (Player u : getInGame())
+		for (String name : getInGame())
 		{
+			Player u = Bukkit.getPlayer(name);
 			InfPlayer ip = InfPlayerManager.getInfPlayer(u);
 			ip.getScoreBoard().showProperBoard();
 			ip.setTimeIn(System.currentTimeMillis() / 1000);
@@ -463,19 +481,20 @@ public class Lobby {
 				if (TimeLeft != 0)
 				{
 					TimeLeft -= 1;
-					for (Player u : getInGame())
-						u.setLevel(TimeLeft);
+					for (String name : getInGame())
+						Bukkit.getPlayer(name).setLevel(TimeLeft);
 
 					if (TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
-						for (Player u : getInGame())
-							u.sendMessage(Msgs.Game_Time_Left_Infecting.getString("<time>", Time.getTime((long) getTimeLeft())));
+						for (String name : getInGame())
+							Bukkit.getPlayer(name).sendMessage(Msgs.Game_Time_Left_Infecting.getString("<time>", Time.getTime((long) getTimeLeft())));
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 					{
 
-						for (Player u : getInGame())
+						for (String name : getInGame())
 						{
+							Player u = Bukkit.getPlayer(name);
 							u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
 							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
@@ -483,8 +502,9 @@ public class Lobby {
 					}
 					if (TimeLeft == 1)
 					{
-						for (Player u : getInGame())
+						for (String name : getInGame())
 						{
+							Player u = Bukkit.getPlayer(name);
 							u.playSound(u.getLocation(), Sound.ZOMBIE_INFECT, 1, 5);
 							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
@@ -495,14 +515,12 @@ public class Lobby {
 					{
 						Game.chooseAlphas();
 
-						for (Player u : getInGame())
+						for (String name : getInGame())
 						{
+							Player u = Bukkit.getPlayer(name);
 							InfPlayer ip = InfPlayerManager.getInfPlayer(u);
-							if (!Lobby.isHuman(u) && !Lobby.isZombie(u))
-							{
-								Lobby.addHuman(u);
+							if (ip.getTeam() != Team.Human || ip.getTeam() != Team.Zombie)
 								ip.setTeam(Team.Human);
-							}
 						}
 						timerStartGame();
 					}
@@ -521,8 +539,9 @@ public class Lobby {
 		GameTime = getActiveArena().getSettings().getGameTime();
 		TimeLeft = GameTime;
 
-		for (Player u : Lobby.getInGame())
+		for (String name : getInGame())
 		{
+			Player u = Bukkit.getPlayer(name);
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
@@ -534,32 +553,34 @@ public class Lobby {
 				if (TimeLeft != 0)
 				{
 					TimeLeft -= 1;
-					for (Player u : getInGame())
-						u.setLevel(TimeLeft);
+					for (String name : getInGame())
+						Bukkit.getPlayer(name).setLevel(TimeLeft);
 
 					if (GameTime - TimeLeft == 10)
-						for (Player u : getInGame())
-							u.teleport(u.getLocation());
+						for (String name : getInGame())
+							Bukkit.getPlayer(name).teleport(Bukkit.getPlayer(name).getLocation());
 
 					if (TimeLeft == (GameTime / 4) * 3 || TimeLeft == GameTime / 2 || TimeLeft == GameTime / 4 || TimeLeft == 60 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
 						if (TimeLeft > 61)
 						{
-							for (Player u : getInGame())
+							for (String name : getInGame())
 							{
+								Player u = Bukkit.getPlayer(name);
 								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
-								u.sendMessage(Msgs.Game_Players_Left.getString("<humans>", String.valueOf(getHumans().size()), "<zombies>", String.valueOf(getZombies().size())));
+								u.sendMessage(Msgs.Game_Players_Left.getString("<humans>", String.valueOf(getTeam(Team.Human).size()), "<zombies>", String.valueOf(getTeam(Team.Zombie).size())));
 							}
 						} else
-							for (Player u : getInGame())
-								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
+							for (String name : getInGame())
+								Bukkit.getPlayer(name).sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
 
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 					{
 
-						for (Player u : getInGame())
+						for (String name : getInGame())
 						{
+							Player u = Bukkit.getPlayer(name);
 							u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
 							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
 							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
@@ -567,8 +588,9 @@ public class Lobby {
 					}
 					if (TimeLeft == 1)
 					{
-						for (Player u : getInGame())
+						for (String name : getInGame())
 						{
+							Player u = Bukkit.getPlayer(name);
 							u.playSound(u.getLocation(), Sound.ORB_PICKUP, 1, 5);
 							u.playSound(u.getLocation(), Sound.LEVEL_UP, 1, 5);
 						}

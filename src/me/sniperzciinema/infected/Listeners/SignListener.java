@@ -500,8 +500,10 @@ public class SignListener implements Listener {
 				if (team == null || className.equalsIgnoreCase("None") || InfClassManager.isRegistered(team, InfClassManager.getClass(team, className)))
 				{
 
-					if(team == null){
-						if(InfClassManager.isClass(className)){
+					if (team == null)
+					{
+						if (InfClassManager.isClass(className))
+						{
 							team = InfClassManager.getClass(className).getTeam();
 						}
 					}

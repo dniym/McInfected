@@ -146,8 +146,8 @@ public class Commands implements CommandExecutor {
 						InfectedJoinEvent je = new InfectedJoinEvent(p);
 						Bukkit.getPluginManager().callEvent(je);
 
-						for (Player u : Lobby.getInGame())
-							u.sendMessage(Msgs.Game_Joined_They.getString("<player>", p.getName()));
+						for (String name : Lobby.getInGame())
+							Bukkit.getPlayer(name).sendMessage(Msgs.Game_Joined_They.getString("<player>", p.getName()));
 
 						ip.setInfo();
 						Lobby.addPlayerInGame(p);
@@ -360,19 +360,19 @@ public class Commands implements CommandExecutor {
 						if (args[1].equalsIgnoreCase("Playing"))
 						{
 							p.sendMessage(Msgs.Format_Header.getString("<title>", "Playing"));
-							for (Player u : Lobby.getInGame())
-								p.sendMessage(Msgs.Format_List.getString("<player>", u.getDisplayName()));
+							for (String name : Lobby.getInGame())
+								Bukkit.getPlayer(name).sendMessage(Msgs.Format_List.getString("<player>", name));
 						} else if (args[1].equalsIgnoreCase("Humans"))
 						{
 							p.sendMessage(Msgs.Format_Header.getString("<title>", "Humans"));
-							for (Player u : Lobby.getHumans())
-								p.sendMessage(Msgs.Format_List.getString("<player>", u.getDisplayName()));
+							for (String name : Lobby.getTeam(Team.Human))
+								Bukkit.getPlayer(name).sendMessage(Msgs.Format_List.getString("<player>", name));
 
 						} else if (args[1].equalsIgnoreCase("Zombies"))
 						{
 							p.sendMessage(Msgs.Format_Header.getString("<title>", "Zombies"));
-							for (Player u : Lobby.getZombies())
-								p.sendMessage(Msgs.Format_List.getString("<player>", u.getDisplayName()));
+							for (String name : Lobby.getTeam(Team.Zombie))
+								Bukkit.getPlayer(name).sendMessage(Msgs.Format_List.getString("<player>", name));
 
 						} else
 							p.sendMessage(Msgs.Help_Lists.getString("<lists>", "Playing, Humans, Zombies"));
@@ -514,10 +514,10 @@ public class Commands implements CommandExecutor {
 								arena.setVotes(arena.getVotes() + ip.getAllowedVotes());
 								ip.setVote(arena);
 
-								for (Player u : Lobby.getInGame())
+								for (String name : Lobby.getInGame())
 								{
-									u.sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (ip.getAllowedVotes() != 0 ? " (x" + ip.getAllowedVotes() + ")" : ""));
-									InfPlayer up = InfPlayerManager.getInfPlayer(u);
+									Bukkit.getPlayer(name).sendMessage(Msgs.Command_Vote.getString("<player>", p.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (ip.getAllowedVotes() != 0 ? " (x" + ip.getAllowedVotes() + ")" : ""));
+									InfPlayer up = InfPlayerManager.getInfPlayer(name);
 									up.getScoreBoard().showProperBoard();
 								}
 							}
@@ -921,6 +921,9 @@ public class Commands implements CommandExecutor {
 						{
 
 							String arena = StringUtil.getWord(args[1]);
+
+							if (!Lobby.getLocation().getWorld().getName().equals(p.getWorld().getName()))
+								p.sendMessage(Msgs.Error_Arena_Not_In_Lobbys_World.getString());
 
 							if (Lobby.getArena(arena) != null)
 								p.sendMessage(Msgs.Error_Arena_Already_Exists.getString());

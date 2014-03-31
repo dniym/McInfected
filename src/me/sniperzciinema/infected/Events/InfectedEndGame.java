@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -33,21 +32,21 @@ public class InfectedEndGame extends Event {
 	/**
 	 * @return the players
 	 */
-	public ArrayList<Player> getPlayers() {
+	public ArrayList<String> getPlayers() {
 		return Lobby.getInGame();
 	}
 
 	/**
 	 * @return the zombies
 	 */
-	public ArrayList<Player> getZombies() {
+	public ArrayList<String> getZombies() {
 		return Lobby.getZombies();
 	}
 
 	/**
 	 * @return the Humans
 	 */
-	public ArrayList<Player> getHumans() {
+	public ArrayList<String> getHumans() {
 		return Lobby.getHumans();
 	}
 
