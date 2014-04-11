@@ -3,6 +3,7 @@ package me.sniperzciinema.infected.Handlers.Player;
 
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.UUID;
 
 import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Disguise.Disguises;
@@ -38,6 +39,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 public class InfPlayer {
 
 	private Player player;
+	private UUID uuid;
 	private Arena vote;
 	private String name;
 	private int killstreak = 0;
@@ -63,7 +65,22 @@ public class InfPlayer {
 	{
 		name = p.getName();
 		player = p;
+		setUuid(p.getUniqueId());
 
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	/**
+	 * @param uuid the uuid to set
+	 */
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public ScoreBoard getScoreBoard() {
@@ -104,9 +121,11 @@ public class InfPlayer {
 	/**
 	 * Clears the players armor and inventory
 	 */
+	@SuppressWarnings("deprecation")
 	public void clearEquipment() {
 		player.getInventory().clear();
 		player.getInventory().setArmorContents(null);
+		player.updateInventory();
 	}
 
 	/**
@@ -144,7 +163,7 @@ public class InfPlayer {
 				p.teleport(location);
 			p.setFallDistance(0F);
 			setTeam(Team.Human);
-			Lobby.getInGame().remove(p);
+			Lobby.delPlayerInGame(player);
 
 			if (Lobby.getGameState() == GameState.Started)
 				Stats.setPlayingTime(getName(), Stats.getPlayingTime(getName()) + getPlayingTime());
@@ -169,8 +188,8 @@ public class InfPlayer {
 
 			manageLeaving();
 
-			for (String name : Lobby.getInGame())
-				if (name != this.name)
+			for (Player u : Lobby.getPlayersInGame())
+				if (u.getName() != this.name)
 					InfPlayerManager.getInfPlayer(name).getScoreBoard().showProperBoard();
 
 			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
@@ -180,29 +199,29 @@ public class InfPlayer {
 	public void manageLeaving() {
 
 		// Is there anyone left in the lobby?
-		if (Lobby.getInGame().size() == 0)
+		if (Lobby.getPlayersInGame().size() == 0)
 			Lobby.reset();
 
 		// If nothing has started yet, just inform players they left
 		else if (Lobby.getGameState() == GameState.InLobby)
-			for (String name : Lobby.getInGame())
-				Bukkit.getPlayer(name).sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			for (Player u : Lobby.getPlayersInGame())
+				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 		// If the game isn't fully started yet, this includes Voting, and before
 		// and Infecteds chosen
 		else if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.Infecting)
 		{
 
-			for (String name : Lobby.getInGame())
-				Bukkit.getPlayer(name).sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			for (Player u : Lobby.getPlayersInGame())
+				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 			// If theres only one person left in the lobby, end the game
-			if (Lobby.getInGame().size() <= 1)
+			if (Lobby.getPlayersInGame().size() <= 1)
 			{
 				Lobby.setGameState(GameState.InLobby);
-				for (String name : Lobby.getInGame())
+				for (Player u : Lobby.getPlayersInGame())
 				{
-					Bukkit.getPlayer(name).sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
 					InfPlayerManager.getInfPlayer(name).tpToLobby();
 				}
 
@@ -215,16 +234,16 @@ public class InfPlayer {
 		// If the game has fully started
 		else if (Lobby.getGameState() == GameState.Started)
 		{
-			for (String name : Lobby.getInGame())
-				Bukkit.getPlayer(name).sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+			for (Player u : Lobby.getPlayersInGame())
+				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
 			// If theres only one person left in the lobby, end the game
-			if (Lobby.getInGame().size() <= 1)
+			if (Lobby.getPlayersInGame().size() <= 1)
 			{
 				Lobby.setGameState(GameState.InLobby);
-				for (String name : Lobby.getInGame())
+				for (Player u : Lobby.getPlayersInGame())
 				{
-					Bukkit.getPlayer(name).sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
 					InfPlayerManager.getInfPlayer(name).tpToLobby();
 				}
 
@@ -243,9 +262,9 @@ public class InfPlayer {
 			else if (Lobby.getTeam(Team.Human).size() == 0)
 			{
 				Lobby.setGameState(GameState.InLobby);
-				for (String name : Lobby.getInGame())
+				for (Player u : Lobby.getPlayersInGame())
 				{
-					Bukkit.getPlayer(name).sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
 					InfPlayerManager.getInfPlayer(name).tpToLobby();
 				}
 
@@ -281,13 +300,7 @@ public class InfPlayer {
 	 * Set Food to 20 - Undisguise the player
 	 */
 	public void tpToLobby() {
-
-		player.getInventory().setArmorContents(null);
-
-		if (!getInfClass(team).getItems().isEmpty())
-			for (ItemStack is : getInfClass(team).getItems())
-				player.getInventory().remove(is.getType());
-
+		clearEquipment();
 		setTeam(Team.Human);
 
 		player.setFlying(false);
@@ -358,12 +371,11 @@ public class InfPlayer {
 	 * zombie apply potion effects disguise update scoreboard apply confussion
 	 */
 	public void Infect() {
-		Player p = player;
-		p.setHealth(20.0);
-		p.setFoodLevel(20);
-		p.setFireTicks(0);
-		player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-		team = Team.Zombie;
+		this.player.setHealth(20.0);
+		this.player.setFoodLevel(20);
+		this.player.setFireTicks(0);
+		this.player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
+		this.team = Team.Zombie;
 		isWinner = false;
 		Equip.equipToZombie(player);
 		for (PotionEffect reffect : player.getActivePotionEffects())

@@ -39,6 +39,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 
@@ -62,7 +63,14 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
-			if (Lobby.getActiveArena().getSettings().droppingItemsDisabled())
+				e.setCancelled(true);
+	}
+	
+	// If a player attempts to drop an item in game
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerPickupItem(PlayerPickupItemEvent e) {
+		if(!e.isCancelled())
+			if (Lobby.isInGame(e.getPlayer()))
 				e.setCancelled(true);
 	}
 

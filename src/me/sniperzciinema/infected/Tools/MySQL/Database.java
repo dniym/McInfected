@@ -1,5 +1,5 @@
 
-package code.husky;
+package me.sniperzciinema.infected.Tools.MySQL;
 
 import java.sql.Connection;
 

@@ -49,15 +49,14 @@ public class Deaths {
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
 				killed.sendMessage(face);
 
-				for (String name : Lobby.getInGame())
+				for (Player u : Lobby.getPlayersInGame())
 				{
-					Player u = Bukkit.getPlayer(name);
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
 				}
 			} else
-				for (String name : Lobby.getInGame())
-					Bukkit.getPlayer(name).sendMessage(killMessage);
+				for (Player u : Lobby.getPlayersInGame())
+					u.sendMessage(killMessage);
 		}
 		// <--
 
@@ -93,9 +92,9 @@ public class Deaths {
 			}
 		}
 
-		for (String name : Lobby.getInGame())
+		for (Player u : Lobby.getPlayersInGame())
 		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(name);
+			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
 
@@ -118,15 +117,14 @@ public class Deaths {
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
 				killed.sendMessage(face);
 
-				for (String name : Lobby.getInGame())
+				for (Player u : Lobby.getPlayersInGame())
 				{
-					Player u = Bukkit.getPlayer(name);
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
 				}
 			} else
-				for (String name : Lobby.getInGame())
-					Bukkit.getPlayer(name).sendMessage(killMessage);
+				for (Player u : Lobby.getPlayersInGame())
+					u.sendMessage(killMessage);
 		}
 		// <--
 
@@ -145,9 +143,9 @@ public class Deaths {
 			Equip.equip(killed);
 		}
 
-		for (String name : Lobby.getInGame())
+		for (Player u : Lobby.getPlayersInGame())
 		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(name);
+			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}
 

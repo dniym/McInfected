@@ -38,7 +38,7 @@ public class UpdateInfoSigns {
 						if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN)
 						{
 							Sign sign = (Sign) location.getBlock().getState();
-							sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Lobby.getInGame().size()));
+							sign.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Lobby.getPlayersInGame().size()));
 							sign.setLine(2, ChatColor.GOLD + status);
 							if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Voting)
 								sign.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));

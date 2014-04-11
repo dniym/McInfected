@@ -278,9 +278,8 @@ public class Menus {
 							arena.setVotes(arena.getVotes() + votes);
 							infPlayer.setVote(arena);
 
-							for (String name : Lobby.getInGame())
+							for (Player u : Lobby.getPlayersInGame())
 							{
-								Player u = Bukkit.getPlayer(name);
 								u.sendMessage(Msgs.Command_Vote.getString("<player>", player.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (votes != 0 ? " (x" + votes + ")" : ""));
 								InfPlayer up = InfPlayerManager.getInfPlayer(u);
 								up.getScoreBoard().showProperBoard();

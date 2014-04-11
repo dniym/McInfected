@@ -40,9 +40,8 @@ public class Game {
 		InfectedEndGame e = new InfectedEndGame(DidHumansWin);
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (String name : Lobby.getInGame())
+		for (Player u : Lobby.getPlayersInGame())
 		{
-			Player u = Bukkit.getPlayer(name);
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 			IP.getScoreBoard().showProperBoard();
 			Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
@@ -53,9 +52,8 @@ public class Game {
 
 			ArrayList<String> winners = new ArrayList<String>();
 
-			for (String name : Lobby.getInGame())
+			for (Player u : Lobby.getPlayersInGame())
 			{
-				Player u = Bukkit.getPlayer(name);
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 
 				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
@@ -104,9 +102,8 @@ public class Game {
 			}
 		} else
 		{
-			for (String name : Lobby.getInGame())
+			for (Player u : Lobby.getPlayersInGame())
 			{
-				Player u = Bukkit.getPlayer(name);
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
@@ -135,8 +132,8 @@ public class Game {
 			public void run() {
 
 				Lobby.setGameState(GameState.InLobby);
-				for (String name : Lobby.getInGame())
-					InfPlayerManager.getInfPlayer(name).tpToLobby();
+				for (Player u : Lobby.getPlayersInGame())
+					InfPlayerManager.getInfPlayer(u).tpToLobby();
 
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 				{
@@ -144,7 +141,7 @@ public class Game {
 					@Override
 					public void run() {
 
-						if (Lobby.getInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
+						if (Lobby.getPlayersInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
 							Lobby.timerStartVote();
 					}
 				}, 10 * 60);
@@ -171,7 +168,7 @@ public class Game {
 	public static void chooseAlphas() {
 
 		int toInfect = 1;
-		int inGame = Lobby.getInGame().size();
+		int inGame = Lobby.getPlayersInGame().size();
 		float percent = Lobby.getActiveArena().getSettings().getAlphaPercent() / 100;
 		toInfect = (int) (inGame * percent);
 		if (toInfect == 0)
@@ -182,8 +179,7 @@ public class Game {
 
 		while (!(Lobby.getTeam(Team.Zombie).size() >= toInfect))
 		{
-			String alphaName = Lobby.getInGame().get(new Random().nextInt(Lobby.getInGame().size()));
-			Player alpha = Bukkit.getPlayer(alphaName);
+			Player alpha = Lobby.getPlayersInGame().get(new Random().nextInt(Lobby.getPlayersInGame().size()));
 			if (Settings.PictureEnabled())
 			{
 				face = Pictures.getZombie();
@@ -193,8 +189,8 @@ public class Game {
 				alpha.sendMessage(face);
 			} else
 				alpha.sendMessage(Msgs.Game_Alpha_You.getString());
-
-			InfPlayerManager.getInfPlayer(alpha).Infect();
+			InfPlayer ip = InfPlayerManager.getInfPlayer(alpha);
+			ip.Infect();
 
 			if (Settings.PictureEnabled())
 			{
@@ -202,21 +198,20 @@ public class Game {
 				face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
 				face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
 			}
-			for (String name : Lobby.getInGame())
-				if (!name.equals(alphaName))
+			for (Player player : Lobby.getPlayersInGame())
+				if (!player.getName().equals(alpha.getName()))
 				{
 					if (Settings.PictureEnabled())
-						Bukkit.getPlayer(name).sendMessage(face);
+						player.sendMessage(face);
 					else
-						Bukkit.getPlayer(name).sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
+						player.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
 				}
 
 			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
 				alpha.addPotionEffect(PE);
 		}
-		for (String name : Lobby.getInGame())
+		for (Player u : Lobby.getPlayersInGame())
 		{
-			Player u = Bukkit.getPlayer(name);
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);
 			up.getScoreBoard().showProperBoard();
 		}

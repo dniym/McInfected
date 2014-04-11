@@ -2,6 +2,7 @@
 package me.sniperzciinema.infected.Handlers.Items;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -42,8 +43,25 @@ public class ItemHandler {
 				for (String data : line)
 				{
 
-					if (data.startsWith("id"))
-						stack.setType(Material.getMaterial(Integer.parseInt(data.split(":")[1])));
+					if (data.startsWith("id") || data.startsWith("item"))
+					{
+						Material mat = null;
+						String item = data.split(":")[1];
+						try
+						{
+							mat = Material.getMaterial(Integer.valueOf(item));
+						} catch (NumberFormatException e)
+						{
+							if (Material.getMaterial(item) != null)
+								mat = Material.getMaterial(item);
+							else if (Material.getMaterial(ItemNames.getMaterialName(item)) != null)
+								mat = Material.getMaterial(item);
+							else
+								mat = Material.AIR;
+						}
+						stack.setType(mat);
+					} else if (data.startsWith("item"))
+						stack.setType(Material.getMaterial(data.split(":")[1]));
 
 					else if (data.startsWith("amount") || data.startsWith("quantity"))
 						stack.setAmount(Integer.parseInt(data.split(":")[1]));
@@ -71,13 +89,18 @@ public class ItemHandler {
 						stack.setItemMeta(im);
 					} else if (data.startsWith("color") || data.startsWith("colour"))
 					{
-						LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
-						String[] s = data.replaceAll("color:", "").replaceAll("colour", "").split(",");
-						int red = Integer.parseInt(s[0]);
-						int green = Integer.parseInt(s[1]);
-						int blue = Integer.parseInt(s[2]);
-						im.setColor(Color.fromRGB(red, green, blue));
-						stack.setItemMeta(im);
+						try
+						{
+							LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
+							String[] s = data.replaceAll("color:", "").replaceAll("colour", "").split(",");
+							int red = Integer.parseInt(s[0]);
+							int green = Integer.parseInt(s[1]);
+							int blue = Integer.parseInt(s[2]);
+							im.setColor(Color.fromRGB(red, green, blue));
+							stack.setItemMeta(im);
+						} catch (ClassCastException notLeather)
+						{
+						}
 					} else if (data.startsWith("lore") || data.startsWith("desc"))
 					{
 						String s = data.split(":")[1];
@@ -340,7 +363,7 @@ public class ItemHandler {
 		if (i.getTypeId() != 0 && i != null)
 		{
 
-			itemCode = "id:"+String.valueOf(i.getTypeId());
+			itemCode = "id:" + String.valueOf(i.getTypeId());
 
 			if (i.getDurability() != 0)
 				itemCode = itemCode + " data:" + i.getDurability();
@@ -389,5 +412,22 @@ public class ItemHandler {
 					killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
 
 		return killstreaks;
+	}
+
+	public static ItemStack getItemStackIgnoreDamage(ItemStack stack) {
+		if (stack == null)
+			stack = new ItemStack(Material.AIR);
+		stack.setDurability((short) 0);
+		return stack;
+	}
+
+	public static ItemStack getFancyMessageItem(String title, String... strings) {
+		ItemStack item = new ItemStack(Material.STONE);
+		ItemMeta im = item.getItemMeta();
+		List<String> lore = Arrays.asList(strings);
+		im.setDisplayName(title);
+		im.setLore(lore);
+		item.setItemMeta(im);
+		return item;
 	}
 }

@@ -294,7 +294,7 @@ public class SignListener implements Listener {
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class") && !event.getLine(1).contains("Classes"))
 			{
 				// Make sure everything checks out as good
-				if (!p.hasPermission("Infected.Setup"))
+				if (!p.hasPermission("Infected.Signs.Shop"))
 				{
 					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
@@ -353,7 +353,7 @@ public class SignListener implements Listener {
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Info"))
 			{
 				// Make thing everythings in check
-				if (!player.hasPermission("Infected.Setup"))
+				if (!player.hasPermission("Infected.Signs.Info"))
 				{
 					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
@@ -375,7 +375,7 @@ public class SignListener implements Listener {
 
 						int time = Lobby.getTimeLeft();
 
-						event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Lobby.getInGame().size()));
+						event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Lobby.getPlayersInGame().size()));
 						event.setLine(2, ChatColor.GOLD + status);
 						if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Voting)
 							event.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
@@ -410,7 +410,7 @@ public class SignListener implements Listener {
 			Player player = event.getPlayer();
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Cmd"))
 			{
-				if (!player.hasPermission("Infected.Setup"))
+				if (!player.hasPermission("Infected.Signs.Command"))
 				{
 					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
@@ -440,7 +440,7 @@ public class SignListener implements Listener {
 			Player player = event.getPlayer();
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("CmdSet"))
 			{
-				if (!player.hasPermission("Infected.Setup"))
+				if (!player.hasPermission("Infected.Signs.CmdSets"))
 				{
 					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
@@ -488,7 +488,7 @@ public class SignListener implements Listener {
 			Player player = event.getPlayer();
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && (event.getLine(1).equalsIgnoreCase("Class") || event.getLine(1).equalsIgnoreCase("Classes")))
 			{
-				if (!player.hasPermission("Infected.Setup"))
+				if (!player.hasPermission("Infected.Signs.Classes"))
 				{
 					player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);

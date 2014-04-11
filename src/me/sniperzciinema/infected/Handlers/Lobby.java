@@ -12,8 +12,6 @@ import me.sniperzciinema.infected.GameMechanics.Equip;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Arena.ArenaSettings;
-import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
-import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
@@ -35,7 +33,7 @@ public class Lobby {
 	// All the Arena Objects
 	private static ArrayList<Arena> arenas = new ArrayList<Arena>();
 	// All the players playing Infected
-	private static ArrayList<String> inGame = new ArrayList<String>();
+	private static ArrayList<Player> inGame = new ArrayList<Player>();
 	// All the humans
 	// What ever arena we're playing on
 	private static Arena activeArena;
@@ -70,13 +68,6 @@ public class Lobby {
 		}
 	};
 
-	public Lobby()
-	{
-		loadArenas();
-		InfClassManager.loadConfigClasses();
-		GrenadeManager.loadConfigGrenades();
-	}
-
 	public static ArrayList<String> getValidArenas() {
 		ArrayList<String> ga = new ArrayList<String>();
 		for (Arena a : getArenas())
@@ -107,18 +98,22 @@ public class Lobby {
 	}
 
 	public static boolean isInGame(Player p) {
-		return inGame.contains(p.getName());
+		return inGame.contains(p);
 	}
 
 	public static void addPlayerInGame(Player p) {
-		inGame.add(p.getName());
+		inGame.add(p);
 	}
 
 	public static void delPlayerInGame(Player p) {
-		inGame.remove(p.getName());
+		inGame.remove(p);
 	}
 
-	public static ArrayList<String> getInGame() {
+	public static ArrayList<Player> getPlayersInGame() {
+		return inGame;
+	}
+	@Deprecated
+	public static ArrayList<Player> getInGame() {
 		return inGame;
 	}
 
@@ -134,24 +129,24 @@ public class Lobby {
 		return InfPlayerManager.getInfPlayer(p).getTeam() == Team.Zombie;
 	}
 
-	public static ArrayList<String> getHumans() {
+	public static ArrayList<Player> getHumans() {
 		return getTeam(Team.Human);
 	}
 
-	public static ArrayList<String> getZombies() {
+	public static ArrayList<Player> getZombies() {
 		return getTeam(Team.Zombie);
 	}
 
 	/**
 	 * @return the teams list
 	 */
-	public static ArrayList<String> getTeam(Team team) {
-		ArrayList<String> teamList = new ArrayList<String>();
-		for (String name : getInGame())
+	public static ArrayList<Player> getTeam(Team team) {
+		ArrayList<Player> teamList = new ArrayList<Player>();
+		for (Player player : getPlayersInGame())
 		{
-			InfPlayer ip = InfPlayerManager.getInfPlayer(name);
+			InfPlayer ip = InfPlayerManager.getInfPlayer(player);
 			if (ip.getTeam() == team)
-				teamList.add(name);
+				teamList.add(player);
 		}
 		return teamList;
 	}
@@ -169,7 +164,7 @@ public class Lobby {
 	public static boolean oppositeTeams(Player p, Player u) {
 		InfPlayer ip = InfPlayerManager.getInfPlayer(p);
 		InfPlayer iu = InfPlayerManager.getInfPlayer(u);
-		return !(ip.getTeam() == iu.getTeam()) || (isInGame(p) && !isInGame(u)) || (!isInGame(p) && isInGame(u));
+		return (ip.getTeam() != iu.getTeam());
 	}
 
 	public static ArenaSettings getArenaSettings(Arena arena) {
@@ -279,8 +274,8 @@ public class Lobby {
 
 		resetArena(getActiveArena());
 		setActiveArena(null);
-		for (String name : getInGame())
-			InfPlayerManager.getInfPlayer(name).setTeam(Team.Human);
+		for (Player player : getPlayersInGame())
+			InfPlayerManager.getInfPlayer(player).setTeam(Team.Human);
 
 	}
 
@@ -330,28 +325,27 @@ public class Lobby {
 			InfectedStartVote e = new InfectedStartVote();
 			Bukkit.getPluginManager().callEvent(e);
 
-			for (String name : getInGame())
+			for (Player player : getPlayersInGame())
 			{
-				Player u = Bukkit.getPlayer(name);
-				InfPlayer up = InfPlayerManager.getInfPlayer(u);
-				up.getScoreBoard().showProperBoard();
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage("");
-				u.sendMessage(Msgs.Format_Header.getString("<title>", " Vote "));
-				u.sendMessage("");
-				u.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
-				u.sendMessage(Msgs.Help_Vote.getString());
-				u.sendMessage("");
-				u.sendMessage(Msgs.Format_Line.getString());
+				InfPlayer ip = InfPlayerManager.getInfPlayer(player);
+				ip.getScoreBoard().showProperBoard();
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage("");
+				player.sendMessage(Msgs.Format_Header.getString("<title>", " Vote "));
+				player.sendMessage("");
+				player.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
+				player.sendMessage(Msgs.Help_Vote.getString());
+				player.sendMessage("");
+				player.sendMessage(Msgs.Format_Line.getString());
 			}
 
 			currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
@@ -363,32 +357,30 @@ public class Lobby {
 					{
 						TimeLeft -= 1;
 
-						for (String name : getInGame())
-							Bukkit.getPlayer(name).setLevel(getTimeLeft());
+						for (Player player : getPlayersInGame())
+							player.setLevel(getTimeLeft());
 
 						if (TimeLeft == 60 || TimeLeft == 50 || TimeLeft == 40 || TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 						{
-							for (String name : getInGame())
-								Bukkit.getPlayer(name).sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
+							for (Player player : getPlayersInGame())
+								player.sendMessage(Msgs.Game_Time_Left_Voting.getString("<time>", Time.getTime((long) getTimeLeft())));
 						}
 						if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 						{
-							for (String name : getInGame())
+							for (Player player : getPlayersInGame())
 							{
-								Player u = Bukkit.getPlayer(name);
-								u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
-								u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
-								u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+								player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1, 1);
+								player.playSound(player.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
+								player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
 							}
 						}
 						if (TimeLeft == 1)
 
-							for (String name : getInGame())
+							for (Player player : getPlayersInGame())
 							{
-								Player u = Bukkit.getPlayer(name);
-								u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 5);
-								u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 5);
-								u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 5);
+								player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1, 5);
+								player.playSound(player.getLocation(), Sound.NOTE_BASS_DRUM, 1, 5);
+								player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 5);
 							}
 						else if (TimeLeft == 0)
 						{
@@ -400,34 +392,33 @@ public class Lobby {
 							}
 
 							setActiveArena(arena);
-							for (String name : getInGame())
+							for (Player player: getPlayersInGame())
 							{
-								Player u = Bukkit.getPlayer(name);
-								InfPlayer up = InfPlayerManager.getInfPlayer(u);
-								up.getScoreBoard().showProperBoard();
+								InfPlayer ip = InfPlayerManager.getInfPlayer(player);
+								ip.getScoreBoard().showProperBoard();
 
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage("");
-								u.sendMessage(Msgs.Format_Line.getString());
-								u.sendMessage("");
-								u.sendMessage(Msgs.Game_Starting_In_5.getString());
-								u.sendMessage("");
-								u.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
-								u.sendMessage("");
-								u.sendMessage(Msgs.Format_Line.getString());
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage("");
+								player.sendMessage(Msgs.Format_Line.getString());
+								player.sendMessage("");
+								player.sendMessage(Msgs.Game_Starting_In_5.getString());
+								player.sendMessage("");
+								player.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
+								player.sendMessage("");
+								player.sendMessage(Msgs.Format_Line.getString());
 								Lobby.setGameState(GameState.Loading);
 								stopTimer();
 							}
@@ -437,13 +428,12 @@ public class Lobby {
 								@Override
 								public void run() {
 
-									for (String name : getInGame())
+									for (Player player : getPlayersInGame())
 									{
-										Player u = Bukkit.getPlayer(name);
-										u.setGameMode(GameMode.SURVIVAL);
-										InfPlayer up = InfPlayerManager.getInfPlayer(u);
+										player.setGameMode(GameMode.SURVIVAL);
+										InfPlayer up = InfPlayerManager.getInfPlayer(player);
 										up.respawn();
-										Equip.equip(u);
+										Equip.equip(player);
 									}
 									timerStartInfecting();
 								}
@@ -463,10 +453,9 @@ public class Lobby {
 		InfectedStartInfecting e = new InfectedStartInfecting();
 		Bukkit.getPluginManager().callEvent(e);
 
-		for (String name : getInGame())
+		for (Player player : getPlayersInGame())
 		{
-			Player u = Bukkit.getPlayer(name);
-			InfPlayer ip = InfPlayerManager.getInfPlayer(u);
+			InfPlayer ip = InfPlayerManager.getInfPlayer(player);
 			ip.getScoreBoard().showProperBoard();
 			ip.setTimeIn(System.currentTimeMillis() / 1000);
 		}
@@ -481,33 +470,31 @@ public class Lobby {
 				if (TimeLeft != 0)
 				{
 					TimeLeft -= 1;
-					for (String name : getInGame())
-						Bukkit.getPlayer(name).setLevel(TimeLeft);
+					for (Player player : getPlayersInGame())
+						player.setLevel(TimeLeft);
 
 					if (TimeLeft == 30 || TimeLeft == 20 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
-						for (String name : getInGame())
-							Bukkit.getPlayer(name).sendMessage(Msgs.Game_Time_Left_Infecting.getString("<time>", Time.getTime((long) getTimeLeft())));
+						for (Player player : getPlayersInGame())
+							player.sendMessage(Msgs.Game_Time_Left_Infecting.getString("<time>", Time.getTime((long) getTimeLeft())));
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 					{
 
-						for (String name : getInGame())
+						for (Player player : getPlayersInGame())
 						{
-							Player u = Bukkit.getPlayer(name);
-							u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
 						}
 					}
 					if (TimeLeft == 1)
 					{
-						for (String name : getInGame())
+						for (Player player : getPlayersInGame())
 						{
-							Player u = Bukkit.getPlayer(name);
-							u.playSound(u.getLocation(), Sound.ZOMBIE_INFECT, 1, 5);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+							player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 5);
+							player.playSound(player.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
 						}
 					}
 
@@ -515,11 +502,10 @@ public class Lobby {
 					{
 						Game.chooseAlphas();
 
-						for (String name : getInGame())
+						for (Player player : getPlayersInGame())
 						{
-							Player u = Bukkit.getPlayer(name);
-							InfPlayer ip = InfPlayerManager.getInfPlayer(u);
-							if (ip.getTeam() != Team.Human || ip.getTeam() != Team.Zombie)
+							InfPlayer ip = InfPlayerManager.getInfPlayer(player);
+							if (ip.getTeam() != Team.Human && ip.getTeam() != Team.Zombie)
 								ip.setTeam(Team.Human);
 						}
 						timerStartGame();
@@ -539,11 +525,10 @@ public class Lobby {
 		GameTime = getActiveArena().getSettings().getGameTime();
 		TimeLeft = GameTime;
 
-		for (String name : getInGame())
+		for (Player player : getPlayersInGame())
 		{
-			Player u = Bukkit.getPlayer(name);
-			InfPlayer up = InfPlayerManager.getInfPlayer(u);
-			up.getScoreBoard().showProperBoard();
+			InfPlayer ip = InfPlayerManager.getInfPlayer(player);
+			ip.getScoreBoard().showProperBoard();
 		}
 		currentGameTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
 		{
@@ -553,46 +538,43 @@ public class Lobby {
 				if (TimeLeft != 0)
 				{
 					TimeLeft -= 1;
-					for (String name : getInGame())
-						Bukkit.getPlayer(name).setLevel(TimeLeft);
+					for (Player player : getPlayersInGame())
+						player.setLevel(TimeLeft);
 
 					if (GameTime - TimeLeft == 10)
-						for (String name : getInGame())
-							Bukkit.getPlayer(name).teleport(Bukkit.getPlayer(name).getLocation());
+						for (Player player : getPlayersInGame())
+							player.teleport(player.getLocation());
 
 					if (TimeLeft == (GameTime / 4) * 3 || TimeLeft == GameTime / 2 || TimeLeft == GameTime / 4 || TimeLeft == 60 || TimeLeft == 10 || TimeLeft == 9 || TimeLeft == 8 || TimeLeft == 7 || TimeLeft == 6 || TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2 || TimeLeft == 1)
 					{
 						if (TimeLeft > 61)
 						{
-							for (String name : getInGame())
+							for (Player player : getPlayersInGame())
 							{
-								Player u = Bukkit.getPlayer(name);
-								u.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
-								u.sendMessage(Msgs.Game_Players_Left.getString("<humans>", String.valueOf(getTeam(Team.Human).size()), "<zombies>", String.valueOf(getTeam(Team.Zombie).size())));
+								player.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
+								player.sendMessage(Msgs.Game_Players_Left.getString("<humans>", String.valueOf(getTeam(Team.Human).size()), "<zombies>", String.valueOf(getTeam(Team.Zombie).size())));
 							}
 						} else
-							for (String name : getInGame())
-								Bukkit.getPlayer(name).sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
+							for (Player player : getPlayersInGame())
+								player.sendMessage(Msgs.Game_Time_Left_Game.getString("<time>", Time.getTime((long) TimeLeft)));
 
 					}
 					if (TimeLeft == 5 || TimeLeft == 4 || TimeLeft == 3 || TimeLeft == 2)
 					{
 
-						for (String name : getInGame())
+						for (Player player : getPlayersInGame())
 						{
-							Player u = Bukkit.getPlayer(name);
-							u.playSound(u.getLocation(), Sound.NOTE_STICKS, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
-							u.playSound(u.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_BASS_DRUM, 1, 1);
+							player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 1, 1);
 						}
 					}
 					if (TimeLeft == 1)
 					{
-						for (String name : getInGame())
+						for (Player player : getPlayersInGame())
 						{
-							Player u = Bukkit.getPlayer(name);
-							u.playSound(u.getLocation(), Sound.ORB_PICKUP, 1, 5);
-							u.playSound(u.getLocation(), Sound.LEVEL_UP, 1, 5);
+							player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1, 5);
+							player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 5);
 						}
 					} else if (TimeLeft == 0)
 						Game.endGame(true);

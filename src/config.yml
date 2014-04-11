@@ -1,4 +1,4 @@
-# Default Infected Config, Last edited in 2.1.8
+# Default Infected Config, Last edited in 2.2.0
 # #
 # See Infecteds config page for help
 # http://dev.bukkit.org/server-mods/infected-core
@@ -64,8 +64,6 @@ Logs:
 Settings:
 # These settings can not be used Per Arena
   Misc:
-# Should "/Infected Help" Give a book
-    Use Book For Help: true
 # To allow certain ranks to have more influance in voting
     Votes:
       Extra Votes:
@@ -161,8 +159,6 @@ Settings:
       Disable Enchanting: true
 # Should players be able to open doors, use levers, etc in arenas
       Disable Interacting: false
-# Should players be able to drop items
-      Disable Dropping Items: true
 # The rewards for playing a game(Items)
     Rewards:
     - id:351 data:2 amount:3

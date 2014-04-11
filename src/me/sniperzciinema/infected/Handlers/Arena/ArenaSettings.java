@@ -53,17 +53,27 @@ public class ArenaSettings {
 	}
 
 	public int getScorePer(InfPlayer ip, Events e) {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Score." + e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString())*ip.getScoreModifier();
+		int modifier;
+		if(ip == null)
+			modifier = 1;
 		else
-			return Files.getConfig().getInt("Settings.Global.Score." + e.toString())*ip.getScoreModifier();
+			modifier = ip.getScoreModifier();
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Score." + e.toString()))
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString())*modifier;
+		else
+			return Files.getConfig().getInt("Settings.Global.Score." + e.toString())*modifier;
 	}
 
 	public int getPointsPer(InfPlayer ip, Events e) {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Points." + e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString())*ip.getPointsModifier();
+			int modifier;
+		if(ip == null)
+			modifier = 1;
 		else
-			return Files.getConfig().getInt("Settings.Global.Points." + e.toString())*ip.getPointsModifier();
+			modifier = ip.getPointsModifier();
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Points." + e.toString()))
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString())*modifier;
+		else
+			return Files.getConfig().getInt("Settings.Global.Points." + e.toString())*modifier;
 	}
 
 	public int getAlphaPercent() {
@@ -74,13 +84,6 @@ public class ArenaSettings {
 	}
 
 	// ////////////////////////////////////////////////-BOOLEANS-////////////////////////////////////////////////////
-
-	public boolean droppingItemsDisabled() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Disable Dropping Items"))
-			return Files.getArenas().getBoolean("Arenas." + arena.getName() + ".Misc.Disable Dropping Items");
-		else
-			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Dropping Items");
-	}
 
 	public boolean hungerDisabled() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Misc.Disable Hunger"))

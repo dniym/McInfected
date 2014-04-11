@@ -7,7 +7,6 @@ import me.sniperzciinema.infected.Disguise.Disguises;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +42,7 @@ public class TeleportFix implements Listener {
 				@Override
 				public void run() {
 					// Refresh nearby clients
-					final List<String> nearby = Lobby.getInGame();
+					final List<Player> nearby = Lobby.getPlayersInGame();
 
 					// Hide every player
 					updateEntities(player, nearby);
@@ -62,12 +61,11 @@ public class TeleportFix implements Listener {
 		}
 	}
 
-	public void updateEntities(Player tpedPlayer, List<String> players) {
+	public void updateEntities(Player tpedPlayer, List<Player> nearby) {
 		// Hide or show every player to tpedPlayer
 		// and hide or show tpedPlayer to every player.
-		for (String name : players)
+		for (Player player : nearby)
 		{
-			Player player = Bukkit.getPlayer(name);
 			// If disguises are enabled only toggle the player if they're
 			// disguised
 			if (Settings.DisguisesEnabled())

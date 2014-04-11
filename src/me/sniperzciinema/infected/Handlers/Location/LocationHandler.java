@@ -47,4 +47,17 @@ public class LocationHandler {
 		return s;
 	}
 
+	public static String getRoundedLocation(Location location) {
+		if(location == null)
+			return "Not Set";
+		int x = location.getBlockX();
+		int y = location.getBlockY();
+		int z = location.getBlockZ();
+		String world = location.getWorld().getName();
+		
+		String s = world + ", " + x + ", " + y + ", " + z;
+		
+		return s;
+	}
+
 }

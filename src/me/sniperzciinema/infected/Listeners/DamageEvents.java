@@ -207,8 +207,10 @@ public class DamageEvents implements Listener {
 							Deaths.playerDies(DeathType.Other, null, victim);
 
 						}
-					} else
+					}
+					else
 					{
+						//TODO: Check if the projectile was from a Gun, if yes, then DON'T DO THIS
 						e.setDamage(0);
 						e.setCancelled(true);
 					}

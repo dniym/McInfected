@@ -26,6 +26,7 @@ import me.sniperzciinema.infected.Tools.Metrics;
 import me.sniperzciinema.infected.Tools.TeleportFix;
 import me.sniperzciinema.infected.Tools.UpdateInfoSigns;
 import me.sniperzciinema.infected.Tools.Updater;
+import me.sniperzciinema.infected.Tools.MySQL.MySQL;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -34,8 +35,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import code.husky.mysql.MySQL;
 
 
 public class Infected extends JavaPlugin {
@@ -46,6 +45,7 @@ public class Infected extends JavaPlugin {
 
 	public static boolean update = false;
 	public static String updateName = "";
+	public static String updateLink = "";
 	public static File file;
 
 	// Plugin Addons
@@ -99,6 +99,7 @@ public class Infected extends JavaPlugin {
 
 			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			updateName = updater.getLatestName();
+			updateLink = updater.getLatestFileLink();
 
 			if (update)
 			{
@@ -142,6 +143,7 @@ public class Infected extends JavaPlugin {
 			} catch (Exception e)
 			{
 				Files.getConfig().set("MySQL.Enabled", false);
+				Files.saveConfig();
 				System.out.println("Unable to connect to MySQL");
 			}
 		}
@@ -166,7 +168,7 @@ public class Infected extends JavaPlugin {
 		try
 		{
 			// On disable reset players with everything from before
-			if (!Lobby.getInGame().isEmpty())
+			if (!Lobby.getPlayersInGame().isEmpty())
 				for (Player p : Bukkit.getOnlinePlayers())
 					if (Lobby.isInGame(p))
 					{

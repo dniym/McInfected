@@ -94,9 +94,8 @@ public class GrenadeListener implements Listener {
 								// Play an effect then get every player in it's
 								// range and do the damage
 								grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
-								for (String name : Lobby.getInGame())
+								for (Player u : Lobby.getPlayersInGame())
 								{
-									Player u = Bukkit.getPlayer(name);
 									if (grenadeItem.getLocation().distance(u.getLocation()) <= grenade.getRange())
 									{
 										if (InfPlayerManager.getInfPlayer(p).getTeam() != InfPlayerManager.getInfPlayer(u).getTeam() || (grenade.isDamageThrower() && p == u))

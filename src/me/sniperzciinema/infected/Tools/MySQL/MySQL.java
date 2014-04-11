@@ -1,5 +1,5 @@
 
-package code.husky.mysql;
+package me.sniperzciinema.infected.Tools.MySQL;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,8 +9,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
-
-import code.husky.Database;
 
 
 /**

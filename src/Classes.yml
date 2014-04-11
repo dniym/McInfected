@@ -84,12 +84,12 @@ Classes:
         '10': id:261 amount:10
   Zombie: 
     Regular:
-      Icon: id:367
+      Icon: id:397 data:2
       Disguise: Zombie
-      Helmet: id:298
-      Chestplate: id:299
-      Leggings: id:300
-      Boots: id:305
+      Helmet: id:397 data:2 color:76,153,0
+      Chestplate: id:299 color:76,153,0
+      Leggings: id:300 color:76,153,0
+      Boots: id:301 color:76,153,0
       Items:
       - id:272
       Transfer Potion Effects:
@@ -97,12 +97,12 @@ Classes:
       KillStreaks:
         '10': id:276 enchantment:1
     Bones:
-      Icon: id:352
+      Icon: id:397
       Disguise: Skeleton
-      Helmet: id:298
-      Chestplate: id:299 enchantmnt:7
-      Leggings: id:300
-      Boots: id:305
+      Helmet: id:397 color:224,224,224
+      Chestplate: id:299 enchantment:7 color:224,224,224
+      Leggings: id:300 color:224,224,224
+      Boots: id:301 color:224,224,224
       Items:
       - id:262 enchantment:51 enchantment:49
       - id:261 amount:1
