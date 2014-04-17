@@ -60,62 +60,62 @@ public class Metrics {
 	/**
 	 * The current revision number
 	 */
-	private final static int REVISION = 7;
+	private final static int		REVISION		= 7;
 
 	/**
 	 * The base url of the metrics domain
 	 */
-	private static final String BASE_URL = "http://report.mcstats.org";
+	private static final String		BASE_URL		= "http://report.mcstats.org";
 
 	/**
 	 * The url used to report a server's status
 	 */
-	private static final String REPORT_URL = "/plugin/%s";
+	private static final String		REPORT_URL		= "/plugin/%s";
 
 	/**
 	 * Interval of time to ping (in minutes)
 	 */
-	private static final int PING_INTERVAL = 15;
+	private static final int		PING_INTERVAL	= 15;
 
 	/**
 	 * The plugin this metrics submits for
 	 */
-	private final Plugin plugin;
+	private final Plugin			plugin;
 
 	/**
 	 * All of the custom graphs to submit to metrics
 	 */
-	private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+	private final Set<Graph>		graphs			= Collections.synchronizedSet(new HashSet<Graph>());
 
 	/**
 	 * The plugin configuration file
 	 */
-	private final YamlConfiguration configuration;
+	private final YamlConfiguration	configuration;
 
 	/**
 	 * The plugin configuration file
 	 */
-	private final File configurationFile;
+	private final File				configurationFile;
 
 	/**
 	 * Unique server id
 	 */
-	private final String guid;
+	private final String			guid;
 
 	/**
 	 * Debug mode
 	 */
-	private final boolean debug;
+	private final boolean			debug;
 
 	/**
 	 * Lock for synchronization
 	 */
-	private final Object optOutLock = new Object();
+	private final Object			optOutLock		= new Object();
 
 	/**
 	 * The scheduled task
 	 */
-	private volatile BukkitTask task = null;
+	private volatile BukkitTask		task			= null;
 
 	public Metrics(final Plugin plugin) throws IOException
 	{
@@ -216,7 +216,7 @@ public class Metrics {
 			task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable()
 			{
 
-				private boolean firstPost = true;
+				private boolean	firstPost	= true;
 
 				public void run() {
 					try
@@ -250,7 +250,8 @@ public class Metrics {
 						// After the first post we set firstPost to false
 						// Each post thereafter will be a ping
 						firstPost = false;
-					} catch (IOException e)
+					}
+					catch (IOException e)
 					{
 						if (debug)
 						{
@@ -276,14 +277,16 @@ public class Metrics {
 			{
 				// Reload the metrics file
 				configuration.load(getConfigFile());
-			} catch (IOException ex)
+			}
+			catch (IOException ex)
 			{
 				if (debug)
 				{
 					Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
 				}
 				return true;
-			} catch (InvalidConfigurationException ex)
+			}
+			catch (InvalidConfigurationException ex)
 			{
 				if (debug)
 				{
@@ -473,8 +476,7 @@ public class Metrics {
 		json.append('}');
 
 		// Create the url
-		URL url = new URL(
-				BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
+		URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
 
 		// Connect to the website
 		URLConnection connection;
@@ -484,7 +486,8 @@ public class Metrics {
 		if (isMineshafterPresent())
 		{
 			connection = url.openConnection(Proxy.NO_PROXY);
-		} else
+		}
+		else
 		{
 			connection = url.openConnection();
 		}
@@ -526,13 +529,16 @@ public class Metrics {
 			if (response == null)
 			{
 				response = "null";
-			} else if (response.startsWith("7"))
-			{
-				response = response.substring(response.startsWith("7,") ? 2 : 1);
 			}
+			else
+				if (response.startsWith("7"))
+				{
+					response = response.substring(response.startsWith("7,") ? 2 : 1);
+				}
 
 			throw new IOException(response);
-		} else
+		}
+		else
 		{
 			// Is this the first update this hour?
 			if (response.equals("1") || response.contains("This is your first update this hour"))
@@ -569,7 +575,8 @@ public class Metrics {
 		{
 			gzos = new GZIPOutputStream(baos);
 			gzos.write(input.getBytes("UTF-8"));
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		} finally
@@ -578,7 +585,8 @@ public class Metrics {
 				try
 				{
 					gzos.close();
-				} catch (IOException ignore)
+				}
+				catch (IOException ignore)
 				{
 				}
 		}
@@ -597,7 +605,8 @@ public class Metrics {
 		{
 			Class.forName("mineshafter.MineServer");
 			return true;
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			return false;
 		}
@@ -621,7 +630,8 @@ public class Metrics {
 				Double.parseDouble(value);
 				isValueNumeric = true;
 			}
-		} catch (NumberFormatException e)
+		}
+		catch (NumberFormatException e)
 		{
 			isValueNumeric = false;
 		}
@@ -637,7 +647,8 @@ public class Metrics {
 		if (isValueNumeric)
 		{
 			json.append(value);
-		} else
+		}
+		else
 		{
 			json.append(escapeJSON(value));
 		}
@@ -681,7 +692,8 @@ public class Metrics {
 				{
 					String t = "000" + Integer.toHexString(chr);
 					builder.append("\\u" + t.substring(t.length() - 4));
-				} else
+				}
+				else
 				{
 					builder.append(chr);
 				}
@@ -713,12 +725,12 @@ public class Metrics {
 		 * The graph's name, alphanumeric and spaces only :) If it does not
 		 * comply to the above when submitted, it is rejected
 		 */
-		private final String name;
+		private final String		name;
 
 		/**
 		 * The set of plotters that are contained within this graph
 		 */
-		private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
+		private final Set<Plotter>	plotters	= new LinkedHashSet<Plotter>();
 
 		private Graph(final String name)
 		{
@@ -795,7 +807,7 @@ public class Metrics {
 		/**
 		 * The plot's name
 		 */
-		private final String name;
+		private final String	name;
 
 		/**
 		 * Construct a plotter with the default plot name

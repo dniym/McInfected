@@ -25,18 +25,23 @@ public class Stats {
 	public static int getStat(StatType type, String user) {
 		if (type == StatType.kills)
 			return getKills(user);
-		else if (type == StatType.deaths)
-			return getDeaths(user);
-		else if (type == StatType.points)
-			return getPoints(user, Settings.VaultEnabled());
-		else if (type == StatType.score)
-			return getScore(user);
-		else if (type == StatType.killstreak)
-			return getHighestKillStreak(user);
-		else if (type == StatType.time)
-			return getPlayingTime(user);
 		else
-			return 0;
+			if (type == StatType.deaths)
+				return getDeaths(user);
+			else
+				if (type == StatType.points)
+					return getPoints(user, Settings.VaultEnabled());
+				else
+					if (type == StatType.score)
+						return getScore(user);
+					else
+						if (type == StatType.killstreak)
+							return getHighestKillStreak(user);
+						else
+							if (type == StatType.time)
+								return getPlayingTime(user);
+							else
+								return 0;
 	}
 
 	/**
@@ -203,10 +208,11 @@ public class Stats {
 		name = name.toLowerCase();
 		if (useVault)
 			return (int) Infected.economy.getBalance(name);
-		else if (Settings.MySQLEnabled())
-			return Integer.valueOf(getMySQLStats(name, "Points"));
 		else
-			return Files.getPlayers().getInt("Players." + name + ".Points");
+			if (Settings.MySQLEnabled())
+				return Integer.valueOf(getMySQLStats(name, "Points"));
+			else
+				return Files.getPlayers().getInt("Players." + name + ".Points");
 	}
 
 	/**
@@ -224,22 +230,24 @@ public class Stats {
 			{
 				int price = cPoints - points;
 				Infected.economy.withdrawPlayer(name, price);
-			} else
+			}
+			else
 			{
 				int depo = points - cPoints;
 				Infected.economy.depositPlayer(name, depo);
 			}
-		} else if (Settings.MySQLEnabled())
-			setMySQLStats(name, "Points", points);
-		else
-		{
-			Files.getPlayers().set("Players." + name + ".Points", points);
-			Files.savePlayers();
 		}
+		else
+			if (Settings.MySQLEnabled())
+				setMySQLStats(name, "Points", points);
+			else
+			{
+				Files.getPlayers().set("Players." + name + ".Points", points);
+				Files.savePlayers();
+			}
 	}
 
 	/**
-	 * 
 	 * Gets the value of the stat for the player's name
 	 * 
 	 * @param name

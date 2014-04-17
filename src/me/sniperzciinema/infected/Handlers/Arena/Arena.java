@@ -19,11 +19,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class Arena {
 
-	private String name;
-	private int Votes;
-	private HashMap<Location, Inventory> chests = new HashMap<Location, Inventory>();
-	private HashMap<Location, Material> blocks = new HashMap<Location, Material>();
-	private ArenaSettings ArenaSettings = new ArenaSettings(this);
+	private String							name;
+	private int								Votes;
+	private HashMap<Location, Inventory>	chests			= new HashMap<Location, Inventory>();
+	private HashMap<Location, Material>		blocks			= new HashMap<Location, Material>();
+	private ArenaSettings					ArenaSettings	= new ArenaSettings(this);
 
 	public Arena(String name)
 	{

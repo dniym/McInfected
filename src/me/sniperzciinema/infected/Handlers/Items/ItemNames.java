@@ -10,11 +10,9 @@ import org.apache.commons.lang.WordUtils;
 public enum ItemNames
 {
 
-/*
- * Made by LCastr0
- * sbuttercraft.com
- * Please, do not remove this lines!
- */
+	/* Made by LCastr0
+	 * sbuttercraft.com
+	 * Please, do not remove this lines! */
 	ACACIA_STAIRS("acacia wood stairs"),
 	ACTIVATOR_RAIL("activator rail"),
 	AIR("air"),
@@ -355,7 +353,7 @@ public enum ItemNames
 	WRITTEN_BOOK("written book"),
 	YELLOW_FLOWER("dandelion");
 
-	private final String name;
+	private final String	name;
 
 	private ItemNames(final String name)
 	{
@@ -366,9 +364,9 @@ public enum ItemNames
 		return name;
 	}
 
-	private static final Map<String, ItemNames> lookup = new HashMap<String, ItemNames>();
+	private static final Map<String, ItemNames>	lookup	= new HashMap<String, ItemNames>();
 
-//Returns the Material name from the given block name
+	// Returns the Material name from the given block name
 	public static String getMaterialName(String fromBlockName) {
 		for (ItemNames n : values())
 		{
@@ -378,18 +376,21 @@ public enum ItemNames
 		return result;
 	}
 
-//Returns the item name with the first letter uppercased (Example: pressure plate -> Pressure plate)
+	// Returns the item name with the first letter uppercased (Example: pressure
+	// plate -> Pressure plate)
 	public String firstUpperCased() {
 		char first = Character.toUpperCase(name.charAt(0));
 		return first + name.substring(1);
 	}
 
-//Returns the item name with all the words with the first letter uppercased (Example: pressure plate -> Pressure Plate)
+	// Returns the item name with all the words with the first letter uppercased
+	// (Example: pressure plate -> Pressure Plate)
 	public String firstAllUpperCased() {
 		return WordUtils.capitalizeFully(name);
 	}
 
-//Returns the item name with all the letters uppercased (Example: pressure plate -> PRESSURE PLATE)
+	// Returns the item name with all the letters uppercased (Example: pressure
+	// plate -> PRESSURE PLATE)
 	public String allUpperCased() {
 		return name.toUpperCase();
 	}

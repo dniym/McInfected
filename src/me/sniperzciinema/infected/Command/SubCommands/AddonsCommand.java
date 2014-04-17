@@ -40,9 +40,10 @@ public class AddonsCommand extends SubCommand {
 			sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Vault Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 			sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Infected-Ranks Support:" + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + (Bukkit.getPluginManager().getPlugin("InfectedAddon-Ranks") != null ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled")));
 			sender.sendMessage(Msgs.Format_Line.getString());
-		} else
+		}
+		else
 		{
-			Player p = (Player)sender;
+			Player p = (Player) sender;
 			new FancyMessage(Msgs.Format_Prefix.getString()).then("§7Disguise Support: " + (Settings.DisguisesEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled"))).tooltip("§aIf enabled, zombies can be actual zombies!").send(p);
 
 			if (Settings.DisguisesEnabled())
@@ -58,6 +59,6 @@ public class AddonsCommand extends SubCommand {
 
 	@Override
 	public List<String> getAliases() {
-		return Arrays.asList(new String[] { "dependancies"});
+		return Arrays.asList(new String[] { "dependancies" });
 	}
 }

@@ -11,7 +11,7 @@ public enum Events
 	Infected("Zombies Infect"),
 	Survive("Humans Survive");
 
-	private String string;
+	private String	string;
 
 	private Events(String string)
 	{

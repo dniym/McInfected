@@ -12,25 +12,23 @@ import org.bukkit.potion.PotionEffect;
 
 public class InfClass {
 
-	private String name;
-	private ItemStack helmet;
-	private ItemStack chestplate;
-	private ItemStack leggings;
-	private ItemStack boots;
-	private ItemStack icon;
-	private ArrayList<ItemStack> items;
-	private ArrayList<PotionEffect> effects;
-	private ArrayList<PotionEffect> transfereffects;
-	private Team team;
-	private String disguise;
-	private HashMap<Integer, ItemStack> killstreaks;
+	private String						name;
+	private ItemStack					helmet;
+	private ItemStack					chestplate;
+	private ItemStack					leggings;
+	private ItemStack					boots;
+	private ItemStack					icon;
+	private ArrayList<ItemStack>		items;
+	private ArrayList<PotionEffect>		effects;
+	private ArrayList<PotionEffect>		transfereffects;
+	private Team						team;
+	private String						disguise;
+	private HashMap<Integer, ItemStack>	killstreaks;
 
-	public InfClass(String name, Team team, ItemStack helmet,
-			ItemStack chestplate, ItemStack leggings, ItemStack boots,
-			ArrayList<ItemStack> items, ArrayList<PotionEffect> effects,
-			ArrayList<PotionEffect> transfereffects,
-			HashMap<Integer, ItemStack> killstreaks, String disguise,
-			ItemStack icon)
+	public InfClass(String name, Team team, ItemStack helmet, ItemStack chestplate,
+			ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items,
+			ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects,
+			HashMap<Integer, ItemStack> killstreaks, String disguise, ItemStack icon)
 	{
 		this.name = name;
 		this.helmet = helmet;

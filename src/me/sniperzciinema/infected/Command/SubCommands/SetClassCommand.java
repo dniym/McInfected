@@ -37,10 +37,11 @@ public class SetClassCommand extends SubCommand {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
-			 if (!p.hasPermission("Infected.SetClass"))
-					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+			if (!p.hasPermission("Infected.SetClass"))
+				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-				else if (args.length == 3 && (args[2].equalsIgnoreCase("Zombie") || args[2].equalsIgnoreCase("Human")))
+			else
+				if (args.length == 3 && (args[2].equalsIgnoreCase("Zombie") || args[2].equalsIgnoreCase("Human")))
 				{
 
 					String className = args[1];
@@ -86,7 +87,8 @@ public class SetClassCommand extends SubCommand {
 
 					sender.sendMessage(Msgs.Command_Classes_SetClass.getString("<class>", className, "<team>", team.toString()));
 
-				} else
+				}
+				else
 					sender.sendMessage(Msgs.Help_SetClass.getString());
 		}
 		else

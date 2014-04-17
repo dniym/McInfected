@@ -13,7 +13,7 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedStartInfecting extends Event {
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public HandlerList getHandlers() {
 		return handlers;

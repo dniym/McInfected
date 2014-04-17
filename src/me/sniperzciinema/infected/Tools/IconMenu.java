@@ -19,16 +19,15 @@ import org.bukkit.plugin.Plugin;
 
 public class IconMenu implements Listener {
 
-	private String name;
-	private int size;
-	private OptionClickEventHandler handler;
-	private Plugin plugin;
+	private String					name;
+	private int						size;
+	private OptionClickEventHandler	handler;
+	private Plugin					plugin;
 
-	private String[] optionNames;
-	private ItemStack[] optionIcons;
+	private String[]				optionNames;
+	private ItemStack[]				optionIcons;
 
-	public IconMenu(String name, int size, OptionClickEventHandler handler,
-			Plugin plugin)
+	public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin)
 	{
 		this.name = name;
 		this.size = size;
@@ -74,8 +73,7 @@ public class IconMenu implements Listener {
 			if (slot >= 0 && slot < size && optionNames[slot] != null)
 			{
 				Plugin plugin = this.plugin;
-				OptionClickEvent e = new OptionClickEvent(
-						(Player) event.getWhoClicked(), slot,
+				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot,
 						optionNames[slot], event.getClick());
 				handler.onOptionClick(e);
 				if (e.willClose())
@@ -104,15 +102,14 @@ public class IconMenu implements Listener {
 
 	public class OptionClickEvent {
 
-		private Player player;
-		private int position;
-		private String name;
-		private boolean close;
-		private boolean destroy;
-		private ClickType clickType;
+		private Player		player;
+		private int			position;
+		private String		name;
+		private boolean		close;
+		private boolean		destroy;
+		private ClickType	clickType;
 
-		public OptionClickEvent(Player player, int position, String name,
-				ClickType clickType)
+		public OptionClickEvent(Player player, int position, String name, ClickType clickType)
 		{
 			this.player = player;
 			this.position = position;

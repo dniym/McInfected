@@ -22,7 +22,7 @@ public enum Msgs
 	Command_Arena_List("Command.Arena.List")/* <valid>, <invalid> */,
 	Command_Arena_Created("Command.Arena.Created")/* <arena> */,
 	Command_Arena_Removed("Command.Arena.Removed")/* <arena> */,
-	Command_Arena_Set("Command.Arena.Set")/* <arena> */, 
+	Command_Arena_Set("Command.Arena.Set")/* <arena> */,
 	Command_Arena_SetBlock("Command.Arena.SetBlock"),
 	Command_Lobby_Set("Command.Lobby.Set"),
 	Command_Lobby_Tp("Command.Lobby.Tp"),
@@ -41,10 +41,11 @@ public enum Msgs
 	Command_Admin_Reload("Command.Admin.Reload"),
 	Command_Admin_Kicked_You("Command.Admin.Kicked.You"),
 	Command_Admin_Kicked_Them("Command.Admin.Kicked.Them")/* <player> */,
-	Command_Admin_Changed_Stat("Command.Admin.Changed Stat")/* <player>, <stat>, <value> */,
+	Command_Admin_Changed_Stat("Command.Admin.Changed Stat")/* <player>, <stat>,
+															 * <value> */,
 	Command_Classes_SetClass("Command.Classes.SetClass")/* <class>, <team> */,
 	Command_Files_Value("Command.Files.Value")/* <path> <value> */,
-	Command_Files_Changed("Command.Files.Changed")/* <path> <newvalue> <value> */, 
+	Command_Files_Changed("Command.Files.Changed")/* <path> <newvalue> <value> */,
 	Command_Arena_SetCreator("Command.Arena.SetCreator"),
 	Error_Misc_No_Permission("Error.Misc.No Permission"),
 	Error_Misc_Plugin_Unloaded("Error.Misc.Plugin Unloaded"),
@@ -56,7 +57,7 @@ public enum Msgs
 	Error_Misc_Not_A_Path("Error.Misc.Not A Path"),
 	Error_Misc_Not_A_Team("Error.Misc.Not A Team"),
 	Error_Misc_Joining_While_Game_Started("Error.Misc.Joining While Game Started"),
-	Error_Misc_Editing_Inventory("Error.Misc.Editing Inventory"), 
+	Error_Misc_Editing_Inventory("Error.Misc.Editing Inventory"),
 	Error_Misc_Not_A_Block("Error.Misc.Not A Block"),
 	Error_Game_Started("Error.Game.Started"),
 	Error_Game_Not_Started("Error.Game.Not Started"),
@@ -69,7 +70,7 @@ public enum Msgs
 	Error_Arena_None_Set("Error.Arena.None Set"),
 	Error_Arena_Not_Valid("Error.Arena.Not Valid")/* <arena> */,
 	Error_Arena_Already_Exists("Error.Arena.Already Exist"),
-	Error_Arena_No_Spawns("Error.Arena.No Spawns"), 
+	Error_Arena_No_Spawns("Error.Arena.No Spawns"),
 	Error_Arena_Not_In_Lobbys_World("Error.Arena.Not In Lobbys World"),
 	Error_Sign_Not_Valid("Error.Sign.Not Valid"),
 	Error_Already_Voted("Error.Already Voted"),
@@ -113,7 +114,7 @@ public enum Msgs
 	Help_SetArena("Help.SetArena"),
 	Help_Top("Help.Top")/* <stats> */,
 	Help_Files("Help.Files")/* Files */,
-	Help_SetClass("Help.SetClass"), 
+	Help_SetClass("Help.SetClass"),
 	Help_Arena_SetBlock("Help.Arena.SetBlock"),
 	Help_Arena_SetCreator("Help.Arena.SetCreator"),
 	Classes_None("Classes.None"),
@@ -128,7 +129,7 @@ public enum Msgs
 	Picture_Survivor_To_Win("Picture.Survivor.To Win"),
 	Picture_Survivor_You("Picture.Survivor.You");
 
-	private String string;
+	private String	string;
 
 	private Msgs(String s)
 	{
@@ -149,14 +150,16 @@ public enum Msgs
 				{
 					replace = variable;
 					i++;
-				} else
+				}
+				else
 				{
 					message = message.replaceAll(replace, variable);
 					i = 0;
 				}
 			}
 			return message;
-		} catch (NullPointerException npe)
+		}
+		catch (NullPointerException npe)
 		{
 			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Either theres something wrong with the variables or we're unable to find message: " + string;
 		}

@@ -25,14 +25,14 @@ public class TpLobbyCommand extends SubCommand {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
-			 if (!p.hasPermission("Infected.TpLobby"))
-					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+			if (!p.hasPermission("Infected.TpLobby"))
+				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-				else
-				{
-					p.teleport(Lobby.getLocation());
-					p.sendMessage(Msgs.Command_Lobby_Tp.getString());
-				}
+			else
+			{
+				p.teleport(Lobby.getLocation());
+				p.sendMessage(Msgs.Command_Lobby_Tp.getString());
+			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

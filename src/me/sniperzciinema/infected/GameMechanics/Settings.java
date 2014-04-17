@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * The class that gets called when ever we need to check a config setting
- * 
  */
 public class Settings {
 

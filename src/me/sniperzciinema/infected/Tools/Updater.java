@@ -46,71 +46,104 @@ import org.json.simple.JSONValue;
 
 public class Updater {
 
-	private Plugin plugin;
-	private UpdateType type;
-	private String versionName;
-	private String versionLink;
-	private String versionType;
-	private String versionGameVersion;
+	private Plugin					plugin;
+	private UpdateType				type;
+	private String					versionName;
+	private String					versionLink;
+	private String					versionType;
+	private String					versionGameVersion;
 
-	private boolean announce; // Whether to announce file downloads
+	private boolean					announce;													// Whether
+																								// to
+																								// announce
+																								// file
+																								// downloads
 
-	private URL url; // Connecting to RSS
-	private File file; // The plugin's file
-	private Thread thread; // Updater thread
+	private URL						url;														// Connecting
+																								// to
+																								// RSS
+	private File					file;														// The
+																								// plugin's
+																								// file
+	private Thread					thread;													// Updater
+																								// thread
 
-	private int id = -1; // Project's Curse ID
-	private String apiKey = null; // BukkitDev ServerMods API key
-	private static final String TITLE_VALUE = "name"; // Gets remote file's
-														// title
-	private static final String LINK_VALUE = "downloadUrl"; // Gets remote
-															// file's download
-															// link
-	private static final String TYPE_VALUE = "releaseType"; // Gets remote
-															// file's release
-															// type
-	private static final String VERSION_VALUE = "gameVersion"; // Gets remote
-																// file's build
-																// version
-	private static final String QUERY = "/servermods/files?projectIds="; // Path
-																			// to
-																			// GET
-	private static final String HOST = "https://api.curseforge.com"; // Slugs
-																		// will
-																		// be
-																		// appended
-																		// to
-																		// this
-																		// to
-																		// get
-																		// to
-																		// the
-																		// project's
-																		// RSS
-																		// feed
+	private int						id				= -1;										// Project's
+																								// Curse
+																								// ID
+	private String					apiKey			= null;									// BukkitDev
+																								// ServerMods
+																								// API
+																								// key
+	private static final String		TITLE_VALUE		= "name";									// Gets
+																								// remote
+																								// file's
+																								// title
+	private static final String		LINK_VALUE		= "downloadUrl";							// Gets
+																								// remote
+																								// file's
+																								// download
+																								// link
+	private static final String		TYPE_VALUE		= "releaseType";							// Gets
+																								// remote
+																								// file's
+																								// release
+																								// type
+	private static final String		VERSION_VALUE	= "gameVersion";							// Gets
+																								// remote
+																								// file's
+																								// build
+																								// version
+	private static final String		QUERY			= "/servermods/files?projectIds=";			// Path
+																								// to
+																								// GET
+	private static final String		HOST			= "https://api.curseforge.com";			// Slugs
+																								// will
+																								// be
+																								// appended
+																								// to
+																								// this
+																								// to
+																								// get
+																								// to
+																								// the
+																								// project's
+																								// RSS
+																								// feed
 
-	private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT, Addon" }; // If
-																							// the
-																							// version
-																							// number
-																							// contains
-																							// one
-																							// of
-																							// these,
-																							// don't
-																							// update.
-	private static final int BYTE_SIZE = 1024; // Used for downloading files
-	private YamlConfiguration config; // Config file
-	private String updateFolder;// The folder that downloads will be placed in
-	private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used
-																		// for
-																		// determining
-																		// the
-																		// outcome
-																		// of
-																		// the
-																		// update
-																		// process
+	private static final String[]	NO_UPDATE_TAG	= { "-DEV", "-PRE", "-SNAPSHOT, Addon" };	// If
+																								// the
+																								// version
+																								// number
+																								// contains
+																								// one
+																								// of
+																								// these,
+																								// don't
+																								// update.
+	private static final int		BYTE_SIZE		= 1024;									// Used
+																								// for
+																								// downloading
+																								// files
+	private YamlConfiguration		config;													// Config
+																								// file
+	private String					updateFolder;												// The
+																								// folder
+																								// that
+																								// downloads
+																								// will
+																								// be
+																								// placed
+																								// in
+	private Updater.UpdateResult	result			= Updater.UpdateResult.SUCCESS;			// Used
+																								// for
+																								// determining
+																								// the
+																								// outcome
+																								// of
+																								// the
+																								// update
+																								// process
 
 	/**
 	 * Gives the dev the result of the update process. Can be obtained by called
@@ -201,8 +234,7 @@ public class Updater {
 	 *            True if the program should announce the progress of new
 	 *            updates in console
 	 */
-	public Updater(Plugin plugin, int id, File file, UpdateType type,
-			boolean announce)
+	public Updater(Plugin plugin, int id, File file, UpdateType type, boolean announce)
 	{
 		this.plugin = plugin;
 		this.type = type;
@@ -224,7 +256,8 @@ public class Updater {
 			try
 			{
 				updaterConfigFile.createNewFile();
-			} catch (final IOException e)
+			}
+			catch (final IOException e)
 			{
 				plugin.getLogger().severe("The updater could not create a configuration in " + updaterFile.getAbsolutePath());
 				e.printStackTrace();
@@ -242,7 +275,8 @@ public class Updater {
 			try
 			{
 				this.config.save(updaterConfigFile);
-			} catch (final IOException e)
+			}
+			catch (final IOException e)
 			{
 				plugin.getLogger().severe("The updater could not save the configuration in " + updaterFile.getAbsolutePath());
 				e.printStackTrace();
@@ -266,7 +300,8 @@ public class Updater {
 		try
 		{
 			this.url = new URL(Updater.HOST + Updater.QUERY + id);
-		} catch (final MalformedURLException e)
+		}
+		catch (final MalformedURLException e)
 		{
 			plugin.getLogger().severe("The project ID provided for updating, " + id + " is invalid.");
 			this.result = UpdateResult.FAIL_BADID;
@@ -333,7 +368,8 @@ public class Updater {
 			try
 			{
 				this.thread.join();
-			} catch (final InterruptedException e)
+			}
+			catch (final InterruptedException e)
 			{
 				e.printStackTrace();
 			}
@@ -377,8 +413,8 @@ public class Updater {
 			}
 			// Just a quick check to make sure we didn't leave any files from
 			// last time...
-			for (final File xFile : new File(
-					this.plugin.getDataFolder().getParent(), this.updateFolder).listFiles())
+			for (final File xFile : new File(this.plugin.getDataFolder().getParent(),
+					this.updateFolder).listFiles())
 			{
 				if (xFile.getName().endsWith(".zip"))
 				{
@@ -396,7 +432,8 @@ public class Updater {
 			{
 				this.plugin.getLogger().info("Finished updating.");
 			}
-		} catch (final Exception ex)
+		}
+		catch (final Exception ex)
 		{
 			System.out.println("The auto-updater tried to download a new update, but was unsuccessful.");
 			this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
@@ -412,7 +449,8 @@ public class Updater {
 				{
 					fout.close();
 				}
-			} catch (final Exception ex)
+			}
+			catch (final Exception ex)
 			{
 			}
 		}
@@ -436,16 +474,16 @@ public class Updater {
 				if (entry.isDirectory())
 				{
 					continue;
-				} else
+				}
+				else
 				{
 					final BufferedInputStream bis = new BufferedInputStream(
 							zipFile.getInputStream(entry));
 					int b;
 					final byte buffer[] = new byte[Updater.BYTE_SIZE];
-					final FileOutputStream fos = new FileOutputStream(
-							destinationFilePath);
-					final BufferedOutputStream bos = new BufferedOutputStream(
-							fos, Updater.BYTE_SIZE);
+					final FileOutputStream fos = new FileOutputStream(destinationFilePath);
+					final BufferedOutputStream bos = new BufferedOutputStream(fos,
+							Updater.BYTE_SIZE);
 					while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1)
 					{
 						bos.write(buffer, 0, b);
@@ -476,8 +514,7 @@ public class Updater {
 				{
 					if (this.pluginFile(dFile.getName()))
 					{
-						final File oFile = new File(
-								this.plugin.getDataFolder().getParent(),
+						final File oFile = new File(this.plugin.getDataFolder().getParent(),
 								dFile.getName()); // Get current dir
 						final File[] contents = oFile.listFiles(); // List of
 																	// existing
@@ -509,7 +546,8 @@ public class Updater {
 								// Move the new file into the current dir
 								cFile.renameTo(new File(
 										oFile.getCanonicalFile() + "/" + cFile.getName()));
-							} else
+							}
+							else
 							{
 								// This file already exists, so we don't need it
 								// anymore.
@@ -522,7 +560,8 @@ public class Updater {
 			}
 			new File(zipPath).delete();
 			fSourceZip.delete();
-		} catch (final IOException ex)
+		}
+		catch (final IOException ex)
 		{
 			System.out.println("The auto-updater tried to unzip a new update file, but was unsuccessful.");
 			this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
@@ -570,7 +609,8 @@ public class Updater {
 					this.result = Updater.UpdateResult.NO_UPDATE;
 					return false;
 				}
-			} else
+			}
+			else
 			{
 				// The file's name did not contain the string 'vVersion'
 				final String authorInfo = this.plugin.getDescription().getAuthors().size() == 0 ? "" : " (" + this.plugin.getDescription().getAuthors().get(0) + ")";
@@ -613,8 +653,8 @@ public class Updater {
 
 			conn.setDoOutput(true);
 
-			final BufferedReader reader = new BufferedReader(
-					new InputStreamReader(conn.getInputStream()));
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
 			final String response = reader.readLine();
 
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
@@ -632,14 +672,16 @@ public class Updater {
 			this.versionGameVersion = (String) ((JSONObject) array.get(array.size() - 1)).get(Updater.VERSION_VALUE);
 
 			return true;
-		} catch (final IOException e)
+		}
+		catch (final IOException e)
 		{
 			if (e.getMessage().contains("HTTP response code: 403"))
 			{
 				System.out.println("dev.bukkit.org rejected the API key provided in plugins/Updater/config.yml");
 				System.out.println("Please double-check your configuration to ensure it is correct.");
 				this.result = UpdateResult.FAIL_APIKEY;
-			} else
+			}
+			else
 			{
 				System.out.println("Unable to connect to dev.Bukkit.org");
 				this.result = UpdateResult.FAIL_DBO;
@@ -672,7 +714,8 @@ public class Updater {
 							Updater.this.saveFile(new File(
 									Updater.this.plugin.getDataFolder().getParent(),
 									Updater.this.updateFolder), name, Updater.this.versionLink);
-						} else
+						}
+						else
 						{
 							Updater.this.result = UpdateResult.UPDATE_AVAILABLE;
 						}

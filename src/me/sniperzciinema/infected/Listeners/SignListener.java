@@ -36,7 +36,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * The Signs Listener
- * 
  */
 
 public class SignListener implements Listener {
@@ -78,15 +77,17 @@ public class SignListener implements Listener {
 						}
 						// If its anything other then "None" Make sure they
 						// have the permissions needed
-						else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
-						{
-							IP.setInfClass(team, InfClassManager.getClass(team, className));
-							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className, "<team>", team.toString()));
-						} else
-						{
-							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+						else
+							if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
+							{
+								IP.setInfClass(team, InfClassManager.getClass(team, className));
+								p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className, "<team>", team.toString()));
+							}
+							else
+							{
+								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-						}
+							}
 					}
 				}
 			}
@@ -169,12 +170,14 @@ public class SignListener implements Listener {
 								for (String row : Files.getSigns().getStringList("Command Sets." + cmdset))
 									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), row.replaceAll("<player>", event.getPlayer().getName()));
 
-							} else
+							}
+							else
 							{
 								p.sendMessage(Msgs.Sign_CmdSet_Not_Enough.getString());
 								p.sendMessage(Msgs.Sign_CmdSet_Cost_Needed.getString("<needed>", String.valueOf(iPrice - points)));
 							}
-						} else
+						}
+						else
 							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					}
 				}
@@ -238,25 +241,27 @@ public class SignListener implements Listener {
 								stack = new ItemStack(material);
 							}
 							// If the item is in the custom items
-							else if (Files.getShop().contains("Custom Items." + materialName + ".Item Code"))
-							{
-								stack = ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + materialName + ".Item Code"));
-								ItemMeta meta = stack.getItemMeta();
-								meta.setDisplayName(materialName);
-								stack.setItemMeta(meta);
-							}
-							// It's gotta be the start of an item name then...
 							else
-							{
-								for (Material materials : Material.values())
+								if (Files.getShop().contains("Custom Items." + materialName + ".Item Code"))
 								{
-									if (materials.toString().startsWith(materialName))
+									stack = ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + materialName + ".Item Code"));
+									ItemMeta meta = stack.getItemMeta();
+									meta.setDisplayName(materialName);
+									stack.setItemMeta(meta);
+								}
+								// It's gotta be the start of an item name
+								// then...
+								else
+								{
+									for (Material materials : Material.values())
 									{
-										stack = new ItemStack(materials);
-										break;
+										if (materials.toString().startsWith(materialName))
+										{
+											stack = new ItemStack(materials);
+											break;
+										}
 									}
 								}
-							}
 							if (p.hasPermission("Infected.Shop") || p.hasPermission("Infected.Shop." + stack.getTypeId()))
 							{
 								if (iPrice <= points)
@@ -267,13 +272,15 @@ public class SignListener implements Listener {
 									if (Lobby.isInGame(p))
 										if (!GrenadeManager.isGrenade(stack) && Settings.saveItem(stack))
 											SaveItemHandler.saveItem(p, stack);
-								} else
+								}
+								else
 								{
 									p.sendMessage(Msgs.Shop_Cost_Not_Enough.getString());
 									p.sendMessage(Msgs.Shop_Cost_Needed.getString("<needed>", String.valueOf(iPrice - points)));
 								}
 								p.updateInventory();
-							} else
+							}
+							else
 								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 						}
@@ -304,7 +311,8 @@ public class SignListener implements Listener {
 				{
 					p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.setCancelled(true);
-				} else
+				}
+				else
 				{
 					try
 					{
@@ -330,7 +338,8 @@ public class SignListener implements Listener {
 							event.setCancelled(true);
 
 						}
-					} catch (Exception e)
+					}
+					catch (Exception e)
 					{
 						p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 						event.setCancelled(true);
@@ -363,7 +372,8 @@ public class SignListener implements Listener {
 					event.getPlayer().sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.getBlock().breakNaturally();
 					event.setCancelled(true);
-				} else
+				}
+				else
 				{
 					// Is Info Signs enabled
 					if (Settings.InfoSignsEnabled())
@@ -388,7 +398,8 @@ public class SignListener implements Listener {
 							String[] list = { LocationHandler.getLocationToString(event.getBlock().getLocation()) };
 							Files.getSigns().set("Info Signs", list);
 							Files.saveSigns();
-						} else
+						}
+						else
 						{
 							List<String> list = Files.getSigns().getStringList("Info Signs");
 							list.add(LocationHandler.getLocationToString(event.getBlock().getLocation()));
@@ -420,7 +431,8 @@ public class SignListener implements Listener {
 					event.getPlayer().sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.getBlock().breakNaturally();
 					event.setCancelled(true);
-				} else
+				}
+				else
 				{
 					event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 					event.setLine(1, ChatColor.GREEN + "Click to use CMD");
@@ -464,13 +476,15 @@ public class SignListener implements Listener {
 						event.setLine(1, ChatColor.GRAY + "CmdSet");
 						event.setLine(2, ChatColor.GOLD + commandSet);
 						event.setLine(3, ChatColor.YELLOW + "Cost: " + event.getLine(3));
-					} else
+					}
+					else
 					{
 						player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 						event.setCancelled(true);
 					}
 
-				} else
+				}
+				else
 				{
 					player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 					event.setCancelled(true);
@@ -511,7 +525,8 @@ public class SignListener implements Listener {
 					event.setLine(1, ChatColor.GRAY + "Class");
 					event.setLine(2, ChatColor.GREEN + className);
 					event.setLine(3, (team == Team.Human ? ChatColor.GREEN : ChatColor.RED) + "-> " + team.toString() + " <-");
-				} else
+				}
+				else
 				{
 					player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 				}

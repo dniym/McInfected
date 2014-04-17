@@ -16,7 +16,7 @@ import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 public class DisguiseDisguiseCraft {
 
-	private static DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
+	private static DisguiseCraftAPI	dcAPI	= DisguiseCraft.getAPI();
 
 	/**
 	 * Disguise the player depending on what their class's disguise is
@@ -33,10 +33,11 @@ public class DisguiseDisguiseCraft {
 				dcAPI.disguisePlayer(p, new Disguise(
 						dcAPI.newEntityID(),
 						DisguiseType.valueOf(StringUtil.getWord(IP.getInfClass(Team.Zombie).getDisguise()))).addSingleData("noarmor"));
-			} else
-				dcAPI.disguisePlayer(p, new Disguise(dcAPI.newEntityID(),
-						DisguiseType.Zombie).addSingleData("noarmor"));
-		} else
+			}
+			else
+				dcAPI.disguisePlayer(p, new Disguise(dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
+		}
+		else
 		{
 			dcAPI.undisguisePlayer(p);
 			disguisePlayer(p);
@@ -44,13 +45,13 @@ public class DisguiseDisguiseCraft {
 	}
 
 	/**
-	 * 
 	 * @param p
 	 * @return the player's disguise
 	 */
-	public static Disguise getDisguise(Player p){
+	public static Disguise getDisguise(Player p) {
 		return dcAPI.getDisguise(p);
 	}
+
 	/**
 	 * unDisguise the player
 	 * 
@@ -62,7 +63,6 @@ public class DisguiseDisguiseCraft {
 	}
 
 	/**
-	 * 
 	 * @param p
 	 * @return if the player is disguised
 	 */

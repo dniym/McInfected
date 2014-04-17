@@ -98,7 +98,8 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 			}
-		} else
+		}
+		else
 		{
 			for (Player u : Lobby.getPlayersInGame())
 			{
@@ -149,7 +150,6 @@ public class Game {
 	}
 
 	/**
-	 * 
 	 * @param p
 	 *            - The Player
 	 */
@@ -160,7 +160,6 @@ public class Game {
 	/**
 	 * Choose the Alpha zombies(Apperently this feature doesn't work yet, will
 	 * fix it when I get internet and can actually test on a live server)
-	 * 
 	 * TODO: Fix the choosing percent of Alpha Zombies
 	 */
 	public static void chooseAlphas() {
@@ -185,7 +184,8 @@ public class Game {
 				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
 
 				alpha.sendMessage(face);
-			} else
+			}
+			else
 				alpha.sendMessage(Msgs.Game_Alpha_You.getString());
 			InfPlayer ip = InfPlayerManager.getInfPlayer(alpha);
 			ip.Infect();

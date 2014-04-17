@@ -12,7 +12,6 @@ import me.sniperzciinema.infected.Handlers.Player.Team;
 import org.bukkit.entity.Player;
 
 
-
 public class DisguiseLibsDisguises {
 
 	/**
@@ -35,11 +34,12 @@ public class DisguiseLibsDisguises {
 				// TODO: Figure our why when i try and show the disguise to the
 				// player it crashes the console...
 				DisguiseAPI.disguiseToAll(p, md);
-			} else
-				DisguiseAPI.disguiseToAll(p, new MobDisguise(
-						DisguiseType.ZOMBIE, true));
+			}
+			else
+				DisguiseAPI.disguiseToAll(p, new MobDisguise(DisguiseType.ZOMBIE, true));
 
-		} else
+		}
+		else
 		{
 			DisguiseAPI.undisguiseToAll(p);
 			disguisePlayer(p);
@@ -47,14 +47,14 @@ public class DisguiseLibsDisguises {
 	}
 
 	/**
-	 * 
 	 * @param p
 	 * @return the player's disguise
 	 */
 	@SuppressWarnings("deprecation")
-	public static Disguise getDisguise(Player p){
+	public static Disguise getDisguise(Player p) {
 		return DisguiseAPI.getDisguise(p);
 	}
+
 	/**
 	 * unDisguise the player
 	 * 
@@ -66,7 +66,6 @@ public class DisguiseLibsDisguises {
 	}
 
 	/**
-	 * 
 	 * @param p
 	 * @return if the player is disguised
 	 */

@@ -18,7 +18,6 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 /**
  * The CrackShot Api Listener
- * 
  */
 public class CrackShotApi implements Listener {
 
@@ -43,7 +42,8 @@ public class CrackShotApi implements Listener {
 				{
 					e.setDamage(0);
 					e.setCancelled(true);
-				} else
+				}
+				else
 				{
 					if (Lobby.getGameState() != GameState.Started)
 					{

@@ -66,7 +66,8 @@ public class CreateCommand extends SubCommand {
 						ip.setCreating(arena);
 						p.sendMessage(Msgs.Command_Arena_Created.getString("<arena>", arena));
 					}
-				} else
+				}
+				else
 					p.sendMessage(Msgs.Help_Create.getString());
 			}
 		}

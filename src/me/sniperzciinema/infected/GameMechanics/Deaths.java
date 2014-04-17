@@ -36,7 +36,8 @@ public class Deaths {
 		// --> Picture deaths
 		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
 		{
-		} else
+		}
+		else
 		{
 			String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
 
@@ -53,7 +54,8 @@ public class Deaths {
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
 				}
-			} else
+			}
+			else
 				for (Player u : Lobby.getPlayersInGame())
 					u.sendMessage(killMessage);
 		}
@@ -83,7 +85,8 @@ public class Deaths {
 				if (Lobby.getTeam(Team.Human).size() == 0 && Lobby.getGameState() == GameState.Started)
 					Game.endGame(false);
 
-			} else
+			}
+			else
 			{
 				killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
 				InfKilled.respawn();
@@ -121,7 +124,8 @@ public class Deaths {
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
 				}
-			} else
+			}
+			else
 				for (Player u : Lobby.getPlayersInGame())
 					u.sendMessage(killMessage);
 		}
@@ -135,7 +139,8 @@ public class Deaths {
 			if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
 				Game.endGame(false);
 
-		} else
+		}
+		else
 		{
 			killed.playSound(killed.getLocation(), Sound.ZOMBIE_PIG_DEATH, 1, 1);
 			InfKilled.respawn();

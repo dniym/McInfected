@@ -14,8 +14,8 @@ public class LocationHandler {
 		{
 			String[] floc = loc.split(",");
 			World world = Bukkit.getServer().getWorld(floc[0]);
-			Loc = new Location(world, Double.valueOf(floc[1]),
-					Double.valueOf(floc[2]), Double.valueOf(floc[3]));
+			Loc = new Location(world, Double.valueOf(floc[1]), Double.valueOf(floc[2]),
+					Double.valueOf(floc[3]));
 		}
 		return Loc;
 	}
@@ -26,9 +26,8 @@ public class LocationHandler {
 		{
 			String[] floc = loc.split(",");
 			World world = Bukkit.getServer().getWorld(floc[0]);
-			Loc = new Location(world, Double.valueOf(floc[1]),
-					Double.valueOf(floc[2]) + .5, Double.valueOf(floc[3]),
-					Float.valueOf(floc[4]), Float.valueOf(floc[5]));
+			Loc = new Location(world, Double.valueOf(floc[1]), Double.valueOf(floc[2]) + .5,
+					Double.valueOf(floc[3]), Float.valueOf(floc[4]), Float.valueOf(floc[5]));
 
 			if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded())
 				Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
@@ -48,15 +47,15 @@ public class LocationHandler {
 	}
 
 	public static String getRoundedLocation(Location location) {
-		if(location == null)
+		if (location == null)
 			return "Not Set";
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
 		String world = location.getWorld().getName();
-		
+
 		String s = world + ", " + x + ", " + y + ", " + z;
-		
+
 		return s;
 	}
 

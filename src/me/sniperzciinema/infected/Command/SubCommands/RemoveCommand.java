@@ -44,7 +44,8 @@ public class RemoveCommand extends SubCommand {
 
 					sender.sendMessage(Msgs.Command_Arena_Removed.getString("<arena>", arena));
 				}
-			} else
+			}
+			else
 				sender.sendMessage(Msgs.Help_Remove.getString());
 		}
 

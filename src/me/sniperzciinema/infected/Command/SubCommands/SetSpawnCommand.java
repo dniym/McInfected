@@ -33,33 +33,35 @@ public class SetSpawnCommand extends SubCommand {
 		{
 			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-			
+
 			if (!p.hasPermission("Infected.SetSpawn"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-			else if (ip.getCreating() == null)
-				p.sendMessage(Msgs.Error_Arena_None_Set.getString());
-
 			else
-			{
-				if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+				if (ip.getCreating() == null)
+					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+
+				else
 				{
-					Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
+					if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+					{
+						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 
-					Location l = p.getLocation();
-					String s = LocationHandler.getLocationToString(l);
-					Arena a = Lobby.getArena(ip.getCreating());
-					List<String> list = a.getExactSpawns(team);
-					list.add(s);
-					a.setSpawns(list, team);
+						Location l = p.getLocation();
+						String s = LocationHandler.getLocationToString(l);
+						Arena a = Lobby.getArena(ip.getCreating());
+						List<String> list = a.getExactSpawns(team);
+						list.add(s);
+						a.setSpawns(list, team);
 
-					Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
-					Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+						Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
+						Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
 
-					p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
-				} else
-					p.sendMessage(Msgs.Help_SetSpawn.getString());
-			}
+						p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
+					}
+					else
+						p.sendMessage(Msgs.Help_SetSpawn.getString());
+				}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

@@ -15,7 +15,6 @@ import com.gmail.nossr50.events.skills.unarmed.McMMOPlayerDisarmEvent;
 
 /**
  * The mcMMO Api Listener
- * 
  */
 public class mcMMOEvents implements Listener {
 

@@ -4,7 +4,6 @@ package me.sniperzciinema.infected.Messages;
 public class StringUtil {
 
 	/**
-	 * 
 	 * @param string
 	 * @return the string with a capital first letter and the rest lowercase
 	 */
@@ -18,7 +17,8 @@ public class StringUtil {
 		}
 		return string;
 	}
-	public static String format(String string){
+
+	public static String format(String string) {
 		return (string.replaceAll("&", "§"));
 	}
 }

@@ -61,7 +61,8 @@ public class Sort {
 			for (String playerName : MySQLManager.getPlayers("Infected"))
 				if (!players.containsKey(playerName.toLowerCase()))
 					players.put(playerName, Stats.getStat(type, playerName));
-		} else
+		}
+		else
 		{
 			if (!Files.getPlayers().getString("Players").isEmpty())
 				for (String playerName : Files.getPlayers().getConfigurationSection("Players").getKeys(false))

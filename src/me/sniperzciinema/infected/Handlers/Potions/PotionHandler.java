@@ -47,8 +47,7 @@ public class PotionHandler {
 				id = Integer.valueOf(strings[0]);
 				time = Integer.valueOf(strings[1]) * 20;
 				power = Integer.valueOf(strings[2]) - 1;
-				effects.add(new PotionEffect(PotionEffectType.getById(id),
-						time, power));
+				effects.add(new PotionEffect(PotionEffectType.getById(id), time, power));
 			}
 		return effects;
 	}

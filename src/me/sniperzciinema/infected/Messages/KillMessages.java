@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 public class KillMessages {
 
 	/**
-	 * 
 	 * @param killer
 	 *            - The Killer
 	 * @param killed
@@ -38,7 +37,8 @@ public class KillMessages {
 		{
 			IP = InfPlayerManager.getInfPlayer(killer);
 			team = IP.getTeam();
-		} else
+		}
+		else
 		{
 			if (InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Human)
 				team = Team.Zombie;
@@ -58,7 +58,6 @@ public class KillMessages {
 	}
 
 	/**
-	 * 
 	 * @param team
 	 *            - The killers team
 	 * @param death

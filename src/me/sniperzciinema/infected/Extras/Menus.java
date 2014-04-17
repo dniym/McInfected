@@ -34,12 +34,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Menus {
 
 	// Create all the menus
-	public IconMenu teamMenu;
-	public IconMenu classHumanMenu;
-	public IconMenu classZombieMenu;
-	public IconMenu voteMenu;
-	public IconMenu shopMenu;
-	public IconMenu grenadeMenu;
+	public IconMenu	teamMenu;
+	public IconMenu	classHumanMenu;
+	public IconMenu	classZombieMenu;
+	public IconMenu	voteMenu;
+	public IconMenu	shopMenu;
+	public IconMenu	grenadeMenu;
 
 	// When the class gets loaded create all the IconMenus and store them for
 	// later use
@@ -81,8 +81,9 @@ public class Menus {
 								Player player = event.getPlayer();
 								if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Human)
 									classHumanMenu.open(player);
-								else if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Zombie)
-									classZombieMenu.open(player);
+								else
+									if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Zombie)
+										classZombieMenu.open(player);
 							}
 						}, 2);
 					}
@@ -123,37 +124,42 @@ public class Menus {
 									}
 								}, 2);
 							}
-						} else if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
-						{
-							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+						}
+						else
+							if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
 							{
-
-								public void run() {
-									infPlayer.openMenu(player, teamMenu);
-
-								}
-							}, 2);
-						} else if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + event.getName()))
-						{
-							if (InfClassManager.isRegistered(Team.Human, InfClassManager.getClass(Team.Human, event.getName())))
-							{
-								player.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", "Human"));
-								infPlayer.setInfClass(Team.Human, InfClassManager.getClass(Team.Human, ChatColor.stripColor(event.getName())));
-
-								if (event.getClickType().isRightClick())
+								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
-									{
 
-										public void run() {
-											infPlayer.openMenu(player, classHumanMenu);
-										}
-									}, 2);
-								}
+									public void run() {
+										infPlayer.openMenu(player, teamMenu);
+
+									}
+								}, 2);
 							}
+							else
+								if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + event.getName()))
+								{
+									if (InfClassManager.isRegistered(Team.Human, InfClassManager.getClass(Team.Human, event.getName())))
+									{
+										player.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", "Human"));
+										infPlayer.setInfClass(Team.Human, InfClassManager.getClass(Team.Human, ChatColor.stripColor(event.getName())));
 
-						} else
-							player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+										if (event.getClickType().isRightClick())
+										{
+											Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+											{
+
+												public void run() {
+													infPlayer.openMenu(player, classHumanMenu);
+												}
+											}, 2);
+										}
+									}
+
+								}
+								else
+									player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					}
 				}, Infected.me);
 		int i = 0;
@@ -196,37 +202,42 @@ public class Menus {
 									}
 								}, 2);
 							}
-						} else if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
-						{
-							Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+						}
+						else
+							if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
 							{
-
-								public void run() {
-									infPlayer.openMenu(player, teamMenu);
-
-								}
-							}, 2);
-						} else if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + event.getName()))
-						{
-							if (InfClassManager.isRegistered(Team.Zombie, InfClassManager.getClass(Team.Zombie, event.getName())))
-							{
-								player.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", "Zombie"));
-								infPlayer.setInfClass(Team.Zombie, InfClassManager.getClass(Team.Zombie, ChatColor.stripColor(event.getName())));
-
-								if (event.getClickType().isRightClick())
+								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
-									{
 
-										public void run() {
-											infPlayer.openMenu(player, classZombieMenu);
-										}
-									}, 2);
-								}
+									public void run() {
+										infPlayer.openMenu(player, teamMenu);
+
+									}
+								}, 2);
 							}
+							else
+								if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + event.getName()))
+								{
+									if (InfClassManager.isRegistered(Team.Zombie, InfClassManager.getClass(Team.Zombie, event.getName())))
+									{
+										player.sendMessage(Msgs.Classes_Chosen.getString("<class>", event.getName(), "<team>", "Zombie"));
+										infPlayer.setInfClass(Team.Zombie, InfClassManager.getClass(Team.Zombie, ChatColor.stripColor(event.getName())));
 
-						} else
-							player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+										if (event.getClickType().isRightClick())
+										{
+											Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+											{
+
+												public void run() {
+													infPlayer.openMenu(player, classZombieMenu);
+												}
+											}, 2);
+										}
+									}
+
+								}
+								else
+									player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					}
 				}, Infected.me);
 		int i = 0;
@@ -248,8 +259,7 @@ public class Menus {
 	public IconMenu getVoteMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Vote for an Arena",
-				((Lobby.getArenas().size() / 9) * 9) + 9,
-				new IconMenu.OptionClickEventHandler()
+				((Lobby.getArenas().size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
 				{
 
 					@Override
@@ -269,7 +279,8 @@ public class Menus {
 								i = r.nextInt(Lobby.getArenas().size());
 								arena = Lobby.getArenas().get(i);
 							}
-						} else
+						}
+						else
 						{
 							arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
 						}
@@ -285,7 +296,8 @@ public class Menus {
 								up.getScoreBoard().showProperBoard();
 							}
 
-						} else
+						}
+						else
 						{
 							event.getPlayer().sendMessage(Msgs.Error_Arena_Not_Valid.getString());
 							event.setWillClose(false);
@@ -318,8 +330,7 @@ public class Menus {
 
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Item Shop",
-				((shop.size() / 9) * 9) + 9,
-				new IconMenu.OptionClickEventHandler()
+				((shop.size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
 				{
 
 					@Override
@@ -358,9 +369,11 @@ public class Menus {
 									}, 2);
 								}
 
-							} else
+							}
+							else
 								player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-						} else
+						}
+						else
 						{
 							player.sendMessage(Msgs.Shop_Cost_Not_Enough.getString());
 							player.sendMessage(Msgs.Shop_Cost_Needed.getString("<needed>", String.valueOf(price - points)));
@@ -383,8 +396,7 @@ public class Menus {
 		ArrayList<String> shop = new ArrayList<String>();
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Grenade Shop",
-				((shop.size() / 9) * 9) + 9,
-				new IconMenu.OptionClickEventHandler()
+				((shop.size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
 				{
 
 					@SuppressWarnings("deprecation")
@@ -418,9 +430,11 @@ public class Menus {
 									}, 2);
 								}
 
-							} else
+							}
+							else
 								player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-						} else
+						}
+						else
 						{
 							player.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
 						}

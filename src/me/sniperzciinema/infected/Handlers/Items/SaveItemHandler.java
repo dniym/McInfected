@@ -26,7 +26,8 @@ public class SaveItemHandler {
 			try
 			{
 				list = (ArrayList<String>) Files.getPlayers().get("Players." + p.getName().toLowerCase() + ".Saved Inventory");
-			} catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				p.sendMessage("Tell an Admin that your saved inventory is invalid!");
 			}

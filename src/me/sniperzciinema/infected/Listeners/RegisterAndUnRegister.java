@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Creating/Removing the InfPlayers
- * 
  */
 public class RegisterAndUnRegister implements Listener {
 

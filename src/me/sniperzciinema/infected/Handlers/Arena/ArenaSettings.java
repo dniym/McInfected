@@ -17,13 +17,11 @@ import org.bukkit.potion.PotionEffect;
 
 /**
  * The class responsible for getting the individual arenas settings
- * 
  * If the value isn't found for the Arena, it goes to global
- * 
  */
 public class ArenaSettings {
 
-	private Arena arena;
+	private Arena	arena;
 
 	public ArenaSettings(Arena arena)
 	{
@@ -54,26 +52,26 @@ public class ArenaSettings {
 
 	public int getScorePer(InfPlayer ip, Events e) {
 		int modifier;
-		if(ip == null)
+		if (ip == null)
 			modifier = 1;
 		else
 			modifier = ip.getScoreModifier();
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Score." + e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString())*modifier;
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Score." + e.toString()) * modifier;
 		else
-			return Files.getConfig().getInt("Settings.Global.Score." + e.toString())*modifier;
+			return Files.getConfig().getInt("Settings.Global.Score." + e.toString()) * modifier;
 	}
 
 	public int getPointsPer(InfPlayer ip, Events e) {
-			int modifier;
-		if(ip == null)
+		int modifier;
+		if (ip == null)
 			modifier = 1;
 		else
 			modifier = ip.getPointsModifier();
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Points." + e.toString()))
-			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString())*modifier;
+			return Files.getArenas().getInt("Arenas." + arena.getName() + ".Points." + e.toString()) * modifier;
 		else
-			return Files.getConfig().getInt("Settings.Global.Points." + e.toString())*modifier;
+			return Files.getConfig().getInt("Settings.Global.Points." + e.toString()) * modifier;
 	}
 
 	public int getAlphaPercent() {
@@ -118,16 +116,21 @@ public class ArenaSettings {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()))
 		{
 			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks." + team.toString()).contains(ids);
-		} else if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
-		{
-			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks.Global").contains(ids);
-		} else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
-		{
-			return true;
-		} else
-		{
-			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(ids);
 		}
+		else
+			if (Files.getArenas().contains("Arenas." + arena.getName() + ".Breakable Blocks.Global"))
+			{
+				return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Breakable Blocks.Global").contains(ids);
+			}
+			else
+				if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
+				{
+					return true;
+				}
+				else
+				{
+					return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(ids);
+				}
 	}
 
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////

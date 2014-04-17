@@ -50,78 +50,97 @@ public class ItemHandler {
 						try
 						{
 							mat = Material.getMaterial(Integer.valueOf(item));
-						} catch (NumberFormatException e)
+						}
+						catch (NumberFormatException e)
 						{
 							if (Material.getMaterial(item) != null)
 								mat = Material.getMaterial(item);
-							else if (Material.getMaterial(ItemNames.getMaterialName(item)) != null)
-								mat = Material.getMaterial(item);
 							else
-								mat = Material.AIR;
+								if (Material.getMaterial(ItemNames.getMaterialName(item)) != null)
+									mat = Material.getMaterial(item);
+								else
+									mat = Material.AIR;
 						}
 						stack.setType(mat);
-					} else if (data.startsWith("item"))
-						stack.setType(Material.getMaterial(data.split(":")[1]));
-
-					else if (data.startsWith("amount") || data.startsWith("quantity"))
-						stack.setAmount(Integer.parseInt(data.split(":")[1]));
-
-					else if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage")){
-						System.out.println(Short.parseShort(data.split(":")[1]));
-						stack.setDurability(Short.parseShort(data.split(":")[1]));
 					}
+					else
+						if (data.startsWith("item"))
+							stack.setType(Material.getMaterial(data.split(":")[1]));
 
-					else if (data.startsWith("enchantment") || data.startsWith("enchant"))
-					{
-						String s = data.split(":")[1];
-						if (s.contains("-"))
-							stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s.split("-")[0])), Integer.parseInt(s.split("-")[1]));
 						else
-							stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s)), 1);
+							if (data.startsWith("amount") || data.startsWith("quantity"))
+								stack.setAmount(Integer.parseInt(data.split(":")[1]));
 
-					} else if (data.startsWith("name") || data.startsWith("title"))
-					{
-						ItemMeta im = stack.getItemMeta();
-						im.setDisplayName(StringUtil.format(data.split(":")[1]));
-						stack.setItemMeta(im);
-					} else if (data.startsWith("owner") || data.startsWith("player"))
-					{
-						SkullMeta im = (SkullMeta) stack.getItemMeta();
-						im.setOwner(data.split(":")[1]);
-						stack.setItemMeta(im);
-					} else if (data.startsWith("color") || data.startsWith("colour"))
-					{
-						try
-						{
-							LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
-							String[] s = data.replaceAll("color:", "").replaceAll("colour", "").split(",");
-							int red = Integer.parseInt(s[0]);
-							int green = Integer.parseInt(s[1]);
-							int blue = Integer.parseInt(s[2]);
-							im.setColor(Color.fromRGB(red, green, blue));
-							stack.setItemMeta(im);
-						} catch (ClassCastException notLeather)
-						{
-						}
-					} else if (data.startsWith("lore") || data.startsWith("desc"))
-					{
-						String s = data.split(":")[1];
-						List<String> lores = new ArrayList<String>();
-						for (String lore : s.split("\\|"))
-						{
-							lores.add(StringUtil.format(lore.replace('_', ' ')));
-						}
-						ItemMeta meta = stack.getItemMeta();
-						meta.setLore(lores);
-						stack.setItemMeta(meta);
-					}
+							else
+								if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage"))
+								{
+									System.out.println(Short.parseShort(data.split(":")[1]));
+									stack.setDurability(Short.parseShort(data.split(":")[1]));
+								}
+
+								else
+									if (data.startsWith("enchantment") || data.startsWith("enchant"))
+									{
+										String s = data.split(":")[1];
+										if (s.contains("-"))
+											stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s.split("-")[0])), Integer.parseInt(s.split("-")[1]));
+										else
+											stack.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(s)), 1);
+
+									}
+									else
+										if (data.startsWith("name") || data.startsWith("title"))
+										{
+											ItemMeta im = stack.getItemMeta();
+											im.setDisplayName(StringUtil.format(data.split(":")[1]));
+											stack.setItemMeta(im);
+										}
+										else
+											if (data.startsWith("owner") || data.startsWith("player"))
+											{
+												SkullMeta im = (SkullMeta) stack.getItemMeta();
+												im.setOwner(data.split(":")[1]);
+												stack.setItemMeta(im);
+											}
+											else
+												if (data.startsWith("color") || data.startsWith("colour"))
+												{
+													try
+													{
+														LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
+														String[] s = data.replaceAll("color:", "").replaceAll("colour", "").split(",");
+														int red = Integer.parseInt(s[0]);
+														int green = Integer.parseInt(s[1]);
+														int blue = Integer.parseInt(s[2]);
+														im.setColor(Color.fromRGB(red, green, blue));
+														stack.setItemMeta(im);
+													}
+													catch (ClassCastException notLeather)
+													{
+													}
+												}
+												else
+													if (data.startsWith("lore") || data.startsWith("desc"))
+													{
+														String s = data.split(":")[1];
+														List<String> lores = new ArrayList<String>();
+														for (String lore : s.split("\\|"))
+														{
+															lores.add(StringUtil.format(lore.replace('_', ' ')));
+														}
+														ItemMeta meta = stack.getItemMeta();
+														meta.setLore(lores);
+														stack.setItemMeta(meta);
+													}
 				}
-			} else
+			}
+			else
 			{
 				if (path.startsWith("id"))
 				{
 					stack.setType(Material.getMaterial(Integer.parseInt(path.split(":")[1])));
-				} else
+				}
+				else
 				{
 					stack = getOldItemStack(path);
 				}
@@ -138,29 +157,39 @@ public class ItemHandler {
 		{
 			String[] ss = string.split(":");
 			itemid = ss[0];
-		} else if (string.contains(","))
-		{
-			String[] ss = string.split(",");
-			itemid = ss[0];
-		} else if (string.contains("-"))
-		{
-			String[] ss = string.split("-");
-			itemid = ss[0];
-		} else if (string.contains("@"))
-		{
-			String[] ss = string.split("@");
-			itemid = ss[0];
-		} else if (string.contains("%"))
-		{
-			String[] ss = string.split("%");
-			itemid = ss[0];
-		} else
-			itemid = string;
+		}
+		else
+			if (string.contains(","))
+			{
+				String[] ss = string.split(",");
+				itemid = ss[0];
+			}
+			else
+				if (string.contains("-"))
+				{
+					String[] ss = string.split("-");
+					itemid = ss[0];
+				}
+				else
+					if (string.contains("@"))
+					{
+						String[] ss = string.split("@");
+						itemid = ss[0];
+					}
+					else
+						if (string.contains("%"))
+						{
+							String[] ss = string.split("%");
+							itemid = ss[0];
+						}
+						else
+							itemid = string;
 		int i = 0;
 		try
 		{
 			i = Integer.valueOf(itemid);
-		} catch (NumberFormatException nfe)
+		}
+		catch (NumberFormatException nfe)
 		{
 			i = 0;
 		}
@@ -178,28 +207,37 @@ public class ItemHandler {
 			{
 				String[] ss = s[1].split(",");
 				itemdata = ss[0];
-			} else if (s[1].contains("-"))
-			{
-				String[] ss = s[1].split("-");
-				itemdata = ss[0];
-			} else if (s[1].contains("@"))
-			{
-				String[] ss = s[1].split("@");
-				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-				itemdata = s[1];
+			}
+			else
+				if (s[1].contains("-"))
+				{
+					String[] ss = s[1].split("-");
+					itemdata = ss[0];
+				}
+				else
+					if (s[1].contains("@"))
+					{
+						String[] ss = s[1].split("@");
+						itemdata = ss[0];
+					}
+					else
+						if (s[1].contains("%"))
+						{
+							String[] ss = s[1].split("%");
+							itemdata = ss[0];
+						}
+						else
+							itemdata = s[1];
 
-		} else
+		}
+		else
 			itemdata = "0";
 		Short s = 0;
 		try
 		{
 			s = Short.valueOf(itemdata);
-		} catch (NumberFormatException nfe)
+		}
+		catch (NumberFormatException nfe)
 		{
 			s = 0;
 		}
@@ -217,23 +255,30 @@ public class ItemHandler {
 			{
 				String[] ss = s[1].split("-");
 				itemdata = ss[0];
-			} else if (s[1].contains("@"))
-			{
-				String[] ss = s[1].split("@");
-				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-				itemdata = s[1];
-		} else
+			}
+			else
+				if (s[1].contains("@"))
+				{
+					String[] ss = s[1].split("@");
+					itemdata = ss[0];
+				}
+				else
+					if (s[1].contains("%"))
+					{
+						String[] ss = s[1].split("%");
+						itemdata = ss[0];
+					}
+					else
+						itemdata = s[1];
+		}
+		else
 			itemdata = "1";
 		int i = 1;
 		try
 		{
 			i = Integer.valueOf(itemdata);
-		} catch (NumberFormatException nfe)
+		}
+		catch (NumberFormatException nfe)
 		{
 			i = 1;
 		}
@@ -251,21 +296,26 @@ public class ItemHandler {
 			{
 				String[] ss = s[1].split("@");
 				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-			{
-				itemdata = s[1];
 			}
-		} else
+			else
+				if (s[1].contains("%"))
+				{
+					String[] ss = s[1].split("%");
+					itemdata = ss[0];
+				}
+				else
+				{
+					itemdata = s[1];
+				}
+		}
+		else
 			itemdata = "0";
 		int i = 1;
 		try
 		{
 			i = Integer.valueOf(itemdata);
-		} catch (NumberFormatException nfe)
+		}
+		catch (NumberFormatException nfe)
 		{
 			i = 1;
 		}
@@ -283,21 +333,26 @@ public class ItemHandler {
 			{
 				String[] ss = s[1].split("-");
 				itemdata = ss[0];
-			} else if (s[1].contains("%"))
-			{
-				String[] ss = s[1].split("%");
-				itemdata = ss[0];
-			} else
-			{
-				itemdata = s[1];
 			}
-		} else
+			else
+				if (s[1].contains("%"))
+				{
+					String[] ss = s[1].split("%");
+					itemdata = ss[0];
+				}
+				else
+				{
+					itemdata = s[1];
+				}
+		}
+		else
 			itemdata = "1";
 		int i = 1;
 		try
 		{
 			i = Integer.valueOf(itemdata);
-		} catch (NumberFormatException nfe)
+		}
+		catch (NumberFormatException nfe)
 		{
 			i = 1;
 		}
@@ -311,7 +366,8 @@ public class ItemHandler {
 		{
 			String[] ss = Path.split("%");
 			itemName = ChatColor.translateAlternateColorCodes('&', ss[1]);
-		} else
+		}
+		else
 		{
 			itemName = null;
 		}
@@ -417,7 +473,7 @@ public class ItemHandler {
 	}
 
 	public static ItemStack getItemStackIgnoreDamage(ItemStack stack) {
-		
+
 		if (stack == null)
 			stack = new ItemStack(Material.AIR);
 		ItemStack newStack = stack.clone();

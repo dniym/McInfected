@@ -16,15 +16,14 @@ import org.bukkit.potion.PotionEffect;
 
 public class InfClassManager {
 
-	private static ArrayList<InfClass> humanClasses = new ArrayList<InfClass>();
-	private static ArrayList<InfClass> zombieClasses = new ArrayList<InfClass>();
-	private static InfClass defaultHuman;
-	private static InfClass defaultZombie;
+	private static ArrayList<InfClass>	humanClasses	= new ArrayList<InfClass>();
+	private static ArrayList<InfClass>	zombieClasses	= new ArrayList<InfClass>();
+	private static InfClass				defaultHuman;
+	private static InfClass				defaultZombie;
 
 	public static void addClass(String name, Team team, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ArrayList<ItemStack> items, ArrayList<PotionEffect> effects, ArrayList<PotionEffect> transfereffects, HashMap<Integer, ItemStack> killstreaks, String disguise, ItemStack icon) {
-		InfClass IC = new InfClass(name, team, helmet, chestplate, leggings,
-				boots, items, effects, transfereffects, killstreaks, disguise,
-				icon);
+		InfClass IC = new InfClass(name, team, helmet, chestplate, leggings, boots, items, effects,
+				transfereffects, killstreaks, disguise, icon);
 		if (team == Team.Human)
 			humanClasses.add(IC);
 		else
@@ -32,8 +31,6 @@ public class InfClassManager {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @param team
 	 * @return All the classes loaded for that team
 	 */
@@ -45,7 +42,6 @@ public class InfClassManager {
 	}
 
 	/**
-	 * 
 	 * @param team
 	 * @param IC
 	 *            - The InfClass
@@ -72,7 +68,6 @@ public class InfClassManager {
 	}
 
 	/**
-	 * 
 	 * @param team
 	 * @param className
 	 * @return The InfClass
@@ -129,7 +124,6 @@ public class InfClassManager {
 	}
 
 	/**
-	 * 
 	 * @param team
 	 * @return The default class for that team
 	 */
@@ -196,14 +190,11 @@ public class InfClassManager {
 				effects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Potion Effects"));
 				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Human." + s + ".Transfer Potion Effects"));
 				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Human." + s + ".KillStreaks");
-				
-				InfClass IC = new InfClass(name, Team.Human,
-						ItemHandler.getItemStack(helmet),
-						ItemHandler.getItemStack(chestplate),
-						ItemHandler.getItemStack(leggings),
-						ItemHandler.getItemStack(boots), items, effects,
-						transfereffects, killstreaks, disguise,
-						ItemHandler.getItemStack(icon));
+
+				InfClass IC = new InfClass(name, Team.Human, ItemHandler.getItemStack(helmet),
+						ItemHandler.getItemStack(chestplate), ItemHandler.getItemStack(leggings),
+						ItemHandler.getItemStack(boots), items, effects, transfereffects,
+						killstreaks, disguise, ItemHandler.getItemStack(icon));
 
 				if (Settings.logClassesEnabled())
 					System.out.println("Loaded Human Class: " + IC.getName());
@@ -238,13 +229,10 @@ public class InfClassManager {
 				transfereffects = PotionHandler.getPotions(Files.getClasses().getStringList("Classes.Zombie." + s + ".Transfer Potion Effects"));
 				killstreaks = ItemHandler.getItemHashMap(Files.getClasses(), "Classes.Zombie." + s + ".KillStreaks");
 
-				InfClass IC = new InfClass(name, Team.Zombie,
-						ItemHandler.getItemStack(helmet),
-						ItemHandler.getItemStack(chestplate),
-						ItemHandler.getItemStack(leggings),
-						ItemHandler.getItemStack(boots), items, effects,
-						transfereffects, killstreaks, disguise,
-						ItemHandler.getItemStack(icon));
+				InfClass IC = new InfClass(name, Team.Zombie, ItemHandler.getItemStack(helmet),
+						ItemHandler.getItemStack(chestplate), ItemHandler.getItemStack(leggings),
+						ItemHandler.getItemStack(boots), items, effects, transfereffects,
+						killstreaks, disguise, ItemHandler.getItemStack(icon));
 
 				if (Settings.logClassesEnabled())
 					System.out.println("Loaded Zombie Class: " + IC.getName());
@@ -256,24 +244,24 @@ public class InfClassManager {
 	}
 
 	public static boolean isClass(String className) {
-		for(InfClass Class : getClasses(Team.Human))
-			if(Class.getName().equalsIgnoreCase(className))
+		for (InfClass Class : getClasses(Team.Human))
+			if (Class.getName().equalsIgnoreCase(className))
 				return true;
-		for(InfClass Class : getClasses(Team.Zombie))
-			if(Class.getName().equalsIgnoreCase(className))
+		for (InfClass Class : getClasses(Team.Zombie))
+			if (Class.getName().equalsIgnoreCase(className))
 				return true;
-		
+
 		return false;
 	}
-	
+
 	public static InfClass getClass(String className) {
-		for(InfClass Class : getClasses(Team.Human))
-			if(Class.getName().equalsIgnoreCase(className))
+		for (InfClass Class : getClasses(Team.Human))
+			if (Class.getName().equalsIgnoreCase(className))
 				return Class;
-		for(InfClass Class : getClasses(Team.Zombie))
-			if(Class.getName().equalsIgnoreCase(className))
+		for (InfClass Class : getClasses(Team.Zombie))
+			if (Class.getName().equalsIgnoreCase(className))
 				return Class;
-		
+
 		return null;
 	}
 

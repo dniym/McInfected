@@ -41,23 +41,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Infected extends JavaPlugin {
 
 	// Initialize all the variables
-	public static String version = null;
-	public static Plugin me;
+	public static String		version		= null;
+	public static Plugin		me;
 
-	public static boolean update = false;
-	public static String updateName = "";
-	public static String updateLink = "";
-	public static File file;
+	public static boolean		update		= false;
+	public static String		updateName	= "";
+	public static String		updateLink	= "";
+	public static File			file;
 
 	// Plugin Addons
-	public static Plugin Disguiser;
-	public static Economy economy = null;
+	public static Plugin		Disguiser;
+	public static Economy		economy		= null;
 
-	public static MySQL MySQL = null;
-	public static Connection connection = null;
+	public static MySQL			MySQL		= null;
+	public static Connection	connection	= null;
 
 	// Create the menus
-	public static Menus Menus;
+	public static Menus			Menus;
 
 	@Override
 	public void onEnable() {
@@ -71,7 +71,8 @@ public class Infected extends JavaPlugin {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 			System.out.println("Metrics was started!");
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			System.out.println("Metrics was unable to start...");
 		}
@@ -112,7 +113,7 @@ public class Infected extends JavaPlugin {
 
 		// Get the Commands class and the Listener
 		getCommand("Infected").setExecutor(new CHandler());
-		
+
 		pm.registerEvents(new ScoreBoardToggle(), this);
 		pm.registerEvents(new DamageEvents(this), this);
 		pm.registerEvents(new PlayerListener(), this);
@@ -120,7 +121,7 @@ public class Infected extends JavaPlugin {
 		pm.registerEvents(new GrenadeListener(), this);
 		pm.registerEvents(new SignListener(), this);
 		pm.registerEvents(new TeleportFix(this), this);
-		
+
 		AddonManager.getAddons();
 
 		// Do the info signs (Updating the info)
@@ -143,7 +144,8 @@ public class Infected extends JavaPlugin {
 
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (Player VARCHAR(20), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
 				System.out.println("MySQL Table has been loaded");
-			} catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				Files.getConfig().set("MySQL.Enabled", false);
 				Files.saveConfig();
@@ -178,7 +180,8 @@ public class Infected extends JavaPlugin {
 						p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
 						InfPlayerManager.getInfPlayer(p).leaveInfected();
 					}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			// If theres no one in Infected it seems to not be able to find the
 			// Lobby class when checking if the game is empty

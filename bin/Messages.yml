@@ -130,7 +130,9 @@ Help:
   SetArena: '&3To select an arena to edit use &4&o/Infected SetArena <Arena>'
   Top: '&3To see from the top list of players use &4&o/Infected Top <Kills/Deaths/Points/Score/Time/KillStreak>'
   Files: '&3To modify Infected''s Files use &4&o/Infected Files <File> [Path] [NewValue]'
-  SetClass: ' &3To create a class use &4&o/Infected SetClass <ClassName> <Human/Zombie>'
+  SetClass: '&3To create a class use &4&o/Infected SetClass <ClassName> <Human/Zombie>'
+  SetCreator: '&3To set the arena creator use &4&o/Infected SetCreator <Creator>'
+  SetBlock: '&3To set the arena''s block icon use &4&o/Infected SetBlock <Block Code>'
 Classes:
   None: '&7You have chosen the &x&odefault class'
   Chosen: '&cYou have chosen &x&o<class> &cas your &x&o<team> class'

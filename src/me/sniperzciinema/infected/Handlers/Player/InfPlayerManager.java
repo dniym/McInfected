@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class InfPlayerManager {
 
-	private static ArrayList<InfPlayer> players = new ArrayList<InfPlayer>();
+	private static ArrayList<InfPlayer>	players	= new ArrayList<InfPlayer>();
 
 	/**
 	 * Create InfPlayer

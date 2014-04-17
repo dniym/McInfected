@@ -10,9 +10,9 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedDeathEvent extends Event {
 
-	private Player killer;
-	private Player killed;
-	private DeathType death;
+	private Player		killer;
+	private Player		killed;
+	private DeathType	death;
 
 	public InfectedDeathEvent(Player killer, Player killed, DeathType death)
 	{
@@ -21,7 +21,7 @@ public class InfectedDeathEvent extends Event {
 		this.death = death;
 	}
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public HandlerList getHandlers() {
 		return handlers;

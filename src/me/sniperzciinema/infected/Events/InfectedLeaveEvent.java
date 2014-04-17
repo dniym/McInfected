@@ -9,15 +9,15 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedLeaveEvent extends Event implements Cancellable {
 
-	private Player p;
-	private boolean b = false;
+	private Player	p;
+	private boolean	b	= false;
 
 	public InfectedLeaveEvent(Player p)
 	{
 		this.p = p;
 	}
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public HandlerList getHandlers() {
 		return handlers;

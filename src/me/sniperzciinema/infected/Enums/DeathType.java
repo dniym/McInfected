@@ -15,7 +15,7 @@ public enum DeathType
 	Gun("Gun"),
 	Other("Other");
 
-	private String string;
+	private String	string;
 
 	private DeathType(String s)
 	{

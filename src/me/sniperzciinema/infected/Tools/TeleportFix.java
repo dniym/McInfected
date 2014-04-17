@@ -18,10 +18,10 @@ import org.bukkit.plugin.Plugin;
 
 public class TeleportFix implements Listener {
 
-	private Plugin plugin;
-	private Server server;
+	private Plugin		plugin;
+	private Server		server;
 
-	private final int TELEPORT_FIX_DELAY = 15; // ticks
+	private final int	TELEPORT_FIX_DELAY	= 15;	// ticks
 
 	public TeleportFix(Plugin plugin)
 	{
@@ -81,7 +81,8 @@ public class TeleportFix implements Listener {
 					else
 						player.hidePlayer(tpedPlayer);
 
-			} else
+			}
+			else
 			{
 				if (!tpedPlayer.canSee(player))
 					tpedPlayer.showPlayer(player);

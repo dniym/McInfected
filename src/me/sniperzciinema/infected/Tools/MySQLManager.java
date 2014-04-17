@@ -12,7 +12,6 @@ import me.sniperzciinema.infected.Infected;
 public class MySQLManager {
 
 	/**
-	 * 
 	 * @param tableName
 	 *            - The tables name
 	 * @param columnName
@@ -30,7 +29,8 @@ public class MySQLManager {
 			i = set.getInt(columnName);
 			set.close();
 			return i;
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			setInt(tableName, columnName, 0, playerName);
 			return 0;
@@ -38,9 +38,7 @@ public class MySQLManager {
 	}
 
 	/**
-	 * 
 	 * Safely update/set the value
-	 * 
 	 * Will set the value only if the table doesn't have the player already,
 	 * otherwise it'll just update the players values
 	 * 
@@ -57,14 +55,14 @@ public class MySQLManager {
 			Statement statement = Infected.connection.createStatement();
 			statement.execute("UPDATE " + tableName + " SET " + columnName + "=" + value + " WHERE Player ='" + playerName + "';");
 			statement.close();
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			setInt(tableName, columnName, value, playerName);
 		}
 	}
 
 	/**
-	 * 
 	 * Force the setting of the players value
 	 * 
 	 * @param tableName
@@ -81,7 +79,8 @@ public class MySQLManager {
 			statement.execute("INSERT INTO " + tableName + " (`Player`, `" + columnName + "`) VALUES ('" + playerName + "', '" + value + "');");
 
 			statement.close();
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,7 +88,6 @@ public class MySQLManager {
 	}
 
 	/**
-	 * 
 	 * @param tableName
 	 *            - The tables name
 	 * @return All the players in the Infected table
@@ -109,7 +107,8 @@ public class MySQLManager {
 			}
 			set.close();
 			return players;
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			ArrayList<String> nope = new ArrayList<String>();
 			return nope;

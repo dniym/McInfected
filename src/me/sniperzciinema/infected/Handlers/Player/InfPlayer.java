@@ -38,28 +38,28 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 public class InfPlayer {
 
-	private Player player;
-	private UUID uuid;
-	private Arena vote;
-	private String name;
-	private int killstreak = 0;
-	private long timeIn;
-	private GameMode gamemode;
-	private int level;
-	private float exp;
-	private double health;
-	private int food;
-	private ItemStack[] armor;
-	private ItemStack[] inventory;
-	private Location location;
-	private String creating;
-	private Player lastDamager;
-	private InfClass humanClass;
-	private InfClass zombieClass;
-	private Team team = Team.Human;
-	private boolean isWinner = true;
-	private boolean isInfChatting = false;
-	private ScoreBoard ScoreBoard = new ScoreBoard(this);
+	private Player		player;
+	private UUID		uuid;
+	private Arena		vote;
+	private String		name;
+	private int			killstreak		= 0;
+	private long		timeIn;
+	private GameMode	gamemode;
+	private int			level;
+	private float		exp;
+	private double		health;
+	private int			food;
+	private ItemStack[]	armor;
+	private ItemStack[]	inventory;
+	private Location	location;
+	private String		creating;
+	private Player		lastDamager;
+	private InfClass	humanClass;
+	private InfClass	zombieClass;
+	private Team		team			= Team.Human;
+	private boolean		isWinner		= true;
+	private boolean		isInfChatting	= false;
+	private ScoreBoard	ScoreBoard		= new ScoreBoard(this);
 
 	public InfPlayer(Player p)
 	{
@@ -77,7 +77,8 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @param uuid the uuid to set
+	 * @param uuid
+	 *            the uuid to set
 	 */
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
@@ -203,77 +204,88 @@ public class InfPlayer {
 			Lobby.reset();
 
 		// If nothing has started yet, just inform players they left
-		else if (Lobby.getGameState() == GameState.InLobby)
-			for (Player u : Lobby.getPlayersInGame())
-				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
-
-		// If the game isn't fully started yet, this includes Voting, and before
-		// and Infecteds chosen
-		else if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.Infecting)
-		{
-
-			for (Player u : Lobby.getPlayersInGame())
-				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
-
-			// If theres only one person left in the lobby, end the game
-			if (Lobby.getPlayersInGame().size() <= 1)
-			{
-				Lobby.setGameState(GameState.InLobby);
+		else
+			if (Lobby.getGameState() == GameState.InLobby)
 				for (Player u : Lobby.getPlayersInGame())
+					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+
+			// If the game isn't fully started yet, this includes Voting, and
+			// before
+			// and Infecteds chosen
+			else
+				if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.Infecting)
 				{
-					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-					InfPlayerManager.getInfPlayer(name).tpToLobby();
+
+					for (Player u : Lobby.getPlayersInGame())
+						u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+
+					// If theres only one person left in the lobby, end the game
+					if (Lobby.getPlayersInGame().size() <= 1)
+					{
+						Lobby.setGameState(GameState.InLobby);
+						for (Player u : Lobby.getPlayersInGame())
+						{
+							u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+							InfPlayerManager.getInfPlayer(name).tpToLobby();
+						}
+
+						// Reset all the timers, lists, etc(Not including the
+						// ones for
+						// people in Infected)
+						Lobby.reset();
+					}
 				}
 
-				// Reset all the timers, lists, etc(Not including the ones for
-				// people in Infected)
-				Lobby.reset();
-			}
-		}
+				// If the game has fully started
+				else
+					if (Lobby.getGameState() == GameState.Started)
+					{
+						for (Player u : Lobby.getPlayersInGame())
+							u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
 
-		// If the game has fully started
-		else if (Lobby.getGameState() == GameState.Started)
-		{
-			for (Player u : Lobby.getPlayersInGame())
-				u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+						// If theres only one person left in the lobby, end the
+						// game
+						if (Lobby.getPlayersInGame().size() <= 1)
+						{
+							Lobby.setGameState(GameState.InLobby);
+							for (Player u : Lobby.getPlayersInGame())
+							{
+								u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+								InfPlayerManager.getInfPlayer(name).tpToLobby();
+							}
 
-			// If theres only one person left in the lobby, end the game
-			if (Lobby.getPlayersInGame().size() <= 1)
-			{
-				Lobby.setGameState(GameState.InLobby);
-				for (Player u : Lobby.getPlayersInGame())
-				{
-					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-					InfPlayerManager.getInfPlayer(name).tpToLobby();
-				}
+							// Reset all the timers, lists, etc(Not including
+							// the ones for
+							// people in Infected)
+							Lobby.reset();
+						}
 
-				// Reset all the timers, lists, etc(Not including the ones for
-				// people in Infected)
-				Lobby.reset();
-			}
+						// If theres no zombies left
+						else
+							if (Lobby.getTeam(Team.Zombie).size() == 0)
+								// Choose someone new to be the zombie
+								Game.chooseAlphas();
 
-			// If theres no zombies left
-			else if (Lobby.getTeam(Team.Zombie).size() == 0)
-				// Choose someone new to be the zombie
-				Game.chooseAlphas();
+							// If theres no humans left(Player who left was
+							// human, or the new
+							// zombie was the only human)
+							else
+								if (Lobby.getTeam(Team.Human).size() == 0)
+								{
+									Lobby.setGameState(GameState.InLobby);
+									for (Player u : Lobby.getPlayersInGame())
+									{
+										u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
+										InfPlayerManager.getInfPlayer(name).tpToLobby();
+									}
 
-			// If theres no humans left(Player who left was human, or the new
-			// zombie was the only human)
-			else if (Lobby.getTeam(Team.Human).size() == 0)
-			{
-				Lobby.setGameState(GameState.InLobby);
-				for (Player u : Lobby.getPlayersInGame())
-				{
-					u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-					InfPlayerManager.getInfPlayer(name).tpToLobby();
-				}
+									// Reset all the timers, lists, etc(Not
+									// including the ones for
+									// people in Infected)
+									Lobby.reset();
+								}
 
-				// Reset all the timers, lists, etc(Not including the ones for
-				// people in Infected)
-				Lobby.reset();
-			}
-
-		}
+					}
 	}
 
 	/**
@@ -325,7 +337,8 @@ public class InfPlayer {
 				for (String string : SaveItemHandler.getSavedItems(player))
 					player.getInventory().addItem(ItemHandler.getItemStack(string));
 
-			} catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Tell an Admin that your saved inventory is invalid!");
 			}
@@ -385,8 +398,7 @@ public class InfPlayer {
 		disguise();
 
 		getScoreBoard().showProperBoard();
-		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20,
-				2));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 2));
 	}
 
 	public long getPlayingTime() {

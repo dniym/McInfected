@@ -40,15 +40,17 @@ public class SetArenaCommand extends SubCommand {
 					if (Lobby.getArenas().isEmpty())
 						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", "Default"));
 
-					else if (Lobby.getArena(arena) == null)
-						p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", arena));
-
 					else
-					{
-						ip.setCreating(arena);
-						p.sendMessage(Msgs.Command_Arena_Set.getString("<arena>", arena));
-					}
-				} else
+						if (Lobby.getArena(arena) == null)
+							p.sendMessage(Msgs.Error_Arena_Doesnt_Exist.getString("<arena>", arena));
+
+						else
+						{
+							ip.setCreating(arena);
+							p.sendMessage(Msgs.Command_Arena_Set.getString("<arena>", arena));
+						}
+				}
+				else
 					p.sendMessage(Msgs.Help_SetArena.getString());
 
 			}

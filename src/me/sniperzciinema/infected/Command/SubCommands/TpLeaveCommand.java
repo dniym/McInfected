@@ -25,14 +25,14 @@ public class TpLeaveCommand extends SubCommand {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
-			 if (!p.hasPermission("Infected.TpLeave"))
-					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+			if (!p.hasPermission("Infected.TpLeave"))
+				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-				else
-				{
-					p.teleport(Lobby.getLeave());
-					p.sendMessage(Msgs.Command_Leave_Location_Tp.getString());
-				}
+			else
+			{
+				p.teleport(Lobby.getLeave());
+				p.sendMessage(Msgs.Command_Leave_Location_Tp.getString());
+			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

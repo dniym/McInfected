@@ -28,35 +28,44 @@ public class SetBlockCommand extends SubCommand {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
-		if(sender instanceof Player){
-			Player p = (Player)sender;
+		if (sender instanceof Player)
+		{
+			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-			
+
 			if (!p.hasPermission("Infected.SetBlock"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-			else if (ip.getCreating() == null)
-				p.sendMessage(Msgs.Error_Arena_None_Set.getString());
-
 			else
-			{
-				if(args.length == 2){
-					Arena arena = Lobby.getArena(ip.getCreating());
-					if(Material.getMaterial(args[1]) != null){
-						arena.setBlock(new ItemStack (Material.getMaterial(args[1])));
-						p.sendMessage(Msgs.Command_Arena_SetBlock.getString());
+				if (ip.getCreating() == null)
+					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+
+				else
+				{
+					if (args.length == 2)
+					{
+						Arena arena = Lobby.getArena(ip.getCreating());
+						if (Material.getMaterial(args[1]) != null)
+						{
+							arena.setBlock(new ItemStack(Material.getMaterial(args[1])));
+							p.sendMessage(Msgs.Command_Arena_SetBlock.getString());
+						}
+						else
+							if (Material.getMaterial(Integer.parseInt(args[1])) != null)
+							{
+								arena.setBlock(new ItemStack(Integer.parseInt(args[1])));
+								p.sendMessage(Msgs.Command_Arena_SetBlock.getString());
+							}
+							else
+							{
+								p.sendMessage(Msgs.Error_Misc_Not_A_Block.getString());
+							}
 					}
-					else if(Material.getMaterial(Integer.parseInt(args[1])) != null){
-						arena.setBlock(new ItemStack (Integer.parseInt(args[1])));
-						p.sendMessage(Msgs.Command_Arena_SetBlock.getString());
+					else
+					{
+						p.sendMessage(Msgs.Help_Arena_SetBlock.getString());
 					}
-					else{
-						p.sendMessage(Msgs.Error_Misc_Not_A_Block.getString());
-					}
-				}else{
-					p.sendMessage(Msgs.Help_Arena_SetBlock.getString());
 				}
-			}
 		}
 
 	}

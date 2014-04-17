@@ -4,7 +4,6 @@ package me.sniperzciinema.infected.Messages;
 public class Time {
 
 	/**
-	 * 
 	 * @param Time
 	 * @return the Time in the game format
 	 */
@@ -18,25 +17,28 @@ public class Time {
 		{
 			if (minutes == 0)
 				times = "N/A";
-			else if (minutes == 1)
-				times = minutes + " " + Msgs.Format_Time_Minute.getString();
 			else
-				times = minutes + " " + Msgs.Format_Time_Minutes.getString();
-		} else if (minutes == 0)
-		{
-			if (seconds <= 1)
-				times = seconds + " " + Msgs.Format_Time_Second.getString();
-			else
-				times = seconds + " " + Msgs.Format_Time_Seconds.getString();
-		} else
-		{
-			times = minutes + " " + Msgs.Format_Time_Minutes.getString() + " " + seconds + " " + Msgs.Format_Time_Seconds.getString();
+				if (minutes == 1)
+					times = minutes + " " + Msgs.Format_Time_Minute.getString();
+				else
+					times = minutes + " " + Msgs.Format_Time_Minutes.getString();
 		}
+		else
+			if (minutes == 0)
+			{
+				if (seconds <= 1)
+					times = seconds + " " + Msgs.Format_Time_Second.getString();
+				else
+					times = seconds + " " + Msgs.Format_Time_Seconds.getString();
+			}
+			else
+			{
+				times = minutes + " " + Msgs.Format_Time_Minutes.getString() + " " + seconds + " " + Msgs.Format_Time_Seconds.getString();
+			}
 		return times;
 	}
 
 	/**
-	 * 
 	 * @param time
 	 * @return the time in a stats format
 	 */

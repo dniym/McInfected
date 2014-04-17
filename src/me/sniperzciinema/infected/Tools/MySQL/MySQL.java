@@ -19,13 +19,13 @@ import org.bukkit.plugin.Plugin;
  */
 public class MySQL extends Database {
 
-	private final String user;
-	private final String database;
-	private final String password;
-	private final String port;
-	private final String hostname;
+	private final String	user;
+	private final String	database;
+	private final String	password;
+	private final String	port;
+	private final String	hostname;
 
-	private Connection connection;
+	private Connection		connection;
 
 	/**
 	 * Creates a new MySQL instance
@@ -43,8 +43,8 @@ public class MySQL extends Database {
 	 * @param password
 	 *            Password
 	 */
-	public MySQL(Plugin plugin, String hostname, String port, String database,
-			String username, String password)
+	public MySQL(Plugin plugin, String hostname, String port, String database, String username,
+			String password)
 	{
 		super(plugin);
 		this.hostname = hostname;
@@ -61,10 +61,12 @@ public class MySQL extends Database {
 		{
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e.getMessage());
-		} catch (ClassNotFoundException e)
+		}
+		catch (ClassNotFoundException e)
 		{
 			plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
 		}
@@ -88,7 +90,8 @@ public class MySQL extends Database {
 			try
 			{
 				connection.close();
-			} catch (SQLException e)
+			}
+			catch (SQLException e)
 			{
 				plugin.getLogger().log(Level.SEVERE, "Error closing the MySQL Connection!");
 				e.printStackTrace();
@@ -102,7 +105,8 @@ public class MySQL extends Database {
 		if (checkConnection())
 		{
 			c = getConnection();
-		} else
+		}
+		else
 		{
 			c = openConnection();
 		}
@@ -112,7 +116,8 @@ public class MySQL extends Database {
 		try
 		{
 			s = c.createStatement();
-		} catch (SQLException e1)
+		}
+		catch (SQLException e1)
 		{
 			e1.printStackTrace();
 		}
@@ -122,7 +127,8 @@ public class MySQL extends Database {
 		try
 		{
 			ret = s.executeQuery(query);
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -139,7 +145,8 @@ public class MySQL extends Database {
 		if (checkConnection())
 		{
 			c = getConnection();
-		} else
+		}
+		else
 		{
 			c = openConnection();
 		}
@@ -150,7 +157,8 @@ public class MySQL extends Database {
 		{
 			s = c.createStatement();
 			s.executeUpdate(update);
-		} catch (SQLException e1)
+		}
+		catch (SQLException e1)
 		{
 			e1.printStackTrace();
 		}

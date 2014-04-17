@@ -31,11 +31,10 @@ import org.bukkit.potion.PotionEffect;
 
 /**
  * The Listener for Infected's grenades
- * 
  */
 public class GrenadeListener implements Listener {
 
-	public ArrayList<String> item = new ArrayList<String>();
+	public ArrayList<String>	item	= new ArrayList<String>();
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerReThrowEvent(PlayerPickupItemEvent event) {
@@ -107,7 +106,8 @@ public class GrenadeListener implements Listener {
 													Deaths.playerDies(DeathType.Other, p, u);
 												else
 													Deaths.playerDies(DeathType.Grenade, p, u);
-											} else
+											}
+											else
 											{
 												u.damage(grenade.getDamage());
 												for (PotionEffect pe : grenade.getEffects())

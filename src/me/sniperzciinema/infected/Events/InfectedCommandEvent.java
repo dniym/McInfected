@@ -11,10 +11,10 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedCommandEvent extends Event implements Cancellable {
 
-	private boolean cancelled = false;
-	private String[] args;
-	private Player p;
-	private InfPlayer ip;
+	private boolean		cancelled	= false;
+	private String[]	args;
+	private Player		p;
+	private InfPlayer	ip;
 
 	public InfectedCommandEvent(String[] args, Player p, InfPlayer ip)
 	{
@@ -23,7 +23,7 @@ public class InfectedCommandEvent extends Event implements Cancellable {
 		this.ip = ip;
 	}
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public HandlerList getHandlers() {
 		return handlers;

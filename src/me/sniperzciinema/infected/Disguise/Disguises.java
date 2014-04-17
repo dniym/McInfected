@@ -21,11 +21,13 @@ public class Disguises {
 		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			DisguiseDisguiseCraft.disguisePlayer(player);
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
-			DisguiseIDisguise.disguisePlayer(player);
+		else
+			if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+				DisguiseIDisguise.disguisePlayer(player);
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-			DisguiseLibsDisguises.disguisePlayer(player);
+			else
+				if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+					DisguiseLibsDisguises.disguisePlayer(player);
 	}
 
 	/**
@@ -38,11 +40,13 @@ public class Disguises {
 		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			DisguiseDisguiseCraft.unDisguisePlayer(player);
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
-			DisguiseIDisguise.unDisguisePlayer(player);
+		else
+			if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+				DisguiseIDisguise.unDisguisePlayer(player);
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-			DisguiseLibsDisguises.unDisguisePlayer(player);
+			else
+				if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+					DisguiseLibsDisguises.unDisguisePlayer(player);
 	}
 
 	/**
@@ -58,11 +62,13 @@ public class Disguises {
 		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			disguised = DisguiseDisguiseCraft.isPlayerDisguised(player);
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
-			disguised = DisguiseIDisguise.isPlayerDisguised(player);
+		else
+			if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+				disguised = DisguiseIDisguise.isPlayerDisguised(player);
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-			disguised = DisguiseLibsDisguises.isPlayerDisguised(player);
+			else
+				if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+					disguised = DisguiseLibsDisguises.isPlayerDisguised(player);
 
 		return disguised;
 	}
@@ -76,20 +82,22 @@ public class Disguises {
 		if (Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") != null)
 			Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft");
 
-		else if (Bukkit.getServer().getPluginManager().getPlugin("iDisguise") != null)
-			Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("iDisguise");
-
-		else if (Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") != null)
-			Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises");
-
 		else
-		{
-			if (Settings.logAddonsEnabled())
-				System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
+			if (Bukkit.getServer().getPluginManager().getPlugin("iDisguise") != null)
+				Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("iDisguise");
 
-			Files.getConfig().set("Addons.Disguise Support.Enabled", false);
-			Files.saveConfig();
-		}
+			else
+				if (Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") != null)
+					Infected.Disguiser = Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises");
+
+				else
+				{
+					if (Settings.logAddonsEnabled())
+						System.out.println("No Valid Disguise Plugins found... disabling Disguise Support");
+
+					Files.getConfig().set("Addons.Disguise Support.Enabled", false);
+					Files.saveConfig();
+				}
 		if (Infected.Disguiser != null)
 			if (Settings.logAddonsEnabled())
 				System.out.println("For Disguise Support we're using " + Infected.Disguiser);
@@ -100,13 +108,15 @@ public class Disguises {
 		if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft"))
 			return DisguiseDisguiseCraft.getDisguise(player).type.name();
 
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
-			return DisguiseIDisguise.getDisguise(player).getType().name();
-
-		else if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
-			return DisguiseLibsDisguises.getDisguise(player).getType().name();
-		
 		else
-			return null;
+			if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("iDisguise"))
+				return DisguiseIDisguise.getDisguise(player).getType().name();
+
+			else
+				if (Infected.Disguiser == Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises"))
+					return DisguiseLibsDisguises.getDisguise(player).getType().name();
+
+				else
+					return null;
 	}
 }

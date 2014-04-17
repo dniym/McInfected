@@ -14,7 +14,6 @@ import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
 
 /**
  * The Factions Api Listener
- * 
  */
 public class FactionsEvents implements Listener {
 

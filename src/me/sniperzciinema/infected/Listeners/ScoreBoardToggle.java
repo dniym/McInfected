@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 /**
  * The Scoreboard Shift Listener
- * 
  */
 
 public class ScoreBoardToggle implements Listener {

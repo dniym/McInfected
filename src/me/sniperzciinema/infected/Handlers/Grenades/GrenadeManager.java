@@ -14,12 +14,11 @@ import org.bukkit.potion.PotionEffect;
 
 public class GrenadeManager {
 
-	private static ArrayList<Grenade> grenades = new ArrayList<Grenade>();
-	private static ArrayList<UUID> thrownGrenades = new ArrayList<UUID>();
+	private static ArrayList<Grenade>	grenades		= new ArrayList<Grenade>();
+	private static ArrayList<UUID>		thrownGrenades	= new ArrayList<UUID>();
 
 	public static void addGrenade(String id, String name, double damage, int delay, int range, int cost, boolean damageThrower, ArrayList<PotionEffect> effects) {
-		Grenade grenade = new Grenade(id, name, damage, delay, range, cost,
-				damageThrower, effects);
+		Grenade grenade = new Grenade(id, name, damage, delay, range, cost, damageThrower, effects);
 		grenades.add(grenade);
 	}
 
@@ -94,8 +93,8 @@ public class GrenadeManager {
 				for (String string : Files.getGrenades().getStringList("Grenades." + s + ".Potion Effects"))
 					potions.add(PotionHandler.getPotion(string));
 
-				Grenade g = new Grenade(id, name, damage, delay, range, cost,
-						damageThrower, potions);
+				Grenade g = new Grenade(id, name, damage, delay, range, cost, damageThrower,
+						potions);
 
 				if (Settings.logGrenadesEnabled())
 					System.out.println("Loaded Grenade " + g.getName());

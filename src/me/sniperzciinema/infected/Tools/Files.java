@@ -16,20 +16,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Files {
 
 	// Set up all the needed things for files
-	public static YamlConfiguration classes = null;
-	public static File classesFile = null;
-	public static YamlConfiguration arenas = null;
-	public static File arenasFile = null;
-	public static YamlConfiguration playerF = null;
-	public static File playerFile = null;
-	public static YamlConfiguration messages = null;
-	public static File messagesFile = null;
-	public static YamlConfiguration shop = null;
-	public static File shopFile = null;
-	public static YamlConfiguration grenades = null;
-	public static File grenadesFile = null;
-	public static YamlConfiguration signs = null;
-	public static File signsFile = null;
+	public static YamlConfiguration	classes			= null;
+	public static File				classesFile		= null;
+	public static YamlConfiguration	arenas			= null;
+	public static File				arenasFile		= null;
+	public static YamlConfiguration	playerF			= null;
+	public static File				playerFile		= null;
+	public static YamlConfiguration	messages		= null;
+	public static File				messagesFile	= null;
+	public static YamlConfiguration	shop			= null;
+	public static File				shopFile		= null;
+	public static YamlConfiguration	grenades		= null;
+	public static File				grenadesFile	= null;
+	public static YamlConfiguration	signs			= null;
+	public static File				signsFile		= null;
 
 	public static FileConfiguration getConfig() {
 		return Infected.me.getConfig();
@@ -70,8 +70,7 @@ public class Files {
 	// Reload Abilities File
 	public static void reloadClasses() {
 		if (classesFile == null)
-			classesFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
+			classesFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
 					"Classes.yml");
 		classes = YamlConfiguration.loadConfiguration(classesFile);
 		// Look for defaults in the jar
@@ -98,7 +97,8 @@ public class Files {
 		try
 		{
 			getClasses().save(classesFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + classesFile, ex);
 		}
@@ -108,8 +108,7 @@ public class Files {
 	// Reload Arenas File
 	public static void reloadArenas() {
 		if (arenasFile == null)
-			arenasFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
+			arenasFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
 					"Arenas.yml");
 		arenas = YamlConfiguration.loadConfiguration(arenasFile);
 		// Look for defaults in the jar
@@ -136,7 +135,8 @@ public class Files {
 		try
 		{
 			getArenas().save(arenasFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + arenasFile, ex);
 		}
@@ -146,8 +146,7 @@ public class Files {
 	public static void reloadGrenades() {
 		if (grenades == null)
 			grenadesFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Grenades.yml");
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Grenades.yml");
 		grenades = YamlConfiguration.loadConfiguration(grenadesFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Grenades.yml");
@@ -173,7 +172,8 @@ public class Files {
 		try
 		{
 			getGrenades().save(grenadesFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + grenadesFile, ex);
 		}
@@ -185,8 +185,7 @@ public class Files {
 	// Reload Arenas File
 	public static void reloadShop() {
 		if (shop == null)
-			shopFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
+			shopFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
 					"Shop.yml");
 		shop = YamlConfiguration.loadConfiguration(shopFile);
 		// Look for defaults in the jar
@@ -213,7 +212,8 @@ public class Files {
 		try
 		{
 			getShop().save(shopFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + shopFile, ex);
 		}
@@ -226,8 +226,7 @@ public class Files {
 	public static void reloadMessages() {
 		if (messages == null)
 			messagesFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Messages.yml");
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Messages.yml");
 		messages = YamlConfiguration.loadConfiguration(messagesFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Messages.yml");
@@ -252,7 +251,8 @@ public class Files {
 		try
 		{
 			getMessages().save(messagesFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + messagesFile, ex);
 		}
@@ -264,8 +264,7 @@ public class Files {
 	// Reload Kills File
 	public static void reloadPlayers() {
 		if (playerFile == null)
-			playerFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
+			playerFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
 					"Players.yml");
 		playerF = YamlConfiguration.loadConfiguration(playerFile);
 		// Look for defaults in the jar
@@ -295,7 +294,8 @@ public class Files {
 		try
 		{
 			getPlayers().save(playerFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + playerFile, ex);
 		}
@@ -307,8 +307,7 @@ public class Files {
 	// Reload Kills File
 	public static void reloadSigns() {
 		if (signsFile == null)
-			signsFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
+			signsFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
 					"Signs.yml");
 		signs = YamlConfiguration.loadConfiguration(signsFile);
 		// Look for defaults in the jar
@@ -338,7 +337,8 @@ public class Files {
 		try
 		{
 			getSigns().save(signsFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + signsFile, ex);
 		}

@@ -45,7 +45,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * The Miscellaneous Listeners for Infected
- * 
  */
 public class PlayerListener implements Listener {
 
@@ -63,13 +62,13 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
-				e.setCancelled(true);
+			e.setCancelled(true);
 	}
-	
+
 	// If a player attempts to drop an item in game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerPickupItem(PlayerPickupItemEvent e) {
-		if(!e.isCancelled())
+		if (!e.isCancelled())
 			if (Lobby.isInGame(e.getPlayer()))
 				e.setCancelled(true);
 	}
@@ -93,26 +92,30 @@ public class PlayerListener implements Listener {
 			}
 			// When players break blocks, before we do anything, are they in the
 			// started game?
-			else if (Lobby.isInGame(e.getPlayer()))
-			{
-				if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
+			else
+				if (Lobby.isInGame(e.getPlayer()))
 				{
-					// Does the config say they can break it?
-					if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
+					if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
 					{
-						Location loc = e.getBlock().getLocation();
-						// Lets make sure this block wasn't a placed one, if so
-						// we'll just remove it
-						if (!Lobby.getActiveArena().getBlocks().containsKey(loc))
-							Lobby.getActiveArena().setBlock(loc, e.getBlock().getType());
+						// Does the config say they can break it?
+						if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
+						{
+							Location loc = e.getBlock().getLocation();
+							// Lets make sure this block wasn't a placed one, if
+							// so
+							// we'll just remove it
+							if (!Lobby.getActiveArena().getBlocks().containsKey(loc))
+								Lobby.getActiveArena().setBlock(loc, e.getBlock().getType());
+							else
+								Lobby.getActiveArena().removeBlock(loc);
+							e.getBlock().setType(Material.AIR);
+						}
 						else
-							Lobby.getActiveArena().removeBlock(loc);
-						e.getBlock().setType(Material.AIR);
-					} else
+							e.setCancelled(true);
+					}
+					else
 						e.setCancelled(true);
-				} else
-					e.setCancelled(true);
-			}
+				}
 		}
 
 	}
@@ -158,7 +161,8 @@ public class PlayerListener implements Listener {
 									Lobby.getActiveArena().setChest(chest.getLocation(), chest.getBlockInventory());
 							}
 						}
-					} else
+					}
+					else
 					{
 						e.setUseInteractedBlock(Result.DENY);
 						e.setUseItemInHand(Result.DENY);
@@ -229,7 +233,8 @@ public class PlayerListener implements Listener {
 			{
 				String[] ss = e.getMessage().split(" ");
 				msg = ss[0];
-			} else
+			}
+			else
 			{
 				msg = e.getMessage();
 			}

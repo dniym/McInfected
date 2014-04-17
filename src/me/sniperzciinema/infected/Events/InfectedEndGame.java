@@ -13,14 +13,14 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedEndGame extends Event {
 
-	private boolean didHumansWin;
+	private boolean	didHumansWin;
 
 	public InfectedEndGame(boolean didHumansWin)
 	{
 		this.didHumansWin = didHumansWin;
 	}
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public HandlerList getHandlers() {
 		return handlers;

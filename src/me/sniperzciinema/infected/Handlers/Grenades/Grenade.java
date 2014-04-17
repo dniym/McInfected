@@ -12,18 +12,18 @@ import org.bukkit.potion.PotionEffect;
 
 public class Grenade {
 
-	private String name;
-	private ItemStack item;
-	private ArrayList<PotionEffect> effects;
-	private double damage;
-	private int delay;
-	private int range;
-	private Player thrower;
-	private boolean damageThrower;
-	private int cost;
+	private String					name;
+	private ItemStack				item;
+	private ArrayList<PotionEffect>	effects;
+	private double					damage;
+	private int						delay;
+	private int						range;
+	private Player					thrower;
+	private boolean					damageThrower;
+	private int						cost;
 
-	public Grenade(String id, String name, double damage, int delay, int range,
-			int cost, boolean damageThrower, ArrayList<PotionEffect> effects)
+	public Grenade(String id, String name, double damage, int delay, int range, int cost,
+			boolean damageThrower, ArrayList<PotionEffect> effects)
 	{
 		this.item = ItemHandler.getItemStack(id);
 		this.name = name;
@@ -55,10 +55,11 @@ public class Grenade {
 		this.name = name;
 	}
 
-	public ItemStack getItem(){
+	public ItemStack getItem() {
 		return item;
 	}
-	public void setItem(ItemStack item){
+
+	public void setItem(ItemStack item) {
 		this.item = item;
 	}
 
@@ -151,7 +152,6 @@ public class Grenade {
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
-
 
 	/**
 	 * @return the cost

@@ -24,7 +24,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 public class ScoreBoard {
 
-	InfPlayer ip;
+	InfPlayer	ip;
 
 	public ScoreBoard(InfPlayer ip)
 	{
@@ -36,7 +36,7 @@ public class ScoreBoard {
 		Regular, Stats
 	};
 
-	private ScoreBoards showing = ScoreBoards.Regular;
+	private ScoreBoards	showing	= ScoreBoards.Regular;
 
 	/**
 	 * @return the scoreboard theyre seeing
@@ -102,37 +102,39 @@ public class ScoreBoard {
 				score2.setScore(0);
 			}
 
-		} else if (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
-		{
-			ob.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote For An Arena!");
-			int i = 1;
-			for (Arena arena : Lobby.getArenas())
+		}
+		else
+			if (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
 			{
-				if (Lobby.isArenaValid(arena))
+				ob.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote For An Arena!");
+				int i = 1;
+				for (Arena arena : Lobby.getArenas())
 				{
-					Score score;
-					if (arena == Lobby.getActiveArena())
-						score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName().substring(0, Math.min(11, arena.getName().length()))));
-					else
-						score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName().substring(0, Math.min(12, arena.getName().length()))));
-					if (i > 15)
+					if (Lobby.isArenaValid(arena))
 					{
-						for (OfflinePlayer op : sb.getPlayers())
+						Score score;
+						if (arena == Lobby.getActiveArena())
+							score = ob.getScore(Bukkit.getOfflinePlayer("" + RandomChatColor.getColor(ChatColor.AQUA, ChatColor.GOLD, ChatColor.RED, ChatColor.LIGHT_PURPLE) + ChatColor.BOLD + ">" + arena.getName().substring(0, Math.min(11, arena.getName().length()))));
+						else
+							score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName().substring(0, Math.min(12, arena.getName().length()))));
+						if (i > 15)
 						{
-							if (ob.getScore(op).getScore() == 0)
+							for (OfflinePlayer op : sb.getPlayers())
 							{
-								sb.resetScores(op);
-								break;
+								if (ob.getScore(op).getScore() == 0)
+								{
+									sb.resetScores(op);
+									break;
 
+								}
 							}
 						}
+						score.setScore(1);
+						score.setScore(arena.getVotes());
+						i++;
 					}
-					score.setScore(1);
-					score.setScore(arena.getVotes());
-					i++;
 				}
 			}
-		}
 
 		player.setScoreboard(sb);
 	}
@@ -177,7 +179,8 @@ public class ScoreBoard {
 				String space = "&" + spaces;
 				spaces++;
 				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(space, player)));
-			} else
+			}
+			else
 			{
 				// If its just a regular message, just set it
 				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(line, player)));

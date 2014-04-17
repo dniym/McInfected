@@ -14,7 +14,7 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedStartVote extends Event {
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public HandlerList getHandlers() {
 		return handlers;

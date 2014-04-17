@@ -18,7 +18,7 @@ public abstract class Database {
 	/**
 	 * Plugin instance, use for plugin.getDataFolder() and plugin.getLogger()
 	 */
-	protected Plugin plugin;
+	protected Plugin	plugin;
 
 	/**
 	 * Creates a new Database

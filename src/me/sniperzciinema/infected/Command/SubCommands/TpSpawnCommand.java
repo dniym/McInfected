@@ -31,10 +31,11 @@ public class TpSpawnCommand extends SubCommand {
 		{
 			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-			 if (!p.hasPermission("Infected.TpSpawn"))
-					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+			if (!p.hasPermission("Infected.TpSpawn"))
+				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
-				else if (ip.getCreating() == null)
+			else
+				if (ip.getCreating() == null)
 					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
 
 				else
@@ -48,10 +49,12 @@ public class TpSpawnCommand extends SubCommand {
 						{
 							p.teleport(LocationHandler.getPlayerLocation(a.getSpawns(team).get(i)));
 							sender.sendMessage(Msgs.Command_Spawn_Tp.getString("<spawns>", String.valueOf(i + 1)));
-						} else
+						}
+						else
 							sender.sendMessage(Msgs.Help_TpSpawn.getString());
 
-					} else
+					}
+					else
 						sender.sendMessage(Msgs.Help_TpSpawn.getString());
 				}
 		}

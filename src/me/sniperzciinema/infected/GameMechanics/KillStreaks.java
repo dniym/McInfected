@@ -16,7 +16,6 @@ public class KillStreaks {
 
 	/**
 	 * The method that is in charge of handling a players killstreaks
-	 * 
 	 * This includes when a player gets a kill and when a player dies
 	 * 
 	 * @param killed
@@ -45,7 +44,7 @@ public class KillStreaks {
 			// To prevent spam we only show when they get 3 or more as a
 			// killstreak
 			if (KillStreak >= 3)
-				for (Player u: Lobby.getPlayersInGame())
+				for (Player u : Lobby.getPlayersInGame())
 					u.sendMessage(Msgs.Game_KillStreak_Value.getString("<player>", p.getName(), "<killstreak>", String.valueOf(KillStreak)));
 
 			// Does their class have a reward for getting a killstreak of this
@@ -68,7 +67,8 @@ public class KillStreaks {
 				{
 					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Survive), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.Survive));
-				} else
+				}
+				else
 				{
 					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Infected), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.Infected));

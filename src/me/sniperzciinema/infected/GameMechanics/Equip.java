@@ -17,7 +17,6 @@ public class Equip {
 	/**
 	 * Equip the player to match with what their class says they should have,
 	 * any items in the inventory that aren't from that class will be ignored.
-	 * 
 	 * Also does their armor
 	 * 
 	 * @param p
@@ -74,8 +73,8 @@ public class Equip {
 		IP.clearEquipment();
 		if (!zombieClass.getItems().isEmpty())
 			for (ItemStack is : zombieClass.getItems())
-					p.getInventory().addItem(is);
-		
+				p.getInventory().addItem(is);
+
 		p.getInventory().setHelmet(zombieClass.getHelmet());
 		p.getInventory().setChestplate(zombieClass.getChestplate());
 		p.getInventory().setLeggings(zombieClass.getLeggings());

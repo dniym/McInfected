@@ -46,10 +46,11 @@ public class TopCommand extends SubCommand {
 						{
 							if (i == 1)
 								sender.sendMessage("" + ChatColor.RED + ChatColor.BOLD + i + ". " + ChatColor.GOLD + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
-							else if (i == 2 || i == 3)
-								sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.GRAY + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
 							else
-								sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.WHITE + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.DARK_GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
+								if (i == 2 || i == 3)
+									sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.GRAY + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
+								else
+									sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.WHITE + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.DARK_GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
 						}
 						i++;
 
@@ -57,9 +58,11 @@ public class TopCommand extends SubCommand {
 							break;
 					}
 
-				} else
+				}
+				else
 					sender.sendMessage(Msgs.Error_Top_Not_Stat.getString());
-			} else
+			}
+			else
 				sender.sendMessage(Msgs.Help_Top.getString());
 		}
 
@@ -67,6 +70,6 @@ public class TopCommand extends SubCommand {
 
 	@Override
 	public List<String> getAliases() {
-		return Arrays.asList(new String[] {"leaderboard", "leaderboards"});
+		return Arrays.asList(new String[] { "leaderboard", "leaderboards" });
 	}
 }
