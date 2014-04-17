@@ -135,21 +135,13 @@ public class ArenaSettings {
 
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////
 
-	public ArrayList<ItemStack> getRewordItems() {
+	public ArrayList<ItemStack> getRewardItems() {
 		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards"))
 			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards"));
 		else
 			return ItemHandler.getItemStackList(Files.getConfig().getStringList("Settings.Global.Rewards"));
 	}
 
-	// /////////////////////////////////////////////////////////-STRINGS-///////////////////////////////////////////////////////
-
-	public List<String> getRewordCommands() {
-		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Rewards.Commands"))
-			return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Rewards.Items");
-		else
-			return Files.getConfig().getStringList("Settings.Global.Rewards.Items");
-	}
 
 	// /////////////////////////////////////////////////////////-POTIONS-////////////////////////////////////////////////////////
 
@@ -162,4 +154,10 @@ public class ArenaSettings {
 
 	// /////////////////////////////////////////////////////////-LIST-////////////////////////////////////////////////////////
 
+	public List<String> getRewardCommands() {
+		if (Files.getArenas().contains("Arenas." + arena.getName() + ".Command Rewards"))
+			 		return Files.getArenas().getStringList("Arenas." + arena.getName() + ".Command Rewards");
+		else
+			return Files.getConfig().getStringList("Settings.Global.Command Rewards");
+	}
 }

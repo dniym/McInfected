@@ -54,21 +54,28 @@ public class Game {
 			{
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 
-				Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
-				for (ItemStack stack : IP.getInventory())
-					if (stack != null)
-						IV.addItem(stack);
-
-				for (ItemStack is : Lobby.getActiveArena().getSettings().getRewordItems())
-					IV.addItem(is);
-
 				if (InfPlayerManager.getInfPlayer(u).isWinner())
 				{
 					if (Settings.VaultEnabled())
 						Infected.economy.depositPlayer(u.getName(), Settings.getVaultReward());
 					winners.add(u.getName());
 				}
+				for (String s : winners)
+				{
+					// Command Rewards
+					for (String c : Lobby.getActiveArena().getSettings().getRewardCommands())
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replaceAll("<player>", s));
 
+					// Item Rewards
+					Inventory IV = Bukkit.getServer().createInventory(null, InventoryType.PLAYER);
+					for (ItemStack stack : IP.getInventory())
+						if (stack != null)
+							IV.addItem(stack);
+
+					for (ItemStack is : Lobby.getActiveArena().getSettings().getRewardItems())
+						IV.addItem(is);
+
+				}
 				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
 				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
@@ -157,11 +164,6 @@ public class Game {
 		InfPlayerManager.getInfPlayer(p).leaveInfected();
 	}
 
-	/**
-	 * Choose the Alpha zombies(Apperently this feature doesn't work yet, will
-	 * fix it when I get internet and can actually test on a live server)
-	 * TODO: Fix the choosing percent of Alpha Zombies
-	 */
 	public static void chooseAlphas() {
 
 		int toInfect = 1;
@@ -174,7 +176,7 @@ public class Game {
 		}
 		String[] face = null;
 
-		while (!(Lobby.getTeam(Team.Zombie).size() >= toInfect))
+		while (Lobby.getTeam(Team.Zombie).size() < toInfect)
 		{
 			Player alpha = Lobby.getPlayersInGame().get(new Random().nextInt(Lobby.getPlayersInGame().size()));
 			if (Settings.PictureEnabled())
@@ -190,24 +192,26 @@ public class Game {
 			InfPlayer ip = InfPlayerManager.getInfPlayer(alpha);
 			ip.Infect();
 
-			if (Settings.PictureEnabled())
-			{
-				face = Pictures.getHuman();
-				face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
-				face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
-			}
-			for (Player player : Lobby.getPlayersInGame())
-				if (!player.getName().equals(alpha.getName()))
-				{
-					if (Settings.PictureEnabled())
-						player.sendMessage(face);
-					else
-						player.sendMessage(Msgs.Game_Alpha_They.getString("<player>", alpha.getName()));
-				}
-
 			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
 				alpha.addPotionEffect(PE);
+
 		}
+
+		if (Settings.PictureEnabled())
+		{
+			face = Pictures.getHuman();
+			face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
+			face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
+		}
+		for (Player player : Lobby.getTeam(Team.Human))
+			if (Settings.PictureEnabled())
+				player.sendMessage(face);
+			else
+			{
+				for (Player u : Lobby.getZombies())
+					player.sendMessage(Msgs.Game_Alpha_They.getString("<player>", u.getName()));
+			}
+
 		for (Player u : Lobby.getPlayersInGame())
 		{
 			InfPlayer up = InfPlayerManager.getInfPlayer(u);

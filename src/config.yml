@@ -163,5 +163,6 @@ Settings:
     Rewards:
     - id:351 data:2 amount:3
     - id:265 amount:2
-# The command triggered for a player winning a game(Can be used to give special items, money, permissions, etc)
-    Command Reward: tell <player> you have won!
+# The commands triggered for a player winning a game(Can be used to give special items, money, permissions, etc)
+    Command Rewards: 
+    - "tell <player> you have won!"
