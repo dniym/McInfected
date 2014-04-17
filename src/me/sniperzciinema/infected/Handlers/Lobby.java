@@ -3,12 +3,12 @@ package me.sniperzciinema.infected.Handlers;
 
 import java.util.ArrayList;
 
-import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Events.InfectedStartGame;
 import me.sniperzciinema.infected.Events.InfectedStartInfecting;
 import me.sniperzciinema.infected.Events.InfectedStartVote;
 import me.sniperzciinema.infected.GameMechanics.Equip;
+import me.sniperzciinema.infected.GameMechanics.Game;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Arena.ArenaSettings;

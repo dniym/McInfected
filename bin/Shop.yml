@@ -1,0 +1,48 @@
+# # Default Shop.yml, Last Edited in v2.1.8
+# #
+# For more help with ids go here: 
+# Item/Block Ids - Minecraftinfo.com/IDList.htm
+# Enchantment Ids - http://minecraft.gamepedia.com/Enchanting#Enchantments
+# Potion Effect Ids - http://minecraft.gamepedia.com/Potion_effects#List_of_effects
+# #
+# Infected's Item Codes
+# ---------------------
+# id:<item id>
+# data:<item durability>
+# amount:<amount>
+# enchant:<enchantment id>-<enchantment level>
+# name:<item name>
+# lore:<line1|line_2>
+# owner:<Player name> - Used on skulls
+# color:<red>,<green>,<blue> - Used on leather armor(http://www.colorschemer.com/online.html)
+# #
+# Examples:
+# id:397 data:3 amount:1 owner:Notch
+# id:269 enchantment:32-3 name:Dwarf lore:Diggy|Diggy|Hole
+# id:299 color:255,204,51 name:Orange_ChestPlate
+# --------------------- 
+# You can use "/Infected Admin Code" To return the code for the item in your hand
+# ------------------------------------------------------------------------
+# Look at Infected's Pages for help with this file
+# +======================================================+ #
+# Are shops enabled
+Enabled: true
+Save Items: 
+# Do we just save all items?
+  All: false
+# What about specific item?
+  Specific Items:
+  - id:827
+  - id:276
+  - id:991
+  - id:0
+Custom Items:
+# Custom item's name
+  StackOfArrow:
+# The items item code
+    Item Code: id:262 amount:64
+# The price of the item in the shops gui
+    GUI Price: 10
+  BowOfKick:
+    Item Code: id:261 enchantment:49-2
+    GUI Price: 20

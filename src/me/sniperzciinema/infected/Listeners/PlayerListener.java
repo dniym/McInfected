@@ -1,8 +1,8 @@
 
 package me.sniperzciinema.infected.Listeners;
 
-import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Infected;
+import me.sniperzciinema.infected.GameMechanics.Game;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;

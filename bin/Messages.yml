@@ -1,0 +1,202 @@
+# Default Message.yml, Last Edited in v2.1.3
+# If you want to write "don't", write "don''t" instead (note the doubled apostrophe)
+# Due to me never being able to decide on a color, Infected supports "Random Color Codes" '&x' is for a random color and '&y' is for a random format
+Format:
+  Header: '&x&y>&e&o&m---------------<<&4&l<title>&e&o&m>>---------------&x&y<'
+  Line: '&x&y>&e&m-------------------------------------------&x&y<'
+  Prefix: '&e&l{&4&lInfected&e&l}&c'
+  InfChat: '&f&l<<&7<team>&8&l-&6&o<player>&f&l>>&7: &e<message>'
+  List: '&e&l> &a&o<player>'
+  Grenades List: '&x&o<id>. &e<name> &7&l- &e<cost>'
+  Time:
+    Second: 'Second'
+    Seconds: 'Seconds'
+    Minute: 'Minute'
+    Minutes: 'Minutes'
+Picture:
+  Infected:
+    To Win: '&c&oInfect all the humans to win!'
+    You: '&f&oYou have become a &4ZOMBIE!'
+  Survivor:
+    To Win: '&b&oSurvive to win!'
+    You: '&f&oYou are a &bSURVIVOR!'
+Command:
+  Arena:
+    List: '&l&7Arenas: &a<valid> &c<invalid>'
+    Created: '&f&l<arena> &6&ohas been created.'
+    Removed: '&f&l<arena> &6&ohas been remove.'
+    Set: '&f&l<arena> &6&ohas been selected.'
+  Spawn:
+    Set: '&e&o<team> spawn &l<spawn> &e&ohas been set at your location'
+    Tp: '&e&oYou have been teleported to <team> spawn &l<spawn> &e&o.'
+    Spawns: '&e&oI counted a total of &l<spawns> <team> &e&ospawns for this arena'
+    Deleted: '&c<team> spawn &o<spawn> &chas been deleted'
+  Lobby:
+    Set: '&3The &lLobby&3 has been set.'
+    Tp: '&a&lYou &3have been teleported to the Lobby'
+  Leave Location:
+    Set: '&3The &lLeave location&3 has been set.'
+    Tp: '&a&lYou &3have been teleported to the out of &lInfected &3location'
+  Vote: '&f&l<player> &e&ohas voted for <arena>'
+  InfChat: '&aYou have toggled <state> your teams chat'
+  Info:
+    Players: '&7Players in game: &e&l<players>'
+    State: '&7Game State: &e&l<state>'
+    Time Left: '&7Time Left: &e&l<time>'
+  Admin:
+    Reload: '&8&oInfected has been reloaded!'
+    Shutdown: '&cInfected has been &a<state>'
+    Kicked:
+      You: '&a&lYou &ahave kicked <player> out of Infected'
+      Them: '&c&lYou &chave been kicked out of Infected'
+    Changed Stat: '&e&l<player>''s &7&o<stat> &ehave been changed to &7&o<value>'
+  Files:
+    Value: '&2&o<path> &2has a value of: &7&o<value>'
+    Changed: '&2&o<path> &2was changed from a value of &7&o<value> &2 to: &7&o<newvalue>'
+  Classes:
+    SetClass: '&b&lClass: &f<class> &bfor <team>''s has been created'
+Error:
+  Misc:
+    Not Player: '&c&oYou''re not a player!'
+    Plugin Unloaded: '&c&oInfected has been unloaded from the server'
+    Plugin Disabled: '&c&oInfected is disabled, please try again later'
+    No Permission: '&c&oYou don''t have the needed permission node to perform this action'
+    Unkown Command: '&c&oInfected has no clue what command you want, but try looking into ''/Infected Help''!'
+    Cant Use Command: '&c&oInfected was warned you''d try this so we blocked this command!'
+    Not A File: '&cThats not a file in Infected... &7Try one of these: &o<files>'
+    Not A Path: '&cThats not a valid path in the selected file!'
+    Joining While Game Started: '&cJoining whille a game is in progress has been disabled!'
+    Editing Inventory: '&cEdting you inventory while in a game has been disabled!'
+  Game:
+    Started: '&e&oThe Games already started'
+    Not Started: '&e&oThe Games not started'
+    Not In: '&c&oYou need to be playing Infected to do this...'
+    In: '&c&oYou''re already playing Infected'
+  Top:
+    Not Stat: '&c&oInvalid Stat &b(<Kills/Deaths/Points/Score/Time/KillStreak>)'
+  Lobby:
+    Doesnt Exist: '&c&oInfected is in dier need of a lobby first...'
+  Arena:
+    Doesnt Exist: '&c&oThat arena has never existed...'
+    None Set: '&c&oYou still have to select an arena!'
+    Not Valid: '&c&oThat arena isn''t setup properly!'
+    Already Exist: '&c&oThat arena already exists...'
+    No Spawns: '&c&oThat arena has no spawns'
+    No Valid: '&c&oThere are no valid arenas'
+  Signs:
+    Not Valid: '&c&oThat sign isn''t setup properly'
+  Already Voted: '&c&oYou''ve already voted for an arena!'
+Game:
+  Joined:
+    You: '&7&lYou &ahave joined Infected.'
+    They: '&7&l<player> &ahas joined Infected.'
+  Left:
+    You: '&7&lYou &chave left Infected.'
+    They: '&7&l<player> &chas left Infected.'
+  KillStreak:
+    Value: '&3&o<player> &6has a killstreak of &f&o<killstreak>'
+    Reward: '&7&oYou''ve been rewarded with a &e<item> &7&ofor your killstreak'
+  Time Left:
+    Voting: '&e&oVoting Ends in &a<time>'
+    Infecting: '&e&oThe &cInfection &egoes viral in &a<time>'
+    Game: '&a<time> &e&oleft in this game'
+  Players Left: '&2Humans &a<humans> &8|| &4Zombies &c<zombies>'
+  Info:
+    Arena: '&6<arena> &f- &2Created By: &7<creator>'
+  Death:
+    Before Game: '&6Somehow you''ve managed to kill yourself before the games even started, Try harder next time...'
+  End:
+    Not Enough Players: '&c&oTheres no longer enough players to play Infected'
+  Over:
+    Humans Win: '&a&lThe Humans have survived!'
+    Winners: '&aThe survivors are: &7<winners>'
+    Zombies Win: '&cAll Humans have been Infected'
+  Alpha:
+    You: '&f&oYou are an &4Alpha Zombie!'
+    They: '&7&o<player> &chas fallen to the Infection'
+  Starting In 5: '&xThe game will start in 5 seconds!'
+Help:
+  Vote: '&3To vote use &4&o/Infected Vote &3and choose an arena'
+  Grenades: '&3To purchase a grenade use &4&o/Infected Grenades [ID] [Amount]'
+  Lists: '&3To view a list use &4&o/Infected List <Playing/Humans/Zombies>'
+  TpSpawn: '&3To teleport to a spawn set an arena and use &4&o/Infected TpSpawn <Human/Zombie/Global> <ID>'
+  DelSpawn: '&3To delete a spawn set an arena and use &4&o/Infected DelSpawn <Human/Zombie/Global> <ID>'
+  SetSpawn: '&3To set a spawn set an arena and keep using &4&o/Infected SetSpawn <Human/Zombie/Global>'
+  Spawns: '&3To see how many spawns an arena has use &4&o/Infected Spawns <Human/Zombie/Global>'
+  Create: '&3To create an arena use &4&o/Infected Create <Arena> [Creator]'
+  Remove: '&3To remove an arena use &4&o/Infected Remove <Arena>'
+  SetArena: '&3To select an arena to edit use &4&o/Infected SetArena <Arena>'
+  Top: '&3To see from the top list of players use &4&o/Infected Top <Kills/Deaths/Points/Score/Time/KillStreak>'
+  Files: '&3To modify Infected''s Files use &4&o/Infected Files <File> [Path] [NewValue]'
+  SetClass: ' &3To create a class use &4&o/Infected SetClass <ClassName> <Human/Zombie>'
+Classes:
+  None: '&7You have chosen the &x&odefault class'
+  Chosen: '&cYou have chosen &x&o<class> &cas your &x&o<team> class'
+Menu:
+  Shop:
+    Click To Buy: '&eClick to purchase this item for &x&o<price> &bpoints'
+  Team:
+    Choose: '&eClick to choose classes for &x&o<team>'
+  Classes:
+    Click To Choose: '&eClick to choose this class'
+    Click For None: '&eClick to choose the default class'
+    Click To Return: '&eClick to return to &f&lTeam Selection'
+  Vote:
+    Choose: '&5Click to vote for this arena'
+    Random: '&cClick to vote for a random arena'
+Shop:
+  Bought Item: '&eYou have just bought &x&o<item>'
+  Cost:
+    Not Enough: '&cYou don''t have enough to purchase this!'
+    Needed: '&cYou need &x&o<needed> &cmore points!'
+Sign:
+  CmdSet:
+    Cost:
+      Not Enough: 'You don''t have enough points to use this Command Set'
+      Needed: '&cYou need &x&o<needed> &cmore points!'
+Grenades:
+  Bought: '&eYou have purchased a &x&o<grenade>'
+  Cost:
+    Not Enough: '&cYou don''t have enough points to buy this grenade'
+  Invalid Id: '&cDouble check that that is a grenades id'
+Kills:
+  Human:
+    Arrow:
+    - "&x<killer> &6has shot &x<killed>"
+    - "&x<killer> &6has looked at &x<killed>&6, and killed them..."
+    - "&x<killer> &6has slayed &x<killed>"
+    - "&x<killer> &6has killed &x<killed>"
+    Melee:
+    - "&x<killer> &6has killed &x<killed>"
+    - "&x<killer> &6has slayed &x<killed>"
+    - "&x<killer> &6has decapitated &x<killed>"
+    - "&x<killer> &6has sliced &x<killed>&6 into hundreds of peices"
+    - "&x<killer> &6has looked at &x<killed>&6, and killed them..."
+    Grenade:
+    - "&x<killer> &6has bombarded &x<killed>"
+    - "&x<killer> &6has blown up &x<killed>"
+    Gun:
+    - "&x<killer> &6has mowed &x<killed>&6 down"
+    - "&x<killer> &6has made swiss cheese out of &x<killed>"
+  Zombie:
+    Arrow:
+    - "&x<killer> &6shot &x<killed>"
+    - "&x<killer> &6has killed &x<killed>"
+    Melee:
+    - "&x<killer> &6has bitten &x<killed>"
+    - "&x<killer> &6ripped off &x<killed>&6's head"
+    - "&x<killer> &6ate &x<killed>"
+    - "&x<killer> &6has killed &x<killed>"
+    - "&x<killer> &6has infected &x<killed>"
+    - "&x<killer> &6has scratched &x<killed>"
+    Grenade:
+    - "&x<killer> &6has bombarded &x<killed>"
+    - "&x<killer> &6has blown up &x<killed>"
+    Gun:
+    - "&x<killer> &6has mowed &x<killed>&6 down"
+    - "&x<killer> &6has made swiss cheese out of &x<killed>"
+Suicides:
+  Human:
+    - "&x<killed> &6 has died"
+  Zombie:
+    - "&x<killed> &6 has become infected"

@@ -1,0 +1,75 @@
+# # Default Grenades.yml, Last Edited in v2.1.8
+# #
+# For more help with ids go here: 
+# Item/Block Ids - Minecraftinfo.com/IDList.htm
+# Enchantment Ids - http://minecraft.gamepedia.com/Enchanting#Enchantments
+# Potion Effect Ids - http://minecraft.gamepedia.com/Potion_effects#List_of_effects
+# #
+# Infected's Item Codes
+# ---------------------
+# id:<item id>
+# data:<item durability>
+# amount:<amount>
+# enchant:<enchantment id>-<enchantment level>
+# name:<item name>
+# lore:<line1|line_2>
+# owner:<Player name> - Used on skulls
+# color:<red>,<green>,<blue> - Used on leather armor(http://www.colorschemer.com/online.html)
+# #
+# Examples:
+# id:397 data:3 amount:1 owner:Notch
+# id:269 enchantment:32-3 name:Dwarf lore:Diggy|Diggy|Hole
+# id:299 color:255,204,51 name:Orange_ChestPlate
+# --------------------- 
+# You can use "/Infected Admin Code" To return the code for the item in your hand
+# ------------------------------------------------------------------------
+# Look at Infected's Pages for help with this file
+# +======================================================+ #
+Can Only Humans Use Grenades: false
+Grenades:
+# The grenade's name
+  Stun:
+# The actual grenade item
+    Item Id: id:341
+# The items cost in the grenades shop
+    Cost: 20
+# The delay before the grenade explodes
+    Delay: 3
+# The range of the grenade's explosion
+    Range: 3
+# The damage that gets done on the player
+    Damage: 1
+# Can the grenade damage the player
+    Damage Thrower: true
+# List of potion effects that the grenade causes on the players
+    Potion Effects:
+    - "2:5:3"
+    - "15:1:2"
+  Flash:
+    Item Id: id:332
+    Cost: 20
+    Delay: 3
+    Range: 3
+    Damage: 1
+    Damage Thrower: true
+    Potion Effects:
+    - "2:1:2"
+    - "15:5:3"
+  Frag:
+    Item Id: id:385
+    Cost: 25
+    Delay: 3
+    Range: 4
+    Damage: 10
+    Damage Thrower: true
+    Potion Effects:
+    - "2:1:1"
+  Health Pack:
+    Item Id: id:390
+    Cost: 30
+    Delay: 1
+    Range: 2
+    Damage: -10
+    Damage Thrower: true
+    Potion Effects:
+    - "15:1:1"

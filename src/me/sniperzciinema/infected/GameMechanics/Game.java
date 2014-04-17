@@ -1,15 +1,13 @@
 
-package me.sniperzciinema.infected;
+package me.sniperzciinema.infected.GameMechanics;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Events.InfectedEndGame;
 import me.sniperzciinema.infected.Extras.Pictures;
-import me.sniperzciinema.infected.GameMechanics.KillStreaks;
-import me.sniperzciinema.infected.GameMechanics.Settings;
-import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;

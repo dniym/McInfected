@@ -5,11 +5,11 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
-import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Disguise.Disguises;
 import me.sniperzciinema.infected.Events.InfectedLeaveEvent;
 import me.sniperzciinema.infected.Extras.ScoreBoard;
 import me.sniperzciinema.infected.GameMechanics.Equip;
+import me.sniperzciinema.infected.GameMechanics.Game;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;

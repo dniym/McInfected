@@ -66,8 +66,10 @@ public class ItemHandler {
 					else if (data.startsWith("amount") || data.startsWith("quantity"))
 						stack.setAmount(Integer.parseInt(data.split(":")[1]));
 
-					else if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage"))
+					else if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage")){
+						System.out.println(Short.parseShort(data.split(":")[1]));
 						stack.setDurability(Short.parseShort(data.split(":")[1]));
+					}
 
 					else if (data.startsWith("enchantment") || data.startsWith("enchant"))
 					{
@@ -415,10 +417,12 @@ public class ItemHandler {
 	}
 
 	public static ItemStack getItemStackIgnoreDamage(ItemStack stack) {
+		
 		if (stack == null)
 			stack = new ItemStack(Material.AIR);
-		stack.setDurability((short) 0);
-		return stack;
+		ItemStack newStack = stack.clone();
+		newStack.setDurability((short) 0);
+		return newStack;
 	}
 
 	public static ItemStack getFancyMessageItem(String title, String... strings) {

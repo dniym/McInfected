@@ -1,0 +1,167 @@
+# Default Infected Config, Last edited in 2.2.0
+# #
+# See Infecteds config page for help
+# http://dev.bukkit.org/server-mods/infected-core
+# #
+# To allow higher ranks votes to be more influential you can add "Infected.Vote.vip" to a player, and that'll make the players votes count twice
+# And "Infected.Vote.staff" will make their's count 3 times 
+#    Votes:
+#      Extra Votes:
+#        vip: 2
+#        staff: 3
+# Points and Score Modifiers and pretty much the same setup as extra votes, except that it multiplies the points/score by the modifier number 
+# and the permissions are "Infected.Points.vip" or "Infected.Score.vip"
+# #
+# ------------------------------------------------------------------------
+# Look at Infected's Pages for help with this file
+# +======================================================+ #
+# # +======================================================+ #
+# # |                Infected Settings                     | #
+# # +======================================================+ #
+MySQL:
+  Enabled: false
+  Host: 127.0.0.1
+  Port: 3306
+  Database: minecraft
+  Username: user
+  Password: pass
+
+Check For Updates:
+  Enabled: true
+ 
+# All the addons for Infected 
+Addons:
+# Can they choose classes
+  Class Support: true
+# Economy Support
+  Vault Support:
+    Enabled: false
+    Reward: 100
+# Picture Support
+  Picture Support:
+    Enabled: true
+# Gun support
+  CrackShot Support:
+    Enabled: true
+# To allow allies to attack each other
+  Factions Support:
+    Enabled: true
+# To prevent mcmmo from unbalancing a fight
+  mcMMO Support:
+    Enabled: true
+# Should the zombies look like real mobs
+  Disguise Support:
+    Enabled: true
+
+# Logs that show when the server starts up
+Logs:
+  Addons: true
+  Arenas: true
+  Classes: true
+  Grenades: true
+  
+# All the settings for Infected
+Settings:
+# These settings can not be used Per Arena
+  Misc:
+# To allow certain ranks to have more influance in voting
+    Votes:
+      Extra Votes:
+        vip: 2
+        staff: 3
+# To allow certain ranks to have more points rewarded
+    Points Modifiers:
+      vip: 2
+# To allow certain ranks to have more score rewarded
+    Score Modifiers:
+      vip: 2
+# Info Signs, every "Refresh Time"(seconds) the signs will be updated
+    Info Signs:
+      Enabled: true
+      Refresh Time: 2
+# How many players needed for it to automatically start
+    Automatic Start:
+      Minimum Players: 3
+# Should players be prevented from editing their inventory
+    Prevent Editing Inventory: false
+# Should we prevent players from joining once a game has started
+    Prevent Joining During Game: false
+    ScoreBoard Stats:
+     - " "
+     - "&9&lPoints:"
+     - "&9&l<points>"
+     - " "
+     - "&7&lScore:"
+     - "&7&l<score>"
+     - " "
+     - "&a&lKills:"
+     - "&a&o<kills>"
+     - " "
+     - "&c&lDeaths:"
+     - "&c&o<deaths>"
+     - " "
+     - "&6&lBest Streak:"
+     - "&6&o<highestkillstreak>"
+# Commands to allowed in the arena
+    Allowed Commands:
+    - /list
+    - /tell
+# Global Settings can be just copied and pasted into an arenas settings then you have settings per arena
+  Global:
+    Hostile Mobs Target Humans: false
+# All the time limits (Seconds)
+    Time:
+      Voting: 30
+      Infecting: 20
+      Game: 480
+# When choosing the alpha should we choose more then one based on the players in game
+    Percent to Infect:
+      Enabled: true
+      Percent: 20
+# Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
+    Breakable Blocks:
+      Global:
+      - 121
+      Zombie:
+      - 170
+      Human:
+      - 153
+# The points(Store/Grenades/Etc) a player is rewarded upon certain events
+    Points:
+      Use: true
+# When another human gets infected
+      Survive: 3
+# As a zombie when your team gets a new Infected
+      Zombies Infected: 3
+# When you kill a player
+      Kill: 2
+# When the game ends
+      Game Over: 10
+# The score a player is rewarded upon certain events
+    Score:
+      Use: true
+# When another human gets infected
+      Survive: 3
+# As a zombie when your team gets a new Infected
+      Zombies Infected: 3
+# When you kill a player
+      Kill: 2
+# When the game ends
+      Game Over: 10
+# Default Classes
+    Default Classes:
+      Human: Guard
+      Zombie: Regular
+    Misc:
+# Should players be able to loose hunger in the arena
+      Disable Hunger: true
+# Should players be able to enchant in the arena
+      Disable Enchanting: true
+# Should players be able to open doors, use levers, etc in arenas
+      Disable Interacting: false
+# The rewards for playing a game(Items)
+    Rewards:
+    - id:351 data:2 amount:3
+    - id:265 amount:2
+# The command triggered for a player winning a game(Can be used to give special items, money, permissions, etc)
+    Command Reward: tell <player> you have won!

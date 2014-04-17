@@ -1,7 +1,6 @@
 
 package me.sniperzciinema.infected.GameMechanics;
 
-import me.sniperzciinema.infected.Game;
 import me.sniperzciinema.infected.Enums.DeathType;
 import me.sniperzciinema.infected.Events.InfectedDeathEvent;
 import me.sniperzciinema.infected.Extras.Pictures;

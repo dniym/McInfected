@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import me.sniperzciinema.infected.Command.CHandler;
 import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.Handlers.Lobby;
@@ -110,7 +111,8 @@ public class Infected extends JavaPlugin {
 		}
 
 		// Get the Commands class and the Listener
-		getCommand("Infected").setExecutor(new Commands());
+		getCommand("Infected").setExecutor(new CHandler());
+		
 		pm.registerEvents(new ScoreBoardToggle(), this);
 		pm.registerEvents(new DamageEvents(this), this);
 		pm.registerEvents(new PlayerListener(), this);
@@ -118,6 +120,7 @@ public class Infected extends JavaPlugin {
 		pm.registerEvents(new GrenadeListener(), this);
 		pm.registerEvents(new SignListener(), this);
 		pm.registerEvents(new TeleportFix(this), this);
+		
 		AddonManager.getAddons();
 
 		// Do the info signs (Updating the info)
