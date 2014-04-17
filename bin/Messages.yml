@@ -26,6 +26,8 @@ Command:
     Created: '&f&l<arena> &6&ohas been created.'
     Removed: '&f&l<arena> &6&ohas been remove.'
     Set: '&f&l<arena> &6&ohas been selected.'
+    SetBlock: '&f&lSucessfully set the arenas icon to: <block>'
+    SetCreator: '&f&lSucessfully set the arenas creator to: <creator>'
   Spawn:
     Set: '&e&o<team> spawn &l<spawn> &e&ohas been set at your location'
     Tp: '&e&oYou have been teleported to <team> spawn &l<spawn> &e&o.'
@@ -47,8 +49,8 @@ Command:
     Reload: '&8&oInfected has been reloaded!'
     Shutdown: '&cInfected has been &a<state>'
     Kicked:
-      You: '&a&lYou &ahave kicked <player> out of Infected'
-      Them: '&c&lYou &chave been kicked out of Infected'
+      Them: '&a&lYou &ahave kicked <player> out of Infected'
+      You: '&c&lYou &chave been kicked out of Infected'
     Changed Stat: '&e&l<player>''s &7&o<stat> &ehave been changed to &7&o<value>'
   Files:
     Value: '&2&o<path> &2has a value of: &7&o<value>'
