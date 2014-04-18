@@ -38,10 +38,8 @@ public class DelSpawnCommand extends SubCommand {
 			else
 				if (ip.getCreating() == null)
 					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
-
 				else
-				{
-					if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+					if ((args.length == 2) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
 					{
 						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 
@@ -63,7 +61,6 @@ public class DelSpawnCommand extends SubCommand {
 					}
 					else
 						p.sendMessage(Msgs.Help_DelSpawn.getString());
-				}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

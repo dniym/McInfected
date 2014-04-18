@@ -45,58 +45,25 @@ public class Menus {
 	// later use
 	public Menus()
 	{
-		teamMenu = getTeamMenu();
-		classHumanMenu = getClassHumanMenu();
-		classZombieMenu = getClassZombieMenu();
-		voteMenu = getVoteMenu();
-		shopMenu = getShopMenu();
-		grenadeMenu = getGrenadeMenu();
+		this.teamMenu = getTeamMenu();
+		this.classHumanMenu = getClassHumanMenu();
+		this.classZombieMenu = getClassZombieMenu();
+		this.voteMenu = getVoteMenu();
+		this.shopMenu = getShopMenu();
+		this.grenadeMenu = getGrenadeMenu();
+	}
+
+	public void destroyAllMenus() {
+		this.teamMenu.destroy();
+		this.classHumanMenu.destroy();
+		this.classZombieMenu.destroy();
+		this.voteMenu.destroy();
+		this.shopMenu.destroy();
+		this.grenadeMenu.destroy();
 	}
 
 	public void destroyMenu(IconMenu menu) {
 		menu.destroy();
-	}
-
-	public void destroyAllMenus() {
-		teamMenu.destroy();
-		classHumanMenu.destroy();
-		classZombieMenu.destroy();
-		voteMenu.destroy();
-		shopMenu.destroy();
-		grenadeMenu.destroy();
-	}
-
-	public IconMenu getTeamMenu() {
-		IconMenu menu = new IconMenu(
-				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Choose a Team",
-				9, new IconMenu.OptionClickEventHandler()
-				{
-
-					@Override
-					public void onOptionClick(final IconMenu.OptionClickEvent event) {
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
-						{
-
-							public void run() {
-								Player player = event.getPlayer();
-								if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Human)
-									classHumanMenu.open(player);
-								else
-									if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Zombie)
-										classZombieMenu.open(player);
-							}
-						}, 2);
-					}
-				}, Infected.me);
-
-		ItemStack zombie = new ItemStack(Material.SKULL_ITEM);
-		zombie.setDurability((short) 2);
-		ItemStack human = new ItemStack(Material.SKULL_ITEM);
-		human.setDurability((short) 3);
-		menu.setOption(3, zombie, ChatColor.RED + "Zombie", Msgs.Menu_Team_Choose.getString("<team>", ChatColor.RED + "Zombie"));
-		menu.setOption(5, human, ChatColor.GREEN + "Human", Msgs.Menu_Team_Choose.getString("<team>", ChatColor.GREEN + "Human"));
-
-		return menu;
 	}
 
 	public IconMenu getClassHumanMenu() {
@@ -115,28 +82,26 @@ public class Menus {
 							player.sendMessage(Msgs.Classes_None.getString("<team>", "Human"));
 
 							if (event.getClickType().isRightClick())
-							{
 								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
 
+									@Override
 									public void run() {
-										infPlayer.openMenu(player, classHumanMenu);
+										infPlayer.openMenu(player, Menus.this.classHumanMenu);
 									}
 								}, 2);
-							}
 						}
 						else
 							if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
-							{
 								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
 
+									@Override
 									public void run() {
-										infPlayer.openMenu(player, teamMenu);
+										infPlayer.openMenu(player, Menus.this.teamMenu);
 
 									}
 								}, 2);
-							}
 							else
 								if (player.hasPermission("Infected.Classes.Human") || player.hasPermission("Infected.Classes.Human." + event.getName()))
 								{
@@ -146,15 +111,14 @@ public class Menus {
 										infPlayer.setInfClass(Team.Human, InfClassManager.getClass(Team.Human, ChatColor.stripColor(event.getName())));
 
 										if (event.getClickType().isRightClick())
-										{
 											Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 											{
 
+												@Override
 												public void run() {
-													infPlayer.openMenu(player, classHumanMenu);
+													infPlayer.openMenu(player, Menus.this.classHumanMenu);
 												}
 											}, 2);
-										}
 									}
 
 								}
@@ -166,9 +130,16 @@ public class Menus {
 		for (InfClass Class : InfClassManager.getClasses(Team.Human))
 		{
 			ItemStack item = Class.getIcon();
-			menu.setOption(i, item, Class.getName(),
+			StringBuilder desc = new StringBuilder();
 
-			ChatColor.GREEN + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), "", ChatColor.AQUA + "Potion Effect:", ChatColor.WHITE + (Class.getEffects().isEmpty() ? "" : StringUtil.getWord(Class.getEffects().get(0).getType().getName().toString())), "", ChatColor.AQUA + "Transfer Effect:", ChatColor.WHITE + (Class.getContactEffects().isEmpty() ? "" : StringUtil.getWord(Class.getContactEffects().get(0).getType().getName().toString())), "", Settings.DisguisesEnabled() && Class.getDisguise() != null ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
+			if (!Class.getDesc().isEmpty())
+				for (String line : Class.getDesc())
+					desc.append(line + "<split>");
+
+			if (!desc.toString().equals(""))
+				menu.setOption(i, item, Class.getName(), ChatColor.GREEN + Msgs.Menu_Classes_Click_To_Choose.getString(), "", desc.toString(), "");
+			else
+				menu.setOption(i, item, Class.getName(), ChatColor.GREEN + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), "", ChatColor.AQUA + "Potion Effect:", ChatColor.WHITE + (Class.getEffects().isEmpty() ? "" : StringUtil.getWord(Class.getEffects().get(0).getType().getName().toString())), "", ChatColor.AQUA + "Transfer Effect:", ChatColor.WHITE + (Class.getContactEffects().isEmpty() ? "" : StringUtil.getWord(Class.getContactEffects().get(0).getType().getName().toString())), "", Settings.DisguisesEnabled() && (Class.getDisguise() != null) ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
 			i++;
 		}
 		menu.setOption(i, new ItemStack(Material.CAKE), "None", Msgs.Menu_Classes_Click_For_None.getString());
@@ -193,28 +164,26 @@ public class Menus {
 							player.sendMessage(Msgs.Classes_None.getString("<team>", "Zombie"));
 
 							if (event.getClickType().isRightClick())
-							{
 								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
 
+									@Override
 									public void run() {
-										infPlayer.openMenu(player, classZombieMenu);
+										infPlayer.openMenu(player, Menus.this.classZombieMenu);
 									}
 								}, 2);
-							}
 						}
 						else
 							if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Return"))
-							{
 								Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 								{
 
+									@Override
 									public void run() {
-										infPlayer.openMenu(player, teamMenu);
+										infPlayer.openMenu(player, Menus.this.teamMenu);
 
 									}
 								}, 2);
-							}
 							else
 								if (player.hasPermission("Infected.Classes.Zombie") || player.hasPermission("Infected.Classes.Zombie." + event.getName()))
 								{
@@ -224,15 +193,14 @@ public class Menus {
 										infPlayer.setInfClass(Team.Zombie, InfClassManager.getClass(Team.Zombie, ChatColor.stripColor(event.getName())));
 
 										if (event.getClickType().isRightClick())
-										{
 											Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 											{
 
+												@Override
 												public void run() {
-													infPlayer.openMenu(player, classZombieMenu);
+													infPlayer.openMenu(player, Menus.this.classZombieMenu);
 												}
 											}, 2);
-										}
 									}
 
 								}
@@ -244,9 +212,14 @@ public class Menus {
 		for (InfClass Class : InfClassManager.getClasses(Team.Zombie))
 		{
 			ItemStack item = Class.getIcon();
-			menu.setOption(i, item, Class.getName(),
+			StringBuilder desc = new StringBuilder();
+			for (String line : Class.getDesc())
+				desc.append(line + "<split>");
 
-			ChatColor.RED + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), "", ChatColor.AQUA + "Potion Effect:", ChatColor.WHITE + (Class.getEffects().isEmpty() ? "" : StringUtil.getWord(Class.getEffects().get(0).getType().getName().toString())), "", ChatColor.AQUA + "Transfer Effect:", ChatColor.WHITE + (Class.getContactEffects().isEmpty() ? "" : StringUtil.getWord(Class.getContactEffects().get(0).getType().getName().toString())), "", Settings.DisguisesEnabled() && Class.getDisguise() != null ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
+			if (!desc.toString().equals(""))
+				menu.setOption(i, item, Class.getName(), ChatColor.RED + Msgs.Menu_Classes_Click_To_Choose.getString(), "", desc.toString(), "");
+			else
+				menu.setOption(i, item, Class.getName(), ChatColor.RED + Msgs.Menu_Classes_Click_To_Choose.getString(), "", ChatColor.GRAY + "Helmet: " + ChatColor.GREEN + StringUtil.getWord(Class.getHelmet().getType().name()), ChatColor.GRAY + "Chestplate: " + ChatColor.GREEN + StringUtil.getWord(Class.getChestplate().getType().name()), ChatColor.GRAY + "Leggings: " + ChatColor.GREEN + StringUtil.getWord(Class.getLeggings().getType().name()), ChatColor.GRAY + "Boots: " + ChatColor.GREEN + StringUtil.getWord(Class.getBoots().getType().name()), "", ChatColor.AQUA + "Potion Effect:", ChatColor.WHITE + (Class.getEffects().isEmpty() ? "" : StringUtil.getWord(Class.getEffects().get(0).getType().getName().toString())), "", ChatColor.AQUA + "Transfer Effect:", ChatColor.WHITE + (Class.getContactEffects().isEmpty() ? "" : StringUtil.getWord(Class.getContactEffects().get(0).getType().getName().toString())), "", Settings.DisguisesEnabled() && (Class.getDisguise() != null) ? ChatColor.YELLOW + "Disguise: " + ChatColor.WHITE + StringUtil.getWord(Class.getDisguise()) : "");
 			i++;
 		}
 		menu.setOption(i, new ItemStack(Material.CAKE), "None", Msgs.Menu_Classes_Click_For_None.getString());
@@ -255,66 +228,59 @@ public class Menus {
 		return menu;
 	}
 
-	@SuppressWarnings("deprecation")
-	public IconMenu getVoteMenu() {
+	public IconMenu getGrenadeMenu() {
+		ArrayList<String> shop = new ArrayList<String>();
 		IconMenu menu = new IconMenu(
-				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Vote for an Arena",
-				((Lobby.getArenas().size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Grenade Shop",
+				((shop.size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
 				{
 
+					@SuppressWarnings("deprecation")
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
-						Arena arena;
+
 						final Player player = event.getPlayer();
-						final InfPlayer infPlayer = InfPlayerManager.getInfPlayer(event.getPlayer());
-						int votes = infPlayer.getAllowedVotes();
-						if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Random"))
+						final InfPlayer infPlayer = InfPlayerManager.getInfPlayer(player);
+						Grenade grenade = GrenadeManager.getGrenade(ChatColor.stripColor(event.getName()));
+						int price = grenade.getCost();
+						int points = infPlayer.getPoints(Settings.VaultEnabled());
+						ItemStack is = grenade.getItem();
+
+						if (price <= points)
 						{
-							int i;
-							Random r = new Random();
-							i = r.nextInt(Lobby.getArenas().size());
-							arena = Lobby.getArenas().get(i);
-							while (!Lobby.isArenaValid(arena))
+							if (player.hasPermission("Infected.Grenades"))
 							{
-								i = r.nextInt(Lobby.getArenas().size());
-								arena = Lobby.getArenas().get(i);
+								player.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
+								infPlayer.setPoints(points - price, Settings.VaultEnabled());
+
+								player.getInventory().addItem(is);
+
+								if (event.getClickType().isRightClick())
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+									{
+
+										@Override
+										public void run() {
+											infPlayer.openMenu(player, Menus.this.grenadeMenu);
+										}
+									}, 2);
+
 							}
+							else
+								player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 						}
 						else
-						{
-							arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
-						}
-						if (Lobby.isArenaValid(arena))
-						{
-							arena.setVotes(arena.getVotes() + votes);
-							infPlayer.setVote(arena);
+							player.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
+						player.updateInventory();
 
-							for (Player u : Lobby.getPlayersInGame())
-							{
-								u.sendMessage(Msgs.Command_Vote.getString("<player>", player.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (votes != 0 ? " (x" + votes + ")" : ""));
-								InfPlayer up = InfPlayerManager.getInfPlayer(u);
-								up.getScoreBoard().showProperBoard();
-							}
-
-						}
-						else
-						{
-							event.getPlayer().sendMessage(Msgs.Error_Arena_Not_Valid.getString());
-							event.setWillClose(false);
-						}
 					}
 				}, Infected.me);
-		int place = 0;
-		for (Arena arena : Lobby.getArenas())
+		int i = 0;
+		for (Grenade grenade : GrenadeManager.getGrenades())
 		{
-			if (Lobby.isArenaValid(arena))
-			{
-				menu.setOption(place, arena.getBlock() != null && arena.getBlock().getTypeId() != 0 ? arena.getBlock() : new ItemStack(
-						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Creator: " + arena.getCreator(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
-				place++;
-			}
+			menu.setOption(i, grenade.getItem(), grenade.getName(), "§7§lCost: §f§o" + String.valueOf(grenade.getCost()), "", "§4§lDamage: §c§o" + grenade.getDamage(), "§9§lRange: §b§o" + grenade.getRange(), "§2§lDelay: §a§o" + grenade.getDelay());
+			i++;
 		}
-		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", "", Msgs.Menu_Vote_Random.getString());
 
 		return menu;
 	}
@@ -323,10 +289,8 @@ public class Menus {
 	public IconMenu getShopMenu() {
 		ArrayList<String> shop = new ArrayList<String>();
 		for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
-		{
-			if (!string.contains(".") && ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + string + ".Item Code")).getType() != Material.AIR)
+			if (!string.contains(".") && (ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + string + ".Item Code")).getType() != Material.AIR))
 				shop.add(string);
-		}
 
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Item Shop",
@@ -359,15 +323,14 @@ public class Menus {
 										SaveItemHandler.saveItem(player, is);
 
 								if (event.getClickType().isRightClick())
-								{
 									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 									{
 
+										@Override
 										public void run() {
-											infPlayer.openMenu(player, shopMenu);
+											infPlayer.openMenu(player, Menus.this.shopMenu);
 										}
 									}, 2);
-								}
 
 							}
 							else
@@ -392,62 +355,96 @@ public class Menus {
 		return menu;
 	}
 
-	public IconMenu getGrenadeMenu() {
-		ArrayList<String> shop = new ArrayList<String>();
+	public IconMenu getTeamMenu() {
 		IconMenu menu = new IconMenu(
-				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Grenade Shop",
-				((shop.size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Choose a Team",
+				9, new IconMenu.OptionClickEventHandler()
 				{
 
-					@SuppressWarnings("deprecation")
+					@Override
+					public void onOptionClick(final IconMenu.OptionClickEvent event) {
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
+						{
+
+							@Override
+							public void run() {
+								Player player = event.getPlayer();
+								if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Human)
+									Menus.this.classHumanMenu.open(player);
+								else
+									if (Team.valueOf(ChatColor.stripColor(event.getName())) == Team.Zombie)
+										Menus.this.classZombieMenu.open(player);
+							}
+						}, 2);
+					}
+				}, Infected.me);
+
+		ItemStack zombie = new ItemStack(Material.SKULL_ITEM);
+		zombie.setDurability((short) 2);
+		ItemStack human = new ItemStack(Material.SKULL_ITEM);
+		human.setDurability((short) 3);
+		menu.setOption(3, zombie, ChatColor.RED + "Zombie", Msgs.Menu_Team_Choose.getString("<team>", ChatColor.RED + "Zombie"));
+		menu.setOption(5, human, ChatColor.GREEN + "Human", Msgs.Menu_Team_Choose.getString("<team>", ChatColor.GREEN + "Human"));
+
+		return menu;
+	}
+
+	@SuppressWarnings("deprecation")
+	public IconMenu getVoteMenu() {
+		IconMenu menu = new IconMenu(
+				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Vote for an Arena",
+				((Lobby.getArenas().size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
+				{
+
 					@Override
 					public void onOptionClick(IconMenu.OptionClickEvent event) {
-
+						Arena arena;
 						final Player player = event.getPlayer();
-						final InfPlayer infPlayer = InfPlayerManager.getInfPlayer(player);
-						Grenade grenade = GrenadeManager.getGrenade(ChatColor.stripColor(event.getName()));
-						int price = grenade.getCost();
-						int points = infPlayer.getPoints(Settings.VaultEnabled());
-						ItemStack is = grenade.getItem();
-
-						if (price <= points)
+						final InfPlayer infPlayer = InfPlayerManager.getInfPlayer(event.getPlayer());
+						int votes = infPlayer.getAllowedVotes();
+						if (ChatColor.stripColor(event.getName()).equalsIgnoreCase("Random"))
 						{
-							if (player.hasPermission("Infected.Grenades"))
+							int i;
+							Random r = new Random();
+							i = r.nextInt(Lobby.getArenas().size());
+							arena = Lobby.getArenas().get(i);
+							while (!Lobby.isArenaValid(arena))
 							{
-								player.sendMessage(Msgs.Grenades_Bought.getString("<grenade>", grenade.getName()));
-								infPlayer.setPoints(points - price, Settings.VaultEnabled());
-
-								player.getInventory().addItem(is);
-
-								if (event.getClickType().isRightClick())
-								{
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
-									{
-
-										public void run() {
-											infPlayer.openMenu(player, grenadeMenu);
-										}
-									}, 2);
-								}
-
+								i = r.nextInt(Lobby.getArenas().size());
+								arena = Lobby.getArenas().get(i);
 							}
-							else
-								player.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+						}
+						else
+							arena = Lobby.getArena(ChatColor.stripColor(event.getName()));
+						if (Lobby.isArenaValid(arena))
+						{
+							arena.setVotes(arena.getVotes() + votes);
+							infPlayer.setVote(arena);
+
+							for (Player u : Lobby.getPlayersInGame())
+							{
+								u.sendMessage(Msgs.Command_Vote.getString("<player>", player.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (votes != 0 ? " (x" + votes + ")" : ""));
+								InfPlayer up = InfPlayerManager.getInfPlayer(u);
+								up.getScoreBoard().showProperBoard();
+							}
+
 						}
 						else
 						{
-							player.sendMessage(Msgs.Grenades_Cost_Not_Enough.getString());
+							event.getPlayer().sendMessage(Msgs.Error_Arena_Not_Valid.getString());
+							event.setWillClose(false);
 						}
-						player.updateInventory();
-
 					}
 				}, Infected.me);
-		int i = 0;
-		for (Grenade grenade : GrenadeManager.getGrenades())
-		{
-			menu.setOption(i, grenade.getItem(), grenade.getName(), "§7§lCost: §f§o" + String.valueOf(grenade.getCost()), "", "§4§lDamage: §c§o" + grenade.getDamage(), "§9§lRange: §b§o" + grenade.getRange(), "§2§lDelay: §a§o" + grenade.getDelay());
-			i++;
-		}
+		int place = 0;
+		for (Arena arena : Lobby.getArenas())
+			if (Lobby.isArenaValid(arena))
+			{
+				menu.setOption(place, (arena.getBlock() != null) && (arena.getBlock().getTypeId() != 0) ? arena.getBlock() : new ItemStack(
+						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Creator: " + arena.getCreator(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+				place++;
+			}
+		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", "", Msgs.Menu_Vote_Random.getString());
 
 		return menu;
 	}

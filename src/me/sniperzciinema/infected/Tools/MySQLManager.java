@@ -38,27 +38,30 @@ public class MySQLManager {
 	}
 
 	/**
-	 * Safely update/set the value
-	 * Will set the value only if the table doesn't have the player already,
-	 * otherwise it'll just update the players values
-	 * 
 	 * @param tableName
 	 *            - The tables name
-	 * @param columnName
-	 *            - The stats name
-	 * @param value
-	 * @param playerName
+	 * @return All the players in the Infected table
 	 */
-	public static void update(String tableName, String columnName, int value, String playerName) {
+	public static ArrayList<String> getPlayers(String tableName) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			statement.execute("UPDATE " + tableName + " SET " + columnName + "=" + value + " WHERE Player ='" + playerName + "';");
-			statement.close();
+			ResultSet set = statement.executeQuery("SELECT * FROM `" + tableName + "` ");
+			ArrayList<String> players = new ArrayList<String>();
+			while (true)
+			{
+				set.next();
+				players.add(set.getString("Player"));
+				if (set.isLast())
+					break;
+			}
+			set.close();
+			return players;
 		}
 		catch (SQLException e)
 		{
-			setInt(tableName, columnName, value, playerName);
+			ArrayList<String> nope = new ArrayList<String>();
+			return nope;
 		}
 	}
 
@@ -88,30 +91,27 @@ public class MySQLManager {
 	}
 
 	/**
+	 * Safely update/set the value
+	 * Will set the value only if the table doesn't have the player already,
+	 * otherwise it'll just update the players values
+	 * 
 	 * @param tableName
 	 *            - The tables name
-	 * @return All the players in the Infected table
+	 * @param columnName
+	 *            - The stats name
+	 * @param value
+	 * @param playerName
 	 */
-	public static ArrayList<String> getPlayers(String tableName) {
+	public static void update(String tableName, String columnName, int value, String playerName) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			ResultSet set = statement.executeQuery("SELECT * FROM `" + tableName + "` ");
-			ArrayList<String> players = new ArrayList<String>();
-			while (true)
-			{
-				set.next();
-				players.add(set.getString("Player"));
-				if (set.isLast())
-					break;
-			}
-			set.close();
-			return players;
+			statement.execute("UPDATE " + tableName + " SET " + columnName + "=" + value + " WHERE Player ='" + playerName + "';");
+			statement.close();
 		}
 		catch (SQLException e)
 		{
-			ArrayList<String> nope = new ArrayList<String>();
-			return nope;
+			setInt(tableName, columnName, value, playerName);
 		}
 	}
 }

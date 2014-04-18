@@ -15,64 +15,24 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Settings {
 
-	public static boolean shopsEnabled() {
-		return Files.getShop().getBoolean("Enabled");
+	public static List<String> AllowedCommands() {
+		return Files.getConfig().getStringList("Settings.Misc.Allowed Commands");
 	}
 
-	public static boolean DisguisesEnabled() {
-		return Files.getConfig().getBoolean("Addons.Disguise Support.Enabled");
-	}
-
-	public static boolean PictureEnabled() {
-		return Files.getConfig().getBoolean("Addons.Picture Support.Enabled");
-	}
-
-	public static boolean VaultEnabled() {
-		return Files.getConfig().getBoolean("Addons.Vault Support.Enabled");
-	}
-
-	public static boolean mcMMOEnabled() {
-		return Files.getConfig().getBoolean("Addons.mcMMO Support.Enabled");
-	}
-
-	public static boolean FactionsEnabled() {
-		return Files.getConfig().getBoolean("Addons.Factions Support.Enabled");
+	public static boolean checkForUpdates() {
+		return Files.getConfig().getBoolean("Check For Updates.Enabled");
 	}
 
 	public static boolean CrackShotEnabled() {
 		return Files.getConfig().getBoolean("Addons.CrackShot Support.Enabled");
 	}
 
-	public static int getRequiredPlayers() {
-		return Files.getConfig().getInt("Settings.Misc.Automatic Start.Minimum Players");
+	public static boolean DisguisesEnabled() {
+		return Files.getConfig().getBoolean("Addons.Disguise Support.Enabled");
 	}
 
-	public static boolean isJoiningDuringGamePrevented() {
-		return Files.getConfig().getBoolean("Settings.Misc.Prevent Joining During Game");
-	}
-
-	public static boolean isEditingInventoryPrevented() {
-		return Files.getConfig().getBoolean("Settings.Misc.Prevent Editing Inventory");
-	}
-
-	public static boolean MySQLEnabled() {
-		return Files.getConfig().getBoolean("MySQL.Enabled");
-	}
-
-	public static int InfoSignsUpdateTime() {
-		return Files.getConfig().getInt("Settings.Misc.Info Signs.Refresh Time");
-	}
-
-	public static boolean InfoSignsEnabled() {
-		return Files.getConfig().getBoolean("Settings.Misc.Info Signs.Enabled");
-	}
-
-	public static List<String> AllowedCommands() {
-		return Files.getConfig().getStringList("Settings.Misc.Allowed Commands");
-	}
-
-	public static boolean useBookForHelp() {
-		return Files.getConfig().getBoolean("Settings.Misc.Use Book For Help");
+	public static boolean FactionsEnabled() {
+		return Files.getConfig().getBoolean("Addons.Factions Support.Enabled");
 	}
 
 	public static HashMap<String, Integer> getExtraVoteNodes() {
@@ -95,6 +55,14 @@ public class Settings {
 		return nodes;
 	}
 
+	public static int getRequiredPlayers() {
+		return Files.getConfig().getInt("Settings.Misc.Automatic Start.Minimum Players");
+	}
+
+	public static List<String> getScoreBoardRows() {
+		return Files.getConfig().getStringList("Settings.Misc.ScoreBoard Stats");
+	}
+
 	public static HashMap<String, Integer> getScoreModifiers() {
 		HashMap<String, Integer> nodes = new HashMap<String, Integer>();
 
@@ -105,12 +73,28 @@ public class Settings {
 		return nodes;
 	}
 
-	public static List<String> getScoreBoardRows() {
-		return Files.getConfig().getStringList("Settings.Misc.ScoreBoard Stats");
+	public static int getVaultReward() {
+		return Files.getConfig().getInt("Addons.Vault Support.Reward");
 	}
 
 	public static int getVotingTime() {
 		return Files.getConfig().getInt("Settings.Global.Time.Voting");
+	}
+
+	public static boolean InfoSignsEnabled() {
+		return Files.getConfig().getBoolean("Settings.Misc.Info Signs.Enabled");
+	}
+
+	public static int InfoSignsUpdateTime() {
+		return Files.getConfig().getInt("Settings.Misc.Info Signs.Refresh Time");
+	}
+
+	public static boolean isEditingInventoryPrevented() {
+		return Files.getConfig().getBoolean("Settings.Misc.Prevent Editing Inventory");
+	}
+
+	public static boolean isJoiningDuringGamePrevented() {
+		return Files.getConfig().getBoolean("Settings.Misc.Prevent Joining During Game");
 	}
 
 	public static boolean logAddonsEnabled() {
@@ -121,23 +105,39 @@ public class Settings {
 		return Files.getConfig().getBoolean("Logs.Arenas");
 	}
 
+	public static boolean logClassesEnabled() {
+		return Files.getConfig().getBoolean("Logs.Classes");
+	}
+
 	public static boolean logGrenadesEnabled() {
 		return Files.getConfig().getBoolean("Logs.Grenades");
 	}
 
-	public static boolean logClassesEnabled() {
-		return Files.getConfig().getBoolean("Logs.Classes");
+	public static boolean mcMMOEnabled() {
+		return Files.getConfig().getBoolean("Addons.mcMMO Support.Enabled");
+	}
+
+	public static boolean MySQLEnabled() {
+		return Files.getConfig().getBoolean("MySQL.Enabled");
+	}
+
+	public static boolean PictureEnabled() {
+		return Files.getConfig().getBoolean("Addons.Picture Support.Enabled");
 	}
 
 	public static boolean saveItem(ItemStack is) {
 		return Files.getShop().getBoolean("Save Items.All") || Files.getShop().getStringList("Save Items.Specific Items").contains(ItemHandler.getItemStackToString(is));
 	}
 
-	public static int getVaultReward() {
-		return Files.getConfig().getInt("Addons.Vault Support.Reward");
+	public static boolean shopsEnabled() {
+		return Files.getShop().getBoolean("Enabled");
 	}
 
-	public static boolean checkForUpdates() {
-		return Files.getConfig().getBoolean("Check For Updates.Enabled");
+	public static boolean useBookForHelp() {
+		return Files.getConfig().getBoolean("Settings.Misc.Use Book For Help");
+	}
+
+	public static boolean VaultEnabled() {
+		return Files.getConfig().getBoolean("Addons.Vault Support.Enabled");
 	}
 }

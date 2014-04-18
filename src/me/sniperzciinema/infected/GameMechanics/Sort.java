@@ -30,9 +30,7 @@ public class Sort {
 
 		for (Entry<String, Integer> e : map.entrySet())
 			if (e.getValue() == top)
-			{
 				highest = e.getKey();
-			}
 
 		return highest;
 	}
@@ -63,12 +61,10 @@ public class Sort {
 					players.put(playerName, Stats.getStat(type, playerName));
 		}
 		else
-		{
 			if (!Files.getPlayers().getString("Players").isEmpty())
 				for (String playerName : Files.getPlayers().getConfigurationSection("Players").getKeys(false))
 					if (!players.containsKey(playerName.toLowerCase()))
 						players.put(playerName, Stats.getStat(type, playerName));
-		}
 		for (int place = 0; place != howMany; place++)
 		{
 			// If the list still has players in it, find the top player

@@ -1,7 +1,8 @@
 
 package me.sniperzciinema.infected.Tools;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,87 +19,6 @@ import org.bukkit.plugin.Plugin;
 
 
 public class IconMenu implements Listener {
-
-	private String					name;
-	private int						size;
-	private OptionClickEventHandler	handler;
-	private Plugin					plugin;
-
-	private String[]				optionNames;
-	private ItemStack[]				optionIcons;
-
-	public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin)
-	{
-		this.name = name;
-		this.size = size;
-		this.handler = handler;
-		this.plugin = plugin;
-		this.optionNames = new String[size];
-		this.optionIcons = new ItemStack[size];
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
-
-	public IconMenu setOption(int position, ItemStack icon, String name, String... info) {
-		optionNames[position] = name;
-		optionIcons[position] = setItemNameAndLore(icon, name, info);
-		return this;
-	}
-
-	public void open(Player player) {
-		Inventory inventory = Bukkit.createInventory(player, size, name);
-		for (int i = 0; i < optionIcons.length; i++)
-		{
-			if (optionIcons[i] != null)
-			{
-				inventory.setItem(i, optionIcons[i]);
-			}
-		}
-		player.openInventory(inventory);
-	}
-
-	public void destroy() {
-		HandlerList.unregisterAll(this);
-		handler = null;
-		plugin = null;
-		optionNames = null;
-		optionIcons = null;
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR)
-	void onInventoryClick(InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name))
-		{
-			event.setCancelled(true);
-			int slot = event.getRawSlot();
-			if (slot >= 0 && slot < size && optionNames[slot] != null)
-			{
-				Plugin plugin = this.plugin;
-				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot,
-						optionNames[slot], event.getClick());
-				handler.onOptionClick(e);
-				if (e.willClose())
-				{
-					final Player p = (Player) event.getWhoClicked();
-					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-					{
-
-						public void run() {
-							p.closeInventory();
-						}
-					}, 1);
-				}
-				if (e.willDestroy())
-				{
-					destroy();
-				}
-			}
-		}
-	}
-
-	public interface OptionClickEventHandler {
-
-		public void onOptionClick(OptionClickEvent event);
-	}
 
 	public class OptionClickEvent {
 
@@ -119,24 +39,24 @@ public class IconMenu implements Listener {
 			this.clickType = clickType;
 		}
 
-		public Player getPlayer() {
-			return player;
-		}
-
-		public int getPosition() {
-			return position;
+		public ClickType getClickType() {
+			return this.clickType;
 		}
 
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
-		public boolean willClose() {
-			return close;
+		public Player getPlayer() {
+			return this.player;
 		}
 
-		public boolean willDestroy() {
-			return destroy;
+		public int getPosition() {
+			return this.position;
+		}
+
+		public void setClickType(ClickType clickType) {
+			this.clickType = clickType;
 		}
 
 		public void setWillClose(boolean close) {
@@ -147,13 +67,85 @@ public class IconMenu implements Listener {
 			this.destroy = destroy;
 		}
 
-		public ClickType getClickType() {
-			return clickType;
+		public boolean willClose() {
+			return this.close;
 		}
 
-		public void setClickType(ClickType clickType) {
-			this.clickType = clickType;
+		public boolean willDestroy() {
+			return this.destroy;
 		}
+	}
+
+	public interface OptionClickEventHandler {
+
+		public void onOptionClick(OptionClickEvent event);
+	}
+
+	private String					name;
+	private int						size;
+
+	private OptionClickEventHandler	handler;
+	private Plugin					plugin;
+
+	private String[]				optionNames;
+
+	private ItemStack[]				optionIcons;
+
+	public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin)
+	{
+		this.name = name;
+		this.size = size;
+		this.handler = handler;
+		this.plugin = plugin;
+		this.optionNames = new String[size];
+		this.optionIcons = new ItemStack[size];
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+
+	public void destroy() {
+		HandlerList.unregisterAll(this);
+		this.handler = null;
+		this.plugin = null;
+		this.optionNames = null;
+		this.optionIcons = null;
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	void onInventoryClick(InventoryClickEvent event) {
+		if (event.getInventory().getTitle().equals(this.name))
+		{
+			event.setCancelled(true);
+			int slot = event.getRawSlot();
+			if ((slot >= 0) && (slot < this.size) && (this.optionNames[slot] != null))
+			{
+				Plugin plugin = this.plugin;
+				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot,
+						this.optionNames[slot], event.getClick());
+				this.handler.onOptionClick(e);
+				if (e.willClose())
+				{
+					final Player p = (Player) event.getWhoClicked();
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+					{
+
+						@Override
+						public void run() {
+							p.closeInventory();
+						}
+					}, 1);
+				}
+				if (e.willDestroy())
+					destroy();
+			}
+		}
+	}
+
+	public void open(Player player) {
+		Inventory inventory = Bukkit.createInventory(player, this.size, this.name);
+		for (int i = 0; i < this.optionIcons.length; i++)
+			if (this.optionIcons[i] != null)
+				inventory.setItem(i, this.optionIcons[i]);
+		player.openInventory(inventory);
 	}
 
 	private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
@@ -165,12 +157,26 @@ public class IconMenu implements Listener {
 				if (name != null)
 					im.setDisplayName(name);
 				if (lore != null)
-					im.setLore(Arrays.asList(lore));
-
+				{
+					List<String> list = new ArrayList<String>();
+					for (String line : lore)
+						if (line.contains("<split>"))
+							for (String part : line.split("<split>"))
+								list.add(part);
+						else
+							list.add(line);
+					im.setLore(list);
+				}
 				item.setItemMeta(im);
 			}
 		}
 		return item;
+	}
+
+	public IconMenu setOption(int position, ItemStack icon, String name, String... info) {
+		this.optionNames[position] = name;
+		this.optionIcons[position] = setItemNameAndLore(icon, name, info);
+		return this;
 	}
 
 }

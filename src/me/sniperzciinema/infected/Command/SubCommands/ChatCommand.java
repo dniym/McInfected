@@ -58,7 +58,7 @@ public class ChatCommand extends SubCommand {
 							message.append(" ").append(args[arg]);
 
 						for (Player u : Bukkit.getOnlinePlayers())
-							if (ip.getTeam() == InfPlayerManager.getInfPlayer(p).getTeam() || u.hasPermission("Infected.Chat.Spy"))
+							if ((ip.getTeam() == InfPlayerManager.getInfPlayer(p).getTeam()) || u.hasPermission("Infected.Chat.Spy"))
 								u.sendMessage(Msgs.Format_InfChat.getString("<team>", ip.getTeam().toString(), "<player>", p.getName(), "<score>", String.valueOf(ip.getScore()), "<message>", message.toString()));
 					}
 		}

@@ -18,16 +18,16 @@ import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
 public class FactionsEvents implements Listener {
 
 	@EventHandler
-	public void factionPVP(FactionsEventPvpDisallowed e) {
-		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender()))
-			e.setCancelled(true);
-	}
-
-	@EventHandler
 	public void factionLoosePower(FactionsEventPowerChange e) {
 		if (e.getReason() == PowerChangeReason.DEATH)
 			if (Lobby.isInGame(Bukkit.getPlayer(e.getUPlayer().getName())))
 				e.setNewPower(e.getUPlayer().getPower());
+	}
+
+	@EventHandler
+	public void factionPVP(FactionsEventPvpDisallowed e) {
+		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender()))
+			e.setCancelled(true);
 	}
 
 }

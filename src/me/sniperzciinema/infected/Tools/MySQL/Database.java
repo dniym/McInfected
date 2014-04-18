@@ -32,18 +32,16 @@ public abstract class Database {
 	}
 
 	/**
-	 * Opens a connection with the database
-	 * 
-	 * @return Connection opened
-	 */
-	public abstract Connection openConnection();
-
-	/**
 	 * Checks if a connection is open with the database
 	 * 
 	 * @return true if a connection is open
 	 */
 	public abstract boolean checkConnection();
+
+	/**
+	 * Closes the connection with the database
+	 */
+	public abstract void closeConnection();
 
 	/**
 	 * Gets the connection with the database
@@ -53,7 +51,9 @@ public abstract class Database {
 	public abstract Connection getConnection();
 
 	/**
-	 * Closes the connection with the database
+	 * Opens a connection with the database
+	 * 
+	 * @return Connection opened
 	 */
-	public abstract void closeConnection();
+	public abstract Connection openConnection();
 }

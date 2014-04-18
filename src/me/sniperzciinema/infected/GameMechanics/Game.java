@@ -25,6 +25,57 @@ import org.bukkit.potion.PotionEffect;
 
 public class Game {
 
+	public static void chooseAlphas() {
+
+		double toInfect = Lobby.getPlayersInGame().size() * (Lobby.getActiveArena().getSettings().getAlphaPercent() / 100.0);
+		if (toInfect == 0)
+			toInfect = 1;
+
+		String[] face = null;
+		for (Player player : Lobby.getPlayersInGame())
+			InfPlayerManager.getInfPlayer(player).setTeam(Team.Human);
+		while (Lobby.getTeam(Team.Zombie).size() < toInfect)
+		{
+			Player alpha = Lobby.getTeam(Team.Human).get(new Random().nextInt(Lobby.getTeam(Team.Human).size()));
+			if (Settings.PictureEnabled())
+			{
+				face = Pictures.getZombie();
+				face[2] = face[2] + "     " + Msgs.Game_Alpha_You.getString();
+				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
+
+				alpha.sendMessage(face);
+			}
+			else
+				alpha.sendMessage(Msgs.Game_Alpha_You.getString());
+
+			InfPlayer ip = InfPlayerManager.getInfPlayer(alpha);
+			ip.Infect();
+
+			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
+				alpha.addPotionEffect(PE);
+
+		}
+
+		if (Settings.PictureEnabled())
+		{
+			face = Pictures.getHuman();
+			face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
+			face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
+		}
+		for (Player player : Lobby.getTeam(Team.Human))
+			if (Settings.PictureEnabled())
+				player.sendMessage(face);
+			else
+				for (Player u : Lobby.getZombies())
+					player.sendMessage(Msgs.Game_Alpha_They.getString("<player>", u.getName()));
+
+		for (Player u : Lobby.getPlayersInGame())
+		{
+			InfPlayer up = InfPlayerManager.getInfPlayer(u);
+			up.getScoreBoard().showProperBoard();
+		}
+	}
+
 	/**
 	 * End the game and depending on who won, do things...
 	 * 
@@ -107,7 +158,6 @@ public class Game {
 			}
 		}
 		else
-		{
 			for (Player u : Lobby.getPlayersInGame())
 			{
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
@@ -129,7 +179,6 @@ public class Game {
 				u.sendMessage("");
 				u.sendMessage(Msgs.Format_Line.getString());
 			}
-		}
 		Lobby.reset();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 		{
@@ -147,7 +196,7 @@ public class Game {
 					@Override
 					public void run() {
 
-						if (Lobby.getPlayersInGame().size() >= Settings.getRequiredPlayers() && Lobby.getGameState() == GameState.InLobby)
+						if ((Lobby.getPlayersInGame().size() >= Settings.getRequiredPlayers()) && (Lobby.getGameState() == GameState.InLobby))
 							Lobby.timerStartVote();
 					}
 				}, 10 * 60);
@@ -162,60 +211,5 @@ public class Game {
 	 */
 	public static void leaveGame(Player p) {
 		InfPlayerManager.getInfPlayer(p).leaveInfected();
-	}
-
-	public static void chooseAlphas() {
-
-		int toInfect = 1;
-		int inGame = Lobby.getPlayersInGame().size();
-		float percent = Lobby.getActiveArena().getSettings().getAlphaPercent() / 100;
-		toInfect = (int) (inGame * percent);
-		if (toInfect == 0)
-		{
-			toInfect = 1;
-		}
-		String[] face = null;
-
-		while (Lobby.getTeam(Team.Zombie).size() < toInfect)
-		{
-			Player alpha = Lobby.getPlayersInGame().get(new Random().nextInt(Lobby.getPlayersInGame().size()));
-			if (Settings.PictureEnabled())
-			{
-				face = Pictures.getZombie();
-				face[2] = face[2] + "     " + Msgs.Game_Alpha_You.getString();
-				face[3] = face[3] + "     " + Msgs.Picture_Infected_To_Win.getString();
-
-				alpha.sendMessage(face);
-			}
-			else
-				alpha.sendMessage(Msgs.Game_Alpha_You.getString());
-			InfPlayer ip = InfPlayerManager.getInfPlayer(alpha);
-			ip.Infect();
-
-			for (PotionEffect PE : Lobby.getActiveArena().getSettings().getAlphaPotionEffects())
-				alpha.addPotionEffect(PE);
-
-		}
-
-		if (Settings.PictureEnabled())
-		{
-			face = Pictures.getHuman();
-			face[2] = face[2] + "     " + Msgs.Picture_Survivor_You.getString();
-			face[3] = face[3] + "     " + Msgs.Picture_Survivor_To_Win.getString();
-		}
-		for (Player player : Lobby.getTeam(Team.Human))
-			if (Settings.PictureEnabled())
-				player.sendMessage(face);
-			else
-			{
-				for (Player u : Lobby.getZombies())
-					player.sendMessage(Msgs.Game_Alpha_They.getString("<player>", u.getName()));
-			}
-
-		for (Player u : Lobby.getPlayersInGame())
-		{
-			InfPlayer up = InfPlayerManager.getInfPlayer(u);
-			up.getScoreBoard().showProperBoard();
-		}
 	}
 }

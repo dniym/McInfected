@@ -15,12 +15,20 @@ public class InfectedStartInfecting extends Event {
 
 	private static final HandlerList	handlers	= new HandlerList();
 
-	public HandlerList getHandlers() {
-		return handlers;
+	public static HandlerList getHandlerList() {
+		return InfectedStartInfecting.handlers;
 	}
 
-	public static HandlerList getHandlerList() {
-		return handlers;
+	/**
+	 * @return active arena
+	 */
+	public Arena getArena() {
+		return Lobby.getActiveArena();
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return InfectedStartInfecting.handlers;
 	}
 
 	/**
@@ -35,13 +43,6 @@ public class InfectedStartInfecting extends Event {
 	 */
 	public int getTimeLimit() {
 		return Lobby.getActiveArena().getSettings().getInfectingTime();
-	}
-
-	/**
-	 * @return active arena
-	 */
-	public Arena getArena() {
-		return Lobby.getActiveArena();
 	}
 
 }

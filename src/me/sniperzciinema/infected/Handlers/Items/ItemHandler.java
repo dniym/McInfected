@@ -31,18 +31,254 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class ItemHandler {
 
+	public static ItemStack getFancyMessageItem(String title, String... strings) {
+		ItemStack item = new ItemStack(Material.STONE);
+		ItemMeta im = item.getItemMeta();
+		List<String> lore = Arrays.asList(strings);
+		im.setDisplayName(title);
+		im.setLore(lore);
+		item.setItemMeta(im);
+		return item;
+	}
+
+	@Deprecated
+	private static Integer getItemAmount(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains(","))
+		{
+			String[] s = string.split(",");
+			if (s[1].contains("-"))
+			{
+				String[] ss = s[1].split("-");
+				itemdata = ss[0];
+			}
+			else
+				if (s[1].contains("@"))
+				{
+					String[] ss = s[1].split("@");
+					itemdata = ss[0];
+				}
+				else
+					if (s[1].contains("%"))
+					{
+						String[] ss = s[1].split("%");
+						itemdata = ss[0];
+					}
+					else
+						itemdata = s[1];
+		}
+		else
+			itemdata = "1";
+		int i = 1;
+		try
+		{
+			i = Integer.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe)
+		{
+			i = 1;
+		}
+		return i;
+	}
+
+	@Deprecated
+	private static Short getItemData(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains(":"))
+		{
+			String[] s = string.split(":");
+			if (s[1].contains(","))
+			{
+				String[] ss = s[1].split(",");
+				itemdata = ss[0];
+			}
+			else
+				if (s[1].contains("-"))
+				{
+					String[] ss = s[1].split("-");
+					itemdata = ss[0];
+				}
+				else
+					if (s[1].contains("@"))
+					{
+						String[] ss = s[1].split("@");
+						itemdata = ss[0];
+					}
+					else
+						if (s[1].contains("%"))
+						{
+							String[] ss = s[1].split("%");
+							itemdata = ss[0];
+						}
+						else
+							itemdata = s[1];
+
+		}
+		else
+			itemdata = "0";
+		Short s = 0;
+		try
+		{
+			s = Short.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe)
+		{
+			s = 0;
+		}
+		return s;
+	}
+
+	@Deprecated
+	private static int getItemEnchant(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains("-"))
+		{
+			String[] s = string.split("-");
+			if (s[1].contains("@"))
+			{
+				String[] ss = s[1].split("@");
+				itemdata = ss[0];
+			}
+			else
+				if (s[1].contains("%"))
+				{
+					String[] ss = s[1].split("%");
+					itemdata = ss[0];
+				}
+				else
+					itemdata = s[1];
+		}
+		else
+			itemdata = "0";
+		int i = 1;
+		try
+		{
+			i = Integer.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe)
+		{
+			i = 1;
+		}
+		return i;
+	}
+
+	@Deprecated
+	private static int getItemEnchantLvl(String Path) {
+		String itemdata = null;
+		String string = Path;
+		if (string.contains("@"))
+		{
+			String[] s = string.split("@");
+			if (s[1].contains("-"))
+			{
+				String[] ss = s[1].split("-");
+				itemdata = ss[0];
+			}
+			else
+				if (s[1].contains("%"))
+				{
+					String[] ss = s[1].split("%");
+					itemdata = ss[0];
+				}
+				else
+					itemdata = s[1];
+		}
+		else
+			itemdata = "1";
+		int i = 1;
+		try
+		{
+			i = Integer.valueOf(itemdata);
+		}
+		catch (NumberFormatException nfe)
+		{
+			i = 1;
+		}
+		return i;
+	}
+
+	public static HashMap<Integer, ItemStack> getItemHashMap(Configuration config, String path) {
+		HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
+		if (config.getConfigurationSection(path) != null)
+			for (String string : config.getConfigurationSection(path).getKeys(true))
+				if (!string.contains("."))
+					killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
+
+		return killstreaks;
+	}
+
+	@Deprecated
+	private static Integer getItemID(String Path) {
+		String itemid = null;
+		String string = Path;
+		if (string.contains(":"))
+		{
+			String[] ss = string.split(":");
+			itemid = ss[0];
+		}
+		else
+			if (string.contains(","))
+			{
+				String[] ss = string.split(",");
+				itemid = ss[0];
+			}
+			else
+				if (string.contains("-"))
+				{
+					String[] ss = string.split("-");
+					itemid = ss[0];
+				}
+				else
+					if (string.contains("@"))
+					{
+						String[] ss = string.split("@");
+						itemid = ss[0];
+					}
+					else
+						if (string.contains("%"))
+						{
+							String[] ss = string.split("%");
+							itemid = ss[0];
+						}
+						else
+							itemid = string;
+		int i = 0;
+		try
+		{
+			i = Integer.valueOf(itemid);
+		}
+		catch (NumberFormatException nfe)
+		{
+			i = 0;
+		}
+		return i;
+	}
+
+	@Deprecated
+	private static String getItemName(String Path) {
+		String itemName = null;
+		if (Path.contains("%"))
+		{
+			String[] ss = Path.split("%");
+			itemName = ChatColor.translateAlternateColorCodes('&', ss[1]);
+		}
+		else
+			itemName = null;
+		return itemName;
+	}
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemStack(String path) {
 		ItemStack stack = new ItemStack(Material.AIR, 1);
 		if (path != null)
-		{
 			if (path.contains(" "))
 			{
 				String[] line = path.split(" ");
 
 				for (String data : line)
-				{
-
 					if (data.startsWith("id") || data.startsWith("item"))
 					{
 						Material mat = null;
@@ -104,7 +340,6 @@ public class ItemHandler {
 											}
 											else
 												if (data.startsWith("color") || data.startsWith("colour"))
-												{
 													try
 													{
 														LeatherArmorMeta im = (LeatherArmorMeta) stack.getItemMeta();
@@ -118,260 +353,81 @@ public class ItemHandler {
 													catch (ClassCastException notLeather)
 													{
 													}
-												}
 												else
 													if (data.startsWith("lore") || data.startsWith("desc"))
 													{
 														String s = data.split(":")[1];
 														List<String> lores = new ArrayList<String>();
 														for (String lore : s.split("\\|"))
-														{
 															lores.add(StringUtil.format(lore.replace('_', ' ')));
-														}
 														ItemMeta meta = stack.getItemMeta();
 														meta.setLore(lores);
 														stack.setItemMeta(meta);
 													}
-				}
 			}
 			else
-			{
 				if (path.startsWith("id"))
-				{
 					stack.setType(Material.getMaterial(Integer.parseInt(path.split(":")[1])));
-				}
 				else
-				{
 					stack = getOldItemStack(path);
-				}
-			}
-		}
 		return stack;
 	}
 
-	@Deprecated
-	private static Integer getItemID(String Path) {
-		String itemid = null;
-		String string = Path;
-		if (string.contains(":"))
-		{
-			String[] ss = string.split(":");
-			itemid = ss[0];
-		}
-		else
-			if (string.contains(","))
-			{
-				String[] ss = string.split(",");
-				itemid = ss[0];
-			}
-			else
-				if (string.contains("-"))
-				{
-					String[] ss = string.split("-");
-					itemid = ss[0];
-				}
-				else
-					if (string.contains("@"))
-					{
-						String[] ss = string.split("@");
-						itemid = ss[0];
-					}
-					else
-						if (string.contains("%"))
-						{
-							String[] ss = string.split("%");
-							itemid = ss[0];
-						}
-						else
-							itemid = string;
-		int i = 0;
-		try
-		{
-			i = Integer.valueOf(itemid);
-		}
-		catch (NumberFormatException nfe)
-		{
-			i = 0;
-		}
-		return i;
+	public static ItemStack getItemStackIgnoreDamage(ItemStack stack) {
+
+		if (stack == null)
+			stack = new ItemStack(Material.AIR);
+		ItemStack newStack = stack.clone();
+		newStack.setDurability((short) 0);
+		return newStack;
 	}
 
-	@Deprecated
-	private static Short getItemData(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains(":"))
-		{
-			String[] s = string.split(":");
-			if (s[1].contains(","))
-			{
-				String[] ss = s[1].split(",");
-				itemdata = ss[0];
-			}
-			else
-				if (s[1].contains("-"))
-				{
-					String[] ss = s[1].split("-");
-					itemdata = ss[0];
-				}
-				else
-					if (s[1].contains("@"))
-					{
-						String[] ss = s[1].split("@");
-						itemdata = ss[0];
-					}
-					else
-						if (s[1].contains("%"))
-						{
-							String[] ss = s[1].split("%");
-							itemdata = ss[0];
-						}
-						else
-							itemdata = s[1];
+	// Loop through a list of these Item Codes and make a ItemStack[]
+	public static ArrayList<ItemStack> getItemStackList(List<String> list) {
+		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		if (!list.isEmpty())
+			for (String string : list)
+				items.add(getItemStack(string));
 
-		}
-		else
-			itemdata = "0";
-		Short s = 0;
-		try
-		{
-			s = Short.valueOf(itemdata);
-		}
-		catch (NumberFormatException nfe)
-		{
-			s = 0;
-		}
-		return s;
+		return items;
 	}
 
-	@Deprecated
-	private static Integer getItemAmount(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains(","))
-		{
-			String[] s = string.split(",");
-			if (s[1].contains("-"))
-			{
-				String[] ss = s[1].split("-");
-				itemdata = ss[0];
-			}
-			else
-				if (s[1].contains("@"))
-				{
-					String[] ss = s[1].split("@");
-					itemdata = ss[0];
-				}
-				else
-					if (s[1].contains("%"))
-					{
-						String[] ss = s[1].split("%");
-						itemdata = ss[0];
-					}
-					else
-						itemdata = s[1];
-		}
-		else
-			itemdata = "1";
-		int i = 1;
-		try
-		{
-			i = Integer.valueOf(itemdata);
-		}
-		catch (NumberFormatException nfe)
-		{
-			i = 1;
-		}
-		return i;
-	}
+	@SuppressWarnings("deprecation")
+	public static String getItemStackToString(ItemStack i) {
+		String itemCode = "id:0";
 
-	@Deprecated
-	private static int getItemEnchant(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains("-"))
+		if ((i.getTypeId() != 0) && (i != null))
 		{
-			String[] s = string.split("-");
-			if (s[1].contains("@"))
-			{
-				String[] ss = s[1].split("@");
-				itemdata = ss[0];
-			}
-			else
-				if (s[1].contains("%"))
-				{
-					String[] ss = s[1].split("%");
-					itemdata = ss[0];
-				}
-				else
-				{
-					itemdata = s[1];
-				}
-		}
-		else
-			itemdata = "0";
-		int i = 1;
-		try
-		{
-			i = Integer.valueOf(itemdata);
-		}
-		catch (NumberFormatException nfe)
-		{
-			i = 1;
-		}
-		return i;
-	}
 
-	@Deprecated
-	private static int getItemEnchantLvl(String Path) {
-		String itemdata = null;
-		String string = Path;
-		if (string.contains("@"))
-		{
-			String[] s = string.split("@");
-			if (s[1].contains("-"))
-			{
-				String[] ss = s[1].split("-");
-				itemdata = ss[0];
-			}
-			else
-				if (s[1].contains("%"))
-				{
-					String[] ss = s[1].split("%");
-					itemdata = ss[0];
-				}
-				else
-				{
-					itemdata = s[1];
-				}
-		}
-		else
-			itemdata = "1";
-		int i = 1;
-		try
-		{
-			i = Integer.valueOf(itemdata);
-		}
-		catch (NumberFormatException nfe)
-		{
-			i = 1;
-		}
-		return i;
-	}
+			itemCode = "id:" + String.valueOf(i.getTypeId());
 
-	@Deprecated
-	private static String getItemName(String Path) {
-		String itemName = null;
-		if (Path.contains("%"))
-		{
-			String[] ss = Path.split("%");
-			itemName = ChatColor.translateAlternateColorCodes('&', ss[1]);
+			if (i.getDurability() != 0)
+				itemCode = itemCode + " data:" + i.getDurability();
+			if (i.getAmount() > 1)
+				itemCode = itemCode + " amount:" + i.getAmount();
+			for (Entry<Enchantment, Integer> ench : i.getEnchantments().entrySet())
+			{
+				itemCode = itemCode + " enchantment:" + ench.getKey().getId();
+				if (ench.getValue() > 1)
+					itemCode = itemCode + "-" + ench.getValue();
+			}
+			if (i.getItemMeta().getDisplayName() != null)
+				itemCode = itemCode + " name:" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("§", "&");
+
+			if (i.getItemMeta().hasLore())
+			{
+				itemCode = itemCode + " lore:";
+				for (String string : i.getItemMeta().getLore())
+					itemCode = itemCode + string.replaceAll(" ", "_").replaceAll("§", "&") + "|";
+				itemCode.substring(0, itemCode.length() - 2);
+			}
+			if (i.getType().toString().toLowerCase().contains("leather") && (((LeatherArmorMeta) i.getItemMeta()).getColor() != null))
+			{
+				LeatherArmorMeta im = (LeatherArmorMeta) i.getItemMeta();
+				itemCode = itemCode + " color:" + im.getColor().getRed() + "," + im.getColor().getGreen() + "," + im.getColor().getBlue();
+			}
 		}
-		else
-		{
-			itemName = null;
-		}
-		return itemName;
+		return itemCode;
 	}
 
 	@Deprecated
@@ -402,92 +458,13 @@ public class ItemHandler {
 				int i;
 				String enchants[] = location.split("-");
 				for (i = 1; i != enchants.length; i++)
-				{
 					if (enchants[i] != null)
 					{
 						enchants[i] = "-" + enchants[i];
 
 						is.addUnsafeEnchantment(Enchantment.getById(getItemEnchant(enchants[i])), getItemEnchantLvl(enchants[i]));
 					}
-				}
 			}
 		return is;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static String getItemStackToString(ItemStack i) {
-		String itemCode = "id:0";
-
-		if (i.getTypeId() != 0 && i != null)
-		{
-
-			itemCode = "id:" + String.valueOf(i.getTypeId());
-
-			if (i.getDurability() != 0)
-				itemCode = itemCode + " data:" + i.getDurability();
-			if (i.getAmount() > 1)
-				itemCode = itemCode + " amount:" + i.getAmount();
-			for (Entry<Enchantment, Integer> ench : i.getEnchantments().entrySet())
-			{
-				itemCode = itemCode + " enchantment:" + ench.getKey().getId();
-				if (ench.getValue() > 1)
-					itemCode = itemCode + "-" + ench.getValue();
-			}
-			if (i.getItemMeta().getDisplayName() != null)
-				itemCode = itemCode + " name:" + i.getItemMeta().getDisplayName().replaceAll(" ", "_").replaceAll("§", "&");
-
-			if (i.getItemMeta().hasLore())
-			{
-				itemCode = itemCode + " lore:";
-				for (String string : i.getItemMeta().getLore())
-					itemCode = itemCode + string.replaceAll(" ", "_").replaceAll("§", "&") + "|";
-				itemCode.substring(0, itemCode.length() - 2);
-			}
-			if (i.getType().toString().toLowerCase().contains("leather") && ((LeatherArmorMeta) i.getItemMeta()).getColor() != null)
-			{
-				LeatherArmorMeta im = (LeatherArmorMeta) i.getItemMeta();
-				itemCode = itemCode + " color:" + im.getColor().getRed() + "," + im.getColor().getGreen() + "," + im.getColor().getBlue();
-			}
-		}
-		return itemCode;
-	}
-
-	// Loop through a list of these Item Codes and make a ItemStack[]
-	public static ArrayList<ItemStack> getItemStackList(List<String> list) {
-		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-		if (!list.isEmpty())
-			for (String string : list)
-				items.add(getItemStack(string));
-
-		return items;
-	}
-
-	public static HashMap<Integer, ItemStack> getItemHashMap(Configuration config, String path) {
-		HashMap<Integer, ItemStack> killstreaks = new HashMap<Integer, ItemStack>();
-		if (config.getConfigurationSection(path) != null)
-			for (String string : config.getConfigurationSection(path).getKeys(true))
-				if (!string.contains("."))
-					killstreaks.put(Integer.valueOf(string), getItemStack(config.getString(path + "." + string)));
-
-		return killstreaks;
-	}
-
-	public static ItemStack getItemStackIgnoreDamage(ItemStack stack) {
-
-		if (stack == null)
-			stack = new ItemStack(Material.AIR);
-		ItemStack newStack = stack.clone();
-		newStack.setDurability((short) 0);
-		return newStack;
-	}
-
-	public static ItemStack getFancyMessageItem(String title, String... strings) {
-		ItemStack item = new ItemStack(Material.STONE);
-		ItemMeta im = item.getItemMeta();
-		List<String> lore = Arrays.asList(strings);
-		im.setDisplayName(title);
-		im.setLore(lore);
-		item.setItemMeta(im);
-		return item;
 	}
 }

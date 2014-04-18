@@ -32,7 +32,6 @@ public class SetArenaCommand extends SubCommand {
 			if (!p.hasPermission("Infected.SetArena"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 			else
-			{
 				if (args.length != 1)
 				{
 					String arena = StringUtil.getWord(args[1]);
@@ -52,8 +51,6 @@ public class SetArenaCommand extends SubCommand {
 				}
 				else
 					p.sendMessage(Msgs.Help_SetArena.getString());
-
-			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

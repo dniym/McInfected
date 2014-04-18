@@ -12,13 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class SaveItemHandler {
 
-	public static void saveItem(Player p, ItemStack is) {
-		List<String> list = getSavedItems(p);
-		list.add(ItemHandler.getItemStackToString(is));
-		Files.getPlayers().set("Players." + p.getName().toLowerCase() + ".Saved Inventory", list);
-		Files.savePlayers();
-	}
-
 	@SuppressWarnings("unchecked")
 	public static List<String> getSavedItems(Player p) {
 		List<String> list = new ArrayList<String>();
@@ -32,5 +25,12 @@ public class SaveItemHandler {
 				p.sendMessage("Tell an Admin that your saved inventory is invalid!");
 			}
 		return list;
+	}
+
+	public static void saveItem(Player p, ItemStack is) {
+		List<String> list = getSavedItems(p);
+		list.add(ItemHandler.getItemStackToString(is));
+		Files.getPlayers().set("Players." + p.getName().toLowerCase() + ".Saved Inventory", list);
+		Files.savePlayers();
 	}
 }

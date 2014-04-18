@@ -32,9 +32,7 @@ public class StatsCommand extends SubCommand {
 
 			if (!p.hasPermission("Infected.Stats"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
 			else
-			{
 				if (args.length != 1)
 				{
 
@@ -63,7 +61,6 @@ public class StatsCommand extends SubCommand {
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Kills: " + ChatColor.GOLD + Stats.getKills(user) + ChatColor.GREEN + "     Deaths: " + ChatColor.GOLD + Stats.getDeaths(user) + ChatColor.GREEN + "    KDR: " + ChatColor.GOLD + KDRatio.KD(user));
 					p.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GREEN + "Highest KillStreak: " + ChatColor.GOLD + Stats.getHighestKillStreak(user));
 				}
-			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

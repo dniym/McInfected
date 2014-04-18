@@ -37,7 +37,7 @@ public class ClassesCommand extends SubCommand {
 					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else
-					if (Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.Started)
+					if ((Lobby.getGameState() == GameState.Infecting) || (Lobby.getGameState() == GameState.Started))
 						p.sendMessage(Msgs.Error_Game_Started.getString());
 
 					else

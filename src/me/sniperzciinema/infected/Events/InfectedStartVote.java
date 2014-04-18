@@ -16,12 +16,20 @@ public class InfectedStartVote extends Event {
 
 	private static final HandlerList	handlers	= new HandlerList();
 
-	public HandlerList getHandlers() {
-		return handlers;
+	public static HandlerList getHandlerList() {
+		return InfectedStartVote.handlers;
 	}
 
-	public static HandlerList getHandlerList() {
-		return handlers;
+	/**
+	 * @return all arenas
+	 */
+	public ArrayList<Arena> getArenas() {
+		return Lobby.getArenas();
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return InfectedStartVote.handlers;
 	}
 
 	/**
@@ -36,13 +44,6 @@ public class InfectedStartVote extends Event {
 	 */
 	public int getTimeLimit() {
 		return Settings.getVotingTime();
-	}
-
-	/**
-	 * @return all arenas
-	 */
-	public ArrayList<Arena> getArenas() {
-		return Lobby.getArenas();
 	}
 
 }

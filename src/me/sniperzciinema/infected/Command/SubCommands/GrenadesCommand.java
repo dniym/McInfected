@@ -39,9 +39,7 @@ public class GrenadesCommand extends SubCommand {
 			else
 				if (!Lobby.isInGame(p))
 					p.sendMessage(Msgs.Error_Game_Not_In.getString());
-
 				else
-				{
 					if (args.length == 2)
 					{
 						if (args[1].matches("[0-9]+"))
@@ -76,7 +74,7 @@ public class GrenadesCommand extends SubCommand {
 								int gi = Integer.parseInt(args[1]) - 1;
 								if (GrenadeManager.getGrenades().get(gi) != null)
 								{
-									if (ip.getPoints(Settings.VaultEnabled()) >= GrenadeManager.getGrenades().get(gi).getCost() * amount)
+									if (ip.getPoints(Settings.VaultEnabled()) >= (GrenadeManager.getGrenades().get(gi).getCost() * amount))
 									{
 										Grenade grenade = GrenadeManager.getGrenades().get(gi);
 										ItemStack g = grenade.getItem();
@@ -96,7 +94,6 @@ public class GrenadesCommand extends SubCommand {
 						}
 						else
 							Infected.Menus.grenadeMenu.open(p);
-				}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

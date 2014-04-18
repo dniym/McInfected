@@ -63,60 +63,10 @@ public class InfPlayer {
 
 	public InfPlayer(Player p)
 	{
-		name = p.getName();
-		player = p;
+		this.name = p.getName();
+		this.player = p;
 		setUuid(p.getUniqueId());
 
-	}
-
-	/**
-	 * @return the uuid
-	 */
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	/**
-	 * @param uuid
-	 *            the uuid to set
-	 */
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
-
-	public ScoreBoard getScoreBoard() {
-		return ScoreBoard;
-	}
-
-	public boolean isInGame() {
-		return Lobby.isInGame(player);
-	}
-
-	/**
-	 * Saves: <li>Location - Name - Gamemode - Level - Exp - Health - Food -
-	 * Inventory - Armor</li> Clears: <li>Armor - Inventory Sets: <li>Gamemode
-	 * to adventure - Sets level to 0 - Sets the players exp to 0 - Sets the
-	 * players health to 20 - Sets the food to 20
-	 */
-	public void setInfo() {
-		location = player.getLocation();
-		name = player.getName();
-		gamemode = player.getGameMode();
-		level = player.getLevel();
-		exp = player.getExp();
-		health = player.getHealth();
-		food = player.getFoodLevel();
-		inventory = player.getInventory().getContents();
-		armor = player.getInventory().getArmorContents();
-		clearEquipment();
-		setInfClass(Team.Human, InfClassManager.getDefaultClass(Team.Human));
-		setInfClass(Team.Zombie, InfClassManager.getDefaultClass(Team.Zombie));
-
-		player.setGameMode(GameMode.ADVENTURE);
-		player.setLevel(0);
-		player.setExp(0.0F);
-		player.setHealth(20);
-		player.setFoodLevel(20);
 	}
 
 	/**
@@ -124,9 +74,263 @@ public class InfPlayer {
 	 */
 	@SuppressWarnings("deprecation")
 	public void clearEquipment() {
-		player.getInventory().clear();
-		player.getInventory().setArmorContents(null);
-		player.updateInventory();
+		this.player.getInventory().clear();
+		this.player.getInventory().setArmorContents(null);
+		this.player.updateInventory();
+	}
+
+	/**
+	 * Disguises the player
+	 */
+	public void disguise() {
+		if (Settings.DisguisesEnabled())
+			if (!Disguises.isPlayerDisguised(this.player))
+				Disguises.disguisePlayer(this.player);
+	}
+
+	/**
+	 * @return how many votes they have
+	 */
+	public int getAllowedVotes() {
+		int votes = 1;
+
+		for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
+			if (this.player.hasPermission("Infected.vote." + node.getKey()) && (node.getValue() > votes))
+				votes = node.getValue();
+		return votes;
+	}
+
+	/**
+	 * @return the armor
+	 */
+	public ItemStack[] getArmor() {
+		return this.armor;
+	}
+
+	/**
+	 * @return the creating
+	 */
+	public String getCreating() {
+		return this.creating;
+	}
+
+	/**
+	 * @return the deaths
+	 */
+	public int getDeaths() {
+		return Stats.getDeaths(this.name);
+	}
+
+	/**
+	 * @return the exp
+	 */
+	public float getExp() {
+		return this.exp;
+	}
+
+	/**
+	 * @return the food
+	 */
+	public int getFood() {
+		return this.food;
+	}
+
+	/**
+	 * @return the gamemode
+	 */
+	public GameMode getGamemode() {
+		return this.gamemode;
+	}
+
+	/**
+	 * @return the health
+	 */
+	public double getHealth() {
+		return this.health;
+	}
+
+	public int getHighestKillStreak() {
+		return Stats.getHighestKillStreak(this.name);
+	}
+
+	/**
+	 * @return the infClass
+	 */
+	public InfClass getInfClass(Team team) {
+		if (team == Team.Human)
+			return this.humanClass;
+		else
+			return this.zombieClass;
+	}
+
+	/**
+	 * @return the inventory
+	 */
+	public ItemStack[] getInventory() {
+		return this.inventory;
+	}
+
+	/**
+	 * @return the kills
+	 */
+	public int getKills() {
+		return Stats.getKills(this.name);
+	}
+
+	/**
+	 * @return the killstreak
+	 */
+	public int getKillstreak() {
+		return this.killstreak;
+	}
+
+	/**
+	 * @return the lastDamager
+	 */
+	public Player getLastDamager() {
+		return this.lastDamager;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return this.level;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public Location getLocation() {
+		return this.location;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return this.player;
+	}
+
+	public long getPlayingTime() {
+		return (System.currentTimeMillis() / 1000) - getTimeIn();
+	}
+
+	/**
+	 * @return the points
+	 */
+	public int getPoints(boolean useVault) {
+		return Stats.getPoints(this.name, useVault);
+	}
+
+	/**
+	 * @return how many votes they have
+	 */
+	public int getPointsModifier() {
+		int points = 1;
+
+		for (Entry<String, Integer> node : Settings.getPointsModifiers().entrySet())
+			if (this.player.hasPermission("Infected.points." + node.getKey()) && (node.getValue() > points))
+				points = node.getValue();
+		return points;
+	}
+
+	/**
+	 * @return the score
+	 */
+	public int getScore() {
+		return Stats.getScore(this.name);
+	}
+
+	public ScoreBoard getScoreBoard() {
+		return this.ScoreBoard;
+	}
+
+	/**
+	 * @return how many votes they have
+	 */
+	public int getScoreModifier() {
+		int score = 1;
+
+		for (Entry<String, Integer> node : Settings.getScoreModifiers().entrySet())
+			if (this.player.hasPermission("Infected.points." + node.getKey()) && (node.getValue() > score))
+				score = node.getValue();
+		return score;
+	}
+
+	/**
+	 * @return the team
+	 */
+	public Team getTeam() {
+		return this.team;
+	}
+
+	/**
+	 * @return the timeJoined
+	 */
+	public long getTimeIn() {
+		return this.timeIn;
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UUID getUuid() {
+		return this.uuid;
+	}
+
+	/**
+	 * @return the vote
+	 */
+	public Arena getVote() {
+		return this.vote;
+	}
+
+	/**
+	 * Change team to Zombie Set winner to false Change their equipment to
+	 * zombie apply potion effects disguise update scoreboard apply confussion
+	 */
+	public void Infect() {
+		this.player.setHealth(20.0);
+		this.player.setFoodLevel(20);
+		this.player.setFireTicks(0);
+		this.player.playSound(this.player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
+		this.team = Team.Zombie;
+		this.isWinner = false;
+		Equip.equipToZombie(this.player);
+		for (PotionEffect reffect : this.player.getActivePotionEffects())
+			this.player.removePotionEffect(reffect.getType());
+
+		PotionEffects.applyClassEffects(this.player);
+		disguise();
+
+		getScoreBoard().showProperBoard();
+		this.player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 2));
+	}
+
+	/**
+	 * @return the isInfChatting
+	 */
+	public boolean isInfChatting() {
+		return this.isInfChatting;
+	}
+
+	public boolean isInGame() {
+		return Lobby.isInGame(this.player);
+	}
+
+	/**
+	 * @return the isWinner
+	 */
+	public boolean isWinner() {
+		return this.isWinner;
 	}
 
 	/**
@@ -136,7 +340,7 @@ public class InfPlayer {
 	@SuppressWarnings("deprecation")
 	public void leaveInfected() {
 
-		InfectedLeaveEvent le = new InfectedLeaveEvent(player);
+		InfectedLeaveEvent le = new InfectedLeaveEvent(this.player);
 		Bukkit.getPluginManager().callEvent(le);
 		if (!le.isCancelled())
 		{
@@ -144,56 +348,56 @@ public class InfPlayer {
 			clearEquipment();
 
 			Player p = getPlayer();
-			p.setGameMode(gamemode);
-			p.setLevel(level);
-			p.setExp(exp);
-			p.setHealth(health);
-			p.setFoodLevel(food);
+			p.setGameMode(this.gamemode);
+			p.setLevel(this.level);
+			p.setExp(this.exp);
+			p.setHealth(this.health);
+			p.setFoodLevel(this.food);
 			p.setFireTicks(0);
-			p.getInventory().setContents(inventory);
-			p.getInventory().setArmorContents(armor);
+			p.getInventory().setContents(this.inventory);
+			p.getInventory().setArmorContents(this.armor);
 			p.updateInventory();
 
-			for (PotionEffect effect : player.getActivePotionEffects())
-				player.removePotionEffect(effect.getType());
+			for (PotionEffect effect : this.player.getActivePotionEffects())
+				this.player.removePotionEffect(effect.getType());
 
-			player.setFallDistance(0F);
+			this.player.setFallDistance(0F);
 			if (Lobby.getLeave() != null)
 				p.teleport(Lobby.getLeave());
 			else
-				p.teleport(location);
+				p.teleport(this.location);
 			p.setFallDistance(0F);
 			setTeam(Team.Human);
-			Lobby.delPlayerInGame(player);
+			Lobby.delPlayerInGame(this.player);
 
 			if (Lobby.getGameState() == GameState.Started)
 				Stats.setPlayingTime(getName(), Stats.getPlayingTime(getName()) + getPlayingTime());
 
-			if (getVote() != null && (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting))
+			if ((getVote() != null) && ((Lobby.getGameState() == GameState.InLobby) || (Lobby.getGameState() == GameState.Voting)))
 				getVote().setVotes(getVote().getVotes() - getAllowedVotes());
 
-			killstreak = 0;
-			location = null;
-			gamemode = null;
-			level = 0;
-			exp = 0;
-			health = 20;
-			food = 20;
-			inventory = null;
-			armor = null;
-			vote = null;
-			timeIn = 0;
+			this.killstreak = 0;
+			this.location = null;
+			this.gamemode = null;
+			this.level = 0;
+			this.exp = 0;
+			this.health = 20;
+			this.food = 20;
+			this.inventory = null;
+			this.armor = null;
+			this.vote = null;
+			this.timeIn = 0;
 			setInfChatting(false);
 
-			player.sendMessage(Msgs.Game_Left_You.getString());
+			this.player.sendMessage(Msgs.Game_Left_You.getString());
 
 			manageLeaving();
 
 			for (Player u : Lobby.getPlayersInGame())
 				if (u.getName() != this.name)
-					InfPlayerManager.getInfPlayer(name).getScoreBoard().showProperBoard();
+					InfPlayerManager.getInfPlayer(this.name).getScoreBoard().showProperBoard();
 
-			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+			this.player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 		}
 	}
 
@@ -207,17 +411,17 @@ public class InfPlayer {
 		else
 			if (Lobby.getGameState() == GameState.InLobby)
 				for (Player u : Lobby.getPlayersInGame())
-					u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+					u.sendMessage(Msgs.Game_Left_They.getString("<player>", this.player.getName()));
 
 			// If the game isn't fully started yet, this includes Voting, and
 			// before
 			// and Infecteds chosen
 			else
-				if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.Infecting)
+				if ((Lobby.getGameState() == GameState.Voting) || (Lobby.getGameState() == GameState.Infecting))
 				{
 
 					for (Player u : Lobby.getPlayersInGame())
-						u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+						u.sendMessage(Msgs.Game_Left_They.getString("<player>", this.player.getName()));
 
 					// If theres only one person left in the lobby, end the game
 					if (Lobby.getPlayersInGame().size() <= 1)
@@ -226,7 +430,7 @@ public class InfPlayer {
 						for (Player u : Lobby.getPlayersInGame())
 						{
 							u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-							InfPlayerManager.getInfPlayer(name).tpToLobby();
+							InfPlayerManager.getInfPlayer(this.name).tpToLobby();
 						}
 
 						// Reset all the timers, lists, etc(Not including the
@@ -241,7 +445,7 @@ public class InfPlayer {
 					if (Lobby.getGameState() == GameState.Started)
 					{
 						for (Player u : Lobby.getPlayersInGame())
-							u.sendMessage(Msgs.Game_Left_They.getString("<player>", player.getName()));
+							u.sendMessage(Msgs.Game_Left_They.getString("<player>", this.player.getName()));
 
 						// If theres only one person left in the lobby, end the
 						// game
@@ -251,7 +455,7 @@ public class InfPlayer {
 							for (Player u : Lobby.getPlayersInGame())
 							{
 								u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-								InfPlayerManager.getInfPlayer(name).tpToLobby();
+								InfPlayerManager.getInfPlayer(this.name).tpToLobby();
 							}
 
 							// Reset all the timers, lists, etc(Not including
@@ -276,7 +480,7 @@ public class InfPlayer {
 									for (Player u : Lobby.getPlayersInGame())
 									{
 										u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-										InfPlayerManager.getInfPlayer(name).tpToLobby();
+										InfPlayerManager.getInfPlayer(this.name).tpToLobby();
 									}
 
 									// Reset all the timers, lists, etc(Not
@@ -288,68 +492,8 @@ public class InfPlayer {
 					}
 	}
 
-	/**
-	 * Disguises the player
-	 */
-	public void disguise() {
-		if (Settings.DisguisesEnabled())
-			if (!Disguises.isPlayerDisguised(player))
-				Disguises.disguisePlayer(player);
-	}
-
-	/**
-	 * Undisguises the player
-	 */
-	public void unDisguise() {
-		if (Settings.DisguisesEnabled())
-			if (Disguises.isPlayerDisguised(player))
-				Disguises.unDisguisePlayer(player);
-	}
-
-	/**
-	 * - Updates Scoreboard - Play a sound - Set level to 0 - Set exp to 0 -
-	 * Teleport to the lobby - Set gamemode - Remove Fire - Set health to 20 -
-	 * Set Food to 20 - Undisguise the player
-	 */
-	public void tpToLobby() {
-		clearEquipment();
-		setTeam(Team.Human);
-
-		player.setFlying(false);
-
-		player.playSound(player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
-		player.setLevel(0);
-		player.setExp(0.0F);
-		player.setFallDistance(0F);
-		player.teleport(Lobby.getLocation());
-		player.setFallDistance(0F);
-		player.setGameMode(GameMode.ADVENTURE);
-		player.setFireTicks(0);
-		player.setHealth(20.0);
-		player.setFoodLevel(20);
-
-		for (PotionEffect effect : player.getActivePotionEffects())
-			player.removePotionEffect(effect.getType());
-
-		if (!SaveItemHandler.getSavedItems(player).isEmpty())
-			try
-			{
-				for (String string : SaveItemHandler.getSavedItems(player))
-					player.getInventory().addItem(ItemHandler.getItemStack(string));
-
-			}
-			catch (Exception e)
-			{
-				player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Tell an Admin that your saved inventory is invalid!");
-			}
-
-		unDisguise();
-		killstreak = 0;
-		vote = null;
-		lastDamager = null;
-		isWinner = true;
-
-		getScoreBoard().showProperBoard();
+	public void openMenu(Player player, IconMenu menu) {
+		menu.open(player);
 	}
 
 	/**
@@ -358,223 +502,25 @@ public class InfPlayer {
 	 */
 	public void respawn() {
 		getScoreBoard().showProperBoard();
-		Player p = player;
+		Player p = this.player;
 		p.setHealth(20.0);
 		p.setFoodLevel(20);
 		p.setFireTicks(0);
 		Random r = new Random();
-		int i = r.nextInt(Lobby.getActiveArena().getSpawns(team).size());
-		String loc = Lobby.getActiveArena().getSpawns(team).get(i);
+		int i = r.nextInt(Lobby.getActiveArena().getSpawns(this.team).size());
+		String loc = Lobby.getActiveArena().getSpawns(this.team).get(i);
 
 		p.setFallDistance(0F);
 		p.teleport(LocationHandler.getPlayerLocation(loc));
 		p.setFallDistance(0F);
 
-		for (PotionEffect reffect : player.getActivePotionEffects())
-			player.removePotionEffect(reffect.getType());
+		for (PotionEffect reffect : this.player.getActivePotionEffects())
+			this.player.removePotionEffect(reffect.getType());
 
-		PotionEffects.applyClassEffects(player);
+		PotionEffects.applyClassEffects(this.player);
 
 		p.setFallDistance(0F);
-		lastDamager = null;
-	}
-
-	/**
-	 * Change team to Zombie Set winner to false Change their equipment to
-	 * zombie apply potion effects disguise update scoreboard apply confussion
-	 */
-	public void Infect() {
-		this.player.setHealth(20.0);
-		this.player.setFoodLevel(20);
-		this.player.setFireTicks(0);
-		this.player.playSound(player.getLocation(), Sound.ZOMBIE_INFECT, 1, 1);
-		this.team = Team.Zombie;
-		isWinner = false;
-		Equip.equipToZombie(player);
-		for (PotionEffect reffect : player.getActivePotionEffects())
-			player.removePotionEffect(reffect.getType());
-
-		PotionEffects.applyClassEffects(player);
-		disguise();
-
-		getScoreBoard().showProperBoard();
-		player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 2));
-	}
-
-	public long getPlayingTime() {
-		return (System.currentTimeMillis() / 1000) - getTimeIn();
-	}
-
-	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
-	 * @param player
-	 *            the player to set
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the points
-	 */
-	public int getPoints(boolean useVault) {
-		return Stats.getPoints(name, useVault);
-	}
-
-	/**
-	 * @param points
-	 *            the points to set
-	 */
-	public void setPoints(int points, boolean useVault) {
-		Stats.setPoints(name, points, useVault);
-	}
-
-	/**
-	 * @return the score
-	 */
-	public int getScore() {
-		return Stats.getScore(name);
-	}
-
-	/**
-	 * @param score
-	 *            the score to set
-	 */
-	public void setScore(int score) {
-		Stats.setScore(name, score);
-	}
-
-	/**
-	 * @return the killstreak
-	 */
-	public int getKillstreak() {
-		return killstreak;
-	}
-
-	/**
-	 * @param killstreak
-	 *            the killstreak to set
-	 */
-	public void setKillstreak(int killstreak) {
-		this.killstreak = killstreak;
-	}
-
-	/**
-	 * @return the timeJoined
-	 */
-	public long getTimeIn() {
-		return timeIn;
-	}
-
-	/**
-	 * @param timeIn
-	 *            the timeIn to set
-	 */
-	public void setTimeIn(long timeIn) {
-		this.timeIn = timeIn;
-	}
-
-	/**
-	 * @return the gamemode
-	 */
-	public GameMode getGamemode() {
-		return gamemode;
-	}
-
-	/**
-	 * @param gamemode
-	 *            the gamemode to set
-	 */
-	public void setGamemode(GameMode gamemode) {
-		this.gamemode = gamemode;
-	}
-
-	/**
-	 * @return the level
-	 */
-	public int getLevel() {
-		return level;
-	}
-
-	/**
-	 * @param level
-	 *            the level to set
-	 */
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	/**
-	 * @return the exp
-	 */
-	public float getExp() {
-		return exp;
-	}
-
-	/**
-	 * @param exp
-	 *            the exp to set
-	 */
-	public void setExp(float exp) {
-		this.exp = exp;
-	}
-
-	/**
-	 * @return the health
-	 */
-	public double getHealth() {
-		return health;
-	}
-
-	/**
-	 * @param health
-	 *            the health to set
-	 */
-	public void setHealth(double health) {
-		this.health = health;
-	}
-
-	/**
-	 * @return the food
-	 */
-	public int getFood() {
-		return food;
-	}
-
-	/**
-	 * @param food
-	 *            the food to set
-	 */
-	public void setFood(int food) {
-		this.food = food;
-	}
-
-	/**
-	 * @return the armor
-	 */
-	public ItemStack[] getArmor() {
-		return armor;
+		this.lastDamager = null;
 	}
 
 	/**
@@ -586,10 +532,97 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @return the inventory
+	 * @param creating
+	 *            the creating to set
 	 */
-	public ItemStack[] getInventory() {
-		return inventory;
+	public void setCreating(String creating) {
+		this.creating = creating;
+	}
+
+	/**
+	 * @param deaths
+	 *            the deaths to set
+	 */
+	public void setDeaths(int deaths) {
+		setDeaths(deaths);
+	}
+
+	/**
+	 * @param exp
+	 *            the exp to set
+	 */
+	public void setExp(float exp) {
+		this.exp = exp;
+	}
+
+	/**
+	 * @param food
+	 *            the food to set
+	 */
+	public void setFood(int food) {
+		this.food = food;
+	}
+
+	/**
+	 * @param gamemode
+	 *            the gamemode to set
+	 */
+	public void setGamemode(GameMode gamemode) {
+		this.gamemode = gamemode;
+	}
+
+	/**
+	 * @param health
+	 *            the health to set
+	 */
+	public void setHealth(double health) {
+		this.health = health;
+	}
+
+	/**
+	 * @param isInfChatting
+	 *            the isInfChatting to set
+	 */
+	public void setInfChatting(boolean isInfChatting) {
+		this.isInfChatting = isInfChatting;
+	}
+
+	/**
+	 * @param infClass
+	 *            the infClass to set
+	 */
+	public void setInfClass(Team team, InfClass Class) {
+		if (team == Team.Human)
+			this.humanClass = Class;
+		else
+			this.zombieClass = Class;
+	}
+
+	/**
+	 * Saves: <li>Location - Name - Gamemode - Level - Exp - Health - Food -
+	 * Inventory - Armor</li> Clears: <li>Armor - Inventory Sets: <li>Gamemode
+	 * to adventure - Sets level to 0 - Sets the players exp to 0 - Sets the
+	 * players health to 20 - Sets the food to 20
+	 */
+	public void setInfo() {
+		this.location = this.player.getLocation();
+		this.name = this.player.getName();
+		this.gamemode = this.player.getGameMode();
+		this.level = this.player.getLevel();
+		this.exp = this.player.getExp();
+		this.health = this.player.getHealth();
+		this.food = this.player.getFoodLevel();
+		this.inventory = this.player.getInventory().getContents();
+		this.armor = this.player.getInventory().getArmorContents();
+		clearEquipment();
+		setInfClass(Team.Human, InfClassManager.getDefaultClass(Team.Human));
+		setInfClass(Team.Zombie, InfClassManager.getDefaultClass(Team.Zombie));
+
+		this.player.setGameMode(GameMode.ADVENTURE);
+		this.player.setLevel(0);
+		this.player.setExp(0.0F);
+		this.player.setHealth(20);
+		this.player.setFoodLevel(20);
 	}
 
 	/**
@@ -601,40 +634,19 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @return the location
+	 * @param kills
+	 *            the kills to set
 	 */
-	public Location getLocation() {
-		return location;
+	public void setKills(int kills) {
+		Stats.setKills(this.name, kills);
 	}
 
 	/**
-	 * @param location
-	 *            the location to set
+	 * @param killstreak
+	 *            the killstreak to set
 	 */
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-	/**
-	 * @return the creating
-	 */
-	public String getCreating() {
-		return creating;
-	}
-
-	/**
-	 * @param creating
-	 *            the creating to set
-	 */
-	public void setCreating(String creating) {
-		this.creating = creating;
-	}
-
-	/**
-	 * @return the lastDamager
-	 */
-	public Player getLastDamager() {
-		return lastDamager;
+	public void setKillstreak(int killstreak) {
+		this.killstreak = killstreak;
 	}
 
 	/**
@@ -646,61 +658,51 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @return the kills
+	 * @param level
+	 *            the level to set
 	 */
-	public int getKills() {
-		return Stats.getKills(name);
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	/**
-	 * @param kills
-	 *            the kills to set
+	 * @param location
+	 *            the location to set
 	 */
-	public void setKills(int kills) {
-		Stats.setKills(name, kills);
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	/**
-	 * @return the deaths
+	 * @param name
+	 *            the name to set
 	 */
-	public int getDeaths() {
-		return Stats.getDeaths(name);
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * @param deaths
-	 *            the deaths to set
+	 * @param player
+	 *            the player to set
 	 */
-	public void setDeaths(int deaths) {
-		this.setDeaths(deaths);
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	/**
-	 * @return the infClass
+	 * @param points
+	 *            the points to set
 	 */
-	public InfClass getInfClass(Team team) {
-		if (team == Team.Human)
-			return humanClass;
-		else
-			return zombieClass;
+	public void setPoints(int points, boolean useVault) {
+		Stats.setPoints(this.name, points, useVault);
 	}
 
 	/**
-	 * @param infClass
-	 *            the infClass to set
+	 * @param score
+	 *            the score to set
 	 */
-	public void setInfClass(Team team, InfClass Class) {
-		if (team == Team.Human)
-			humanClass = Class;
-		else
-			zombieClass = Class;
-	}
-
-	/**
-	 * @return the team
-	 */
-	public Team getTeam() {
-		return team;
+	public void setScore(int score) {
+		Stats.setScore(this.name, score);
 	}
 
 	/**
@@ -712,10 +714,19 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @return the vote
+	 * @param timeIn
+	 *            the timeIn to set
 	 */
-	public Arena getVote() {
-		return vote;
+	public void setTimeIn(long timeIn) {
+		this.timeIn = timeIn;
+	}
+
+	/**
+	 * @param uuid
+	 *            the uuid to set
+	 */
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	/**
@@ -724,20 +735,6 @@ public class InfPlayer {
 	 */
 	public void setVote(Arena vote) {
 		this.vote = vote;
-	}
-
-	public void updateStats(int kills, int deaths) {
-		if (kills != 0)
-			Stats.setKills(name, Stats.getKills(name) + kills);
-		if (deaths != 0)
-			Stats.setDeaths(name, Stats.getDeaths(name) + deaths);
-	}
-
-	/**
-	 * @return the isWinner
-	 */
-	public boolean isWinner() {
-		return isWinner;
 	}
 
 	/**
@@ -749,68 +746,65 @@ public class InfPlayer {
 	}
 
 	/**
-	 * @return the isInfChatting
+	 * - Updates Scoreboard - Play a sound - Set level to 0 - Set exp to 0 -
+	 * Teleport to the lobby - Set gamemode - Remove Fire - Set health to 20 -
+	 * Set Food to 20 - Undisguise the player
 	 */
-	public boolean isInfChatting() {
-		return isInfChatting;
+	public void tpToLobby() {
+		clearEquipment();
+		setTeam(Team.Human);
+
+		this.player.setFlying(false);
+
+		this.player.playSound(this.player.getLocation(), Sound.ENDERDRAGON_WINGS, 1, 1);
+		this.player.setLevel(0);
+		this.player.setExp(0.0F);
+		this.player.setFallDistance(0F);
+		this.player.teleport(Lobby.getLocation());
+		this.player.setFallDistance(0F);
+		this.player.setGameMode(GameMode.ADVENTURE);
+		this.player.setFireTicks(0);
+		this.player.setHealth(20.0);
+		this.player.setFoodLevel(20);
+
+		for (PotionEffect effect : this.player.getActivePotionEffects())
+			this.player.removePotionEffect(effect.getType());
+
+		if (!SaveItemHandler.getSavedItems(this.player).isEmpty())
+			try
+			{
+				for (String string : SaveItemHandler.getSavedItems(this.player))
+					this.player.getInventory().addItem(ItemHandler.getItemStack(string));
+
+			}
+			catch (Exception e)
+			{
+				this.player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Tell an Admin that your saved inventory is invalid!");
+			}
+
+		unDisguise();
+		this.killstreak = 0;
+		this.vote = null;
+		this.lastDamager = null;
+		this.isWinner = true;
+
+		getScoreBoard().showProperBoard();
 	}
 
 	/**
-	 * @param isInfChatting
-	 *            the isInfChatting to set
+	 * Undisguises the player
 	 */
-	public void setInfChatting(boolean isInfChatting) {
-		this.isInfChatting = isInfChatting;
+	public void unDisguise() {
+		if (Settings.DisguisesEnabled())
+			if (Disguises.isPlayerDisguised(this.player))
+				Disguises.unDisguisePlayer(this.player);
 	}
 
-	public int getHighestKillStreak() {
-		return Stats.getHighestKillStreak(name);
-	}
-
-	/**
-	 * @return how many votes they have
-	 */
-	public int getAllowedVotes() {
-		int votes = 1;
-
-		for (Entry<String, Integer> node : Settings.getExtraVoteNodes().entrySet())
-		{
-			if (player.hasPermission("Infected.vote." + node.getKey()) && node.getValue() > votes)
-				votes = node.getValue();
-		}
-		return votes;
-	}
-
-	/**
-	 * @return how many votes they have
-	 */
-	public int getPointsModifier() {
-		int points = 1;
-
-		for (Entry<String, Integer> node : Settings.getPointsModifiers().entrySet())
-		{
-			if (player.hasPermission("Infected.points." + node.getKey()) && node.getValue() > points)
-				points = node.getValue();
-		}
-		return points;
-	}
-
-	/**
-	 * @return how many votes they have
-	 */
-	public int getScoreModifier() {
-		int score = 1;
-
-		for (Entry<String, Integer> node : Settings.getScoreModifiers().entrySet())
-		{
-			if (player.hasPermission("Infected.points." + node.getKey()) && node.getValue() > score)
-				score = node.getValue();
-		}
-		return score;
-	}
-
-	public void openMenu(Player player, IconMenu menu) {
-		menu.open(player);
+	public void updateStats(int kills, int deaths) {
+		if (kills != 0)
+			Stats.setKills(this.name, Stats.getKills(this.name) + kills);
+		if (deaths != 0)
+			Stats.setDeaths(this.name, Stats.getDeaths(this.name) + deaths);
 	}
 
 }

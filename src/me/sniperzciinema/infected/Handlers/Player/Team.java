@@ -9,12 +9,12 @@ public enum Team
 
 	private Team(String s)
 	{
-		string = s;
+		this.string = s;
 	}
 
 	@Override
 	public String toString() {
-		return string;
+		return this.string;
 	}
 
 };

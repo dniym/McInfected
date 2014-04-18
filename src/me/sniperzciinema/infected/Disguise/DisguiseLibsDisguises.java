@@ -56,6 +56,15 @@ public class DisguiseLibsDisguises {
 	}
 
 	/**
+	 * @param p
+	 * @return if the player is disguised
+	 */
+	@SuppressWarnings("deprecation")
+	public static boolean isPlayerDisguised(Player p) {
+		return DisguiseAPI.isDisguised(p);
+	}
+
+	/**
 	 * unDisguise the player
 	 * 
 	 * @param p
@@ -63,15 +72,6 @@ public class DisguiseLibsDisguises {
 	public static void unDisguisePlayer(Player p) {
 
 		DisguiseAPI.undisguiseToAll(p);
-	}
-
-	/**
-	 * @param p
-	 * @return if the player is disguised
-	 */
-	@SuppressWarnings("deprecation")
-	public static boolean isPlayerDisguised(Player p) {
-		return DisguiseAPI.isDisguised(p);
 	}
 
 }

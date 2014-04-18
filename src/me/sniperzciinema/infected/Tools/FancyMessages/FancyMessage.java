@@ -34,47 +34,35 @@ public class FancyMessage {
 
 	public FancyMessage(final String firstPartText)
 	{
-		messageParts = new ArrayList<MessagePart>();
-		messageParts.add(new MessagePart(firstPartText));
-		jsonString = null;
-		dirty = false;
+		this.messageParts = new ArrayList<MessagePart>();
+		this.messageParts.add(new MessagePart(firstPartText));
+		this.jsonString = null;
+		this.dirty = false;
+	}
+
+	public FancyMessage achievementTooltip(final Achievement which) {
+		try
+		{
+			Object achievement = Reflection.getMethod(this.obcStatistic, "getNMSAchievement").invoke(null, which);
+			return achievementTooltip((String) Reflection.getField(this.nmsAchievement, "name").get(achievement));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return this;
+		}
+	}
+
+	public FancyMessage achievementTooltip(final String name) {
+		onHover("show_achievement", "achievement." + name);
+		return this;
 	}
 
 	public FancyMessage color(final ChatColor color) {
 		if (!color.isColor())
-		{
 			throw new IllegalArgumentException(color.name() + " is not a color");
-		}
 		latest().color = color;
-		dirty = true;
-		return this;
-	}
-
-	public FancyMessage style(final ChatColor... styles) {
-		for (final ChatColor style : styles)
-		{
-			if (!style.isFormat())
-			{
-				throw new IllegalArgumentException(style.name() + " is not a style");
-			}
-		}
-		latest().styles = styles;
-		dirty = true;
-		return this;
-	}
-
-	public FancyMessage file(final String path) {
-		onClick("open_file", path);
-		return this;
-	}
-
-	public FancyMessage link(final String url) {
-		onClick("open_url", url);
-		return this;
-	}
-
-	public FancyMessage suggest(final String command) {
-		onClick("suggest_command", command);
+		this.dirty = true;
 		return this;
 	}
 
@@ -83,81 +71,16 @@ public class FancyMessage {
 		return this;
 	}
 
-	public FancyMessage achievementTooltip(final String name) {
-		onHover("show_achievement", "achievement." + name);
+	public FancyMessage file(final String path) {
+		onClick("open_file", path);
 		return this;
 	}
 
-	public FancyMessage achievementTooltip(final Achievement which) {
+	public FancyMessage itemTooltip(final ItemStack itemStack) {
 		try
 		{
-			Object achievement = Reflection.getMethod(obcStatistic, "getNMSAchievement").invoke(null, which);
-			return achievementTooltip((String) Reflection.getField(nmsAchievement, "name").get(achievement));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return this;
-		}
-	}
-
-	public FancyMessage statisticTooltip(final Statistic which) {
-		Type type = which.getType();
-		if (type != Type.UNTYPED)
-		{
-			throw new IllegalArgumentException(
-					"That statistic requires an additional " + type + " parameter!");
-		}
-		try
-		{
-			Object statistic = Reflection.getMethod(obcStatistic, "getNMSStatistic").invoke(null, which);
-			return achievementTooltip((String) Reflection.getField(nmsStatistic, "name").get(statistic));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return this;
-		}
-	}
-
-	public FancyMessage statisticTooltip(final Statistic which, Material item) {
-		Type type = which.getType();
-		if (type == Type.UNTYPED)
-		{
-			throw new IllegalArgumentException("That statistic needs no additional parameter!");
-		}
-		if ((type == Type.BLOCK && item.isBlock()) || type == Type.ENTITY)
-		{
-			throw new IllegalArgumentException(
-					"Wrong parameter type for that statistic - needs " + type + "!");
-		}
-		try
-		{
-			Object statistic = Reflection.getMethod(obcStatistic, "getMaterialStatistic").invoke(null, which, item);
-			return achievementTooltip((String) Reflection.getField(nmsStatistic, "name").get(statistic));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return this;
-		}
-	}
-
-	public FancyMessage statisticTooltip(final Statistic which, EntityType entity) {
-		Type type = which.getType();
-		if (type == Type.UNTYPED)
-		{
-			throw new IllegalArgumentException("That statistic needs no additional parameter!");
-		}
-		if (type != Type.ENTITY)
-		{
-			throw new IllegalArgumentException(
-					"Wrong parameter type for that statistic - needs " + type + "!");
-		}
-		try
-		{
-			Object statistic = Reflection.getMethod(obcStatistic, "getEntityStatistic").invoke(null, which, entity);
-			return achievementTooltip((String) Reflection.getField(nmsStatistic, "name").get(statistic));
+			Object nmsItem = Reflection.getMethod(this.obcItemStack, "asNMSCopy", ItemStack.class).invoke(null, itemStack);
+			return itemTooltip(Reflection.getMethod(this.nmsItemStack, "save").invoke(nmsItem, this.nmsTagCompound.newInstance()).toString());
 		}
 		catch (Exception e)
 		{
@@ -171,102 +94,13 @@ public class FancyMessage {
 		return this;
 	}
 
-	public FancyMessage itemTooltip(final ItemStack itemStack) {
-		try
-		{
-			Object nmsItem = Reflection.getMethod(obcItemStack, "asNMSCopy", ItemStack.class).invoke(null, itemStack);
-			return itemTooltip(Reflection.getMethod(nmsItemStack, "save").invoke(nmsItem, nmsTagCompound.newInstance()).toString());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return this;
-		}
-	}
-
-	public FancyMessage tooltip(final String text) {
-		return tooltip(text.split("\\n"));
-	}
-
-	public FancyMessage tooltip(final List<String> lines) {
-		return tooltip((String[]) lines.toArray());
-	}
-
-	public FancyMessage tooltip(final String... lines) {
-		if (lines.length == 1)
-		{
-			onHover("show_text", lines[0]);
-		}
-		else
-		{
-			itemTooltip(makeMultilineTooltip(lines));
-		}
-		return this;
-	}
-
-	public FancyMessage then(final Object obj) {
-		messageParts.add(new MessagePart(obj.toString()));
-		dirty = true;
-		return this;
-	}
-
-	public String toJSONString() {
-		if (!dirty && jsonString != null)
-		{
-			return jsonString;
-		}
-		StringWriter string = new StringWriter();
-		JsonWriter json = new JsonWriter(string);
-		try
-		{
-			if (messageParts.size() == 1)
-			{
-				latest().writeJson(json);
-			}
-			else
-			{
-				json.beginObject().name("text").value("").name("extra").beginArray();
-				for (final MessagePart part : messageParts)
-				{
-					part.writeJson(json);
-				}
-				json.endArray().endObject();
-				json.close();
-			}
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("invalid message");
-		}
-		jsonString = string.toString();
-		dirty = false;
-		return jsonString;
-	}
-
-	public void send(Player player) {
-		try
-		{
-			Object handle = Reflection.getHandle(player);
-			Object connection = Reflection.getField(handle.getClass(), "playerConnection").get(handle);
-			Object serialized = Reflection.getMethod(nmsChatSerializer, "a", String.class).invoke(null, toJSONString());
-			Object packet = nmsPacketPlayOutChat.getConstructor(Reflection.getNMSClass("IChatBaseComponent")).newInstance(serialized);
-			Reflection.getMethod(connection.getClass(), "sendPacket").invoke(connection, packet);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void send(final Iterable<Player> players) {
-		for (final Player player : players)
-		{
-			send(player);
-		}
-	}
-
 	private MessagePart latest() {
-		return messageParts.get(messageParts.size() - 1);
+		return this.messageParts.get(this.messageParts.size() - 1);
+	}
+
+	public FancyMessage link(final String url) {
+		onClick("open_url", url);
+		return this;
 	}
 
 	private String makeMultilineTooltip(final String[] lines) {
@@ -297,14 +131,152 @@ public class FancyMessage {
 		final MessagePart latest = latest();
 		latest.clickActionName = name;
 		latest.clickActionData = data;
-		dirty = true;
+		this.dirty = true;
 	}
 
 	private void onHover(final String name, final String data) {
 		final MessagePart latest = latest();
 		latest.hoverActionName = name;
 		latest.hoverActionData = data;
-		dirty = true;
+		this.dirty = true;
+	}
+
+	public void send(final Iterable<Player> players) {
+		for (final Player player : players)
+			send(player);
+	}
+
+	public void send(Player player) {
+		try
+		{
+			Object handle = Reflection.getHandle(player);
+			Object connection = Reflection.getField(handle.getClass(), "playerConnection").get(handle);
+			Object serialized = Reflection.getMethod(this.nmsChatSerializer, "a", String.class).invoke(null, toJSONString());
+			Object packet = this.nmsPacketPlayOutChat.getConstructor(Reflection.getNMSClass("IChatBaseComponent")).newInstance(serialized);
+			Reflection.getMethod(connection.getClass(), "sendPacket").invoke(connection, packet);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public FancyMessage statisticTooltip(final Statistic which) {
+		Type type = which.getType();
+		if (type != Type.UNTYPED)
+			throw new IllegalArgumentException(
+					"That statistic requires an additional " + type + " parameter!");
+		try
+		{
+			Object statistic = Reflection.getMethod(this.obcStatistic, "getNMSStatistic").invoke(null, which);
+			return achievementTooltip((String) Reflection.getField(this.nmsStatistic, "name").get(statistic));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return this;
+		}
+	}
+
+	public FancyMessage statisticTooltip(final Statistic which, EntityType entity) {
+		Type type = which.getType();
+		if (type == Type.UNTYPED)
+			throw new IllegalArgumentException("That statistic needs no additional parameter!");
+		if (type != Type.ENTITY)
+			throw new IllegalArgumentException(
+					"Wrong parameter type for that statistic - needs " + type + "!");
+		try
+		{
+			Object statistic = Reflection.getMethod(this.obcStatistic, "getEntityStatistic").invoke(null, which, entity);
+			return achievementTooltip((String) Reflection.getField(this.nmsStatistic, "name").get(statistic));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return this;
+		}
+	}
+
+	public FancyMessage statisticTooltip(final Statistic which, Material item) {
+		Type type = which.getType();
+		if (type == Type.UNTYPED)
+			throw new IllegalArgumentException("That statistic needs no additional parameter!");
+		if (((type == Type.BLOCK) && item.isBlock()) || (type == Type.ENTITY))
+			throw new IllegalArgumentException(
+					"Wrong parameter type for that statistic - needs " + type + "!");
+		try
+		{
+			Object statistic = Reflection.getMethod(this.obcStatistic, "getMaterialStatistic").invoke(null, which, item);
+			return achievementTooltip((String) Reflection.getField(this.nmsStatistic, "name").get(statistic));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return this;
+		}
+	}
+
+	public FancyMessage style(final ChatColor... styles) {
+		for (final ChatColor style : styles)
+			if (!style.isFormat())
+				throw new IllegalArgumentException(style.name() + " is not a style");
+		latest().styles = styles;
+		this.dirty = true;
+		return this;
+	}
+
+	public FancyMessage suggest(final String command) {
+		onClick("suggest_command", command);
+		return this;
+	}
+
+	public FancyMessage then(final Object obj) {
+		this.messageParts.add(new MessagePart(obj.toString()));
+		this.dirty = true;
+		return this;
+	}
+
+	public String toJSONString() {
+		if (!this.dirty && (this.jsonString != null))
+			return this.jsonString;
+		StringWriter string = new StringWriter();
+		JsonWriter json = new JsonWriter(string);
+		try
+		{
+			if (this.messageParts.size() == 1)
+				latest().writeJson(json);
+			else
+			{
+				json.beginObject().name("text").value("").name("extra").beginArray();
+				for (final MessagePart part : this.messageParts)
+					part.writeJson(json);
+				json.endArray().endObject();
+				json.close();
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("invalid message");
+		}
+		this.jsonString = string.toString();
+		this.dirty = false;
+		return this.jsonString;
+	}
+
+	public FancyMessage tooltip(final List<String> lines) {
+		return tooltip((String[]) lines.toArray());
+	}
+
+	public FancyMessage tooltip(final String text) {
+		return tooltip(text.split("\\n"));
+	}
+
+	public FancyMessage tooltip(final String... lines) {
+		if (lines.length == 1)
+			onHover("show_text", lines[0]);
+		else
+			itemTooltip(makeMultilineTooltip(lines));
+		return this;
 	}
 
 }

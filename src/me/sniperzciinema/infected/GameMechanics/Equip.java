@@ -43,13 +43,13 @@ public class Equip {
 
 		// Only replace the armor if the player hasn't changed it(So if
 		// its none, or if it is the same as default)
-		if (ItemHandler.getItemStackIgnoreDamage(p.getInventory().getHelmet()) == ItemHandler.getItemStackIgnoreDamage(Class.getHelmet()) || p.getInventory().getHelmet() == null)
+		if ((ItemHandler.getItemStackIgnoreDamage(p.getInventory().getHelmet()) == ItemHandler.getItemStackIgnoreDamage(Class.getHelmet())) || (p.getInventory().getHelmet() == null))
 			p.getInventory().setHelmet(Class.getHelmet());
-		if (ItemHandler.getItemStackIgnoreDamage(p.getInventory().getChestplate()) == ItemHandler.getItemStackIgnoreDamage(Class.getChestplate()) || p.getInventory().getChestplate() == null)
+		if ((ItemHandler.getItemStackIgnoreDamage(p.getInventory().getChestplate()) == ItemHandler.getItemStackIgnoreDamage(Class.getChestplate())) || (p.getInventory().getChestplate() == null))
 			p.getInventory().setChestplate(Class.getChestplate());
-		if (ItemHandler.getItemStackIgnoreDamage(p.getInventory().getLeggings()) == ItemHandler.getItemStackIgnoreDamage(Class.getLeggings()) || p.getInventory().getLeggings() == null)
+		if ((ItemHandler.getItemStackIgnoreDamage(p.getInventory().getLeggings()) == ItemHandler.getItemStackIgnoreDamage(Class.getLeggings())) || (p.getInventory().getLeggings() == null))
 			p.getInventory().setLeggings(Class.getLeggings());
-		if (ItemHandler.getItemStackIgnoreDamage(p.getInventory().getBoots()) == ItemHandler.getItemStackIgnoreDamage(Class.getBoots()) || p.getInventory().getBoots() == null)
+		if ((ItemHandler.getItemStackIgnoreDamage(p.getInventory().getBoots()) == ItemHandler.getItemStackIgnoreDamage(Class.getBoots())) || (p.getInventory().getBoots() == null))
 			p.getInventory().setBoots(Class.getBoots());
 
 		p.updateInventory();

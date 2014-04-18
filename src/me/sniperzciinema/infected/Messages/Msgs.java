@@ -133,19 +133,18 @@ public enum Msgs
 
 	private Msgs(String s)
 	{
-		string = s;
+		this.string = s;
 	}
 
 	public String getString(String... variables) {
 		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
 		try
 		{
-			String message = (string.startsWith("Format") || string.startsWith("Picture") || string.startsWith("Menu") || (Settings.PictureEnabled() && (string.startsWith("Game.Alpha") || string.startsWith("Game.Survior"))) ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
+			String message = (this.string.startsWith("Format") || this.string.startsWith("Picture") || this.string.startsWith("Menu") || (Settings.PictureEnabled() && (this.string.startsWith("Game.Alpha") || this.string.startsWith("Game.Survior"))) ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(this.string).replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 			int i = 0;
 			String replace = null;
 
 			for (String variable : variables)
-			{
 				if (i == 0)
 				{
 					replace = variable;
@@ -156,12 +155,11 @@ public enum Msgs
 					message = message.replaceAll(replace, variable);
 					i = 0;
 				}
-			}
 			return message;
 		}
 		catch (NullPointerException npe)
 		{
-			return (string.startsWith("Format") || string.startsWith("Menu") ? "" : prefix) + "Either theres something wrong with the variables or we're unable to find message: " + string;
+			return (this.string.startsWith("Format") || this.string.startsWith("Menu") ? "" : prefix) + "Either theres something wrong with the variables or we're unable to find message: " + this.string;
 		}
 	}
 

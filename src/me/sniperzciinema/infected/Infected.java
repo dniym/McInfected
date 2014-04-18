@@ -60,10 +60,33 @@ public class Infected extends JavaPlugin {
 	public static Menus			Menus;
 
 	@Override
+	public void onDisable() {
+		Infected.Menus.destroyAllMenus();
+		try
+		{
+			// On disable reset players with everything from before
+			if (!Lobby.getPlayersInGame().isEmpty())
+				for (Player p : Bukkit.getOnlinePlayers())
+					if (Lobby.isInGame(p))
+					{
+						p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
+						InfPlayerManager.getInfPlayer(p).leaveInfected();
+					}
+		}
+		catch (Exception e)
+		{
+			// If theres no one in Infected it seems to not be able to find the
+			// Lobby class when checking if the game is empty
+		}
+		if (Settings.MySQLEnabled())
+			Infected.MySQL.closeConnection();
+	}
+
+	@Override
 	public void onEnable() {
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
-		me = this;
+		Infected.me = this;
 		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
 
 		try
@@ -90,25 +113,23 @@ public class Infected extends JavaPlugin {
 
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
-		version = pdf.getVersion();
+		Infected.version = pdf.getVersion();
 
 		if (Settings.checkForUpdates())
 		{
 
-			file = this.getFile();
-			Updater updater = new Updater(this, 44622, this.getFile(),
-					Updater.UpdateType.NO_DOWNLOAD, true);
+			Infected.file = getFile();
+			Updater updater = new Updater(this, 44622, getFile(), Updater.UpdateType.NO_DOWNLOAD,
+					true);
 
-			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			updateName = updater.getLatestName();
-			updateLink = updater.getLatestFileLink();
+			Infected.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+			Infected.updateName = updater.getLatestName();
+			Infected.updateLink = updater.getLatestFileLink();
 
-			if (update)
-			{
+			if (Infected.update)
 				for (Player player : Bukkit.getOnlinePlayers())
 					if (player.hasPermission("Infected.Admin"))
-						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + updateName);
-			}
+						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + Infected.updateName);
 		}
 
 		// Get the Commands class and the Listener
@@ -131,7 +152,7 @@ public class Infected extends JavaPlugin {
 		if (Settings.MySQLEnabled())
 		{
 			System.out.println("Attempting to connect to MySQL");
-			MySQL = new MySQL(this, Files.getConfig().getString("MySQL.Host"),
+			Infected.MySQL = new MySQL(this, Files.getConfig().getString("MySQL.Host"),
 					Files.getConfig().getString("MySQL.Port"),
 					Files.getConfig().getString("MySQL.Database"),
 					Files.getConfig().getString("MySQL.Username"),
@@ -139,8 +160,8 @@ public class Infected extends JavaPlugin {
 
 			try
 			{
-				connection = MySQL.openConnection();
-				Statement statement = connection.createStatement();
+				Infected.connection = Infected.MySQL.openConnection();
+				Statement statement = Infected.connection.createStatement();
 
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (Player VARCHAR(20), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
 				System.out.println("MySQL Table has been loaded");
@@ -161,35 +182,10 @@ public class Infected extends JavaPlugin {
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 
-		Menus = new Menus();
+		Infected.Menus = new Menus();
 
 		System.out.println(Msgs.Format_Line.getString());
 
-	}
-
-	@Override
-	public void onDisable() {
-		Infected.Menus.destroyAllMenus();
-		try
-		{
-			// On disable reset players with everything from before
-			if (!Lobby.getPlayersInGame().isEmpty())
-				for (Player p : Bukkit.getOnlinePlayers())
-					if (Lobby.isInGame(p))
-					{
-						p.sendMessage(Msgs.Error_Misc_Plugin_Unloaded.getString());
-						InfPlayerManager.getInfPlayer(p).leaveInfected();
-					}
-		}
-		catch (Exception e)
-		{
-			// If theres no one in Infected it seems to not be able to find the
-			// Lobby class when checking if the game is empty
-		}
-		if (Settings.MySQLEnabled())
-		{
-			MySQL.closeConnection();
-		}
 	}
 
 }

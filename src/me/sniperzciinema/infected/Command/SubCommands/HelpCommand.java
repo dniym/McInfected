@@ -105,7 +105,6 @@ public class HelpCommand extends SubCommand {
 
 			}
 			else
-			{
 				if (args[1].equals("1"))
 				{
 					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Join" + ChatColor.WHITE + " - Join Infected");
@@ -149,14 +148,10 @@ public class HelpCommand extends SubCommand {
 								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpLeave" + ChatColor.WHITE + " - Tp to the leave location");
 							}
 
-			}
-
 			sender.sendMessage(Msgs.Format_Line.getString());
 		}
 		else
-		{
 			Bukkit.getServer().dispatchCommand(sender, "Infected Help 1");
-		}
 
 	}
 

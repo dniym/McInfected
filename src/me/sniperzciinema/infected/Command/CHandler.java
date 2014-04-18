@@ -91,10 +91,6 @@ public class CHandler implements CommandExecutor {
 
 	}
 
-	public void registerSubCommand(SubCommand subCommand) {
-		this.commands.add(subCommand);
-	}
-
 	public ArrayList<SubCommand> getSubCommands() {
 		return this.commands;
 	}
@@ -114,9 +110,9 @@ public class CHandler implements CommandExecutor {
 			InfectedCommandEvent ce = new InfectedCommandEvent(args, p, ip);
 			Bukkit.getPluginManager().callEvent(ce);
 			if (!ce.isCancelled())
-			{
 				if (args.length == 0)
 				{
+
 					sender.sendMessage("");
 					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
 					if (Infected.update)
@@ -151,8 +147,11 @@ public class CHandler implements CommandExecutor {
 						}
 					sender.sendMessage(Msgs.Error_Misc_Unkown_Command.getString());
 				}
-			}
 		}
 		return true;
+	}
+
+	public void registerSubCommand(SubCommand subCommand) {
+		this.commands.add(subCommand);
 	}
 }

@@ -20,6 +20,6 @@ public enum Events
 
 	@Override
 	public String toString() {
-		return string;
+		return this.string;
 	}
 };

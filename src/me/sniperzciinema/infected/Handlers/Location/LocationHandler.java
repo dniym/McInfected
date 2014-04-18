@@ -8,6 +8,17 @@ import org.bukkit.World;
 
 public class LocationHandler {
 
+	public static String getLocationToString(Location loc) {
+		double ix = loc.getX();
+		double iy = loc.getY();
+		double iz = loc.getZ();
+		World world = loc.getWorld();
+		float yaw = loc.getYaw();
+		float pitch = loc.getPitch();
+		String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
+		return s;
+	}
+
 	public static Location getObjectLocation(String loc) {
 		Location Loc = null;
 		if (loc != null)
@@ -33,17 +44,6 @@ public class LocationHandler {
 				Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
 		}
 		return Loc;
-	}
-
-	public static String getLocationToString(Location loc) {
-		double ix = loc.getX();
-		double iy = loc.getY();
-		double iz = loc.getZ();
-		World world = loc.getWorld();
-		float yaw = loc.getYaw();
-		float pitch = loc.getPitch();
-		String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
-		return s;
 	}
 
 	public static String getRoundedLocation(Location location) {

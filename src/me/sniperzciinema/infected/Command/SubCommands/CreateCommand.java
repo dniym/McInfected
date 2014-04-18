@@ -34,9 +34,7 @@ public class CreateCommand extends SubCommand {
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
 			if (!p.hasPermission("Infected.Create"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
 			else
-			{
 				if (args.length != 1)
 				{
 
@@ -69,7 +67,6 @@ public class CreateCommand extends SubCommand {
 				}
 				else
 					p.sendMessage(Msgs.Help_Create.getString());
-			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

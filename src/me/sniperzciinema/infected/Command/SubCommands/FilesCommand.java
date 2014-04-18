@@ -30,7 +30,6 @@ public class FilesCommand extends SubCommand {
 			Configuration config = null;
 
 			if (args.length > 1)
-			{
 				if (args[1].equalsIgnoreCase("Config"))
 					config = Files.getConfig();
 				else
@@ -56,19 +55,13 @@ public class FilesCommand extends SubCommand {
 												config = Files.getSigns();
 											else
 												sender.sendMessage(Msgs.Error_Misc_Not_A_File.getString("<files>", "Config, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
-
-			}
 			if (args.length == 2)
 			{
 
 				if (config != null)
-				{
 					for (String path : config.getConfigurationSection("").getKeys(true))
-					{
 						if (!config.getString(path).startsWith("MemorySection"))
 							sender.sendMessage(ChatColor.YELLOW + path.replaceAll(" ", "_") + ChatColor.WHITE + ": " + ChatColor.GRAY + config.getString(path).replaceAll(" ", "_"));
-					}
-				}
 			}
 			else
 				if (args.length == 3)
@@ -76,9 +69,7 @@ public class FilesCommand extends SubCommand {
 					String path = args[2].replaceAll("_", " ");
 
 					if (config != null)
-					{
 						sender.sendMessage(Msgs.Command_Files_Value.getString("<path>", path, "<value>", config.getString(path).replaceAll("_", " ")));
-					}
 				}
 				else
 					if (args.length == 4)

@@ -34,9 +34,8 @@ public class TeleportFix implements Listener {
 
 		final Player player = event.getPlayer();
 		if (Lobby.isInGame(player))
-		{
 			// Fix the visibility issue one tick later
-			server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+			this.server.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
 			{
 
 				@Override
@@ -48,7 +47,7 @@ public class TeleportFix implements Listener {
 					updateEntities(player, nearby);
 
 					// Then show them again
-					server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+					TeleportFix.this.server.getScheduler().scheduleSyncDelayedTask(TeleportFix.this.plugin, new Runnable()
 					{
 
 						@Override
@@ -57,15 +56,13 @@ public class TeleportFix implements Listener {
 						}
 					}, 1);
 				}
-			}, TELEPORT_FIX_DELAY);
-		}
+			}, this.TELEPORT_FIX_DELAY);
 	}
 
 	public void updateEntities(Player tpedPlayer, List<Player> nearby) {
 		// Hide or show every player to tpedPlayer
 		// and hide or show tpedPlayer to every player.
 		for (Player player : nearby)
-		{
 			// If disguises are enabled only toggle the player if they're
 			// disguised
 			if (Settings.DisguisesEnabled())
@@ -94,7 +91,6 @@ public class TeleportFix implements Listener {
 					player.hidePlayer(tpedPlayer);
 
 			}
-		}
 	}
 
 }

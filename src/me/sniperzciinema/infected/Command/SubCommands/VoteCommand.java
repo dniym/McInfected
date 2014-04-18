@@ -42,15 +42,13 @@ public class VoteCommand extends SubCommand {
 					p.sendMessage(Msgs.Error_Game_Not_In.getString());
 
 				else
-					if (Lobby.getGameState() != GameState.Voting && Lobby.getGameState() != GameState.InLobby)
+					if ((Lobby.getGameState() != GameState.Voting) && (Lobby.getGameState() != GameState.InLobby))
 						p.sendMessage(Msgs.Error_Game_Started.getString());
 
 					else
 						if (ip.getVote() != null)
 							p.sendMessage(Msgs.Error_Already_Voted.getString());
-
 						else
-						{
 							// If the user didn't specify an arena, open the
 							// voting
 							// GUI
@@ -73,10 +71,8 @@ public class VoteCommand extends SubCommand {
 									}
 								}
 								else
-								{
 									// Assign arena to what ever the user said
 									arena = Lobby.getArena(args[1]);
-								}
 								// If its a valid arena, let the user vote and
 								// set
 								// everything
@@ -96,7 +92,6 @@ public class VoteCommand extends SubCommand {
 								else
 									p.sendMessage(Msgs.Error_Arena_Not_Valid.getString());
 							}
-						}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

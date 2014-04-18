@@ -65,7 +65,6 @@ public class SetupCommand extends SubCommand {
 						new FancyMessage(Msgs.Format_Prefix.getString()).then("" + ChatColor.YELLOW + ChatColor.BOLD + "Edit Arena: " + RandomChatColor.getColor() + arena.getName()).tooltip(ChatColor.YELLOW + "Edit " + arena.getName()).command("/Infected Setup " + arena.getName()).send(p);
 				}
 				else
-				{
 					if (Lobby.getArena(args[1]) != null)
 					{
 						Arena arena = Lobby.getArena(args[1]);
@@ -91,8 +90,6 @@ public class SetupCommand extends SubCommand {
 							new FancyMessage(Msgs.Format_Prefix.getString()).then("§4<< Back").tooltip("Go back a Setup Page").command("/Infected Setup").send(p);
 						}
 						else
-						{
-
 							if (args[2].equals("Spawns"))
 							{
 								new FancyMessage(Msgs.Format_Prefix.getString()).then(RandomChatColor.getColor() + "Tp to a Global Spawn").itemTooltip(ItemHandler.getFancyMessageItem(RandomChatColor.getColor() + "Teleport to a Global Spawn")).suggest("/Infected TpSpawn Global #").send(p);
@@ -124,7 +121,6 @@ public class SetupCommand extends SubCommand {
 											p.sendMessage("");
 											new FancyMessage(Msgs.Format_Prefix.getString()).then("§4<< Back").tooltip("Go back a Setup Page").command("/Infected Setup " + arena.getName()).send(p);
 										}
-						}
 					}
 					else
 						if (args[1].equals("Lobby"))
@@ -140,7 +136,6 @@ public class SetupCommand extends SubCommand {
 								new FancyMessage(Msgs.Format_Prefix.getString()).then("§4<< Back").tooltip("Go back a Setup Page").command("/Infected Setup").send(p);
 							}
 							else
-							{
 								if (args[2].equals("Arenas"))
 								{
 									new FancyMessage(Msgs.Format_Prefix.getString()).then(ChatColor.GREEN + "See all Arenas").itemTooltip(ItemHandler.getFancyMessageItem(ChatColor.GREEN + "See all the arenas")).command("/Infected Arenas").send(p);
@@ -181,15 +176,11 @@ public class SetupCommand extends SubCommand {
 													p.sendMessage("");
 													new FancyMessage(Msgs.Format_Prefix.getString()).then("§4<< Back").tooltip("Go back a Setup Page").command("/Infected Setup Lobby").send(p);
 												}
-							}
 							sender.sendMessage("");
 							sender.sendMessage(Msgs.Format_Line.getString());
 						}
 						else
-						{
 							p.performCommand("Infected Setup");
-						}
-				}
 			}
 		}
 		else

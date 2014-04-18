@@ -17,50 +17,25 @@ public class GrenadeManager {
 	private static ArrayList<Grenade>	grenades		= new ArrayList<Grenade>();
 	private static ArrayList<UUID>		thrownGrenades	= new ArrayList<UUID>();
 
+	public static void addGrenade(Grenade grenade) {
+		GrenadeManager.grenades.add(grenade);
+	}
+
 	public static void addGrenade(String id, String name, double damage, int delay, int range, int cost, boolean damageThrower, ArrayList<PotionEffect> effects) {
 		Grenade grenade = new Grenade(id, name, damage, delay, range, cost, damageThrower, effects);
-		grenades.add(grenade);
-	}
-
-	public static void addGrenade(Grenade grenade) {
-		grenades.add(grenade);
-	}
-
-	public static ArrayList<Grenade> getGrenades() {
-		return grenades;
-	}
-
-	public static ArrayList<UUID> getThrownGrenade() {
-		return thrownGrenades;
+		GrenadeManager.grenades.add(grenade);
 	}
 
 	public static void addThrownGrenade(UUID uuid) {
-		thrownGrenades.add(uuid);
+		GrenadeManager.thrownGrenades.add(uuid);
 	}
 
 	public static void delThrownGrenade(UUID uuid) {
-		thrownGrenades.remove(uuid);
-	}
-
-	public static boolean isThrownGrenade(UUID uuid) {
-		return thrownGrenades.contains(uuid);
-	}
-
-	public static boolean isGrenade(ItemStack is) {
-		for (Grenade grenade : grenades)
-		{
-			if (grenade.getItem() == is)
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean isGrenade(Grenade g) {
-		return grenades.contains(g);
+		GrenadeManager.thrownGrenades.remove(uuid);
 	}
 
 	public static Grenade getGrenade(ItemStack is) {
-		for (Grenade grenade : grenades)
+		for (Grenade grenade : GrenadeManager.grenades)
 			if (grenade.getItem() == is)
 				return grenade;
 
@@ -68,17 +43,39 @@ public class GrenadeManager {
 	}
 
 	public static Grenade getGrenade(String name) {
-		for (Grenade grenade : grenades)
+		for (Grenade grenade : GrenadeManager.grenades)
 			if (grenade.getName().equals(name))
 				return grenade;
 
 		return null;
 	}
 
+	public static ArrayList<Grenade> getGrenades() {
+		return GrenadeManager.grenades;
+	}
+
+	public static ArrayList<UUID> getThrownGrenade() {
+		return GrenadeManager.thrownGrenades;
+	}
+
+	public static boolean isGrenade(Grenade g) {
+		return GrenadeManager.grenades.contains(g);
+	}
+
+	public static boolean isGrenade(ItemStack is) {
+		for (Grenade grenade : GrenadeManager.grenades)
+			if (grenade.getItem() == is)
+				return true;
+		return false;
+	}
+
+	public static boolean isThrownGrenade(UUID uuid) {
+		return GrenadeManager.thrownGrenades.contains(uuid);
+	}
+
 	public static void loadConfigGrenades() {
-		grenades = new ArrayList<Grenade>();
+		GrenadeManager.grenades = new ArrayList<Grenade>();
 		for (String s : Files.getGrenades().getConfigurationSection("Grenades").getKeys(true))
-		{
 			if (!s.contains("."))
 			{
 
@@ -102,6 +99,5 @@ public class GrenadeManager {
 				if (!isGrenade(g))
 					addGrenade(g);
 			}
-		}
 	}
 }

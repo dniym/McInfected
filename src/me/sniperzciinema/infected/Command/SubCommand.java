@@ -16,21 +16,21 @@ public abstract class SubCommand {
 		this.name = name;
 	}
 
+	public abstract void execute(CommandSender sender, String[] args) throws CommandException;
+
+	public abstract List<String> getAliases();
+
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public String getPermission() {
-		return "Infected." + name;
+		return "Infected." + this.name;
 	}
 
 	public final boolean hasPermission(CommandSender sender) {
 
 		return sender.hasPermission(getPermission());
 	}
-
-	public abstract List<String> getAliases();
-
-	public abstract void execute(CommandSender sender, String[] args) throws CommandException;
 
 }

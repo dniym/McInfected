@@ -41,108 +41,71 @@ public class Grenade {
 	}
 
 	/**
-	 * @return the name
+	 * @return the cost
 	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public ItemStack getItem() {
-		return item;
-	}
-
-	public void setItem(ItemStack item) {
-		this.item = item;
-	}
-
-	/**
-	 * @return the effects
-	 */
-	public ArrayList<PotionEffect> getEffects() {
-		return effects;
-	}
-
-	/**
-	 * @param effects
-	 *            the effects to set
-	 */
-	public void setEffects(ArrayList<PotionEffect> effects) {
-		this.effects = effects;
-	}
-
-	/**
-	 * @return the delay
-	 */
-	public int getDelay() {
-		return delay;
-	}
-
-	/**
-	 * @param delay
-	 *            the delay to set
-	 */
-	public void setDelay(int delay) {
-		this.delay = delay;
-	}
-
-	/**
-	 * @return the thrower
-	 */
-	public Player getThrower() {
-		return thrower;
-	}
-
-	/**
-	 * @param thrower
-	 *            the thrower to set
-	 */
-	public void setThrower(Player thrower) {
-		this.thrower = thrower;
-	}
-
-	/**
-	 * @return the range
-	 */
-	public int getRange() {
-		return range;
-	}
-
-	/**
-	 * @param range
-	 *            the range to set
-	 */
-	public void setRange(int range) {
-		this.range = range;
-	}
-
-	/**
-	 * @return the damageThrower
-	 */
-	public boolean isDamageThrower() {
-		return damageThrower;
-	}
-
-	/**
-	 * @param damageThrower
-	 *            the damageThrower to set
-	 */
-	public void setDamageThrower(boolean damageThrower) {
-		this.damageThrower = damageThrower;
+	public int getCost() {
+		return this.cost;
 	}
 
 	/**
 	 * @return the damage
 	 */
 	public double getDamage() {
-		return damage;
+		return this.damage;
+	}
+
+	/**
+	 * @return the delay
+	 */
+	public int getDelay() {
+		return this.delay;
+	}
+
+	/**
+	 * @return the effects
+	 */
+	public ArrayList<PotionEffect> getEffects() {
+		return this.effects;
+	}
+
+	public ItemStack getItem() {
+		return this.item;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * @return the range
+	 */
+	public int getRange() {
+		return this.range;
+	}
+
+	/**
+	 * @return the thrower
+	 */
+	public Player getThrower() {
+		return this.thrower;
+	}
+
+	/**
+	 * @return the damageThrower
+	 */
+	public boolean isDamageThrower() {
+		return this.damageThrower;
+	}
+
+	/**
+	 * @param cost
+	 *            the cost to set
+	 */
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 
 	/**
@@ -154,18 +117,55 @@ public class Grenade {
 	}
 
 	/**
-	 * @return the cost
+	 * @param damageThrower
+	 *            the damageThrower to set
 	 */
-	public int getCost() {
-		return cost;
+	public void setDamageThrower(boolean damageThrower) {
+		this.damageThrower = damageThrower;
 	}
 
 	/**
-	 * @param cost
-	 *            the cost to set
+	 * @param delay
+	 *            the delay to set
 	 */
-	public void setCost(int cost) {
-		this.cost = cost;
+	public void setDelay(int delay) {
+		this.delay = delay;
+	}
+
+	/**
+	 * @param effects
+	 *            the effects to set
+	 */
+	public void setEffects(ArrayList<PotionEffect> effects) {
+		this.effects = effects;
+	}
+
+	public void setItem(ItemStack item) {
+		this.item = item;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param range
+	 *            the range to set
+	 */
+	public void setRange(int range) {
+		this.range = range;
+	}
+
+	/**
+	 * @param thrower
+	 *            the thrower to set
+	 */
+	public void setThrower(Player thrower) {
+		this.thrower = thrower;
 	}
 
 }

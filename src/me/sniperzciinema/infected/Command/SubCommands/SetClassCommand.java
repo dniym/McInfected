@@ -41,7 +41,7 @@ public class SetClassCommand extends SubCommand {
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 
 			else
-				if (args.length == 3 && (args[2].equalsIgnoreCase("Zombie") || args[2].equalsIgnoreCase("Human")))
+				if ((args.length == 3) && (args[2].equalsIgnoreCase("Zombie") || args[2].equalsIgnoreCase("Human")))
 				{
 
 					String className = args[1];

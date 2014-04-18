@@ -25,23 +25,21 @@ public class DisguiseIDisguise {
 	 */
 	public static void disguisePlayer(Player p) {
 
-		if (!idAPI.isDisguised(p))
+		if (!DisguiseIDisguise.idAPI.isDisguised(p))
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
 			if (DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()) != null)
-			{
-				idAPI.disguiseToAll(p, new MobDisguise(
+				DisguiseIDisguise.idAPI.disguiseToAll(p, new MobDisguise(
 						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()),
 						true));
-			}
 			else
-				idAPI.disguiseToAll(p, new MobDisguise(DisguiseType.ZOMBIE, true));
+				DisguiseIDisguise.idAPI.disguiseToAll(p, new MobDisguise(DisguiseType.ZOMBIE, true));
 
 		}
 		else
 		{
-			idAPI.undisguiseToAll(p);
+			DisguiseIDisguise.idAPI.undisguiseToAll(p);
 			disguisePlayer(p);
 		}
 	}
@@ -51,7 +49,15 @@ public class DisguiseIDisguise {
 	 * @return the player's disguise
 	 */
 	public static Disguise getDisguise(Player p) {
-		return idAPI.getDisguise(p);
+		return DisguiseIDisguise.idAPI.getDisguise(p);
+	}
+
+	/**
+	 * @param p
+	 * @return if the player is disguised
+	 */
+	public static boolean isPlayerDisguised(Player p) {
+		return DisguiseIDisguise.idAPI.isDisguised(p);
 	}
 
 	/**
@@ -61,15 +67,7 @@ public class DisguiseIDisguise {
 	 */
 	public static void unDisguisePlayer(Player p) {
 
-		idAPI.undisguiseToAll(p);
-	}
-
-	/**
-	 * @param p
-	 * @return if the player is disguised
-	 */
-	public static boolean isPlayerDisguised(Player p) {
-		return idAPI.isDisguised(p);
+		DisguiseIDisguise.idAPI.undisguiseToAll(p);
 	}
 
 }

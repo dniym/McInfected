@@ -43,14 +43,10 @@ public class GrenadeListener implements Listener {
 			if (GrenadeManager.isThrownGrenade(event.getItem().getUniqueId()))
 			{
 				if (event.getPlayer().hasPermission("Infected.Grenades"))
-				{
 					// Make sure they have nothing in their hands
 					if (event.getPlayer().getItemInHand().getType() == Material.AIR)
-					{
 						// Throw the item in the direction they're looking
 						event.getItem().setVelocity(event.getPlayer().getEyeLocation().getDirection());
-					}
-				}
 				event.setCancelled(true);
 			}
 	}
@@ -61,9 +57,8 @@ public class GrenadeListener implements Listener {
 		final Player p = event.getPlayer();
 		// Make sure they clicked with the mouse, and that the item in their
 		// hand is in fact a grenade
-		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && GrenadeManager.isGrenade(p.getItemInHand()))
-		{
-			if (Lobby.getGameState() == GameState.Started && Lobby.isInGame(p))
+		if (((event.getAction() == Action.LEFT_CLICK_AIR) || (event.getAction() == Action.RIGHT_CLICK_AIR) || (event.getAction() == Action.LEFT_CLICK_BLOCK) || (event.getAction() == Action.RIGHT_CLICK_BLOCK)) && GrenadeManager.isGrenade(p.getItemInHand()))
+			if ((Lobby.getGameState() == GameState.Started) && Lobby.isInGame(p))
 			{
 				final Grenade grenade = GrenadeManager.getGrenade(p.getItemInHand());
 
@@ -94,13 +89,11 @@ public class GrenadeListener implements Listener {
 								// range and do the damage
 								grenadeItem.getWorld().playEffect(grenadeItem.getLocation(), Effect.SMOKE, 5);
 								for (Player u : Lobby.getPlayersInGame())
-								{
 									if (grenadeItem.getLocation().distance(u.getLocation()) <= grenade.getRange())
-									{
-										if (InfPlayerManager.getInfPlayer(p).getTeam() != InfPlayerManager.getInfPlayer(u).getTeam() || (grenade.isDamageThrower() && p == u))
+										if ((InfPlayerManager.getInfPlayer(p).getTeam() != InfPlayerManager.getInfPlayer(u).getTeam()) || (grenade.isDamageThrower() && (p == u)))
 										{
 											u.playEffect(EntityEffect.HURT);
-											if (u.getHealth() - grenade.getDamage() <= 0D)
+											if ((u.getHealth() - grenade.getDamage()) <= 0D)
 											{
 												if (u == p)
 													Deaths.playerDies(DeathType.Other, p, u);
@@ -114,8 +107,6 @@ public class GrenadeListener implements Listener {
 													u.addPotionEffect(pe);
 											}
 										}
-									}
-								}
 							}
 							// Create an explosion effect and remove the grenade
 							Location loc = grenadeItem.getLocation();
@@ -132,7 +123,6 @@ public class GrenadeListener implements Listener {
 					p.updateInventory();
 				}
 			}
-		}
 	}
 
 }

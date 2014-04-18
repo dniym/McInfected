@@ -18,6 +18,28 @@ import org.bukkit.entity.Player;
 public class KillMessages {
 
 	/**
+	 * @param team
+	 *            - The killers team
+	 * @param death
+	 *            - The death type
+	 * @return the death message
+	 */
+	private static String getKill(Team team, DeathType death) {
+		String message;
+		List<String> list;
+		// If the death type is other it means they suicided or just joined late
+		// in the game
+		if (death == DeathType.Other)
+			list = Files.getMessages().getStringList("Suicides." + team.toString());
+		else
+			list = Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
+		Random r = new Random();
+		int i = r.nextInt(list.size());
+		message = list.get(i);
+		return message;
+	}
+
+	/**
 	 * @param killer
 	 *            - The Killer
 	 * @param killed
@@ -39,12 +61,10 @@ public class KillMessages {
 			team = IP.getTeam();
 		}
 		else
-		{
 			if (InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Human)
 				team = Team.Zombie;
 			else
 				team = Team.Human;
-		}
 		// Get the message
 		String msg = getKill(team, death);
 
@@ -55,27 +75,5 @@ public class KillMessages {
 		if (killed != null)
 			msg = msg.replaceAll("<killed>", killed.getName() + "(" + Stats.getScore(killed.getName()) + ")");
 		return (prefix ? Msgs.Format_Prefix.getString() : "") + msg;
-	}
-
-	/**
-	 * @param team
-	 *            - The killers team
-	 * @param death
-	 *            - The death type
-	 * @return the death message
-	 */
-	private static String getKill(Team team, DeathType death) {
-		String message;
-		List<String> list;
-		// If the death type is other it means they suicided or just joined late
-		// in the game
-		if (death == DeathType.Other)
-			list = Files.getMessages().getStringList("Suicides." + team.toString());
-		else
-			list = Files.getMessages().getStringList("Kills." + team.toString() + "." + death.toString());
-		Random r = new Random();
-		int i = r.nextInt(list.size());
-		message = list.get(i);
-		return message;
 	}
 }

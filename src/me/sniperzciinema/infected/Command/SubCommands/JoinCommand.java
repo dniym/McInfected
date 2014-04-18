@@ -52,7 +52,7 @@ public class JoinCommand extends SubCommand {
 							p.sendMessage(Msgs.Error_Arena_No_Valid.getString());
 
 						else
-							if (Settings.isJoiningDuringGamePrevented() && (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting || Lobby.getGameState() == GameState.GameOver))
+							if (Settings.isJoiningDuringGamePrevented() && ((Lobby.getGameState() == GameState.Started) || (Lobby.getGameState() == GameState.Infecting) || (Lobby.getGameState() == GameState.GameOver)))
 								p.sendMessage(Msgs.Error_Misc_Joining_While_Game_Started.getString());
 
 							else
@@ -73,7 +73,7 @@ public class JoinCommand extends SubCommand {
 									// If the game isn't started and isn't
 									// infecting then
 									// the players are all still in the lobby
-									if (Lobby.getGameState() != GameState.Started && Lobby.getGameState() != GameState.Infecting)
+									if ((Lobby.getGameState() != GameState.Started) && (Lobby.getGameState() != GameState.Infecting))
 										ip.tpToLobby();
 
 									p.sendMessage(Msgs.Game_Joined_You.getString());
@@ -81,8 +81,7 @@ public class JoinCommand extends SubCommand {
 									// If the game hasn't started and there's
 									// enough players
 									// for an autostart, start the timer
-									if (Lobby.getGameState() == GameState.InLobby && Lobby.getPlayersInGame().size() >= Settings.getRequiredPlayers())
-									{
+									if ((Lobby.getGameState() == GameState.InLobby) && (Lobby.getPlayersInGame().size() >= Settings.getRequiredPlayers()))
 										Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 										{
 
@@ -92,10 +91,6 @@ public class JoinCommand extends SubCommand {
 												Lobby.timerStartVote();
 											}
 										}, 100L);
-									}
-									// If voting has started, tell the new
-									// player how to
-									// vote
 									else
 										if (Lobby.getGameState() == GameState.Voting)
 											p.sendMessage(Msgs.Help_Vote.getString());

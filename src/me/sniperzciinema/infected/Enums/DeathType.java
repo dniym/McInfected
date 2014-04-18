@@ -19,11 +19,11 @@ public enum DeathType
 
 	private DeathType(String s)
 	{
-		string = s;
+		this.string = s;
 	}
 
 	@Override
 	public String toString() {
-		return string;
+		return this.string;
 	}
 };

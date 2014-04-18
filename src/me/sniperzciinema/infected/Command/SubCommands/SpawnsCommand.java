@@ -41,7 +41,7 @@ public class SpawnsCommand extends SubCommand {
 				else
 				{
 					Arena a = Lobby.getArena(ip.getCreating());
-					if (args.length == 2 && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+					if ((args.length == 2) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
 					{
 						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 						p.sendMessage(Msgs.Command_Spawn_Spawns.getString("<team>", team.toString(), "<spawns>", String.valueOf(a.getExactSpawns(team).size())));

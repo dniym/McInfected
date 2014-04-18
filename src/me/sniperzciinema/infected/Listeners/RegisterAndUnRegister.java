@@ -28,9 +28,9 @@ public class RegisterAndUnRegister implements Listener {
 		InfPlayerManager.createInfPlayer(IP);
 	}
 
-	// When a player leaves the server willingly, delete the InfPlayer of them
+	// When a player leaves the server by kick, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onLeaveDeleteInfPlayer(final PlayerQuitEvent e) {
+	public void onKickedDeleteInfPlayer(final PlayerKickEvent e) {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 		{
 
@@ -43,9 +43,9 @@ public class RegisterAndUnRegister implements Listener {
 		}, 2L);
 	}
 
-	// When a player leaves the server by kick, delete the InfPlayer of them
+	// When a player leaves the server willingly, delete the InfPlayer of them
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onKickedDeleteInfPlayer(final PlayerKickEvent e) {
+	public void onLeaveDeleteInfPlayer(final PlayerQuitEvent e) {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 		{
 

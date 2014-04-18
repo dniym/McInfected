@@ -62,7 +62,6 @@ public class KillStreaks {
 			// But now all the survivors and other Infecteds need their share of
 			// the kills points and score
 			for (Player u : Lobby.getPlayersInGame())
-			{
 				if (Lobby.isHuman(u))
 				{
 					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Survive), Settings.VaultEnabled());
@@ -73,8 +72,6 @@ public class KillStreaks {
 					IP.setPoints(IP.getPoints(Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.Infected), Settings.VaultEnabled());
 					IP.setScore(IP.getScore() + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.Infected));
 				}
-
-			}
 		}
 	}
 

@@ -30,23 +30,19 @@ public class NameFetcher implements Callable<Map<UUID, String>> {
 	@Override
 	public Map<UUID, String> call() throws Exception {
 		Map<UUID, String> uuidStringMap = new HashMap<UUID, String>();
-		for (UUID uuid : uuids)
+		for (UUID uuid : this.uuids)
 		{
 			HttpURLConnection connection = (HttpURLConnection) new URL(
-					PROFILE_URL + uuid.toString().replace("-", "")).openConnection();
-			JSONObject response = (JSONObject) jsonParser.parse(new InputStreamReader(
+					NameFetcher.PROFILE_URL + uuid.toString().replace("-", "")).openConnection();
+			JSONObject response = (JSONObject) this.jsonParser.parse(new InputStreamReader(
 					connection.getInputStream()));
 			String name = (String) response.get("name");
 			if (name == null)
-			{
 				continue;
-			}
 			String cause = (String) response.get("cause");
 			String errorMessage = (String) response.get("errorMessage");
-			if (cause != null && cause.length() > 0)
-			{
+			if ((cause != null) && (cause.length() > 0))
 				throw new IllegalStateException(errorMessage);
-			}
 			uuidStringMap.put(uuid, name);
 		}
 		return uuidStringMap;

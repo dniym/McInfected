@@ -35,77 +35,6 @@ public class DamageEvents implements Listener {
 		this.plugin = instance;
 	}
 
-	// If the damage isn't done by an Entity attacking or by a projectile
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerDamage(EntityDamageEvent e) {
-
-		if (e.getEntity() instanceof Player)
-		{
-			Player victim = (Player) e.getEntity();
-
-			// Make sure the victim is in Infected
-			if (Lobby.isInGame(victim))
-			{
-
-				// Make sure the damage caused isn't from another entity as that
-				// is handled in a different event listener
-				if (e.getCause() != DamageCause.ENTITY_ATTACK && e.getCause() != DamageCause.PROJECTILE)
-				{
-					InfPlayer IPV = InfPlayerManager.getInfPlayer(victim);
-
-					// If the Player got hurt during Voting, just cancel it.
-					if (Lobby.getGameState() == GameState.Voting || Lobby.getGameState() == GameState.InLobby)
-					{
-						e.setDamage(0);
-						e.setCancelled(true);
-					}
-
-					// If the player gets hurt well the game is choosing an
-					// Infected, kill the player, but respawn them without doing
-					// anything
-					else
-						if (Lobby.getGameState() == GameState.Infecting && victim.getHealth() - e.getDamage() <= 0)
-						{
-							e.setDamage(0);
-							victim.sendMessage(Msgs.Game_Death_Before_Game.getString());
-							// Because we're not counting this, we'll just
-							// respawn
-							// them without saying they died
-							IPV.respawn();
-						}
-
-						// If the game has started, lets do some stuff
-						else
-							if (Lobby.getGameState() == GameState.Started)
-							{
-								// Is the damage enough to kill the player?
-								if (victim.getHealth() - e.getDamage() <= 0)
-								{
-									// If the stored last damager isn't null,
-									// we'll say
-									// they're the killer
-									if (IPV.getLastDamager() != null)
-									{
-										e.setDamage(0);
-										Player killer = IPV.getLastDamager();
-
-										// Not really sure how they died? Just
-										// say melee
-										Deaths.playerDies(DeathType.Melee, killer, victim);
-									}
-									// Other wise, they just died by "Other"
-									else
-									{
-										e.setDamage(0);
-										Deaths.playerDies(DeathType.Other, null, victim);
-									}
-								}
-							}
-				}
-			}
-		}
-	}
-
 	// If the damage is done by a Entity
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
@@ -169,7 +98,7 @@ public class DamageEvents implements Listener {
 								}
 							}
 				// Lets make sure the final killer is a Player
-				if (killer instanceof Player && Lobby.isInGame(killer))
+				if ((killer instanceof Player) && Lobby.isInGame(killer))
 				{
 					// If the Player got hurt by a player before the game
 					// started, just cancel it.
@@ -178,10 +107,7 @@ public class DamageEvents implements Listener {
 						e.setDamage(0);
 						e.setCancelled(true);
 					}
-
-					// If the game has started lets start watching
 					else
-					{
 						// Make sure they arn't on the same team
 						if (!Lobby.oppositeTeams(killer, victim))
 						{
@@ -195,7 +121,7 @@ public class DamageEvents implements Listener {
 							IPV.setLastDamager(killer);
 
 							// If it was enough to kill the player
-							if (victim.getHealth() - e.getDamage() <= 0)
+							if ((victim.getHealth() - e.getDamage()) <= 0)
 							{
 								e.setDamage(0);
 								Deaths.playerDies(death, killer, victim);
@@ -207,18 +133,13 @@ public class DamageEvents implements Listener {
 								if (!IPK.getInfClass(IPK.getTeam()).getContactEffects().isEmpty())
 									PotionEffects.addEffectOnContact(killer, victim);
 						}
-					}
 				}
 				else
-				{
 					if (Lobby.getActiveArena().getSettings().hostileMobsTargetHumans())
 					{
 						// If it was enough to kill the player
-						if (victim.getHealth() - e.getDamage() <= 0)
-						{
+						if ((victim.getHealth() - e.getDamage()) <= 0)
 							Deaths.playerDies(DeathType.Other, null, victim);
-
-						}
 					}
 					else
 					{
@@ -227,10 +148,73 @@ public class DamageEvents implements Listener {
 						e.setDamage(0);
 						e.setCancelled(true);
 					}
-				}
 
 			}
 
+		}
+	}
+
+	// If the damage isn't done by an Entity attacking or by a projectile
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerDamage(EntityDamageEvent e) {
+
+		if (e.getEntity() instanceof Player)
+		{
+			Player victim = (Player) e.getEntity();
+
+			// Make sure the victim is in Infected
+			if (Lobby.isInGame(victim))
+				// Make sure the damage caused isn't from another entity as that
+				// is handled in a different event listener
+				if ((e.getCause() != DamageCause.ENTITY_ATTACK) && (e.getCause() != DamageCause.PROJECTILE))
+				{
+					InfPlayer IPV = InfPlayerManager.getInfPlayer(victim);
+
+					// If the Player got hurt during Voting, just cancel it.
+					if ((Lobby.getGameState() == GameState.Voting) || (Lobby.getGameState() == GameState.InLobby))
+					{
+						e.setDamage(0);
+						e.setCancelled(true);
+					}
+
+					// If the player gets hurt well the game is choosing an
+					// Infected, kill the player, but respawn them without doing
+					// anything
+					else
+						if ((Lobby.getGameState() == GameState.Infecting) && ((victim.getHealth() - e.getDamage()) <= 0))
+						{
+							e.setDamage(0);
+							victim.sendMessage(Msgs.Game_Death_Before_Game.getString());
+							// Because we're not counting this, we'll just
+							// respawn
+							// them without saying they died
+							IPV.respawn();
+						}
+
+						// If the game has started, lets do some stuff
+						else
+							if (Lobby.getGameState() == GameState.Started)
+								// Is the damage enough to kill the player?
+								if ((victim.getHealth() - e.getDamage()) <= 0)
+									// If the stored last damager isn't null,
+									// we'll say
+									// they're the killer
+									if (IPV.getLastDamager() != null)
+									{
+										e.setDamage(0);
+										Player killer = IPV.getLastDamager();
+
+										// Not really sure how they died? Just
+										// say melee
+										Deaths.playerDies(DeathType.Melee, killer, victim);
+									}
+									// Other wise, they just died by "Other"
+									else
+									{
+										e.setDamage(0);
+										Deaths.playerDies(DeathType.Other, null, victim);
+									}
+				}
 		}
 	}
 }

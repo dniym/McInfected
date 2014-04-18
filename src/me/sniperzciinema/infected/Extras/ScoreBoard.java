@@ -24,35 +24,25 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 public class ScoreBoard {
 
-	InfPlayer	ip;
+	public enum ScoreBoards
+	{
+		Regular, Stats
+	}
+
+	InfPlayer			ip;
+
+	private ScoreBoards	showing	= ScoreBoards.Regular;	;
 
 	public ScoreBoard(InfPlayer ip)
 	{
 		this.ip = ip;
 	}
 
-	public enum ScoreBoards
-	{
-		Regular, Stats
-	};
-
-	private ScoreBoards	showing	= ScoreBoards.Regular;
-
 	/**
 	 * @return the scoreboard theyre seeing
 	 */
 	public ScoreBoards getShowing() {
-		return showing;
-	}
-
-	/**
-	 * Toggles the scoreboard they're seeing
-	 */
-	public void switchShowing() {
-		if (getShowing() == ScoreBoards.Regular)
-			showing = ScoreBoards.Stats;
-		else
-			showing = ScoreBoards.Regular;
+		return this.showing;
 	}
 
 	/**
@@ -60,7 +50,7 @@ public class ScoreBoard {
 	 * update a scoreboard)
 	 */
 	public void showProperBoard() {
-		if (showing == ScoreBoards.Regular)
+		if (this.showing == ScoreBoards.Regular)
 			showRegular();
 		else
 			showStats();
@@ -70,8 +60,8 @@ public class ScoreBoard {
 	 * Force seeing the regular scoreboard(Votes, Players)
 	 */
 	public void showRegular() {
-		showing = ScoreBoards.Regular;
-		Player player = ip.getPlayer();
+		this.showing = ScoreBoards.Regular;
+		Player player = this.ip.getPlayer();
 
 		// Create a new scoreboard
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -82,7 +72,7 @@ public class ScoreBoard {
 		// Now set all the scores and the title
 		ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Rankings");
 
-		if (Lobby.getGameState() == GameState.Started || Lobby.getGameState() == GameState.Infecting)
+		if ((Lobby.getGameState() == GameState.Started) || (Lobby.getGameState() == GameState.Infecting))
 		{
 			ob.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Teams");
 			Score score = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "" + ChatColor.ITALIC + "Humans:"));
@@ -104,12 +94,11 @@ public class ScoreBoard {
 
 		}
 		else
-			if (Lobby.getGameState() == GameState.InLobby || Lobby.getGameState() == GameState.Voting)
+			if ((Lobby.getGameState() == GameState.InLobby) || (Lobby.getGameState() == GameState.Voting))
 			{
 				ob.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.UNDERLINE + "Vote For An Arena!");
 				int i = 1;
 				for (Arena arena : Lobby.getArenas())
-				{
 					if (Lobby.isArenaValid(arena))
 					{
 						Score score;
@@ -118,22 +107,17 @@ public class ScoreBoard {
 						else
 							score = ob.getScore(Bukkit.getOfflinePlayer("" + ChatColor.YELLOW + ChatColor.ITALIC + arena.getName().substring(0, Math.min(12, arena.getName().length()))));
 						if (i > 15)
-						{
 							for (OfflinePlayer op : sb.getPlayers())
-							{
 								if (ob.getScore(op).getScore() == 0)
 								{
 									sb.resetScores(op);
 									break;
 
 								}
-							}
-						}
 						score.setScore(1);
 						score.setScore(arena.getVotes());
 						i++;
 					}
-				}
 			}
 
 		player.setScoreboard(sb);
@@ -144,8 +128,8 @@ public class ScoreBoard {
 	 * because i was to lazy to make it myself...))
 	 */
 	public void showStats() {
-		showing = ScoreBoards.Stats;
-		Player player = ip.getPlayer();
+		this.showing = ScoreBoards.Stats;
+		Player player = this.ip.getPlayer();
 
 		// Create a new scoreboard
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -181,16 +165,23 @@ public class ScoreBoard {
 				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(space, player)));
 			}
 			else
-			{
 				// If its just a regular message, just set it
 				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(line, player)));
-
-			}
 			score.setScore(list.size() - 1 - row);
 			row++;
 		}
 
 		player.setScoreboard(sb);
+	}
+
+	/**
+	 * Toggles the scoreboard they're seeing
+	 */
+	public void switchShowing() {
+		if (getShowing() == ScoreBoards.Regular)
+			this.showing = ScoreBoards.Stats;
+		else
+			this.showing = ScoreBoards.Regular;
 	}
 }
 

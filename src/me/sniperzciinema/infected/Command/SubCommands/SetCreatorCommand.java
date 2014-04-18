@@ -36,9 +36,7 @@ public class SetCreatorCommand extends SubCommand {
 			else
 				if (ip.getCreating() == null)
 					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
-
 				else
-				{
 					if (args.length == 2)
 					{
 						Arena arena = Lobby.getArena(ip.getCreating());
@@ -46,10 +44,7 @@ public class SetCreatorCommand extends SubCommand {
 						p.sendMessage(Msgs.Command_Arena_SetCreator.getString());
 					}
 					else
-					{
 						p.sendMessage(Msgs.Help_Arena_SetCreator.getString());
-					}
-				}
 		}
 
 	}

@@ -8,28 +8,29 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedJoinEvent extends Event {
 
-	private Player	p;
+	private Player						p;
+
+	private static final HandlerList	handlers	= new HandlerList();
+
+	public static HandlerList getHandlerList() {
+		return InfectedJoinEvent.handlers;
+	}
 
 	public InfectedJoinEvent(Player p)
 	{
 		this.p = p;
 	}
 
-	private static final HandlerList	handlers	= new HandlerList();
-
+	@Override
 	public HandlerList getHandlers() {
-		return handlers;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
+		return InfectedJoinEvent.handlers;
 	}
 
 	/**
 	 * @return the p
 	 */
 	public Player getP() {
-		return p;
+		return this.p;
 	}
 
 }

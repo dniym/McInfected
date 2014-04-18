@@ -56,60 +56,54 @@ public class MySQL extends Database {
 	}
 
 	@Override
-	public Connection openConnection() {
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
-		}
-		catch (SQLException e)
-		{
-			plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e.getMessage());
-		}
-		catch (ClassNotFoundException e)
-		{
-			plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
-		}
-		return connection;
-	}
-
-	@Override
 	public boolean checkConnection() {
-		return connection != null;
-	}
-
-	@Override
-	public Connection getConnection() {
-		return connection;
+		return this.connection != null;
 	}
 
 	@Override
 	public void closeConnection() {
-		if (connection != null)
-		{
+		if (this.connection != null)
 			try
 			{
-				connection.close();
+				this.connection.close();
 			}
 			catch (SQLException e)
 			{
-				plugin.getLogger().log(Level.SEVERE, "Error closing the MySQL Connection!");
+				this.plugin.getLogger().log(Level.SEVERE, "Error closing the MySQL Connection!");
 				e.printStackTrace();
 			}
+	}
+
+	@Override
+	public Connection getConnection() {
+		return this.connection;
+	}
+
+	@Override
+	public Connection openConnection() {
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			this.connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
 		}
+		catch (SQLException e)
+		{
+			this.plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e.getMessage());
+		}
+		catch (ClassNotFoundException e)
+		{
+			this.plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
+		}
+		return this.connection;
 	}
 
 	public ResultSet querySQL(String query) {
 		Connection c = null;
 
 		if (checkConnection())
-		{
 			c = getConnection();
-		}
 		else
-		{
 			c = openConnection();
-		}
 
 		Statement s = null;
 
@@ -143,13 +137,9 @@ public class MySQL extends Database {
 		Connection c = null;
 
 		if (checkConnection())
-		{
 			c = getConnection();
-		}
 		else
-		{
 			c = openConnection();
-		}
 
 		Statement s = null;
 

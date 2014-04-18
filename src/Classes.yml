@@ -27,7 +27,7 @@
 # As humans won't get the chance to be disguise anyways
 # #
 # ==== Permissions =====
-# Infected.Classes
+# Infected.Classes.*
 #    Infected.Class.Human
 #       Infected.Class.Human.<ClassName>
 #    Infected.Class.Zombie
@@ -40,6 +40,12 @@ Classes:
   Human: 
 # The class' name
     Guard:
+      Description: 
+      - '&fWell protecting the king may be fun,'
+      - '&fIt''s nothing compared to fighting'
+      - '&fundead.'
+      - ' '
+      - '&bJust your basic equipment.'
 # The class' icon for the GUI
       Icon: id:268
 # The class' armor
@@ -63,6 +69,12 @@ Classes:
         '5': id:268 enchantment:19
         '7': id:305 enchantment:2
     Knight:
+      Description: 
+      - '&6Not only is he a protector'
+      - '&6He''s the head of the guards'
+      - ' '
+      - '&aAn improvement from the guard''s'
+      - '&aarmor, &cbut moves slower'
       Icon: id:314
       Helmet: id:314
       Chestplate: id:315
@@ -84,6 +96,8 @@ Classes:
         '10': id:261 amount:10
   Zombie: 
     Regular:
+      Description: 
+      - '&cJust your regular everyday &2Zombie'
       Icon: id:397 data:2
       Disguise: Zombie
       Helmet: id:397 data:2 color:76,153,0
@@ -97,6 +111,11 @@ Classes:
       KillStreaks:
         '10': id:276 enchantment:1
     Bones:
+      Description: 
+      - '&fNot good with close hand to hand'
+      - '&fcombat?'
+      - ' '
+      - '&fTry your luck using a &lbow&f!'
       Icon: id:397
       Disguise: Skeleton
       Helmet: id:397 color:224,224,224

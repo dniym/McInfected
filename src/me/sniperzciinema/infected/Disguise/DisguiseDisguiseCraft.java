@@ -26,20 +26,19 @@ public class DisguiseDisguiseCraft {
 	public static void disguisePlayer(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 
-		if (!dcAPI.isDisguised(p))
+		if (!DisguiseDisguiseCraft.dcAPI.isDisguised(p))
 		{
 			if (DisguiseType.fromString(StringUtil.getWord(IP.getInfClass(Team.Zombie).getDisguise())) != null)
-			{
-				dcAPI.disguisePlayer(p, new Disguise(
-						dcAPI.newEntityID(),
+				DisguiseDisguiseCraft.dcAPI.disguisePlayer(p, new Disguise(
+						DisguiseDisguiseCraft.dcAPI.newEntityID(),
 						DisguiseType.valueOf(StringUtil.getWord(IP.getInfClass(Team.Zombie).getDisguise()))).addSingleData("noarmor"));
-			}
 			else
-				dcAPI.disguisePlayer(p, new Disguise(dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
+				DisguiseDisguiseCraft.dcAPI.disguisePlayer(p, new Disguise(
+						DisguiseDisguiseCraft.dcAPI.newEntityID(), DisguiseType.Zombie).addSingleData("noarmor"));
 		}
 		else
 		{
-			dcAPI.undisguisePlayer(p);
+			DisguiseDisguiseCraft.dcAPI.undisguisePlayer(p);
 			disguisePlayer(p);
 		}
 	}
@@ -49,7 +48,15 @@ public class DisguiseDisguiseCraft {
 	 * @return the player's disguise
 	 */
 	public static Disguise getDisguise(Player p) {
-		return dcAPI.getDisguise(p);
+		return DisguiseDisguiseCraft.dcAPI.getDisguise(p);
+	}
+
+	/**
+	 * @param p
+	 * @return if the player is disguised
+	 */
+	public static boolean isPlayerDisguised(Player p) {
+		return DisguiseDisguiseCraft.dcAPI.isDisguised(p);
 	}
 
 	/**
@@ -59,14 +66,6 @@ public class DisguiseDisguiseCraft {
 	 */
 	public static void unDisguisePlayer(Player p) {
 
-		dcAPI.undisguisePlayer(p);
-	}
-
-	/**
-	 * @param p
-	 * @return if the player is disguised
-	 */
-	public static boolean isPlayerDisguised(Player p) {
-		return dcAPI.isDisguised(p);
+		DisguiseDisguiseCraft.dcAPI.undisguisePlayer(p);
 	}
 }

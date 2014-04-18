@@ -11,10 +11,10 @@ import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.GameMechanics.Settings;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
-import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
@@ -38,9 +38,7 @@ public class AdminCommand extends SubCommand {
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (!sender.hasPermission("Infected.Admin"))
 			sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
 		else
-		{
 			if (args.length == 2)
 			{
 				// SHUTDOWN
@@ -68,6 +66,7 @@ public class AdminCommand extends SubCommand {
 						AddonManager.getAddons();
 
 						InfClassManager.loadConfigClasses();
+						InfClassManager.loadDefaultClasses();
 						GrenadeManager.loadConfigGrenades();
 
 						Infected.Menus.destroyAllMenus();
@@ -127,7 +126,7 @@ public class AdminCommand extends SubCommand {
 					if (args[1].equalsIgnoreCase("Kick"))
 					{
 						Player u = Bukkit.getPlayer(args[2]);
-						if (u == null || !Lobby.isInGame(u))
+						if ((u == null) || !Lobby.isInGame(u))
 							sender.sendMessage(Msgs.Error_Game_Not_In.getString());
 						else
 						{
@@ -197,7 +196,6 @@ public class AdminCommand extends SubCommand {
 						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GOLD + "/Inf Admin Code");
 						sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "-> " + ChatColor.WHITE + ChatColor.ITALIC + "See Infected's item code for the item in hand");
 					}
-		}
 	}
 
 	@Override

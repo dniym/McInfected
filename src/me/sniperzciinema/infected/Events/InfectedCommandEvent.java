@@ -11,10 +11,17 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedCommandEvent extends Event implements Cancellable {
 
-	private boolean		cancelled	= false;
-	private String[]	args;
-	private Player		p;
-	private InfPlayer	ip;
+	public static HandlerList getHandlerList() {
+		return InfectedCommandEvent.handlers;
+	}
+
+	private boolean						cancelled	= false;
+	private String[]					args;
+	private Player						p;
+
+	private InfPlayer					ip;
+
+	private static final HandlerList	handlers	= new HandlerList();
 
 	public InfectedCommandEvent(String[] args, Player p, InfPlayer ip)
 	{
@@ -23,43 +30,38 @@ public class InfectedCommandEvent extends Event implements Cancellable {
 		this.ip = ip;
 	}
 
-	private static final HandlerList	handlers	= new HandlerList();
-
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-
 	/**
-	 * @return the p
+	 * @return args
 	 */
-	public Player getP() {
-		return p;
+	public String[] getArgs() {
+		return this.args;
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return InfectedCommandEvent.handlers;
 	}
 
 	/**
 	 * @return the ip
 	 */
 	public InfPlayer getIp() {
-		return ip;
+		return this.ip;
+	}
+
+	/**
+	 * @return the p
+	 */
+	public Player getP() {
+		return this.p;
 	}
 
 	/**
 	 * @return the cancelled
 	 */
+	@Override
 	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	/**
-	 * @param cancelled
-	 *            the cancelled to set
-	 */
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
+		return this.cancelled;
 	}
 
 	/**
@@ -71,10 +73,12 @@ public class InfectedCommandEvent extends Event implements Cancellable {
 	}
 
 	/**
-	 * @return args
+	 * @param cancelled
+	 *            the cancelled to set
 	 */
-	public String[] getArgs() {
-		return args;
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
 	}
 
 }

@@ -24,9 +24,7 @@ public class RemoveCommand extends SubCommand {
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (!sender.hasPermission("Infected.Remove"))
 			sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
 		else
-		{
 			if (args.length != 1)
 			{
 
@@ -47,7 +45,6 @@ public class RemoveCommand extends SubCommand {
 			}
 			else
 				sender.sendMessage(Msgs.Help_Remove.getString());
-		}
 
 	}
 

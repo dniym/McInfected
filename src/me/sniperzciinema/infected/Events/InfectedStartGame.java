@@ -13,32 +13,26 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedStartGame extends Event {
 
+	private static final HandlerList	handlers	= new HandlerList();
+
+	public static HandlerList getHandlerList() {
+		return InfectedStartGame.handlers;
+	}
+
 	public InfectedStartGame()
 	{
 	}
 
-	private static final HandlerList	handlers	= new HandlerList();
+	/**
+	 * @return active arena
+	 */
+	public Arena getArena() {
+		return Lobby.getActiveArena();
+	}
 
+	@Override
 	public HandlerList getHandlers() {
-		return handlers;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-
-	/**
-	 * @return the players
-	 */
-	public ArrayList<Player> getPlayers() {
-		return Lobby.getPlayersInGame();
-	}
-
-	/**
-	 * @return the zombies
-	 */
-	public ArrayList<Player> getZombies() {
-		return Lobby.getZombies();
+		return InfectedStartGame.handlers;
 	}
 
 	/**
@@ -49,6 +43,13 @@ public class InfectedStartGame extends Event {
 	}
 
 	/**
+	 * @return the players
+	 */
+	public ArrayList<Player> getPlayers() {
+		return Lobby.getPlayersInGame();
+	}
+
+	/**
 	 * @return the infecting time
 	 */
 	public int getTimeLimit() {
@@ -56,10 +57,10 @@ public class InfectedStartGame extends Event {
 	}
 
 	/**
-	 * @return active arena
+	 * @return the zombies
 	 */
-	public Arena getArena() {
-		return Lobby.getActiveArena();
+	public ArrayList<Player> getZombies() {
+		return Lobby.getZombies();
 	}
 
 }

@@ -25,7 +25,40 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	private static final int	MAX_SEARCH	= 100;
 	private static final String	PROFILE_URL	= "https://api.mojang.com/profiles/page/";
 	private static final String	AGENT		= "minecraft";
+
+	@SuppressWarnings("unchecked")
+	private static String buildBody(List<String> names) {
+		List<JSONObject> lookups = new ArrayList<JSONObject>();
+		for (String name : names)
+		{
+			JSONObject obj = new JSONObject();
+			obj.put("name", name);
+			obj.put("agent", UUIDFetcher.AGENT);
+			lookups.add(obj);
+		}
+		return JSONValue.toJSONString(lookups);
+	}
+
+	private static HttpURLConnection createConnection(int page) throws Exception {
+		URL url = new URL(UUIDFetcher.PROFILE_URL + page);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+		return connection;
+	}
+
+	private static void writeBody(HttpURLConnection connection, String body) throws Exception {
+		DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
+		writer.write(body.getBytes());
+		writer.flush();
+		writer.close();
+	}
+
 	private final JSONParser	jsonParser	= new JSONParser();
+
 	private final List<String>	names;
 
 	public UUIDFetcher(List<String> names)
@@ -33,21 +66,20 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		this.names = ImmutableList.copyOf(names);
 	}
 
+	@Override
 	public Map<String, UUID> call() throws Exception {
 		Map<String, UUID> uuidMap = new HashMap<String, UUID>();
-		String body = buildBody(names);
-		for (int i = 1; i < MAX_SEARCH; i++)
+		String body = buildBody(this.names);
+		for (int i = 1; i < UUIDFetcher.MAX_SEARCH; i++)
 		{
 			HttpURLConnection connection = createConnection(i);
 			writeBody(connection, body);
-			JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(
+			JSONObject jsonObject = (JSONObject) this.jsonParser.parse(new InputStreamReader(
 					connection.getInputStream()));
 			JSONArray array = (JSONArray) jsonObject.get("profiles");
 			Number count = (Number) jsonObject.get("size");
 			if (count.intValue() == 0)
-			{
 				break;
-			}
 			for (Object profile : array)
 			{
 				JSONObject jsonProfile = (JSONObject) profile;
@@ -58,36 +90,5 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 			}
 		}
 		return uuidMap;
-	}
-
-	private static void writeBody(HttpURLConnection connection, String body) throws Exception {
-		DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-		writer.write(body.getBytes());
-		writer.flush();
-		writer.close();
-	}
-
-	private static HttpURLConnection createConnection(int page) throws Exception {
-		URL url = new URL(PROFILE_URL + page);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setUseCaches(false);
-		connection.setDoInput(true);
-		connection.setDoOutput(true);
-		return connection;
-	}
-
-	@SuppressWarnings("unchecked")
-	private static String buildBody(List<String> names) {
-		List<JSONObject> lookups = new ArrayList<JSONObject>();
-		for (String name : names)
-		{
-			JSONObject obj = new JSONObject();
-			obj.put("name", name);
-			obj.put("agent", AGENT);
-			lookups.add(obj);
-		}
-		return JSONValue.toJSONString(lookups);
 	}
 }

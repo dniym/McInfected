@@ -31,10 +31,41 @@ public class Arena {
 	}
 
 	/**
-	 * @return the settings
+	 * @return the block
 	 */
-	public ArenaSettings getSettings() {
-		return ArenaSettings;
+	public ItemStack getBlock() {
+		return ItemHandler.getItemStack(Files.getArenas().getString("Arenas." + this.name + ".Block"));
+	}
+
+	/**
+	 * Get the broken blocks
+	 * 
+	 * @param loc
+	 * @return
+	 */
+	public Material getBlock(Location loc) {
+		return this.blocks.get(loc);
+	}
+
+	/**
+	 * @return the broken blocks
+	 */
+	public HashMap<Location, Material> getBlocks() {
+		return this.blocks;
+	}
+
+	/**
+	 * Get the opened chests
+	 * 
+	 * @param loc
+	 * @return
+	 */
+	public Inventory getChest(Location loc) {
+		return this.chests.get(loc);
+	}
+
+	public HashMap<Location, Inventory> getChests() {
+		return this.chests;
 	}
 
 	/**
@@ -43,53 +74,15 @@ public class Arena {
 	 * @return the creator
 	 */
 	public String getCreator() {
-		return Files.getArenas().getString("Arenas." + name + ".Creator");
-	}
-
-	/**
-	 * @param string
-	 *            the arena maker
-	 */
-	public void setCreator(String maker) {
-		Files.getArenas().set("Arenas." + name + ".Creator", maker);
-		Files.saveArenas();
-	}
-
-	/**
-	 * Set the spawns in the config
-	 * 
-	 * @param spawns
-	 *            the spawns to set
-	 */
-	public void setSpawns(List<String> spawns, Team team) {
-		if (team == Team.Zombie || team == Team.Human)
-			Files.getArenas().set("Arenas." + name + "." + team.toString() + " Spawns", spawns);
-		else
-			Files.getArenas().set("Arenas." + name + ".Spawns", spawns);
-
-		Files.saveArenas();
-	}
-
-	/**
-	 * Returns the spawns from the config
-	 * 
-	 * @return the spawns
-	 */
-	public List<String> getSpawns(Team team) {
-		List<String> spawns = Files.getArenas().getStringList("Arenas." + name + ".Spawns");
-
-		if (team != Team.Global && team != Team.None)
-			spawns.addAll(Files.getArenas().getStringList("Arenas." + name + "." + team.toString() + " Spawns"));
-
-		return spawns;
+		return Files.getArenas().getString("Arenas." + this.name + ".Creator");
 	}
 
 	public List<String> getExactSpawns(Team team) {
 		List<String> spawns = new ArrayList<String>();
-		if (team == Team.Global || team == Team.None)
-			spawns.addAll(Files.getArenas().getStringList("Arenas." + name + ".Spawns"));
+		if ((team == Team.Global) || (team == Team.None))
+			spawns.addAll(Files.getArenas().getStringList("Arenas." + this.name + ".Spawns"));
 		else
-			spawns.addAll(Files.getArenas().getStringList("Arenas." + name + "." + team.toString() + " Spawns"));
+			spawns.addAll(Files.getArenas().getStringList("Arenas." + this.name + "." + team.toString() + " Spawns"));
 
 		return spawns;
 	}
@@ -98,7 +91,116 @@ public class Arena {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return this.name;
+	}
+
+	/**
+	 * @return the settings
+	 */
+	public ArenaSettings getSettings() {
+		return this.ArenaSettings;
+	}
+
+	/**
+	 * Returns the spawns from the config
+	 * 
+	 * @return the spawns
+	 */
+	public List<String> getSpawns(Team team) {
+		List<String> spawns = Files.getArenas().getStringList("Arenas." + this.name + ".Spawns");
+
+		if ((team != Team.Global) && (team != Team.None))
+			spawns.addAll(Files.getArenas().getStringList("Arenas." + this.name + "." + team.toString() + " Spawns"));
+
+		return spawns;
+	}
+
+	/**
+	 * @return the votes
+	 */
+	public int getVotes() {
+		return this.Votes;
+	}
+
+	/**
+	 * Removes a broken block
+	 * 
+	 * @param loc
+	 */
+	public void removeBlock(Location loc) {
+		this.blocks.remove(loc);
+	}
+
+	/**
+	 * Remove a opened chest
+	 * 
+	 * @param loc
+	 */
+	public void removeChest(Location loc) {
+		this.chests.remove(loc);
+	}
+
+	/**
+	 * Reset the arena
+	 */
+	public void reset() {
+		if (!getBlocks().isEmpty())
+			for (Location loc : getBlocks().keySet())
+				loc.getBlock().setType(getBlock(loc));
+
+		getBlocks().clear();
+
+		// Clear Chests too
+		if (!getChests().isEmpty())
+			for (Location loc : getChests().keySet())
+				if (loc.getBlock().getType() == Material.CHEST)
+					((Chest) loc.getBlock()).getBlockInventory().setContents(getChests().get(loc).getContents());
+
+		getChests().clear();
+
+		setVotes(0);
+	}
+
+	/**
+	 * @param block
+	 *            the block to set
+	 */
+	@SuppressWarnings("deprecation")
+	public void setBlock(ItemStack is) {
+		if ((is.getType() == null) || (is.getType().getId() == 0))
+			Files.getArenas().set("Arenas." + this.name + ".Block", "id:395");
+		else
+			Files.getArenas().set("Arenas." + this.name + ".Block", ItemHandler.getItemStackToString(is));
+		Files.saveArenas();
+	}
+
+	/**
+	 * Set the blocks broken
+	 * 
+	 * @param loc
+	 * @param mat
+	 */
+	public void setBlock(Location loc, Material mat) {
+		this.blocks.put(loc, mat);
+	}
+
+	/**
+	 * Set the opened chests
+	 * 
+	 * @param loc
+	 * @param inv
+	 */
+	public void setChest(Location loc, Inventory inv) {
+		this.chests.put(loc, inv);
+	}
+
+	/**
+	 * @param string
+	 *            the arena maker
+	 */
+	public void setCreator(String maker) {
+		Files.getArenas().set("Arenas." + this.name + ".Creator", maker);
+		Files.saveArenas();
 	}
 
 	/**
@@ -110,10 +212,18 @@ public class Arena {
 	}
 
 	/**
-	 * @return the votes
+	 * Set the spawns in the config
+	 * 
+	 * @param spawns
+	 *            the spawns to set
 	 */
-	public int getVotes() {
-		return Votes;
+	public void setSpawns(List<String> spawns, Team team) {
+		if ((team == Team.Zombie) || (team == Team.Human))
+			Files.getArenas().set("Arenas." + this.name + "." + team.toString() + " Spawns", spawns);
+		else
+			Files.getArenas().set("Arenas." + this.name + ".Spawns", spawns);
+
+		Files.saveArenas();
 	}
 
 	/**
@@ -121,117 +231,7 @@ public class Arena {
 	 *            the votes to set
 	 */
 	public void setVotes(int votes) {
-		Votes = votes;
-	}
-
-	public HashMap<Location, Inventory> getChests() {
-		return chests;
-	}
-
-	/**
-	 * Get the opened chests
-	 * 
-	 * @param loc
-	 * @return
-	 */
-	public Inventory getChest(Location loc) {
-		return chests.get(loc);
-	}
-
-	/**
-	 * Set the opened chests
-	 * 
-	 * @param loc
-	 * @param inv
-	 */
-	public void setChest(Location loc, Inventory inv) {
-		chests.put(loc, inv);
-	}
-
-	/**
-	 * Remove a opened chest
-	 * 
-	 * @param loc
-	 */
-	public void removeChest(Location loc) {
-		chests.remove(loc);
-	}
-
-	/**
-	 * Get the broken blocks
-	 * 
-	 * @param loc
-	 * @return
-	 */
-	public Material getBlock(Location loc) {
-		return blocks.get(loc);
-	}
-
-	/**
-	 * @return the broken blocks
-	 */
-	public HashMap<Location, Material> getBlocks() {
-		return blocks;
-	}
-
-	/**
-	 * Set the blocks broken
-	 * 
-	 * @param loc
-	 * @param mat
-	 */
-	public void setBlock(Location loc, Material mat) {
-		blocks.put(loc, mat);
-	}
-
-	/**
-	 * Removes a broken block
-	 * 
-	 * @param loc
-	 */
-	public void removeBlock(Location loc) {
-		blocks.remove(loc);
-	}
-
-	/**
-	 * Reset the arena
-	 */
-	public void reset() {
-		if (!this.getBlocks().isEmpty())
-			for (Location loc : this.getBlocks().keySet())
-				loc.getBlock().setType(getBlock(loc));
-
-		this.getBlocks().clear();
-
-		// Clear Chests too
-		if (!this.getChests().isEmpty())
-			for (Location loc : this.getChests().keySet())
-				if (loc.getBlock().getType() == Material.CHEST)
-					((Chest) loc.getBlock()).getBlockInventory().setContents(getChests().get(loc).getContents());
-
-		this.getChests().clear();
-
-		setVotes(0);
-	}
-
-	/**
-	 * @return the block
-	 */
-	public ItemStack getBlock() {
-		return ItemHandler.getItemStack(Files.getArenas().getString("Arenas." + name + ".Block"));
-	}
-
-	/**
-	 * @param block
-	 *            the block to set
-	 */
-	@SuppressWarnings("deprecation")
-	public void setBlock(ItemStack is) {
-		if (is.getType() == null || is.getType().getId() == 0)
-			Files.getArenas().set("Arenas." + name + ".Block", "id:395");
-		else
-			Files.getArenas().set("Arenas." + name + ".Block", ItemHandler.getItemStackToString(is));
-		Files.saveArenas();
+		this.Votes = votes;
 	}
 
 }

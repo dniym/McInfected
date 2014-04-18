@@ -19,8 +19,21 @@ import com.gmail.nossr50.events.skills.unarmed.McMMOPlayerDisarmEvent;
 public class mcMMOEvents implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
+	public void mcMMOAbilityActivate(McMMOPlayerAbilityActivateEvent e) {
+		System.out.println("TEST");
+		if (Lobby.isInGame(e.getPlayer()))
+			e.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void mcMMODisarm(McMMOPlayerDisarmEvent e) {
+		if (Lobby.isInGame(e.getPlayer()) || Lobby.isInGame(e.getDefender()))
+			e.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void mcMMOExtraDamage(FakeEntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player)
+		if ((e.getEntity() instanceof Player) && (e.getDamager() instanceof Player))
 		{
 			Player player = (Player) e.getEntity();
 			Player attacker = (Player) e.getDamager();
@@ -31,19 +44,6 @@ public class mcMMOEvents implements Listener {
 			}
 		}
 
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void mcMMODisarm(McMMOPlayerDisarmEvent e) {
-		if (Lobby.isInGame(e.getPlayer()) || Lobby.isInGame(e.getDefender()))
-			e.setCancelled(true);
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void mcMMOAbilityActivate(McMMOPlayerAbilityActivateEvent e) {
-		System.out.println("TEST");
-		if (Lobby.isInGame(e.getPlayer()))
-			e.setCancelled(true);
 	}
 
 }

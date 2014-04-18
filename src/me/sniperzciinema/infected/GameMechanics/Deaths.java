@@ -34,14 +34,14 @@ public class Deaths {
 		Bukkit.getPluginManager().callEvent(e);
 
 		// --> Picture deaths
-		if (death == DeathType.Other && InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie)
+		if ((death == DeathType.Other) && (InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Zombie))
 		{
 		}
 		else
 		{
 			String killMessage = KillMessages.getKillMessage(killer, killed, death, true);
 
-			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && Lobby.getTeam(Team.Human).size() > 1)
+			if (Settings.PictureEnabled() && Lobby.isHuman(killed) && (Lobby.getTeam(Team.Human).size() > 1))
 			{
 				killMessage = KillMessages.getKillMessage(killer, killed, death, false);
 				String[] face = Pictures.getZombie();
@@ -50,10 +50,8 @@ public class Deaths {
 				killed.sendMessage(face);
 
 				for (Player u : Lobby.getPlayersInGame())
-				{
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
-				}
 			}
 			else
 				for (Player u : Lobby.getPlayersInGame())
@@ -82,7 +80,7 @@ public class Deaths {
 			{
 				InfKilled.Infect();
 
-				if (Lobby.getTeam(Team.Human).size() == 0 && Lobby.getGameState() == GameState.Started)
+				if ((Lobby.getTeam(Team.Human).size() == 0) && (Lobby.getGameState() == GameState.Started))
 					Game.endGame(false);
 
 			}
@@ -120,10 +118,8 @@ public class Deaths {
 				killed.sendMessage(face);
 
 				for (Player u : Lobby.getPlayersInGame())
-				{
 					if (u != killed)
 						u.sendMessage(Msgs.Format_Prefix.getString() + killMessage);
-				}
 			}
 			else
 				for (Player u : Lobby.getPlayersInGame())
@@ -136,7 +132,7 @@ public class Deaths {
 			InfKilled.Infect();
 			InfKilled.respawn();
 
-			if (Lobby.getHumans().size() == 0 && Lobby.getGameState() == GameState.Started)
+			if ((Lobby.getHumans().size() == 0) && (Lobby.getGameState() == GameState.Started))
 				Game.endGame(false);
 
 		}

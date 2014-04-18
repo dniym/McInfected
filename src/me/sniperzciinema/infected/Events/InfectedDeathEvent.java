@@ -10,9 +10,15 @@ import org.bukkit.event.HandlerList;
 
 public class InfectedDeathEvent extends Event {
 
-	private Player		killer;
-	private Player		killed;
-	private DeathType	death;
+	private Player						killer;
+	private Player						killed;
+	private DeathType					death;
+
+	private static final HandlerList	handlers	= new HandlerList();
+
+	public static HandlerList getHandlerList() {
+		return InfectedDeathEvent.handlers;
+	}
 
 	public InfectedDeathEvent(Player killer, Player killed, DeathType death)
 	{
@@ -21,21 +27,16 @@ public class InfectedDeathEvent extends Event {
 		this.death = death;
 	}
 
-	private static final HandlerList	handlers	= new HandlerList();
-
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-
 	/**
-	 * @return the killer
+	 * @return the death
 	 */
-	public Player getKiller() {
-		return killer;
+	public DeathType getDeath() {
+		return this.death;
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return InfectedDeathEvent.handlers;
 	}
 
 	/**
@@ -45,14 +46,14 @@ public class InfectedDeathEvent extends Event {
 	 * @return the killed
 	 */
 	public Player getKilled() {
-		return killed;
+		return this.killed;
 	}
 
 	/**
-	 * @return the death
+	 * @return the killer
 	 */
-	public DeathType getDeath() {
-		return death;
+	public Player getKiller() {
+		return this.killer;
 	}
 
 }

@@ -116,7 +116,6 @@ Settings:
       Game: 480
 # When choosing the alpha should we choose more then one based on the players in game
     Percent to Infect:
-      Enabled: true
       Percent: 20
 # Blocks players are allowed to break(Seperated into "Global", "Zombie" and "Human"
     Breakable Blocks:

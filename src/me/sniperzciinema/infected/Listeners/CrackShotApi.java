@@ -44,7 +44,6 @@ public class CrackShotApi implements Listener {
 					e.setCancelled(true);
 				}
 				else
-				{
 					if (Lobby.getGameState() != GameState.Started)
 					{
 						e.setDamage(0);
@@ -60,14 +59,13 @@ public class CrackShotApi implements Listener {
 						IPV.setLastDamager(killer);
 
 						// If it was enough to kill the player
-						if (victim.getHealth() - e.getDamage() <= 0)
+						if ((victim.getHealth() - e.getDamage()) <= 0)
 						{
 							e.setDamage(0);
 							Deaths.playerDies(DeathType.Gun, killer, victim);
 						}
 
 					}
-				}
 			}
 		}
 	}

@@ -31,27 +31,65 @@ public class Files {
 	public static YamlConfiguration	signs			= null;
 	public static File				signsFile		= null;
 
+	// Get Arenas File
+	public static FileConfiguration getArenas() {
+		if (Files.arenas == null)
+			reloadArenas();
+		return Files.arenas;
+	}
+
+	// Get Abilities file
+	public static FileConfiguration getClasses() {
+		if (Files.classes == null)
+			reloadClasses();
+		return Files.classes;
+	}
+
 	public static FileConfiguration getConfig() {
 		return Infected.me.getConfig();
 	}
 
-	public static void saveConfig() {
-		Infected.me.saveConfig();
+	// Get Arenas File
+	public static FileConfiguration getGrenades() {
+		if (Files.grenades == null)
+			reloadGrenades();
+		return Files.grenades;
 	}
 
-	public static void reloadConfig() {
-		Infected.me.reloadConfig();
+	// Get Arenas File
+	public static FileConfiguration getMessages() {
+		if (Files.messages == null)
+			reloadMessages();
+		return Files.messages;
 	}
 
-	public static void saveAll() {
-		saveConfig();
-		saveClasses();
-		saveArenas();
-		savePlayers();
-		saveMessages();
-		saveShop();
-		saveGrenades();
-		saveSigns();
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Get Kills file
+	public static FileConfiguration getPlayers() {
+		if (Files.playerF == null)
+		{
+			reloadPlayers();
+			savePlayers();
+		}
+		return Files.playerF;
+	}
+
+	// Get Arenas File
+	public static FileConfiguration getShop() {
+		if (Files.shop == null)
+			reloadShop();
+		return Files.shop;
+	}
+
+	// Get Kills file
+	public static FileConfiguration getSigns() {
+		if (Files.signs == null)
+		{
+			reloadSigns();
+			saveSigns();
+		}
+		return Files.signs;
 	}
 
 	public static void reloadAll() {
@@ -65,282 +103,244 @@ public class Files {
 		reloadSigns();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// Reload Abilities File
-	public static void reloadClasses() {
-		if (classesFile == null)
-			classesFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Classes.yml");
-		classes = YamlConfiguration.loadConfiguration(classesFile);
-		// Look for defaults in the jar
-		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Classes.yml");
-		if (defConfigStream != null)
-		{
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!classesFile.exists() || classesFile.length() == 0)
-				classes.setDefaults(defConfig);
-		}
-	}
-
-	// Get Abilities file
-	public static FileConfiguration getClasses() {
-		if (classes == null)
-			reloadClasses();
-		return classes;
-	}
-
-	// Safe Abilities File
-	public static void saveClasses() {
-		if (classes == null || classesFile == null)
-			return;
-		try
-		{
-			getClasses().save(classesFile);
-		}
-		catch (IOException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + classesFile, ex);
-		}
-	}
-
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Reload Arenas File
 	public static void reloadArenas() {
-		if (arenasFile == null)
-			arenasFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Arenas.yml");
-		arenas = YamlConfiguration.loadConfiguration(arenasFile);
+		if (Files.arenasFile == null)
+			Files.arenasFile = new File(
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Arenas.yml");
+		Files.arenas = YamlConfiguration.loadConfiguration(Files.arenasFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Arenas.yml");
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!arenasFile.exists() || arenasFile.length() == 0)
-				arenas.setDefaults(defConfig);
+			if (!Files.arenasFile.exists() || (Files.arenasFile.length() == 0))
+				Files.arenas.setDefaults(defConfig);
 		}
 	}
 
-	// Get Arenas File
-	public static FileConfiguration getArenas() {
-		if (arenas == null)
-			reloadArenas();
-		return arenas;
+	// Reload Abilities File
+	public static void reloadClasses() {
+		if (Files.classesFile == null)
+			Files.classesFile = new File(
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Classes.yml");
+		Files.classes = YamlConfiguration.loadConfiguration(Files.classesFile);
+		// Look for defaults in the jar
+		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Classes.yml");
+		if (defConfigStream != null)
+		{
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			if (!Files.classesFile.exists() || (Files.classesFile.length() == 0))
+				Files.classes.setDefaults(defConfig);
+		}
 	}
 
-	// Safe Arenas File
-	public static void saveArenas() {
-		if (arenas == null || arenasFile == null)
-			return;
-		try
-		{
-			getArenas().save(arenasFile);
-		}
-		catch (IOException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + arenasFile, ex);
-		}
+	public static void reloadConfig() {
+		Infected.me.reloadConfig();
 	}
 
 	// Reload Arenas File
 	public static void reloadGrenades() {
-		if (grenades == null)
-			grenadesFile = new File(
+		if (Files.grenades == null)
+			Files.grenadesFile = new File(
 					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Grenades.yml");
-		grenades = YamlConfiguration.loadConfiguration(grenadesFile);
+		Files.grenades = YamlConfiguration.loadConfiguration(Files.grenadesFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Grenades.yml");
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!grenadesFile.exists() || grenadesFile.length() == 0)
-				grenades.setDefaults(defConfig);
+			if (!Files.grenadesFile.exists() || (Files.grenadesFile.length() == 0))
+				Files.grenades.setDefaults(defConfig);
 		}
 	}
 
-	// Get Arenas File
-	public static FileConfiguration getGrenades() {
-		if (grenades == null)
-			reloadGrenades();
-		return grenades;
-	}
-
-	// Safe Arenas File
-	public static void saveGrenades() {
-		if (grenades == null || grenadesFile == null)
-			return;
-		try
+	// Reload Arenas File
+	public static void reloadMessages() {
+		if (Files.messages == null)
+			Files.messagesFile = new File(
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Messages.yml");
+		Files.messages = YamlConfiguration.loadConfiguration(Files.messagesFile);
+		// Look for defaults in the jar
+		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Messages.yml");
+		if (defConfigStream != null)
 		{
-			getGrenades().save(grenadesFile);
-		}
-		catch (IOException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + grenadesFile, ex);
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			Files.messages.setDefaults(defConfig);
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// SHOP
 
+	// Reload Kills File
+	public static void reloadPlayers() {
+		if (Files.playerFile == null)
+			Files.playerFile = new File(
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Players.yml");
+		Files.playerF = YamlConfiguration.loadConfiguration(Files.playerFile);
+		// Look for defaults in the jar
+		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Players.yml");
+		if (defConfigStream != null)
+		{
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			if (!Files.playerFile.exists() || (Files.playerFile.length() == 0))
+				Files.playerF.setDefaults(defConfig);
+		}
+	}
+
 	// Reload Arenas File
 	public static void reloadShop() {
-		if (shop == null)
-			shopFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Shop.yml");
-		shop = YamlConfiguration.loadConfiguration(shopFile);
+		if (Files.shop == null)
+			Files.shopFile = new File(
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Shop.yml");
+		Files.shop = YamlConfiguration.loadConfiguration(Files.shopFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Shop.yml");
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!shopFile.exists() || shopFile.length() == 0)
-				shop.setDefaults(defConfig);
+			if (!Files.shopFile.exists() || (Files.shopFile.length() == 0))
+				Files.shop.setDefaults(defConfig);
 		}
 	}
 
-	// Get Arenas File
-	public static FileConfiguration getShop() {
-		if (shop == null)
-			reloadShop();
-		return shop;
-	}
-
-	// Safe Arenas File
-	public static void saveShop() {
-		if (shop == null || shopFile == null)
-			return;
-		try
+	// Reload Kills File
+	public static void reloadSigns() {
+		if (Files.signsFile == null)
+			Files.signsFile = new File(
+					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Signs.yml");
+		Files.signs = YamlConfiguration.loadConfiguration(Files.signsFile);
+		// Look for defaults in the jar
+		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Signs.yml");
+		if (defConfigStream != null)
 		{
-			getShop().save(shopFile);
-		}
-		catch (IOException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + shopFile, ex);
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			if (!Files.signsFile.exists() || (Files.signsFile.length() == 0))
+				Files.signs.setDefaults(defConfig);
 		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////
 	// MESSAGES
 
-	// Reload Arenas File
-	public static void reloadMessages() {
-		if (messages == null)
-			messagesFile = new File(
-					Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(), "Messages.yml");
-		messages = YamlConfiguration.loadConfiguration(messagesFile);
-		// Look for defaults in the jar
-		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Messages.yml");
-		if (defConfigStream != null)
-		{
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			messages.setDefaults(defConfig);
-		}
-	}
-
-	// Get Arenas File
-	public static FileConfiguration getMessages() {
-		if (messages == null)
-			reloadMessages();
-		return messages;
+	public static void saveAll() {
+		saveConfig();
+		saveClasses();
+		saveArenas();
+		savePlayers();
+		saveMessages();
+		saveShop();
+		saveGrenades();
+		saveSigns();
 	}
 
 	// Safe Arenas File
-	public static void saveMessages() {
-		if (messages == null || messagesFile == null)
+	public static void saveArenas() {
+		if ((Files.arenas == null) || (Files.arenasFile == null))
 			return;
 		try
 		{
-			getMessages().save(messagesFile);
+			getArenas().save(Files.arenasFile);
 		}
 		catch (IOException ex)
 		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + messagesFile, ex);
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.arenasFile, ex);
+		}
+	}
+
+	// Safe Abilities File
+	public static void saveClasses() {
+		if ((Files.classes == null) || (Files.classesFile == null))
+			return;
+		try
+		{
+			getClasses().save(Files.classesFile);
+		}
+		catch (IOException ex)
+		{
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.classesFile, ex);
 		}
 	}
 
 	// ======================================================================================
 	// PLAYERS
 
-	// Reload Kills File
-	public static void reloadPlayers() {
-		if (playerFile == null)
-			playerFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Players.yml");
-		playerF = YamlConfiguration.loadConfiguration(playerFile);
-		// Look for defaults in the jar
-		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Players.yml");
-		if (defConfigStream != null)
-		{
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!playerFile.exists() || playerFile.length() == 0)
-				playerF.setDefaults(defConfig);
-		}
+	public static void saveConfig() {
+		Infected.me.saveConfig();
 	}
 
-	// Get Kills file
-	public static FileConfiguration getPlayers() {
-		if (playerF == null)
-		{
-			reloadPlayers();
-			savePlayers();
-		}
-		return playerF;
-	}
-
-	// Save Kills File
-	public static void savePlayers() {
-		if (playerF == null || playerFile == null)
+	// Safe Arenas File
+	public static void saveGrenades() {
+		if ((Files.grenades == null) || (Files.grenadesFile == null))
 			return;
 		try
 		{
-			getPlayers().save(playerFile);
+			getGrenades().save(Files.grenadesFile);
 		}
 		catch (IOException ex)
 		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + playerFile, ex);
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.grenadesFile, ex);
+		}
+	}
+
+	// Safe Arenas File
+	public static void saveMessages() {
+		if ((Files.messages == null) || (Files.messagesFile == null))
+			return;
+		try
+		{
+			getMessages().save(Files.messagesFile);
+		}
+		catch (IOException ex)
+		{
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.messagesFile, ex);
 		}
 	}
 
 	// ================================================================================
 	// Signs
 
-	// Reload Kills File
-	public static void reloadSigns() {
-		if (signsFile == null)
-			signsFile = new File(Bukkit.getPluginManager().getPlugin("Infected").getDataFolder(),
-					"Signs.yml");
-		signs = YamlConfiguration.loadConfiguration(signsFile);
-		// Look for defaults in the jar
-		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Infected").getResource("Signs.yml");
-		if (defConfigStream != null)
+	// Save Kills File
+	public static void savePlayers() {
+		if ((Files.playerF == null) || (Files.playerFile == null))
+			return;
+		try
 		{
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			if (!signsFile.exists() || signsFile.length() == 0)
-				signs.setDefaults(defConfig);
+			getPlayers().save(Files.playerFile);
+		}
+		catch (IOException ex)
+		{
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.playerFile, ex);
 		}
 	}
 
-	// Get Kills file
-	public static FileConfiguration getSigns() {
-		if (signs == null)
+	// Safe Arenas File
+	public static void saveShop() {
+		if ((Files.shop == null) || (Files.shopFile == null))
+			return;
+		try
 		{
-			reloadSigns();
-			saveSigns();
+			getShop().save(Files.shopFile);
 		}
-		return signs;
+		catch (IOException ex)
+		{
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.shopFile, ex);
+		}
 	}
 
 	// Save Kills File
 	public static void saveSigns() {
-		if (signs == null || signsFile == null)
+		if ((Files.signs == null) || (Files.signsFile == null))
 			return;
 		try
 		{
-			getSigns().save(signsFile);
+			getSigns().save(Files.signsFile);
 		}
 		catch (IOException ex)
 		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + signsFile, ex);
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.signsFile, ex);
 		}
 	}
 }

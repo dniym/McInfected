@@ -353,46 +353,45 @@ public enum ItemNames
 	WRITTEN_BOOK("written book"),
 	YELLOW_FLOWER("dandelion");
 
-	private final String	name;
-
-	private ItemNames(final String name)
-	{
-		this.name = name;
-	}
-
-	public String toString() {
-		return name;
-	}
+	private final String						name;
 
 	private static final Map<String, ItemNames>	lookup	= new HashMap<String, ItemNames>();
 
 	// Returns the Material name from the given block name
 	public static String getMaterialName(String fromBlockName) {
 		for (ItemNames n : values())
-		{
-			lookup.put(n.toString(), n);
-		}
-		String result = lookup.get(fromBlockName).name();
+			ItemNames.lookup.put(n.toString(), n);
+		String result = ItemNames.lookup.get(fromBlockName).name();
 		return result;
 	}
 
-	// Returns the item name with the first letter uppercased (Example: pressure
-	// plate -> Pressure plate)
-	public String firstUpperCased() {
-		char first = Character.toUpperCase(name.charAt(0));
-		return first + name.substring(1);
-	}
-
-	// Returns the item name with all the words with the first letter uppercased
-	// (Example: pressure plate -> Pressure Plate)
-	public String firstAllUpperCased() {
-		return WordUtils.capitalizeFully(name);
+	private ItemNames(final String name)
+	{
+		this.name = name;
 	}
 
 	// Returns the item name with all the letters uppercased (Example: pressure
 	// plate -> PRESSURE PLATE)
 	public String allUpperCased() {
-		return name.toUpperCase();
+		return this.name.toUpperCase();
+	}
+
+	// Returns the item name with all the words with the first letter uppercased
+	// (Example: pressure plate -> Pressure Plate)
+	public String firstAllUpperCased() {
+		return WordUtils.capitalizeFully(this.name);
+	}
+
+	// Returns the item name with the first letter uppercased (Example: pressure
+	// plate -> Pressure plate)
+	public String firstUpperCased() {
+		char first = Character.toUpperCase(this.name.charAt(0));
+		return first + this.name.substring(1);
+	}
+
+	@Override
+	public String toString() {
+		return this.name;
 	}
 
 }
