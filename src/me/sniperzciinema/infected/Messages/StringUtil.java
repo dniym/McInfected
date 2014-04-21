@@ -1,10 +1,14 @@
 
 package me.sniperzciinema.infected.Messages;
 
+import org.bukkit.ChatColor;
+
+
 public class StringUtil {
 
 	public static String format(String string) {
-		return (string.replaceAll("&", "§"));
+
+		return ChatColor.translateAlternateColorCodes('&', string.replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 	}
 
 	/**

@@ -127,7 +127,7 @@ public class AdminCommand extends SubCommand {
 					{
 						Player u = Bukkit.getPlayer(args[2]);
 						if ((u == null) || !Lobby.isInGame(u))
-							sender.sendMessage(Msgs.Error_Game_Not_In.getString());
+							sender.sendMessage(Msgs.Error_Game_They_Are_Not_In.getString());
 						else
 						{
 							u.performCommand("Infected Leave");

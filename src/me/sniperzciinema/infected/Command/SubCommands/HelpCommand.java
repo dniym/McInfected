@@ -32,7 +32,7 @@ public class HelpCommand extends SubCommand {
 			if (sender instanceof Player)
 			{
 				Player p = (Player) sender;
-				if (args[1].equalsIgnoreCase("1"))
+				if (args[1].equals("1"))
 				{
 					if (sender.hasPermission("Infected.Join"))
 						new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aJoin").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected Join", " ", "§7Join Infected")).suggest("/Infected Join").send(p);
@@ -82,12 +82,14 @@ public class HelpCommand extends SubCommand {
 								new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aDelSpawn <Zombie/Human/Global> <#>").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected DelSpawn [Zombie/Human/Global]", " ", "§7Delete the spawn for the specific teams.", " ", "§b  Global §e-> Both Teams", "§c  Zombie §e-> Spawn for just the zombies", "§a  Humans §e-> Spawn for just the humans.")).suggest("/Infected DelSpawn <Zombies/Humans/Global> <#>").send(p);
 							if (sender.hasPermission("Infected.SetArena"))
 								new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aSetArena <Arena>").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected SetArena <Arena>", " ", "§7Select an arena to be edited")).suggest("/Infected SetArena <Arena>").send(p);
-							if (sender.hasPermission("Infected.Create"))
-								new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aCreate <Arena> [Creator]").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected Create <Arena> [Creator]", " ", "§7Create an arena")).suggest("/Infected Create <Arena>").send(p);
+							if (sender.hasPermission("Infected.SetCreator"))
+								new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aSetCreator <Creator>").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected SetCreator <Creator>", " ", "§7Set the creator for the set arena")).suggest("/Infected SetCreator <Creator>").send(p);
 						}
 						else
-							if (args[1].equalsIgnoreCase("4"))
+							if (args[1].equals("4"))
 							{
+								if (sender.hasPermission("Infected.Create"))
+									new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aCreate <Arena> [Creator]").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected Create <Arena> [Creator]", " ", "§7Create an arena")).suggest("/Infected Create <Arena>").send(p);
 								if (sender.hasPermission("Infected.Remove"))
 									new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aRemove <Arena>").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected Remove <Arena>", " ", "§7Remove an arena")).suggest("/Infected Remove <Arena>").send(p);
 								if (sender.hasPermission("Infected.Admin"))
@@ -101,6 +103,15 @@ public class HelpCommand extends SubCommand {
 								if (sender.hasPermission("Infected.TpLeave"))
 									new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aTpLeave").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected TpLeave", " ", "§7Teleport to the Leave Location")).suggest("/Infected TpLeave").send(p);
 							}
+							else
+								if (args[1].equals("5"))
+								{
+									if (sender.hasPermission("Infected.SetBlock"))
+										new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aSetBlock <Item Code>").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected SetBlock <Item Code>", " ", "§7Set the arenas icon/block", "This is what they see when voting")).suggest("/Infected SetBlock <Item Code>").send(p);
+									if (sender.hasPermission("Infected.Setup"))
+										new FancyMessage(Msgs.Format_Prefix.getString()).then("§7/Infected §aSetUp").itemTooltip(ItemHandler.getFancyMessageItem("§a§l/Infected SetUp", " ", "§7A GUI that makes Infected easy to manage")).suggest("/Infected SetUp").send(p);
+
+								}
 				new FancyMessage(Msgs.Format_Prefix.getString()).then("§4<< Back").tooltip("Go back a Help Page").command("/Infected Help " + String.valueOf(Integer.parseInt(args[1]) - 1)).then("             ").then("§6Next >>").tooltip("Go to the next Help Page").command("/Infected Help " + String.valueOf(Integer.parseInt(args[1]) + 1)).send(p);
 
 			}
@@ -135,18 +146,22 @@ public class HelpCommand extends SubCommand {
 							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpSpawn [Global/Human/Zombie] [#]" + ChatColor.WHITE + " - Tp to a spawn ID");
 							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "DelSpawn [Global/Human/Zombie] [ #]" + ChatColor.WHITE + " - Delete the spawn ID");
 							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetArena [Arena]" + ChatColor.WHITE + " - Select an arena");
-							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Create [Arena]" + ChatColor.WHITE + " - Create an arena");
+							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetCreator <Creator>" + ChatColor.WHITE + " - Set the creator");
 						}
 						else
 							if (args[1].equals("4"))
 							{
-								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Remove[Arena]" + ChatColor.WHITE + " - Remove an Arena");
+								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Create <Arena>" + ChatColor.WHITE + " - Create an arena");
+								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Remove <Arena>" + ChatColor.WHITE + " - Remove an Arena");
 								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Admin" + ChatColor.WHITE + " - View the admin menu");
 								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "Files" + ChatColor.WHITE + " - Edit Files in Game");
 								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetClass" + ChatColor.WHITE + " - Create a class with you inventory");
 								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpLobby" + ChatColor.WHITE + " - Tp to the lobby");
 								sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "TpLeave" + ChatColor.WHITE + " - Tp to the leave location");
 							}
+							else
+								if (args[1].equals("5"))
+									sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "/Inf " + ChatColor.GREEN + "SetBlock <Item Code>" + ChatColor.WHITE + " - Set the block/icon");
 
 			sender.sendMessage(Msgs.Format_Line.getString());
 		}

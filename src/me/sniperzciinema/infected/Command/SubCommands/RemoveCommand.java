@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
+import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Messages.Msgs;
 
@@ -37,8 +38,7 @@ public class RemoveCommand extends SubCommand {
 				{
 					Lobby.removeArena(Lobby.getArena(arena));
 
-					Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
-					Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+					Infected.Menus = new Menus();
 
 					sender.sendMessage(Msgs.Command_Arena_Removed.getString("<arena>", arena));
 				}

@@ -81,8 +81,6 @@ public class SetClassCommand extends SubCommand {
 						Files.getClasses().set("Classes." + team.toString() + "." + className + ".Potion Effects", potions);
 					Files.saveClasses();
 					InfClassManager.loadConfigClasses();
-					Infected.Menus.destroyMenu(Infected.Menus.classHumanMenu);
-					Infected.Menus.destroyMenu(Infected.Menus.classZombieMenu);
 					Infected.Menus = new Menus();
 
 					sender.sendMessage(Msgs.Command_Classes_SetClass.getString("<class>", className, "<team>", team.toString()));

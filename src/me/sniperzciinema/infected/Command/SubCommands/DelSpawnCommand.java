@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
+import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
@@ -39,28 +40,25 @@ public class DelSpawnCommand extends SubCommand {
 				if (ip.getCreating() == null)
 					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
 				else
-					if ((args.length == 2) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+					if ((args.length == 3) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
 					{
 						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
 
 						Arena a = Lobby.getArena(ip.getCreating());
-						int i = Integer.valueOf(args[1]) - 1;
+						int i = Integer.valueOf(args[2]) - 1;
 						if (i < a.getSpawns(team).size())
 						{
 							List<String> spawns = a.getExactSpawns(team);
 							spawns.remove(i);
 							a.setSpawns(spawns, team);
 
-							Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
-							Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+							Infected.Menus = new Menus();
 
 							p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
 						}
 						else
 							p.sendMessage(Msgs.Help_DelSpawn.getString());
 					}
-					else
-						p.sendMessage(Msgs.Help_DelSpawn.getString());
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

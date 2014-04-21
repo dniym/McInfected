@@ -41,8 +41,6 @@ public class Menus {
 	public IconMenu	shopMenu;
 	public IconMenu	grenadeMenu;
 
-	// When the class gets loaded create all the IconMenus and store them for
-	// later use
 	public Menus()
 	{
 		this.teamMenu = getTeamMenu();
@@ -62,11 +60,7 @@ public class Menus {
 		this.grenadeMenu.destroy();
 	}
 
-	public void destroyMenu(IconMenu menu) {
-		menu.destroy();
-	}
-
-	public IconMenu getClassHumanMenu() {
+	private IconMenu getClassHumanMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Human Classes",
 				((InfClassManager.getClasses(Team.Human).size() / 9) * 9) + 18,
@@ -148,7 +142,7 @@ public class Menus {
 		return menu;
 	}
 
-	public IconMenu getClassZombieMenu() {
+	private IconMenu getClassZombieMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Zombie Classes",
 				((InfClassManager.getClasses(Team.Zombie).size() / 9) * 9) + 18,
@@ -228,7 +222,7 @@ public class Menus {
 		return menu;
 	}
 
-	public IconMenu getGrenadeMenu() {
+	private IconMenu getGrenadeMenu() {
 		ArrayList<String> shop = new ArrayList<String>();
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Grenade Shop",
@@ -286,7 +280,7 @@ public class Menus {
 	}
 
 	@SuppressWarnings("deprecation")
-	public IconMenu getShopMenu() {
+	private IconMenu getShopMenu() {
 		ArrayList<String> shop = new ArrayList<String>();
 		for (String string : Files.getShop().getConfigurationSection("Custom Items").getKeys(true))
 			if (!string.contains(".") && (ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + string + ".Item Code")).getType() != Material.AIR))
@@ -355,7 +349,7 @@ public class Menus {
 		return menu;
 	}
 
-	public IconMenu getTeamMenu() {
+	private IconMenu getTeamMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.GREEN, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Choose a Team",
 				9, new IconMenu.OptionClickEventHandler()
@@ -390,7 +384,7 @@ public class Menus {
 	}
 
 	@SuppressWarnings("deprecation")
-	public IconMenu getVoteMenu() {
+	private IconMenu getVoteMenu() {
 		IconMenu menu = new IconMenu(
 				RandomChatColor.getColor(ChatColor.GOLD, ChatColor.BLUE, ChatColor.RED, ChatColor.DARK_AQUA, ChatColor.YELLOW) + "Vote for an Arena",
 				((Lobby.getArenas().size() / 9) * 9) + 9, new IconMenu.OptionClickEventHandler()
@@ -421,6 +415,7 @@ public class Menus {
 							arena.setVotes(arena.getVotes() + votes);
 							infPlayer.setVote(arena);
 
+							Infected.Menus = new Menus();
 							for (Player u : Lobby.getPlayersInGame())
 							{
 								u.sendMessage(Msgs.Command_Vote.getString("<player>", player.getName(), "<arena>", arena.getName()) + ChatColor.GRAY + (votes != 0 ? " (x" + votes + ")" : ""));
@@ -441,7 +436,7 @@ public class Menus {
 			if (Lobby.isArenaValid(arena))
 			{
 				menu.setOption(place, (arena.getBlock() != null) && (arena.getBlock().getTypeId() != 0) ? arena.getBlock() : new ItemStack(
-						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Creator: " + arena.getCreator(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
+						Material.EMPTY_MAP), "" + RandomChatColor.getColor() + ChatColor.BOLD + ChatColor.UNDERLINE + arena.getName(), "", Msgs.Menu_Vote_Choose.getString(), "", ChatColor.GREEN + "Votes: " + arena.getVotes(), "", ChatColor.AQUA + "--------------------------", ChatColor.AQUA + "Creator: " + ChatColor.WHITE + arena.getCreator());
 				place++;
 			}
 		menu.setOption(place, new ItemStack(Material.MAP), "§aR§ba§cn§dd§eo§fm", "", Msgs.Menu_Vote_Random.getString());

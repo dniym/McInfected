@@ -46,10 +46,11 @@ public class TpSpawnCommand extends SubCommand {
 						if (i < a.getSpawns(team).size())
 						{
 							p.teleport(LocationHandler.getPlayerLocation(a.getSpawns(team).get(i)));
-							sender.sendMessage(Msgs.Command_Spawn_Tp.getString("<spawns>", String.valueOf(i + 1)));
+							sender.sendMessage(Msgs.Command_Spawn_Tp.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
 						}
+
 						else
-							sender.sendMessage(Msgs.Help_TpSpawn.getString());
+							sender.sendMessage(Msgs.Error_Arena_Not_A_Spawn.getString());
 
 					}
 					else

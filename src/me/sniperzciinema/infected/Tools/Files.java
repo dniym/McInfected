@@ -16,29 +16,27 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Files {
 
 	// Set up all the needed things for files
-	public static YamlConfiguration	classes			= null;
-	public static File				classesFile		= null;
-	public static YamlConfiguration	arenas			= null;
-	public static File				arenasFile		= null;
-	public static YamlConfiguration	playerF			= null;
-	public static File				playerFile		= null;
-	public static YamlConfiguration	messages		= null;
-	public static File				messagesFile	= null;
-	public static YamlConfiguration	shop			= null;
-	public static File				shopFile		= null;
-	public static YamlConfiguration	grenades		= null;
-	public static File				grenadesFile	= null;
-	public static YamlConfiguration	signs			= null;
-	public static File				signsFile		= null;
+	private static YamlConfiguration	classes			= null;
+	private static File					classesFile		= null;
+	private static YamlConfiguration	arenas			= null;
+	private static File					arenasFile		= null;
+	private static YamlConfiguration	playerF			= null;
+	private static File					playerFile		= null;
+	private static YamlConfiguration	messages		= null;
+	private static File					messagesFile	= null;
+	private static YamlConfiguration	shop			= null;
+	private static File					shopFile		= null;
+	private static YamlConfiguration	grenades		= null;
+	private static File					grenadesFile	= null;
+	private static YamlConfiguration	signs			= null;
+	private static File					signsFile		= null;
 
-	// Get Arenas File
 	public static FileConfiguration getArenas() {
 		if (Files.arenas == null)
 			reloadArenas();
 		return Files.arenas;
 	}
 
-	// Get Abilities file
 	public static FileConfiguration getClasses() {
 		if (Files.classes == null)
 			reloadClasses();
@@ -49,23 +47,18 @@ public class Files {
 		return Infected.me.getConfig();
 	}
 
-	// Get Arenas File
 	public static FileConfiguration getGrenades() {
 		if (Files.grenades == null)
 			reloadGrenades();
 		return Files.grenades;
 	}
 
-	// Get Arenas File
 	public static FileConfiguration getMessages() {
 		if (Files.messages == null)
 			reloadMessages();
 		return Files.messages;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// Get Kills file
 	public static FileConfiguration getPlayers() {
 		if (Files.playerF == null)
 		{
@@ -75,14 +68,12 @@ public class Files {
 		return Files.playerF;
 	}
 
-	// Get Arenas File
 	public static FileConfiguration getShop() {
 		if (Files.shop == null)
 			reloadShop();
 		return Files.shop;
 	}
 
-	// Get Kills file
 	public static FileConfiguration getSigns() {
 		if (Files.signs == null)
 		{
@@ -103,8 +94,6 @@ public class Files {
 		reloadSigns();
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Reload Arenas File
 	public static void reloadArenas() {
 		if (Files.arenasFile == null)
 			Files.arenasFile = new File(
@@ -120,7 +109,6 @@ public class Files {
 		}
 	}
 
-	// Reload Abilities File
 	public static void reloadClasses() {
 		if (Files.classesFile == null)
 			Files.classesFile = new File(
@@ -140,7 +128,6 @@ public class Files {
 		Infected.me.reloadConfig();
 	}
 
-	// Reload Arenas File
 	public static void reloadGrenades() {
 		if (Files.grenades == null)
 			Files.grenadesFile = new File(
@@ -156,7 +143,6 @@ public class Files {
 		}
 	}
 
-	// Reload Arenas File
 	public static void reloadMessages() {
 		if (Files.messages == null)
 			Files.messagesFile = new File(
@@ -171,10 +157,6 @@ public class Files {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////
-	// SHOP
-
-	// Reload Kills File
 	public static void reloadPlayers() {
 		if (Files.playerFile == null)
 			Files.playerFile = new File(
@@ -190,7 +172,6 @@ public class Files {
 		}
 	}
 
-	// Reload Arenas File
 	public static void reloadShop() {
 		if (Files.shop == null)
 			Files.shopFile = new File(
@@ -206,7 +187,6 @@ public class Files {
 		}
 	}
 
-	// Reload Kills File
 	public static void reloadSigns() {
 		if (Files.signsFile == null)
 			Files.signsFile = new File(
@@ -222,9 +202,6 @@ public class Files {
 		}
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////
-	// MESSAGES
-
 	public static void saveAll() {
 		saveConfig();
 		saveClasses();
@@ -236,7 +213,6 @@ public class Files {
 		saveSigns();
 	}
 
-	// Safe Arenas File
 	public static void saveArenas() {
 		if ((Files.arenas == null) || (Files.arenasFile == null))
 			return;
@@ -250,7 +226,6 @@ public class Files {
 		}
 	}
 
-	// Safe Abilities File
 	public static void saveClasses() {
 		if ((Files.classes == null) || (Files.classesFile == null))
 			return;
@@ -263,9 +238,6 @@ public class Files {
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.classesFile, ex);
 		}
 	}
-
-	// ======================================================================================
-	// PLAYERS
 
 	public static void saveConfig() {
 		Infected.me.saveConfig();
@@ -285,7 +257,6 @@ public class Files {
 		}
 	}
 
-	// Safe Arenas File
 	public static void saveMessages() {
 		if ((Files.messages == null) || (Files.messagesFile == null))
 			return;
@@ -299,10 +270,6 @@ public class Files {
 		}
 	}
 
-	// ================================================================================
-	// Signs
-
-	// Save Kills File
 	public static void savePlayers() {
 		if ((Files.playerF == null) || (Files.playerFile == null))
 			return;
@@ -316,7 +283,6 @@ public class Files {
 		}
 	}
 
-	// Safe Arenas File
 	public static void saveShop() {
 		if ((Files.shop == null) || (Files.shopFile == null))
 			return;
@@ -330,7 +296,6 @@ public class Files {
 		}
 	}
 
-	// Save Kills File
 	public static void saveSigns() {
 		if ((Files.signs == null) || (Files.signsFile == null))
 			return;
@@ -342,5 +307,21 @@ public class Files {
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.signsFile, ex);
 		}
+	}
+
+	public static void updateAll() {
+		getArenas().options().copyDefaults(true);
+		getShop().options().copyDefaults(true);
+		getPlayers().options().copyDefaults(true);
+		getMessages().options().copyDefaults(true);
+		getGrenades().options().copyDefaults(true);
+		getClasses().options().copyDefaults(true);
+		getSigns().options().copyDefaults(true);
+		getMessages().options().copyDefaults(true);
+		getConfig().options().copyDefaults(true);
+	}
+
+	public Files()
+	{
 	}
 }

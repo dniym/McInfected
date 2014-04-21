@@ -75,17 +75,8 @@ public class SetupCommand extends SubCommand {
 							new FancyMessage(Msgs.Format_Prefix.getString()).then(ChatColor.RED + "Creator").itemTooltip(ItemHandler.getFancyMessageItem(ChatColor.RED + arena.getName() + " Creator", "   §eCreator: " + arena.getCreator())).command("/Infected Setup " + arena.getName() + " Creator").send(p);
 							new FancyMessage(Msgs.Format_Prefix.getString()).then(ChatColor.DARK_AQUA + "Block").itemTooltip(ItemHandler.getFancyMessageItem(ChatColor.DARK_AQUA + arena.getName() + " Creator", "   §eBlock: " + ItemHandler.getItemStackToString(arena.getBlock()))).command("/Infected Setup " + arena.getName() + " Block").send(p);
 							new FancyMessage(Msgs.Format_Prefix.getString()).then(ChatColor.LIGHT_PURPLE + "Time").itemTooltip(ItemHandler.getFancyMessageItem(ChatColor.LIGHT_PURPLE + arena.getName() + " Time", "   §eVoting Time: " + arena.getSettings().getVotingTime(), "   §cInfecting Time: " + arena.getSettings().getInfectingTime(), "   §aGame Time: " + arena.getSettings().getGameTime())).command("/Infected Setup " + arena.getName() + " Time").send(p);
-							// new
-							// FancyMessage(Msgs.Format_Prefix.getString()).then(ChatColor.AQUA
-							// +
-							// "Booleans").itemTooltip(ItemHandler.getFancyMessageItem(ChatColor.AQUA
-							// + arena.getName() + " Booleans",
-							// "   §eInteract Blocked: " +
-							// arena.getSettings().interactDisabled(),
-							// "   §cEnchant Blocked: " +
-							// arena.getSettings().enchantDisabled(),
-							// "   §6Hunger Blocked: " +
-							// arena.getSettings().hungerDisabled())).command("/Infected Setup "+arena.getName()+" Booleans").send(p);
+							p.sendMessage("");
+							new FancyMessage("                 §7§l[§4§nRemove Arena§7§l]").tooltip("§aClick to suggest §cremoving§a this arena.").suggest("/Infected Remove " + arena.getName()).send(p);
 							p.sendMessage("");
 							new FancyMessage(Msgs.Format_Prefix.getString()).then("§4<< Back").tooltip("Go back a Setup Page").command("/Infected Setup").send(p);
 						}

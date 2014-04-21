@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
+import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Location.LocationHandler;
@@ -52,13 +53,29 @@ public class SetSpawnCommand extends SubCommand {
 						list.add(s);
 						a.setSpawns(list, team);
 
-						Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
-						Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+						Infected.Menus = new Menus();
 
 						p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
 					}
 					else
-						p.sendMessage(Msgs.Help_SetSpawn.getString());
+						if (args.length == 1)
+						{
+							Team team = Team.Global;
+
+							Location l = p.getLocation();
+							String s = LocationHandler.getLocationToString(l);
+							Arena a = Lobby.getArena(ip.getCreating());
+							List<String> list = a.getExactSpawns(team);
+							list.add(s);
+							a.setSpawns(list, team);
+
+							Infected.Menus = new Menus();
+
+							p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
+
+						}
+						else
+							p.sendMessage(Msgs.Help_SetSpawn.getString());
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());

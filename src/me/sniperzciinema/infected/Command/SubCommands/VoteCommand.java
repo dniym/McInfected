@@ -7,6 +7,7 @@ import java.util.Random;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
+import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
@@ -80,6 +81,8 @@ public class VoteCommand extends SubCommand {
 								{
 									arena.setVotes(arena.getVotes() + ip.getAllowedVotes());
 									ip.setVote(arena);
+
+									Infected.Menus = new Menus();
 
 									for (Player u : Lobby.getPlayersInGame())
 									{

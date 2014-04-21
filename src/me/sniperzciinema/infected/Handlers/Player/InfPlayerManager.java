@@ -14,11 +14,13 @@ public class InfPlayerManager {
 	/**
 	 * Create InfPlayer
 	 * 
-	 * @param IP
+	 * @param Player
+	 * @return The new InfPlayer
 	 */
-	public static void createInfPlayer(InfPlayer IP) {
+	public static InfPlayer createInfPlayer(InfPlayer IP) {
 		if (!InfPlayerManager.players.contains(IP))
 			InfPlayerManager.players.add(IP);
+		return IP;
 	}
 
 	/**
@@ -76,5 +78,9 @@ public class InfPlayerManager {
 		for (InfPlayer player : InfPlayerManager.players)
 			if (player.getName().equalsIgnoreCase(playerName))
 				InfPlayerManager.players.remove(player);
+	}
+
+	public InfPlayerManager()
+	{
 	}
 }

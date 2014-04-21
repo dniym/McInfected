@@ -8,7 +8,6 @@ import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
-import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.RandomChatColor;
 
 import org.bukkit.Bukkit;
@@ -158,15 +157,15 @@ public class ScoreBoard {
 			// color code
 			// This way it'll show as a blank line, and not be merged with
 			// similar color codes
-			if (ScoreBoardVariables.getLine(line, player).equalsIgnoreCase(" "))
+			if (ScoreBoardVariables.getLine(line, this.ip).equalsIgnoreCase(" "))
 			{
 				String space = "&" + spaces;
 				spaces++;
-				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(space, player)));
+				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(space, this.ip)));
 			}
 			else
 				// If its just a regular message, just set it
-				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(line, player)));
+				score = ob.getScore(Bukkit.getOfflinePlayer(ScoreBoardVariables.getLine(line, this.ip)));
 			score.setScore(list.size() - 1 - row);
 			row++;
 		}
@@ -197,9 +196,8 @@ class ScoreBoardVariables {
 	 *            - the player who will see this line
 	 * @return The new line with the variables replaced and color added
 	 */
-	public static String getLine(String string, Player user) {
+	public static String getLine(String string, InfPlayer ip) {
 
-		InfPlayer ip = InfPlayerManager.getInfPlayer(user);
 		String newString = string;
 		// Replace all variables we need
 

@@ -30,7 +30,7 @@ import org.bukkit.entity.Player;
 
 public class Lobby {
 
-	public enum GameState
+	public static enum GameState
 	{
 		InLobby("In Lobby"),
 		Voting("Voting"),
@@ -53,28 +53,20 @@ public class Lobby {
 		}
 	}
 
-	// All the Arena Objects
 	private static ArrayList<Arena>		arenas	= new ArrayList<Arena>();
-	// All the players playing Infected
 	private static ArrayList<Player>	inGame	= new ArrayList<Player>();
-	// All the humans
-	// What ever arena we're playing on
+
 	private static Arena				activeArena;
-
-	// The games state
 	private static GameState			state	= GameState.InLobby;
-	private static int					VotingTime;
-	private static int					InfectingTime;
-	private static int					GameTime;
-	private static int					TimeLeft;
+	private static int					VotingTime, InfectingTime, GameTime, TimeLeft;
 
-	private static int					currentGameTimer;					;
+	private static int					currentGameTimer;
 
 	public static Arena addArena(Arena arena) {
 		if (!Lobby.arenas.contains(arena))
 			Lobby.arenas.add(arena);
 		return arena;
-	}
+	};
 
 	public static Arena addArena(String arenaName) {
 		Arena arena = new Arena(StringUtil.getWord(arenaName));
@@ -273,8 +265,8 @@ public class Lobby {
 
 	public static void reset() {
 		stopTimer();
-		Lobby.setGameState(GameState.InLobby);
-		for (Arena a : Lobby.getArenas())
+		setGameState(GameState.InLobby);
+		for (Arena a : getArenas())
 			a.setVotes(0);
 
 		resetArena(getActiveArena());
@@ -299,8 +291,8 @@ public class Lobby {
 	 * @param currentGameTimer
 	 *            the currentGameTimer to set
 	 */
-	public static void setCurrentGameTimer(int currentGameTimer) {
-		Lobby.currentGameTimer = currentGameTimer;
+	public static void setCurrentGameTimer(int currentGameTime) {
+		Lobby.currentGameTimer = currentGameTime;
 	}
 
 	public static void setGameState(GameState gamestate) {
@@ -465,7 +457,7 @@ public class Lobby {
 	}
 
 	public static void timerStartVote() {
-		if (Lobby.getGameState() == GameState.InLobby)
+		if (getGameState() == GameState.InLobby)
 		{
 			stopTimer();
 			Lobby.VotingTime = Settings.getVotingTime();
@@ -564,7 +556,7 @@ public class Lobby {
 									player.sendMessage(Msgs.Game_Info_Arena.getString("<arena>", getActiveArena().getName(), "<creator>", getActiveArena().getCreator()));
 									player.sendMessage("");
 									player.sendMessage(Msgs.Format_Line.getString());
-									Lobby.setGameState(GameState.Loading);
+									setGameState(GameState.Loading);
 									stopTimer();
 								}
 								Lobby.currentGameTimer = Bukkit.getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
@@ -588,6 +580,11 @@ public class Lobby {
 				}
 			}, 0L, 20L);
 		}
+	}
+
+	public Lobby()
+	{
+		loadAllArenas();
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
+import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
@@ -50,8 +51,7 @@ public class CreateCommand extends SubCommand {
 						Arena a = new Arena(arena);
 						Lobby.addArena(a);
 
-						Infected.Menus.destroyMenu(Infected.Menus.voteMenu);
-						Infected.Menus.voteMenu = Infected.Menus.getVoteMenu();
+						Infected.Menus = new Menus();
 
 						if (args.length == 3)
 							a.setCreator(args[2]);

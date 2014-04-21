@@ -309,11 +309,7 @@ public class ItemHandler {
 
 							else
 								if (data.startsWith("data") || data.startsWith("durability") || data.startsWith("damage"))
-								{
-									System.out.println(Short.parseShort(data.split(":")[1]));
 									stack.setDurability(Short.parseShort(data.split(":")[1]));
-								}
-
 								else
 									if (data.startsWith("enchantment") || data.startsWith("enchant"))
 									{

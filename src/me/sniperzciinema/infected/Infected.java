@@ -56,7 +56,6 @@ public class Infected extends JavaPlugin {
 	public static MySQL			MySQL		= null;
 	public static Connection	connection	= null;
 
-	// Create the menus
 	public static Menus			Menus;
 
 	@Override
@@ -75,8 +74,7 @@ public class Infected extends JavaPlugin {
 		}
 		catch (Exception e)
 		{
-			// If theres no one in Infected it seems to not be able to find the
-			// Lobby class when checking if the game is empty
+
 		}
 		if (Settings.MySQLEnabled())
 			Infected.MySQL.closeConnection();
@@ -84,9 +82,16 @@ public class Infected extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
+		Infected.me = this;
+		Infected.Menus = new Menus();
+
+		Files.updateAll();
+		Files.saveAll();
+		Files.reloadAll();
+
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
-		Infected.me = this;
 		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
 
 		try
@@ -99,17 +104,6 @@ public class Infected extends JavaPlugin {
 		{
 			System.out.println("Metrics was unable to start...");
 		}
-
-		// Create Configs and files
-		getConfig().options().copyDefaults(true);
-		Files.getArenas().options().copyDefaults(true);
-		Files.getShop().options().copyDefaults(true);
-		Files.getPlayers().options().copyDefaults(true);
-		Files.getMessages().options().copyDefaults(true);
-		Files.getGrenades().options().copyDefaults(true);
-		Files.getClasses().options().copyDefaults(true);
-		Files.getSigns().options().copyDefaults(true);
-		Files.saveAll();
 
 		// Check for an update
 		PluginDescriptionFile pdf = getDescription();
@@ -177,12 +171,8 @@ public class Infected extends JavaPlugin {
 		for (Player u : Bukkit.getOnlinePlayers())
 			InfPlayerManager.createInfPlayer(u);
 
-		Lobby.loadAllArenas();
-
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
-
-		Infected.Menus = new Menus();
 
 		System.out.println(Msgs.Format_Line.getString());
 
