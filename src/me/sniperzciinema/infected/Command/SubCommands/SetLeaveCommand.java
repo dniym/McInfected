@@ -43,4 +43,9 @@ public class SetLeaveCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "setexit" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

@@ -1,6 +1,8 @@
 
 package me.sniperzciinema.infected.GameMechanics;
 
+import java.util.UUID;
+
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Tools.Files;
 import me.sniperzciinema.infected.Tools.MySQLManager;
@@ -14,97 +16,94 @@ public class Stats {
 	};
 
 	// Get the deaths from the location required
-	public static int getDeaths(String name) {
-		name = name.toLowerCase();
+	public static int getDeaths(UUID uuid) {
 		if (Settings.MySQLEnabled())
-			return Integer.valueOf(getMySQLStats(name, "Deaths"));
+			return Integer.valueOf(getMySQLStats(uuid, "Deaths"));
 		else
-			return Files.getPlayers().getInt("Players." + name + ".Deaths");
+			return Files.getPlayers().getInt("Players." + uuid + ".Deaths");
 	}
 
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @return HighestKillStreak
 	 */
-	public static int getHighestKillStreak(String name) {
-		name = name.toLowerCase();
+	public static int getHighestKillStreak(UUID uuid) {
+
 		if (Settings.MySQLEnabled())
-			return Integer.valueOf(getMySQLStats(name, "HighestKillStreak"));
+			return Integer.valueOf(getMySQLStats(uuid, "HighestKillStreak"));
 		else
-			return Files.getPlayers().getInt("Players." + name + ".HighestKillStreak");
+			return Files.getPlayers().getInt("Players." + uuid + ".HighestKillStreak");
 	}
 
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @return Kills
 	 */
-	public static int getKills(String name) {
-		name = name.toLowerCase();
+	public static int getKills(UUID uuid) {
+
 		if (Settings.MySQLEnabled())
-			return Integer.valueOf(getMySQLStats(name, "Kills"));
+			return Integer.valueOf(getMySQLStats(uuid, "Kills"));
 		else
-			return Files.getPlayers().getInt("Players." + name + ".Kills");
+			return Files.getPlayers().getInt("Players." + uuid + ".Kills");
 	}
 
 	/**
-	 * Gets the value of the stat for the player's name
+	 * Gets the value of the stat for the player's uuid
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param stat
 	 * @return value
 	 */
-	private static Integer getMySQLStats(String name, String stat) {
-		name = name.toLowerCase();
-		return MySQLManager.getInt("Infected", stat, name);
+	private static Integer getMySQLStats(UUID uuid, String stat) {
+		return MySQLManager.getInt("Infected", stat, uuid);
 	}
 
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @return PlayingTime
 	 */
-	public static int getPlayingTime(String name) {
-		name = name.toLowerCase();
+	public static int getPlayingTime(UUID uuid) {
 		if (Settings.MySQLEnabled())
-			return Integer.valueOf(getMySQLStats(name, "PlayingTime"));
+			return Integer.valueOf(getMySQLStats(uuid, "PlayingTime"));
 		else
-			return Files.getPlayers().getInt("Players." + name + ".PlayingTime");
+			return Files.getPlayers().getInt("Players." + uuid.toString() + ".PlayingTime");
 	}
 
 	/**
 	 * Checks if we're going MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @return the players Score
 	 */
-	public static int getPoints(String name, boolean useVault) {
-		name = name.toLowerCase();
+	public static int getPoints(UUID uuid, boolean useVault) {
+
 		if (useVault)
-			return (int) Infected.economy.getBalance(name);
+			return (int) Infected.economy.getBalance(uuid.toString());
 		else
 			if (Settings.MySQLEnabled())
-				return Integer.valueOf(getMySQLStats(name, "Points"));
+				return Integer.valueOf(getMySQLStats(uuid, "Points"));
 			else
-				return Files.getPlayers().getInt("Players." + name + ".Points");
+				return Files.getPlayers().getInt("Players." + uuid + ".Points");
 	}
 
 	/**
 	 * Checks if we're going MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @return the players Score
 	 */
-	public static int getScore(String name) {
-		name = name.toLowerCase();
+	public static int getScore(UUID uuid) {
+
 		if (Settings.MySQLEnabled())
-			return Integer.valueOf(getMySQLStats(name, "Score"));
+			return Integer.valueOf(getMySQLStats(uuid, "Score"));
 		else
-			return Files.getPlayers().getInt("Players." + name + ".Score");
+			return Files.getPlayers().getInt("Players." + uuid + ".Score");
 	}
 
 	/**
@@ -116,24 +115,24 @@ public class Stats {
 	 *            - The player
 	 * @return the value
 	 */
-	public static int getStat(StatType type, String user) {
+	public static int getStat(StatType type, UUID uuid) {
 		if (type == StatType.kills)
-			return getKills(user);
+			return getKills(uuid);
 		else
 			if (type == StatType.deaths)
-				return getDeaths(user);
+				return getDeaths(uuid);
 			else
 				if (type == StatType.points)
-					return getPoints(user, Settings.VaultEnabled());
+					return getPoints(uuid, Settings.VaultEnabled());
 				else
 					if (type == StatType.score)
-						return getScore(user);
+						return getScore(uuid);
 					else
 						if (type == StatType.killstreak)
-							return getHighestKillStreak(user);
+							return getHighestKillStreak(uuid);
 						else
 							if (type == StatType.time)
-								return getPlayingTime(user);
+								return getPlayingTime(uuid);
 							else
 								return 0;
 	}
@@ -141,17 +140,17 @@ public class Stats {
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param deaths
 	 */
 
-	public static void setDeaths(String name, Integer deaths) {
-		name = name.toLowerCase();
+	public static void setDeaths(UUID uuid, Integer deaths) {
+
 		if (Settings.MySQLEnabled())
-			setMySQLStats(name, "Deaths", deaths);
+			setMySQLStats(uuid, "Deaths", deaths);
 		else
 		{
-			Files.getPlayers().set("Players." + name + ".Deaths", deaths);
+			Files.getPlayers().set("Players." + uuid + ".Deaths", deaths);
 			Files.savePlayers();
 		}
 	}
@@ -159,17 +158,17 @@ public class Stats {
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param highestKillStreak
 	 */
 
-	public static void setHighestKillStreak(String name, Integer highestKillStreak) {
-		name = name.toLowerCase();
+	public static void setHighestKillStreak(UUID uuid, Integer highestKillStreak) {
+
 		if (Settings.MySQLEnabled())
-			setMySQLStats(name, "HighestKillStreak", highestKillStreak);
+			setMySQLStats(uuid, "HighestKillStreak", highestKillStreak);
 		else
 		{
-			Files.getPlayers().set("Players." + name + ".HighestKillStreak", highestKillStreak);
+			Files.getPlayers().set("Players." + uuid + ".HighestKillStreak", highestKillStreak);
 			Files.savePlayers();
 		}
 	}
@@ -177,47 +176,47 @@ public class Stats {
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param kills
 	 */
 
-	public static void setKills(String name, Integer kills) {
-		name = name.toLowerCase();
+	public static void setKills(UUID uuid, Integer kills) {
+
 		if (Settings.MySQLEnabled())
-			setMySQLStats(name, "Kills", kills);
+			setMySQLStats(uuid, "Kills", kills);
 		else
 		{
-			Files.getPlayers().set("Players." + name + ".Kills", kills);
+			Files.getPlayers().set("Players." + uuid + ".Kills", kills);
 			Files.savePlayers();
 		}
 	}
 
 	/**
-	 * Sets the value of the stat to the player's name
+	 * Sets the value of the stat to the player's uuid
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param stat
 	 * @param value
 	 */
-	private static void setMySQLStats(String name, String stat, int value) {
-		name = name.toLowerCase();
-		MySQLManager.update("Infected", stat, value, name);
+	private static void setMySQLStats(UUID uuid, String stat, int value) {
+
+		MySQLManager.update("Infected", stat, value, uuid);
 	}
 
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param PlayingTime
 	 */
 
-	public static void setPlayingTime(String name, long l) {
-		name = name.toLowerCase();
+	public static void setPlayingTime(UUID uuid, long l) {
+
 		if (Settings.MySQLEnabled())
-			setMySQLStats(name, "PlayingTime", (int) l);
+			setMySQLStats(uuid, "PlayingTime", (int) l);
 		else
 		{
-			Files.getPlayers().set("Players." + name + ".PlayingTime", l);
+			Files.getPlayers().set("Players." + uuid + ".PlayingTime", l);
 			Files.savePlayers();
 		}
 	}
@@ -225,31 +224,31 @@ public class Stats {
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param points
 	 */
-	public static void setPoints(String name, Integer points, boolean useVault) {
-		name = name.toLowerCase();
+	public static void setPoints(UUID uuid, Integer points, boolean useVault) {
+
 		if (useVault)
 		{
-			int cPoints = Stats.getPoints(name, useVault);
+			int cPoints = Stats.getPoints(uuid, useVault);
 			if (cPoints > points)
 			{
 				int price = cPoints - points;
-				Infected.economy.withdrawPlayer(name, price);
+				Infected.economy.withdrawPlayer(uuid.toString(), price);
 			}
 			else
 			{
 				int depo = points - cPoints;
-				Infected.economy.depositPlayer(name, depo);
+				Infected.economy.depositPlayer(uuid.toString(), depo);
 			}
 		}
 		else
 			if (Settings.MySQLEnabled())
-				setMySQLStats(name, "Points", points);
+				setMySQLStats(uuid, "Points", points);
 			else
 			{
-				Files.getPlayers().set("Players." + name + ".Points", points);
+				Files.getPlayers().set("Players." + uuid + ".Points", points);
 				Files.savePlayers();
 			}
 	}
@@ -257,16 +256,16 @@ public class Stats {
 	/**
 	 * Checks if we're setting MySQL or Player.yml
 	 * 
-	 * @param name
+	 * @param uuid
 	 * @param score
 	 */
-	public static void setScore(String name, Integer score) {
-		name = name.toLowerCase();
+	public static void setScore(UUID uuid, Integer score) {
+
 		if (Settings.MySQLEnabled())
-			setMySQLStats(name, "Score", score);
+			setMySQLStats(uuid, "Score", score);
 		else
 		{
-			Files.getPlayers().set("Players." + name + ".Score", score);
+			Files.getPlayers().set("Players." + uuid + ".Score", score);
 			Files.savePlayers();
 		}
 	}

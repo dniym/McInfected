@@ -41,10 +41,10 @@ public class SetCreatorCommand extends SubCommand {
 					{
 						Arena arena = Lobby.getArena(ip.getCreating());
 						arena.setCreator(args[1]);
-						p.sendMessage(Msgs.Command_Arena_SetCreator.getString());
+						p.sendMessage(Msgs.Command_Arena_SetCreator.getString("<creator>", args[1]));
 					}
 					else
-						p.sendMessage(Msgs.Help_Arena_SetCreator.getString());
+						p.sendMessage(Msgs.Help_SetCreator.getString());
 		}
 
 	}
@@ -52,5 +52,10 @@ public class SetCreatorCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "setcreater", "setmaker", "setdesigner" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "<Creator>" });
 	}
 }

@@ -43,4 +43,9 @@ public class TpLeaveCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "visitleave", "seeleave" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

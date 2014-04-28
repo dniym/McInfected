@@ -43,4 +43,9 @@ public class SetLobbyCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "sl" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

@@ -107,11 +107,11 @@ public class FilesCommand extends SubCommand {
 
 						}
 						else
-							sender.sendMessage(Msgs.Help_Files.getString("<files>", "Config, Abilities, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
+							sender.sendMessage(Msgs.Help_Files.getString("<files>", "Config, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
 
 					}
 					else
-						sender.sendMessage(Msgs.Help_Files.getString("<files>", "Config, Abilities, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
+						sender.sendMessage(Msgs.Help_Files.getString("<files>", "Config, Arenas, Classes, Grenades, Messages, Players, Shop, Signs"));
 		}
 
 	}
@@ -119,5 +119,10 @@ public class FilesCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "files" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "Config", "Arenas", "Classes", "Grenades", "Messages", "Players", "Shop", "Signs" });
 	}
 }

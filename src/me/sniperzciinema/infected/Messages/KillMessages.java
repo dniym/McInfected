@@ -71,9 +71,9 @@ public class KillMessages {
 		// Replace color codes, and killer and killed names
 		msg = ChatColor.translateAlternateColorCodes('&', msg.replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 		if (killer != null)
-			msg = msg.replaceAll("<killer>", killer.getName() + "(" + Stats.getScore(killer.getName()) + ")");
+			msg = msg.replaceAll("<killer>", killer.getName() + "(" + Stats.getScore(killer.getUniqueId()) + ")");
 		if (killed != null)
-			msg = msg.replaceAll("<killed>", killed.getName() + "(" + Stats.getScore(killed.getName()) + ")");
+			msg = msg.replaceAll("<killed>", killed.getName() + "(" + Stats.getScore(killed.getUniqueId()) + ")");
 		return (prefix ? Msgs.Format_Prefix.getString() : "") + msg;
 	}
 }

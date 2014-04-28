@@ -53,4 +53,9 @@ public class ClassesCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "kits", "class", "kit" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

@@ -2,6 +2,7 @@
 package me.sniperzciinema.infected.Command;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommands.AddonsCommand;
@@ -21,7 +22,9 @@ import me.sniperzciinema.infected.Command.SubCommands.LeaveCommand;
 import me.sniperzciinema.infected.Command.SubCommands.ListCommand;
 import me.sniperzciinema.infected.Command.SubCommands.RemoveCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SetArenaCommand;
+import me.sniperzciinema.infected.Command.SubCommands.SetBlockCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SetClassCommand;
+import me.sniperzciinema.infected.Command.SubCommands.SetCreatorCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SetLeaveCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SetLobbyCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SetSpawnCommand;
@@ -29,6 +32,7 @@ import me.sniperzciinema.infected.Command.SubCommands.SetupCommand;
 import me.sniperzciinema.infected.Command.SubCommands.ShopCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SpawnsCommand;
 import me.sniperzciinema.infected.Command.SubCommands.StartCommand;
+import me.sniperzciinema.infected.Command.SubCommands.StatsCommand;
 import me.sniperzciinema.infected.Command.SubCommands.SuicideCommand;
 import me.sniperzciinema.infected.Command.SubCommands.TopCommand;
 import me.sniperzciinema.infected.Command.SubCommands.TpLeaveCommand;
@@ -39,6 +43,7 @@ import me.sniperzciinema.infected.Events.InfectedCommandEvent;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
+import me.sniperzciinema.infected.Tools.TabCompletionHelper;
 import me.sniperzciinema.infected.Tools.FancyMessages.FancyMessage;
 
 import org.bukkit.Bukkit;
@@ -46,10 +51,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 
-public class CHandler implements CommandExecutor {
+public class CHandler implements TabCompleter, CommandExecutor {
 
 	private ArrayList<SubCommand>	commands;
 
@@ -74,7 +80,9 @@ public class CHandler implements CommandExecutor {
 		registerSubCommand(new ListCommand());
 		registerSubCommand(new RemoveCommand());
 		registerSubCommand(new SetArenaCommand());
+		registerSubCommand(new SetBlockCommand());
 		registerSubCommand(new SetClassCommand());
+		registerSubCommand(new SetCreatorCommand());
 		registerSubCommand(new SetLeaveCommand());
 		registerSubCommand(new SetLobbyCommand());
 		registerSubCommand(new SetSpawnCommand());
@@ -82,6 +90,7 @@ public class CHandler implements CommandExecutor {
 		registerSubCommand(new ShopCommand());
 		registerSubCommand(new SpawnsCommand());
 		registerSubCommand(new StartCommand());
+		registerSubCommand(new StatsCommand());
 		registerSubCommand(new SuicideCommand());
 		registerSubCommand(new TopCommand());
 		registerSubCommand(new TpLeaveCommand());
@@ -89,6 +98,39 @@ public class CHandler implements CommandExecutor {
 		registerSubCommand(new TpSpawnCommand());
 		registerSubCommand(new VoteCommand());
 
+	}
+
+	public SubCommand getSubCommand(String cmdName) {
+		for (SubCommand cmd : this.commands)
+			if (cmd.getName().equalsIgnoreCase(cmdName))
+				return cmd;
+		return null;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+
+		if (args.length == 1)
+		{
+			List<String> cmds = new ArrayList<String>();
+
+			for (SubCommand subCommand : this.commands)
+				cmds.add(subCommand.getName());
+
+			return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, cmds);
+		}
+
+		else
+		{
+			List<String> params = new ArrayList<String>();
+			for (SubCommand subCommand : this.commands)
+				if (subCommand.getName().equalsIgnoreCase(args[0]) || subCommand.getAliases().contains(args[0].toLowerCase()))
+					params = subCommand.getTabs();
+
+			if (params != null)
+				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, params);
+		}
+		return null;
 	}
 
 	public ArrayList<SubCommand> getSubCommands() {
@@ -153,5 +195,9 @@ public class CHandler implements CommandExecutor {
 
 	public void registerSubCommand(SubCommand subCommand) {
 		this.commands.add(subCommand);
+	}
+
+	public void unRegisterSubCommand(SubCommand subCommand) {
+		this.commands.remove(subCommand);
 	}
 }

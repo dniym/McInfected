@@ -65,4 +65,9 @@ public class TpSpawnCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "visitspawn", "seespawn" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

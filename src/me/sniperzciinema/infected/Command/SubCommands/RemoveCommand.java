@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infected.Command.SubCommands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
 import me.sniperzciinema.infected.Extras.Menus;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Messages.Msgs;
 
 import org.bukkit.command.CommandException;
@@ -51,5 +53,14 @@ public class RemoveCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "delete" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		List<String> arenas = new ArrayList<String>();
+		for (Arena arena : Lobby.getArenas())
+			arenas.add(arena.getName());
+
+		return arenas;
 	}
 }

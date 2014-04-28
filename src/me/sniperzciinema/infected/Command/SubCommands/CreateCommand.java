@@ -77,4 +77,9 @@ public class CreateCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "addmap", "addarena" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

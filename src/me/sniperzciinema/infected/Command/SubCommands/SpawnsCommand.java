@@ -59,4 +59,9 @@ public class SpawnsCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "countspawns" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

@@ -2,6 +2,9 @@
 package me.sniperzciinema.infected.Handlers.Player;
 
 import java.util.ArrayList;
+import java.util.UUID;
+
+import me.sniperzciinema.infected.Handlers.UUID.UUIDManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -53,11 +56,25 @@ public class InfPlayerManager {
 	 * 
 	 * @param playername
 	 */
+	@SuppressWarnings("deprecation")
 	public static InfPlayer getInfPlayer(String playerName) {
 		for (InfPlayer IP : InfPlayerManager.players)
 			if (IP.getName().equalsIgnoreCase(playerName))
 				return IP;
 		return createInfPlayer(Bukkit.getPlayer(playerName));
+	}
+
+	/**
+	 * Get InfPlayer
+	 * 
+	 * @param uuid
+	 */
+	@SuppressWarnings("deprecation")
+	public static InfPlayer getInfPlayer(UUID id) {
+		for (InfPlayer IP : InfPlayerManager.players)
+			if (IP.getUuid() == id)
+				return IP;
+		return createInfPlayer(Bukkit.getPlayer(UUIDManager.getPlayerName(id)));
 	}
 
 	/**

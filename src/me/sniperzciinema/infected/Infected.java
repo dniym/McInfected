@@ -57,6 +57,7 @@ public class Infected extends JavaPlugin {
 	public static Connection	connection	= null;
 
 	public static Menus			Menus;
+	public static CHandler		commandsHandler;
 
 	@Override
 	public void onDisable() {
@@ -127,7 +128,9 @@ public class Infected extends JavaPlugin {
 		}
 
 		// Get the Commands class and the Listener
-		getCommand("Infected").setExecutor(new CHandler());
+		Infected.commandsHandler = new CHandler();
+		getCommand("Infected").setExecutor(Infected.commandsHandler);
+		getCommand("Infected").setTabCompleter(Infected.commandsHandler);
 
 		pm.registerEvents(new ScoreBoardToggle(), this);
 		pm.registerEvents(new DamageEvents(this), this);
@@ -157,7 +160,7 @@ public class Infected extends JavaPlugin {
 				Infected.connection = Infected.MySQL.openConnection();
 				Statement statement = Infected.connection.createStatement();
 
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (Player VARCHAR(20), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
+				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (UUID VARCHAR(40), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
 				System.out.println("MySQL Table has been loaded");
 			}
 			catch (Exception e)
@@ -171,11 +174,11 @@ public class Infected extends JavaPlugin {
 		for (Player u : Bukkit.getOnlinePlayers())
 			InfPlayerManager.createInfPlayer(u);
 
+		Lobby.loadAllArenas();
 		InfClassManager.loadConfigClasses();
 		GrenadeManager.loadConfigGrenades();
 
 		System.out.println(Msgs.Format_Line.getString());
-
 	}
 
 }

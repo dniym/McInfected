@@ -16,6 +16,8 @@ public abstract class SubCommand {
 		this.name = name;
 	}
 
+	public abstract List<String> getTabs();
+
 	public abstract void execute(CommandSender sender, String[] args) throws CommandException;
 
 	public abstract List<String> getAliases();

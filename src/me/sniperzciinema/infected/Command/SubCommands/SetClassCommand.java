@@ -98,4 +98,9 @@ public class SetClassCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "createclass", "makeclass" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

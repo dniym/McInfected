@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import me.sniperzciinema.infected.Infected;
 
@@ -16,14 +17,14 @@ public class MySQLManager {
 	 *            - The tables name
 	 * @param columnName
 	 *            - The stats name
-	 * @param playerName
+	 * @param uuid
 	 * @return the players stats
 	 */
-	public static int getInt(String tableName, String columnName, String playerName) {
+	public static int getInt(String tableName, String columnName, UUID uuid) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			ResultSet set = statement.executeQuery("SELECT " + columnName + " FROM " + tableName + " WHERE Player = '" + playerName + "';");
+			ResultSet set = statement.executeQuery("SELECT " + columnName + " FROM " + tableName + " WHERE UUID = '" + uuid.toString() + "';");
 			int i = 0;
 			set.next();
 			i = set.getInt(columnName);
@@ -32,7 +33,7 @@ public class MySQLManager {
 		}
 		catch (SQLException e)
 		{
-			setInt(tableName, columnName, 0, playerName);
+			setInt(tableName, columnName, 0, uuid);
 			return 0;
 		}
 	}
@@ -42,16 +43,16 @@ public class MySQLManager {
 	 *            - The tables name
 	 * @return All the players in the Infected table
 	 */
-	public static ArrayList<String> getPlayers(String tableName) {
+	public static ArrayList<UUID> getPlayers(String tableName) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
 			ResultSet set = statement.executeQuery("SELECT * FROM `" + tableName + "` ");
-			ArrayList<String> players = new ArrayList<String>();
+			ArrayList<UUID> players = new ArrayList<UUID>();
 			while (true)
 			{
 				set.next();
-				players.add(set.getString("Player"));
+				players.add(UUID.fromString(set.getString("UUID")));
 				if (set.isLast())
 					break;
 			}
@@ -60,7 +61,7 @@ public class MySQLManager {
 		}
 		catch (SQLException e)
 		{
-			ArrayList<String> nope = new ArrayList<String>();
+			ArrayList<UUID> nope = new ArrayList<UUID>();
 			return nope;
 		}
 	}
@@ -75,11 +76,11 @@ public class MySQLManager {
 	 * @param value
 	 * @param playerName
 	 */
-	private static void setInt(String tableName, String columnName, int value, String playerName) {
+	private static void setInt(String tableName, String columnName, int value, UUID uuid) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			statement.execute("INSERT INTO " + tableName + " (`Player`, `" + columnName + "`) VALUES ('" + playerName + "', '" + value + "');");
+			statement.execute("INSERT INTO " + tableName + " (`UUID`, `" + columnName + "`) VALUES ('" + uuid + "', '" + value + "');");
 
 			statement.close();
 		}
@@ -102,16 +103,16 @@ public class MySQLManager {
 	 * @param value
 	 * @param playerName
 	 */
-	public static void update(String tableName, String columnName, int value, String playerName) {
+	public static void update(String tableName, String columnName, int value, UUID uuid) {
 		try
 		{
 			Statement statement = Infected.connection.createStatement();
-			statement.execute("UPDATE " + tableName + " SET " + columnName + "=" + value + " WHERE Player ='" + playerName + "';");
+			statement.execute("UPDATE " + tableName + " SET " + columnName + "=" + value + " WHERE UUID ='" + uuid + "';");
 			statement.close();
 		}
 		catch (SQLException e)
 		{
-			setInt(tableName, columnName, value, playerName);
+			setInt(tableName, columnName, value, uuid);
 		}
 	}
 }

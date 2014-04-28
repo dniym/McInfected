@@ -3,11 +3,13 @@ package me.sniperzciinema.infected.Command.SubCommands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import me.sniperzciinema.infected.Command.SubCommand;
 import me.sniperzciinema.infected.GameMechanics.Sort;
 import me.sniperzciinema.infected.GameMechanics.Stats;
 import me.sniperzciinema.infected.GameMechanics.Stats.StatType;
+import me.sniperzciinema.infected.Handlers.UUID.UUIDManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Messages.Time;
 
@@ -38,16 +40,21 @@ public class TopCommand extends SubCommand {
 
 					int i = 1;
 					sender.sendMessage(Msgs.Format_Header.getString("<title>", "Top " + stat.toString()));
-					for (String name : Sort.topStats(type, 5))
+					for (UUID id : Sort.topStats(type, 5))
 					{
-						if (name != " ")
+						if (id != null)
+						{
+
+							String name = UUIDManager.getPlayerName(id);
 							if (i == 1)
-								sender.sendMessage("" + ChatColor.RED + ChatColor.BOLD + i + ". " + ChatColor.GOLD + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
+								sender.sendMessage("" + ChatColor.RED + ChatColor.BOLD + i + ". " + ChatColor.GOLD + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, id)) : Stats.getStat(type, id)));
 							else
 								if ((i == 2) || (i == 3))
-									sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.GRAY + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
+									sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.GRAY + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, id)) : Stats.getStat(type, id)));
 								else
-									sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.WHITE + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.DARK_GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, name)) : Stats.getStat(type, name)));
+									sender.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + i + ". " + ChatColor.WHITE + ChatColor.BOLD + (name.length() == 16 ? name : (name + "                 ").substring(0, 16)) + ChatColor.GREEN + " =-= " + ChatColor.DARK_GRAY + (type == StatType.time ? Time.getOnlineTime((long) Stats.getStat(type, id)) : Stats.getStat(type, id)));
+
+						}
 						i++;
 
 						if (i == 6)
@@ -66,5 +73,11 @@ public class TopCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "leaderboard", "leaderboards" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		List<String> stats = Arrays.asList(new String[] { "Kills", "Deaths", "Points", "Score", "Time", "KillStreak" });
+		return stats;
 	}
 }

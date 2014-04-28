@@ -58,6 +58,7 @@ public class ScoreBoard {
 	/**
 	 * Force seeing the regular scoreboard(Votes, Players)
 	 */
+	@SuppressWarnings("deprecation")
 	public void showRegular() {
 		this.showing = ScoreBoards.Regular;
 		Player player = this.ip.getPlayer();
@@ -126,6 +127,7 @@ public class ScoreBoard {
 	 * Force showing the stats scoreboard (Layout is set in the config (Mainly
 	 * because i was to lazy to make it myself...))
 	 */
+	@SuppressWarnings("deprecation")
 	public void showStats() {
 		this.showing = ScoreBoards.Stats;
 		Player player = this.ip.getPlayer();

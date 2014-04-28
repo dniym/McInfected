@@ -63,8 +63,8 @@ public class InfPlayer {
 
 	public InfPlayer(Player p)
 	{
-		this.name = p.getName();
-		this.player = p;
+		setPlayer(p);
+		setName(p.getName());
 		setUuid(p.getUniqueId());
 
 	}
@@ -118,7 +118,7 @@ public class InfPlayer {
 	 * @return the deaths
 	 */
 	public int getDeaths() {
-		return Stats.getDeaths(this.name);
+		return Stats.getDeaths(this.uuid);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class InfPlayer {
 	}
 
 	public int getHighestKillStreak() {
-		return Stats.getHighestKillStreak(this.name);
+		return Stats.getHighestKillStreak(this.uuid);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class InfPlayer {
 	 * @return the kills
 	 */
 	public int getKills() {
-		return Stats.getKills(this.name);
+		return Stats.getKills(this.uuid);
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class InfPlayer {
 	 * @return the points
 	 */
 	public int getPoints(boolean useVault) {
-		return Stats.getPoints(this.name, useVault);
+		return Stats.getPoints(this.uuid, useVault);
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class InfPlayer {
 	 * @return the score
 	 */
 	public int getScore() {
-		return Stats.getScore(this.name);
+		return Stats.getScore(this.uuid);
 	}
 
 	public ScoreBoard getScoreBoard() {
@@ -371,7 +371,7 @@ public class InfPlayer {
 			Lobby.delPlayerInGame(this.player);
 
 			if (Lobby.getGameState() == GameState.Started)
-				Stats.setPlayingTime(getName(), Stats.getPlayingTime(getName()) + getPlayingTime());
+				Stats.setPlayingTime(this.uuid, Stats.getPlayingTime(this.uuid) + getPlayingTime());
 
 			if ((getVote() != null) && ((Lobby.getGameState() == GameState.InLobby) || (Lobby.getGameState() == GameState.Voting)))
 				getVote().setVotes(getVote().getVotes() - getAllowedVotes());
@@ -394,8 +394,8 @@ public class InfPlayer {
 			manageLeaving();
 
 			for (Player u : Lobby.getPlayersInGame())
-				if (u.getName() != this.name)
-					InfPlayerManager.getInfPlayer(this.name).getScoreBoard().showProperBoard();
+				if (u.getUniqueId() != this.uuid)
+					InfPlayerManager.getInfPlayer(u).getScoreBoard().showProperBoard();
 
 			this.player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 		}
@@ -430,7 +430,7 @@ public class InfPlayer {
 						for (Player u : Lobby.getPlayersInGame())
 						{
 							u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-							InfPlayerManager.getInfPlayer(this.name).tpToLobby();
+							InfPlayerManager.getInfPlayer(u).tpToLobby();
 						}
 
 						// Reset all the timers, lists, etc(Not including the
@@ -455,7 +455,7 @@ public class InfPlayer {
 							for (Player u : Lobby.getPlayersInGame())
 							{
 								u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-								InfPlayerManager.getInfPlayer(this.name).tpToLobby();
+								InfPlayerManager.getInfPlayer(u).tpToLobby();
 							}
 
 							// Reset all the timers, lists, etc(Not including
@@ -480,7 +480,7 @@ public class InfPlayer {
 									for (Player u : Lobby.getPlayersInGame())
 									{
 										u.sendMessage(Msgs.Game_End_Not_Enough_Players.getString());
-										InfPlayerManager.getInfPlayer(this.name).tpToLobby();
+										InfPlayerManager.getInfPlayer(u).tpToLobby();
 									}
 
 									// Reset all the timers, lists, etc(Not
@@ -638,7 +638,7 @@ public class InfPlayer {
 	 *            the kills to set
 	 */
 	public void setKills(int kills) {
-		Stats.setKills(this.name, kills);
+		Stats.setKills(this.uuid, kills);
 	}
 
 	/**
@@ -694,7 +694,7 @@ public class InfPlayer {
 	 *            the points to set
 	 */
 	public void setPoints(int points, boolean useVault) {
-		Stats.setPoints(this.name, points, useVault);
+		Stats.setPoints(this.uuid, points, useVault);
 	}
 
 	/**
@@ -702,7 +702,7 @@ public class InfPlayer {
 	 *            the score to set
 	 */
 	public void setScore(int score) {
-		Stats.setScore(this.name, score);
+		Stats.setScore(this.uuid, score);
 	}
 
 	/**
@@ -802,9 +802,9 @@ public class InfPlayer {
 
 	public void updateStats(int kills, int deaths) {
 		if (kills != 0)
-			Stats.setKills(this.name, Stats.getKills(this.name) + kills);
+			Stats.setKills(this.uuid, Stats.getKills(this.uuid) + kills);
 		if (deaths != 0)
-			Stats.setDeaths(this.name, Stats.getDeaths(this.name) + deaths);
+			Stats.setDeaths(this.uuid, Stats.getDeaths(this.uuid) + deaths);
 	}
 
 }

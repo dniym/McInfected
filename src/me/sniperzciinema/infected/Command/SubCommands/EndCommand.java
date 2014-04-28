@@ -38,4 +38,9 @@ public class EndCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "finish", "stop" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

@@ -1,11 +1,13 @@
 
 package me.sniperzciinema.infected.Command.SubCommands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import me.sniperzciinema.infected.Command.SubCommand;
 import me.sniperzciinema.infected.Handlers.Lobby;
+import me.sniperzciinema.infected.Handlers.Arena.Arena;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayerManager;
 import me.sniperzciinema.infected.Messages.Msgs;
@@ -60,5 +62,14 @@ public class SetArenaCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "choosearena", "select", "selectarena" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		List<String> arenas = new ArrayList<String>();
+		for (Arena arena : Lobby.getArenas())
+			arenas.add(arena.getName());
+
+		return arenas;
 	}
 }

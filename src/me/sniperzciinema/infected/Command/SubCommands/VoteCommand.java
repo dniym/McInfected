@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infected.Command.SubCommands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -104,5 +105,15 @@ public class VoteCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "choose" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		List<String> arenas = new ArrayList<String>();
+		for (Arena arena : Lobby.getArenas())
+			arenas.add(arena.getName());
+
+		arenas.add("Random");
+		return arenas;
 	}
 }

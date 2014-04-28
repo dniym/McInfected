@@ -45,4 +45,9 @@ public class ShopCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "store", "items" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

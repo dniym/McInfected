@@ -1,6 +1,8 @@
 
 package me.sniperzciinema.infected.GameMechanics;
 
+import java.util.UUID;
+
 import me.sniperzciinema.infected.Enums.Events;
 import me.sniperzciinema.infected.Handlers.Lobby;
 import me.sniperzciinema.infected.Handlers.Player.InfPlayer;
@@ -25,12 +27,13 @@ public class KillStreaks {
 	 */
 	public static void handle(boolean killed, Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
+		UUID id = p.getUniqueId();
 
 		// If the player was killed check if it is their new highest killstreak
 		if (killed)
 		{
-			if (IP.getKillstreak() > Stats.getHighestKillStreak(p.getName()))
-				Stats.setHighestKillStreak(p.getName(), IP.getKillstreak());
+			if (IP.getKillstreak() > Stats.getHighestKillStreak(id))
+				Stats.setHighestKillStreak(id, IP.getKillstreak());
 
 		}
 		// If the player didn't just die it means they we're the one who got a

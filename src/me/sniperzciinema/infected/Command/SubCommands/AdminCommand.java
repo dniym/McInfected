@@ -4,6 +4,7 @@ package me.sniperzciinema.infected.Command.SubCommands;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import me.sniperzciinema.infected.Infected;
 import me.sniperzciinema.infected.Command.SubCommand;
@@ -15,6 +16,7 @@ import me.sniperzciinema.infected.Handlers.Lobby.GameState;
 import me.sniperzciinema.infected.Handlers.Classes.InfClassManager;
 import me.sniperzciinema.infected.Handlers.Grenades.GrenadeManager;
 import me.sniperzciinema.infected.Handlers.Items.ItemHandler;
+import me.sniperzciinema.infected.Handlers.UUID.UUIDManager;
 import me.sniperzciinema.infected.Messages.Msgs;
 import me.sniperzciinema.infected.Tools.AddonManager;
 import me.sniperzciinema.infected.Tools.Files;
@@ -125,6 +127,7 @@ public class AdminCommand extends SubCommand {
 					// KICK
 					if (args[1].equalsIgnoreCase("Kick"))
 					{
+						@SuppressWarnings("deprecation")
 						Player u = Bukkit.getPlayer(args[2]);
 						if ((u == null) || !Lobby.isInGame(u))
 							sender.sendMessage(Msgs.Error_Game_They_Are_Not_In.getString());
@@ -145,31 +148,32 @@ public class AdminCommand extends SubCommand {
 						String user = args[2];
 
 						int i = Integer.parseInt(args[3]);
+						UUID id = UUIDManager.getPlayerUUID(user);
 						if (args[1].equalsIgnoreCase("Points"))
 						{
-							int newValue = Stats.getPoints(user, Settings.VaultEnabled()) + i;
-							Stats.setPoints(user, newValue, Settings.VaultEnabled());
+							int newValue = Stats.getPoints(id, Settings.VaultEnabled()) + i;
+							Stats.setPoints(id, newValue, Settings.VaultEnabled());
 							sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "points", "<value>", String.valueOf(newValue)));
 						}
 						else
 							if (args[1].equalsIgnoreCase("Score"))
 							{
-								int newValue = Stats.getScore(user) + i;
-								Stats.setScore(user, newValue);
+								int newValue = Stats.getScore(id) + i;
+								Stats.setScore(id, newValue);
 								sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "score", "<value>", String.valueOf(newValue)));
 							}
 							else
 								if (args[1].equalsIgnoreCase("Kills"))
 								{
-									int newValue = Stats.getKills(user) + i;
-									Stats.setKills(user, newValue);
+									int newValue = Stats.getKills(id) + i;
+									Stats.setKills(id, newValue);
 									sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "kills", "<value>", String.valueOf(newValue)));
 								}
 								else
 									if (args[1].equalsIgnoreCase("Deaths"))
 									{
-										int newValue = Stats.getDeaths(user) + i;
-										Stats.setDeaths(user, newValue);
+										int newValue = Stats.getDeaths(id) + i;
+										Stats.setDeaths(id, newValue);
 										sender.sendMessage(Msgs.Command_Admin_Changed_Stat.getString("<player>", user, "<stat>", "deaths", "<value>", String.valueOf(newValue)));
 									}
 									else
@@ -201,5 +205,11 @@ public class AdminCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "administrator" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+
+		return Arrays.asList(new String[] { "Points", "Score", "Kills", "Deaths", "Kick", "Shutdown", "Reload", "Code" });
 	}
 }

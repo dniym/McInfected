@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infected.Command.SubCommands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -103,5 +104,14 @@ public class GrenadesCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "grenade", "explode" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		List<String> grenades = new ArrayList<String>();
+		for (Grenade nade : GrenadeManager.getGrenades())
+			grenades.add(nade.getName());
+
+		return grenades;
 	}
 }

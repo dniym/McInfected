@@ -71,4 +71,9 @@ public class ChatCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "talk", "message", "msg" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

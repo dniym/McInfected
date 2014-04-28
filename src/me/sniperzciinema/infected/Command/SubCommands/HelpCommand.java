@@ -174,4 +174,9 @@ public class HelpCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "h", "?" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "1", "2", "3", "4", "5" });
+	}
 }

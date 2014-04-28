@@ -93,7 +93,7 @@ public class Game {
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 			IP.getScoreBoard().showProperBoard();
-			Stats.setPlayingTime(u.getName(), Stats.getPlayingTime(u.getName()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
+			Stats.setPlayingTime(u.getUniqueId(), Stats.getPlayingTime(u.getUniqueId()) + InfPlayerManager.getInfPlayer(u).getPlayingTime());
 			KillStreaks.handle(true, u);
 		}
 		if (DidHumansWin)
@@ -127,8 +127,8 @@ public class Game {
 						IV.addItem(is);
 
 				}
-				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
+				Stats.setScore(u.getUniqueId(), Stats.getScore(u.getUniqueId()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
+				Stats.setPoints(u.getUniqueId(), Stats.getPoints(u.getUniqueId(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");
@@ -162,8 +162,8 @@ public class Game {
 			{
 				InfPlayer IP = InfPlayerManager.getInfPlayer(u);
 
-				Stats.setScore(u.getName(), Stats.getScore(u.getName()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
-				Stats.setPoints(u.getName(), Stats.getPoints(u.getName(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
+				Stats.setScore(u.getUniqueId(), Stats.getScore(u.getUniqueId()) + Lobby.getActiveArena().getSettings().getScorePer(IP, Events.GameEnds));
+				Stats.setPoints(u.getUniqueId(), Stats.getPoints(u.getUniqueId(), Settings.VaultEnabled()) + Lobby.getActiveArena().getSettings().getPointsPer(IP, Events.GameEnds), Settings.VaultEnabled());
 				u.sendMessage("");
 				u.sendMessage("");
 				u.sendMessage("");

@@ -48,4 +48,9 @@ public class LeaveCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "quit", "leave" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "" });
+	}
 }

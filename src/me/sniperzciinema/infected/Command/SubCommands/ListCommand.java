@@ -64,4 +64,9 @@ public class ListCommand extends SubCommand {
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "teams", "show" });
 	}
+
+	@Override
+	public List<String> getTabs() {
+		return Arrays.asList(new String[] { "Playing", "Humans", "Zombies" });
+	}
 }

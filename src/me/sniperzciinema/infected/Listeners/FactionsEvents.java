@@ -17,6 +17,7 @@ import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
  */
 public class FactionsEvents implements Listener {
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void factionLoosePower(FactionsEventPowerChange e) {
 		if (e.getReason() == PowerChangeReason.DEATH)

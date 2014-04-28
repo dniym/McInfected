@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.infected.Command.SubCommands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,19 +47,19 @@ public class SetBlockCommand extends SubCommand {
 						if (Material.getMaterial(args[1]) != null)
 						{
 							arena.setBlock(new ItemStack(Material.getMaterial(args[1])));
-							p.sendMessage(Msgs.Command_Arena_SetBlock.getString());
+							p.sendMessage(Msgs.Command_Arena_SetBlock.getString("<block>", args[1]));
 						}
 						else
 							if (Material.getMaterial(Integer.parseInt(args[1])) != null)
 							{
 								arena.setBlock(new ItemStack(Integer.parseInt(args[1])));
-								p.sendMessage(Msgs.Command_Arena_SetBlock.getString());
+								p.sendMessage(Msgs.Command_Arena_SetBlock.getString("<block>", args[1]));
 							}
 							else
 								p.sendMessage(Msgs.Error_Misc_Not_A_Block.getString());
 					}
 					else
-						p.sendMessage(Msgs.Help_Arena_SetBlock.getString());
+						p.sendMessage(Msgs.Help_SetBlock.getString());
 		}
 
 	}
@@ -66,5 +67,14 @@ public class SetBlockCommand extends SubCommand {
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "seticon" });
+	}
+
+	@Override
+	public List<String> getTabs() {
+		List<String> mats = new ArrayList<String>();
+		for (Material mat : Material.values())
+			mats.add(mat.name());
+
+		return mats;
 	}
 }
