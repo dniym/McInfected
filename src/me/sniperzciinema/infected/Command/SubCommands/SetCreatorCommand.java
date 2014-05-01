@@ -17,43 +17,41 @@ import org.bukkit.entity.Player;
 
 
 public class SetCreatorCommand extends SubCommand {
-
+	
 	public SetCreatorCommand()
 	{
 		super("setcreator");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-
+			
 			if (!p.hasPermission("Infected.SetCreator"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+			
+			else if (ip.getCreating() == null)
+				p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+			else if (args.length == 2)
+			{
+				Arena arena = Lobby.getArena(ip.getCreating());
+				arena.setCreator(args[1]);
+				p.sendMessage(Msgs.Command_Arena_SetCreator.getString("<creator>", args[1]));
+			}
 			else
-				if (ip.getCreating() == null)
-					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
-				else
-					if (args.length == 2)
-					{
-						Arena arena = Lobby.getArena(ip.getCreating());
-						arena.setCreator(args[1]);
-						p.sendMessage(Msgs.Command_Arena_SetCreator.getString("<creator>", args[1]));
-					}
-					else
-						p.sendMessage(Msgs.Help_SetCreator.getString());
+				p.sendMessage(Msgs.Help_SetCreator.getString());
 		}
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "setcreater", "setmaker", "setdesigner" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "<Creator>" });

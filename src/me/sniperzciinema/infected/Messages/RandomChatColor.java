@@ -16,10 +16,10 @@ import org.bukkit.ChatColor;
  */
 
 public class RandomChatColor {
-
+	
 	/**
 	 * @param chatColors
-	 *            - Only put things here if you want to choose from these colors
+	 *          - Only put things here if you want to choose from these colors
 	 * @return the random color
 	 */
 	public static ChatColor getColor(ChatColor... chatColors) {
@@ -35,11 +35,11 @@ public class RandomChatColor {
 		ChatColor rc = colors[i];
 		return rc;
 	}
-
+	
 	/**
 	 * @param chatColors
-	 *            - Only put things here if you want to choose from these
-	 *            formats
+	 *          - Only put things here if you want to choose from these
+	 *          formats
 	 * @return the random format
 	 */
 	public static ChatColor getFormat(ChatColor... chatColors) {

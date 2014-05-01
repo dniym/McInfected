@@ -14,12 +14,12 @@ import org.bukkit.entity.Player;
 
 
 public class TpLeaveCommand extends SubCommand {
-
+	
 	public TpLeaveCommand()
 	{
 		super("tpleave");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
@@ -27,7 +27,7 @@ public class TpLeaveCommand extends SubCommand {
 			Player p = (Player) sender;
 			if (!p.hasPermission("Infected.TpLeave"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+			
 			else
 			{
 				p.teleport(Lobby.getLeave());
@@ -36,14 +36,14 @@ public class TpLeaveCommand extends SubCommand {
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "visitleave", "seeleave" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

@@ -20,49 +20,47 @@ import org.bukkit.potion.PotionEffect;
  * If the value isn't found for the Arena, it goes to global
  */
 public class ArenaSettings {
-
+	
 	private Arena	arena;
-
+	
 	public ArenaSettings(Arena arena)
 	{
 		this.arena = arena;
 	}
-
+	
 	public Boolean canBreakBlock(Team team, int id) {
 		String ids = String.valueOf(id);
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Breakable Blocks." + team.toString()))
 			return Files.getArenas().getStringList("Arenas." + this.arena.getName() + ".Breakable Blocks." + team.toString()).contains(ids);
+		else if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Breakable Blocks.Global"))
+			return Files.getArenas().getStringList("Arenas." + this.arena.getName() + ".Breakable Blocks.Global").contains(ids);
+		else if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
+			return true;
 		else
-			if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Breakable Blocks.Global"))
-				return Files.getArenas().getStringList("Arenas." + this.arena.getName() + ".Breakable Blocks.Global").contains(ids);
-			else
-				if (Files.getConfig().getStringList("Settings.Global.Breakable Blocks." + team.toString()).contains(ids))
-					return true;
-				else
-					return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(ids);
+			return Files.getConfig().getStringList("Settings.Global.Breakable Blocks.Global").contains(ids);
 	}
-
+	
 	public boolean enchantDisabled() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Misc.Disable Enchant"))
 			return Files.getArenas().getBoolean("Arenas." + this.arena.getName() + ".Misc.Disable Enchant");
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Enchant");
 	}
-
+	
 	public int getAlphaPercent() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Percent to Infect.Percent"))
 			return Files.getArenas().getInt("Arenas." + this.arena.getName() + ".Percent to Infect.Percent");
 		else
 			return Files.getConfig().getInt("Settings.Global.Percent to Infect.Percent");
 	}
-
+	
 	public ArrayList<PotionEffect> getAlphaPotionEffects() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Infecting.Alpha Potion Effects"))
 			return PotionHandler.getPotions(Files.getArenas().getStringList("Arenas." + this.arena.getName() + ".Infecting.Alpha Potion Effects"));
 		else
 			return PotionHandler.getPotions(Files.getConfig().getStringList("Settings.Global.Infecting.Alpha Potion Effects"));
 	}
-
+	
 	// /////////////////////////////////////////////-Integers-//////////////////////////////////////////////////////
 	public int getGameTime() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Time.Game"))
@@ -70,16 +68,16 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getInt("Settings.Global.Time.Game");
 	}
-
+	
 	public int getInfectingTime() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Time.Infecting"))
 			return Files.getArenas().getInt("Arenas." + this.arena.getName() + ".Time.Infecting");
 		else
 			return Files.getConfig().getInt("Settings.Global.Time.Infecting");
 	}
-
+	
 	// ////////////////////////////////////////////////-BOOLEANS-////////////////////////////////////////////////////
-
+	
 	public int getPointsPer(InfPlayer ip, Events e) {
 		int modifier;
 		if (ip == null)
@@ -91,21 +89,21 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getInt("Settings.Global.Points." + e.toString()) * modifier;
 	}
-
+	
 	public List<String> getRewardCommands() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Command Rewards"))
 			return Files.getArenas().getStringList("Arenas." + this.arena.getName() + ".Command Rewards");
 		else
 			return Files.getConfig().getStringList("Settings.Global.Command Rewards");
 	}
-
+	
 	public ArrayList<ItemStack> getRewardItems() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Rewards"))
 			return ItemHandler.getItemStackList(Files.getArenas().getStringList("Arenas." + this.arena.getName() + ".Rewards"));
 		else
 			return ItemHandler.getItemStackList(Files.getConfig().getStringList("Settings.Global.Rewards"));
 	}
-
+	
 	public int getScorePer(InfPlayer ip, Events e) {
 		int modifier;
 		if (ip == null)
@@ -117,34 +115,34 @@ public class ArenaSettings {
 		else
 			return Files.getConfig().getInt("Settings.Global.Score." + e.toString()) * modifier;
 	}
-
+	
 	public int getVotingTime() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Time.Voting"))
 			return Files.getArenas().getInt("Arenas." + this.arena.getName() + ".Time.Voting");
 		else
 			return Files.getConfig().getInt("Settings.Global.Time.Voting");
 	}
-
+	
 	// ////////////////////////////////////////////-ITEMS-///////////////////////////////////////////////////////////
-
+	
 	public boolean hostileMobsTargetHumans() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Hostile Mobs Target Humans"))
 			return Files.getArenas().getBoolean("Arenas." + this.arena.getName() + ".Hostile Mobs Target Humans");
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Hostile Mobs Target Humans");
 	}
-
+	
 	// /////////////////////////////////////////////////////////-POTIONS-////////////////////////////////////////////////////////
-
+	
 	public boolean hungerDisabled() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Misc.Disable Hunger"))
 			return Files.getArenas().getBoolean("Arenas." + this.arena.getName() + ".Misc.Disable Hunger");
 		else
 			return Files.getConfig().getBoolean("Settings.Global.Misc.Disable Hunger");
 	}
-
+	
 	// /////////////////////////////////////////////////////////-LIST-////////////////////////////////////////////////////////
-
+	
 	public boolean interactDisabled() {
 		if (Files.getArenas().contains("Arenas." + this.arena.getName() + ".Misc.Disable Interacting"))
 			return Files.getArenas().getBoolean("Arenas." + this.arena.getName() + ".Misc.Disable Interacting");

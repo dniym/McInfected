@@ -18,15 +18,15 @@ import org.bukkit.entity.Player;
 
 
 public class AddonsCommand extends SubCommand {
-
+	
 	public AddonsCommand()
 	{
 		super("addons");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
-
+		
 		sender.sendMessage("");
 		sender.sendMessage(Msgs.Format_Header.getString("<title>", " Addons "));
 		if (!(sender instanceof Player))
@@ -45,7 +45,7 @@ public class AddonsCommand extends SubCommand {
 		{
 			Player p = (Player) sender;
 			new FancyMessage(Msgs.Format_Prefix.getString()).then("§7Disguise Support: " + (Settings.DisguisesEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled"))).tooltip("§aIf enabled, zombies can be actual zombies!").send(p);
-
+			
 			if (Settings.DisguisesEnabled())
 				sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Disguise Plugin: " + "" + ChatColor.GREEN + ChatColor.ITALIC + " " + Infected.Disguiser.getName());
 			new FancyMessage(Msgs.Format_Prefix.getString()).then("§7CrackShot Support: " + (Settings.CrackShotEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled"))).tooltip("§aIf enabled, you can use guns!").send(p);
@@ -54,14 +54,14 @@ public class AddonsCommand extends SubCommand {
 			new FancyMessage(Msgs.Format_Prefix.getString()).then("§7Vault Support: " + (Settings.VaultEnabled() ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled"))).tooltip("§aIf enabled, money can be given as a reward!").send(p);
 			new FancyMessage(Msgs.Format_Prefix.getString()).then("§7Infected-Ranks Support: " + (Bukkit.getPluginManager().getPlugin("InfectedAddon-Ranks") != null ? ("" + ChatColor.GREEN + ChatColor.ITALIC + "Enabled") : ("" + ChatColor.RED + ChatColor.ITALIC + "Disabled"))).tooltip("§aIf enabled, Infected has ranks!").send(p);
 		}
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "dependancies" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

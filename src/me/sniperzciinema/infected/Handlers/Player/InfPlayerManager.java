@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 
 
 public class InfPlayerManager {
-
+	
 	private static ArrayList<InfPlayer>	players	= new ArrayList<InfPlayer>();
-
+	
 	/**
 	 * Create InfPlayer
 	 * 
@@ -25,7 +25,7 @@ public class InfPlayerManager {
 			InfPlayerManager.players.add(IP);
 		return IP;
 	}
-
+	
 	/**
 	 * Create InfPlayer
 	 * 
@@ -38,7 +38,7 @@ public class InfPlayerManager {
 			InfPlayerManager.players.add(IP);
 		return IP;
 	}
-
+	
 	/**
 	 * Create InfPlayer
 	 * 
@@ -50,7 +50,7 @@ public class InfPlayerManager {
 				return IP;
 		return createInfPlayer(p);
 	}
-
+	
 	/**
 	 * Get InfPlayer
 	 * 
@@ -63,7 +63,7 @@ public class InfPlayerManager {
 				return IP;
 		return createInfPlayer(Bukkit.getPlayer(playerName));
 	}
-
+	
 	/**
 	 * Get InfPlayer
 	 * 
@@ -76,7 +76,7 @@ public class InfPlayerManager {
 				return IP;
 		return createInfPlayer(Bukkit.getPlayer(UUIDManager.getPlayerName(id)));
 	}
-
+	
 	/**
 	 * Remove InfPlayer
 	 * 
@@ -85,7 +85,7 @@ public class InfPlayerManager {
 	public static void removeInfPlayer(InfPlayer IP) {
 		InfPlayerManager.players.remove(IP);
 	}
-
+	
 	/**
 	 * Remove InfPlayer
 	 * 
@@ -96,7 +96,7 @@ public class InfPlayerManager {
 			if (player.getName().equalsIgnoreCase(playerName))
 				InfPlayerManager.players.remove(player);
 	}
-
+	
 	public InfPlayerManager()
 	{
 	}

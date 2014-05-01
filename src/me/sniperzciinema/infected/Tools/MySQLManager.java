@@ -11,12 +11,12 @@ import me.sniperzciinema.infected.Infected;
 
 
 public class MySQLManager {
-
+	
 	/**
 	 * @param tableName
-	 *            - The tables name
+	 *          - The tables name
 	 * @param columnName
-	 *            - The stats name
+	 *          - The stats name
 	 * @param uuid
 	 * @return the players stats
 	 */
@@ -37,10 +37,10 @@ public class MySQLManager {
 			return 0;
 		}
 	}
-
+	
 	/**
 	 * @param tableName
-	 *            - The tables name
+	 *          - The tables name
 	 * @return All the players in the Infected table
 	 */
 	public static ArrayList<UUID> getPlayers(String tableName) {
@@ -65,14 +65,14 @@ public class MySQLManager {
 			return nope;
 		}
 	}
-
+	
 	/**
 	 * Force the setting of the players value
 	 * 
 	 * @param tableName
-	 *            - The tables name
+	 *          - The tables name
 	 * @param columnName
-	 *            - The stats name
+	 *          - The stats name
 	 * @param value
 	 * @param playerName
 	 */
@@ -81,7 +81,7 @@ public class MySQLManager {
 		{
 			Statement statement = Infected.connection.createStatement();
 			statement.execute("INSERT INTO " + tableName + " (`UUID`, `" + columnName + "`) VALUES ('" + uuid + "', '" + value + "');");
-
+			
 			statement.close();
 		}
 		catch (SQLException e)
@@ -90,16 +90,16 @@ public class MySQLManager {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Safely update/set the value
 	 * Will set the value only if the table doesn't have the player already,
 	 * otherwise it'll just update the players values
 	 * 
 	 * @param tableName
-	 *            - The tables name
+	 *          - The tables name
 	 * @param columnName
-	 *            - The stats name
+	 *          - The stats name
 	 * @param value
 	 * @param playerName
 	 */

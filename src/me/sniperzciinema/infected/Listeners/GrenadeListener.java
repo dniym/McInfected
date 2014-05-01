@@ -33,9 +33,9 @@ import org.bukkit.potion.PotionEffect;
  * The Listener for Infected's grenades
  */
 public class GrenadeListener implements Listener {
-
+	
 	public ArrayList<String>	item	= new ArrayList<String>();
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerReThrowEvent(PlayerPickupItemEvent event) {
 		if (!event.isCancelled())
@@ -50,7 +50,7 @@ public class GrenadeListener implements Listener {
 				event.setCancelled(true);
 			}
 	}
-
+	
 	@SuppressWarnings({ "deprecation" })
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerThrowEvent(PlayerInteractEvent event) {
@@ -61,26 +61,26 @@ public class GrenadeListener implements Listener {
 			if ((Lobby.getGameState() == GameState.Started) && Lobby.isInGame(p))
 			{
 				final Grenade grenade = GrenadeManager.getGrenade(p.getItemInHand());
-
+				
 				if (p.hasPermission("Infected.Grenades"))
 				{
-
+					
 					// Create a new Item and throw it in the direction the
 					// player is looking
 					final Item grenadeItem = p.getWorld().dropItem(p.getEyeLocation(), grenade.getItem());
 					grenadeItem.setVelocity(event.getPlayer().getEyeLocation().getDirection());
-
+					
 					if (p.getItemInHand().getAmount() != 1)
 						p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
 					else
 						p.getInventory().remove(p.getItemInHand());
-
+					
 					p.updateInventory();
 					GrenadeManager.addThrownGrenade(grenadeItem.getUniqueId());
-
+					
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 					{
-
+						
 						@Override
 						public void run() {
 							if (Lobby.getGameState() == GameState.Started)
@@ -111,7 +111,7 @@ public class GrenadeListener implements Listener {
 							// Create an explosion effect and remove the grenade
 							Location loc = grenadeItem.getLocation();
 							p.getWorld().createExplosion(loc, 0.0F, false);
-
+							
 							GrenadeManager.delThrownGrenade(grenadeItem.getUniqueId());
 							grenadeItem.remove();
 						}
@@ -124,5 +124,5 @@ public class GrenadeListener implements Listener {
 				}
 			}
 	}
-
+	
 }

@@ -18,30 +18,30 @@ import org.bukkit.plugin.Plugin;
  * @author tips48
  */
 public class MySQL extends Database {
-
+	
 	private final String	user;
 	private final String	database;
 	private final String	password;
 	private final String	port;
 	private final String	hostname;
-
+	
 	private Connection		connection;
-
+	
 	/**
 	 * Creates a new MySQL instance
 	 * 
 	 * @param plugin
-	 *            Plugin instance
+	 *          Plugin instance
 	 * @param hostname
-	 *            Name of the host
+	 *          Name of the host
 	 * @param port
-	 *            Port number
+	 *          Port number
 	 * @param database
-	 *            Database name
+	 *          Database name
 	 * @param username
-	 *            Username
+	 *          Username
 	 * @param password
-	 *            Password
+	 *          Password
 	 */
 	public MySQL(Plugin plugin, String hostname, String port, String database, String username,
 			String password)
@@ -54,12 +54,12 @@ public class MySQL extends Database {
 		this.password = password;
 		this.connection = null;
 	}
-
+	
 	@Override
 	public boolean checkConnection() {
 		return this.connection != null;
 	}
-
+	
 	@Override
 	public void closeConnection() {
 		if (this.connection != null)
@@ -73,12 +73,12 @@ public class MySQL extends Database {
 				e.printStackTrace();
 			}
 	}
-
+	
 	@Override
 	public Connection getConnection() {
 		return this.connection;
 	}
-
+	
 	@Override
 	public Connection openConnection() {
 		try
@@ -96,17 +96,17 @@ public class MySQL extends Database {
 		}
 		return this.connection;
 	}
-
+	
 	public ResultSet querySQL(String query) {
 		Connection c = null;
-
+		
 		if (checkConnection())
 			c = getConnection();
 		else
 			c = openConnection();
-
+		
 		Statement s = null;
-
+		
 		try
 		{
 			s = c.createStatement();
@@ -115,9 +115,9 @@ public class MySQL extends Database {
 		{
 			e1.printStackTrace();
 		}
-
+		
 		ResultSet ret = null;
-
+		
 		try
 		{
 			ret = s.executeQuery(query);
@@ -126,23 +126,23 @@ public class MySQL extends Database {
 		{
 			e.printStackTrace();
 		}
-
+		
 		closeConnection();
-
+		
 		return ret;
 	}
-
+	
 	public void updateSQL(String update) {
-
+		
 		Connection c = null;
-
+		
 		if (checkConnection())
 			c = getConnection();
 		else
 			c = openConnection();
-
+		
 		Statement s = null;
-
+		
 		try
 		{
 			s = c.createStatement();
@@ -152,9 +152,9 @@ public class MySQL extends Database {
 		{
 			e1.printStackTrace();
 		}
-
+		
 		closeConnection();
-
+		
 	}
-
+	
 }

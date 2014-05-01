@@ -10,14 +10,14 @@ public enum Events
 	GameEnds("Game Ends"),
 	Infected("Zombies Infect"),
 	Survive("Humans Survive");
-
+	
 	private String	string;
-
+	
 	private Events(String string)
 	{
 		this.string = string;
 	}
-
+	
 	@Override
 	public String toString() {
 		return this.string;

@@ -14,7 +14,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 
 public class AddonManager {
-
+	
 	/**
 	 * Go through all the plugins Infected supports, and if any are there and it
 	 * has been enabled in the config, enable the support for that plugin
@@ -22,7 +22,7 @@ public class AddonManager {
 	 * iDisguise)
 	 */
 	public static void getAddons() {
-
+		
 		// ------------------------------------------------Vault------------------------------------------------\\
 		if (Settings.VaultEnabled())
 		{
@@ -30,17 +30,17 @@ public class AddonManager {
 			{
 				if (Settings.logAddonsEnabled())
 					System.out.println("Vault support has been enabled!");
-
+				
 				RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-
+				
 				if (economyProvider != null)
 					Infected.economy = economyProvider.getProvider();
-
+				
 				else
 				{
 					if (Settings.logAddonsEnabled())
 						System.out.println("Vault wasn't found on plugin server, Disabling Vault Support");
-
+					
 					Files.getConfig().set("Addons.Vault Support.Enabled", false);
 					Files.saveConfig();
 				}
@@ -49,16 +49,15 @@ public class AddonManager {
 			{
 				if (Settings.logAddonsEnabled())
 					System.out.println("Vault wasn't found on plugin server, Disabling Vault Support");
-
+				
 				Files.getConfig().set("Addons.Vault Support.Enabled", false);
 				Files.saveConfig();
-
+				
 			}
 		}
-		else
-			if (Settings.logAddonsEnabled())
-				System.out.println("Vault Support is Disabled");
-
+		else if (Settings.logAddonsEnabled())
+			System.out.println("Vault Support is Disabled");
+		
 		// ------------------------------------------------Crackshot------------------------------------------------\\
 		if (Settings.CrackShotEnabled())
 		{
@@ -66,7 +65,7 @@ public class AddonManager {
 			{
 				if (Settings.logAddonsEnabled())
 					System.out.println("CrackShot wasn't found on plugin server, disabling CrackShot Support");
-
+				
 				Files.getConfig().set("Addons.CrackShot Support.Enabled", false);
 				Files.saveConfig();
 			}
@@ -74,15 +73,14 @@ public class AddonManager {
 			{
 				CrackShotApi CSApi = new CrackShotApi();
 				Bukkit.getPluginManager().registerEvents(CSApi, Infected.me);
-
+				
 				if (Settings.logAddonsEnabled())
 					System.out.println("CrackShot support has been enabled!");
 			}
 		}
-		else
-			if (Settings.logAddonsEnabled())
-				System.out.println("CrackShot Support is Disabled");
-
+		else if (Settings.logAddonsEnabled())
+			System.out.println("CrackShot Support is Disabled");
+		
 		// ------------------------------------------------Factions------------------------------------------------\\
 		if (Settings.FactionsEnabled())
 		{
@@ -90,7 +88,7 @@ public class AddonManager {
 			{
 				if (Settings.logAddonsEnabled())
 					System.out.println("Factions wasn't found on plugin server, disabling Factions Support");
-
+				
 				Files.getConfig().set("Addons.Factions Support.Enabled", false);
 				Files.saveConfig();
 			}
@@ -98,15 +96,14 @@ public class AddonManager {
 			{
 				FactionsEvents FactionsEvents = new FactionsEvents();
 				Bukkit.getPluginManager().registerEvents(FactionsEvents, Infected.me);
-
+				
 				if (Settings.logAddonsEnabled())
 					System.out.println("Factions support has been enabled!");
 			}
 		}
-		else
-			if (Settings.logAddonsEnabled())
-				System.out.println("Factions Support is Disabled");
-
+		else if (Settings.logAddonsEnabled())
+			System.out.println("Factions Support is Disabled");
+		
 		// --------------------------------------------------mcMMO--------------------------------------------------\\
 		if (Settings.mcMMOEnabled())
 		{
@@ -114,7 +111,7 @@ public class AddonManager {
 			{
 				if (Settings.logAddonsEnabled())
 					System.out.println("mcMMO wasn't found on plugin server, disabling mcMMO Support");
-
+				
 				Files.getConfig().set("Addons.mcMMO Support.Enabled", false);
 				Files.saveConfig();
 			}
@@ -122,23 +119,21 @@ public class AddonManager {
 			{
 				mcMMOEvents mcMMOEvents = new mcMMOEvents();
 				Bukkit.getPluginManager().registerEvents(mcMMOEvents, Infected.me);
-
+				
 				if (Settings.logAddonsEnabled())
 					System.out.println("mcMMO support has been enabled!");
 			}
 		}
-		else
-			if (Settings.logAddonsEnabled())
-				System.out.println("mcMMO Support is Disabled");
-
+		else if (Settings.logAddonsEnabled())
+			System.out.println("mcMMO Support is Disabled");
+		
 		// ------------------------------------------------Disguises------------------------------------------------\\
 		/* Because theres multiple disguise plugin supports in Infected, i have
 		 * it in it's own class with all the disguise features */
 		if (Settings.DisguisesEnabled())
 			Disguises.getDisguisePlugin();
-		else
-			if (Settings.logAddonsEnabled())
-				System.out.println("Disguise Support is Disabled");
-
+		else if (Settings.logAddonsEnabled())
+			System.out.println("Disguise Support is Disabled");
+		
 	}
 }

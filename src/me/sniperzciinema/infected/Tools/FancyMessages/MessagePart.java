@@ -6,18 +6,18 @@ import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
 
 
 final class MessagePart {
-
-	ChatColor		color	= null;
+	
+	ChatColor			color		= null;
 	ChatColor[]		styles	= null;
-	String			clickActionName	= null, clickActionData = null, hoverActionName = null,
+	String				clickActionName	= null, clickActionData = null, hoverActionName = null,
 			hoverActionData = null;
 	final String	text;
-
+	
 	MessagePart(final String text)
 	{
 		this.text = text;
 	}
-
+	
 	JsonWriter writeJson(JsonWriter json) {
 		try
 		{
@@ -39,5 +39,5 @@ final class MessagePart {
 			return json;
 		}
 	}
-
+	
 }

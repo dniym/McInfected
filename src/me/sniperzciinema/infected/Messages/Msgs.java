@@ -42,7 +42,7 @@ public enum Msgs
 	Command_Admin_Kicked_You("Command.Admin.Kicked.You"),
 	Command_Admin_Kicked_Them("Command.Admin.Kicked.Them")/* <player> */,
 	Command_Admin_Changed_Stat("Command.Admin.Changed Stat")/* <player>, <stat>,
-															 * <value> */,
+																													 * <value> */,
 	Command_Classes_SetClass("Command.Classes.SetClass")/* <class>, <team> */,
 	Command_Files_Value("Command.Files.Value")/* <path> <value> */,
 	Command_Files_Changed("Command.Files.Changed")/* <path> <newvalue> <value> */,
@@ -130,14 +130,14 @@ public enum Msgs
 	Picture_Infected_You("Picture.Infected.You"),
 	Picture_Survivor_To_Win("Picture.Survivor.To Win"),
 	Picture_Survivor_You("Picture.Survivor.You");
-
+	
 	private String	string;
-
+	
 	private Msgs(String s)
 	{
 		this.string = s;
 	}
-
+	
 	public String getString(String... variables) {
 		String prefix = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString("Format.Prefix").replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
 		try
@@ -145,7 +145,7 @@ public enum Msgs
 			String message = (this.string.startsWith("Format") || this.string.startsWith("Picture") || this.string.startsWith("Menu") || (Settings.PictureEnabled() && (this.string.startsWith("Game.Alpha") || this.string.startsWith("Game.Survior"))) ? "" : prefix) + ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(this.string).replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 			int i = 0;
 			String replace = null;
-
+			
 			for (String variable : variables)
 				if (i == 0)
 				{
@@ -164,5 +164,5 @@ public enum Msgs
 			return (this.string.startsWith("Format") || this.string.startsWith("Menu") ? "" : prefix) + "Either theres something wrong with the variables or we're unable to find message: " + this.string;
 		}
 	}
-
+	
 };

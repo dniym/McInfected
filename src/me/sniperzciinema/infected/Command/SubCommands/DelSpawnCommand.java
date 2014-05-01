@@ -20,56 +20,54 @@ import org.bukkit.entity.Player;
 
 
 public class DelSpawnCommand extends SubCommand {
-
+	
 	public DelSpawnCommand()
 	{
 		super("delspawn");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-
+			
 			if (!p.hasPermission("Infected.DelSpawn"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
-			else
-				if (ip.getCreating() == null)
-					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+			
+			else if (ip.getCreating() == null)
+				p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+			else if ((args.length == 3) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+			{
+				Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
+				
+				Arena a = Lobby.getArena(ip.getCreating());
+				int i = Integer.valueOf(args[2]) - 1;
+				if (i < a.getSpawns(team).size())
+				{
+					List<String> spawns = a.getExactSpawns(team);
+					spawns.remove(i);
+					a.setSpawns(spawns, team);
+					
+					Infected.Menus = new Menus();
+					
+					p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
+				}
 				else
-					if ((args.length == 3) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
-					{
-						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
-
-						Arena a = Lobby.getArena(ip.getCreating());
-						int i = Integer.valueOf(args[2]) - 1;
-						if (i < a.getSpawns(team).size())
-						{
-							List<String> spawns = a.getExactSpawns(team);
-							spawns.remove(i);
-							a.setSpawns(spawns, team);
-
-							Infected.Menus = new Menus();
-
-							p.sendMessage(Msgs.Command_Spawn_Deleted.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
-						}
-						else
-							p.sendMessage(Msgs.Help_DelSpawn.getString());
-					}
+					p.sendMessage(Msgs.Help_DelSpawn.getString());
+			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "removespawn" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

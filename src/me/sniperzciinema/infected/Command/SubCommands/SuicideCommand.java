@@ -20,12 +20,12 @@ import org.bukkit.entity.Player;
 
 
 public class SuicideCommand extends SubCommand {
-
+	
 	public SuicideCommand()
 	{
 		super("suicide");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
@@ -34,34 +34,32 @@ public class SuicideCommand extends SubCommand {
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
 			if (!p.hasPermission("Infected.Suicide"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+			
+			else if (!Lobby.isInGame(p))
+				p.sendMessage(Msgs.Error_Game_Not_In.getString());
+			
+			else if (Lobby.getGameState() != GameState.Started)
+				p.sendMessage(Msgs.Error_Game_Not_Started.getString());
+			
 			else
-				if (!Lobby.isInGame(p))
-					p.sendMessage(Msgs.Error_Game_Not_In.getString());
-
-				else
-					if (Lobby.getGameState() != GameState.Started)
-						p.sendMessage(Msgs.Error_Game_Not_Started.getString());
-
-					else
-					{
-						if (ip.getTeam() == Team.Human)
-							ip.Infect();
-
-						Deaths.playerDies(DeathType.Other, null, p);
-						ip.respawn();
-					}
+			{
+				if (ip.getTeam() == Team.Human)
+					ip.Infect();
+				
+				Deaths.playerDies(DeathType.Other, null, p);
+				ip.respawn();
+			}
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "kill", "die", "stuck" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

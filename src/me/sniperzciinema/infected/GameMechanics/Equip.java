@@ -13,14 +13,14 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class Equip {
-
+	
 	/**
 	 * Equip the player to match with what their class says they should have,
 	 * any items in the inventory that aren't from that class will be ignored.
 	 * Also does their armor
 	 * 
 	 * @param p
-	 *            - The player we're equipping
+	 *          - The player we're equipping
 	 */
 	@SuppressWarnings("deprecation")
 	public static void equip(Player p) {
@@ -28,7 +28,7 @@ public class Equip {
 		Team team = IP.getTeam();
 		InfClass Class = IP.getInfClass(team);
 		p.playSound(p.getLocation(), Sound.ANVIL_USE, 1, 1);
-
+		
 		// Reset their inventory by: Going through and removing any old items
 		// from the class
 		// and add the new ones, this way we don't remove purchased/grenades
@@ -40,7 +40,7 @@ public class Equip {
 				if (!p.getInventory().contains(ItemHandler.getItemStackIgnoreDamage(is)))
 					p.getInventory().addItem(is);
 			}
-
+		
 		// Only replace the armor if the player hasn't changed it(So if
 		// its none, or if it is the same as default)
 		if ((ItemHandler.getItemStackIgnoreDamage(p.getInventory().getHelmet()) == ItemHandler.getItemStackIgnoreDamage(Class.getHelmet())) || (p.getInventory().getHelmet() == null))
@@ -51,37 +51,37 @@ public class Equip {
 			p.getInventory().setLeggings(Class.getLeggings());
 		if ((ItemHandler.getItemStackIgnoreDamage(p.getInventory().getBoots()) == ItemHandler.getItemStackIgnoreDamage(Class.getBoots())) || (p.getInventory().getBoots() == null))
 			p.getInventory().setBoots(Class.getBoots());
-
+		
 		p.updateInventory();
-
+		
 	}
-
+	
 	/**
 	 * Set up their new inventory as a zombie
 	 * 
 	 * @param p
-	 *            - The player who just became a Zombie
+	 *          - The player who just became a Zombie
 	 */
 	@SuppressWarnings("deprecation")
 	public static void equipToZombie(Player p) {
 		InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-
+		
 		InfClass zombieClass = IP.getInfClass(Team.Zombie);
-
+		
 		p.playSound(p.getLocation(), Sound.ANVIL_USE, 1, 1);
-
+		
 		IP.clearEquipment();
 		if (!zombieClass.getItems().isEmpty())
 			for (ItemStack is : zombieClass.getItems())
 				p.getInventory().addItem(is);
-
+		
 		p.getInventory().setHelmet(zombieClass.getHelmet());
 		p.getInventory().setChestplate(zombieClass.getChestplate());
 		p.getInventory().setLeggings(zombieClass.getLeggings());
 		p.getInventory().setBoots(zombieClass.getBoots());
-
+		
 		p.updateInventory();
-
+		
 	}
-
+	
 }

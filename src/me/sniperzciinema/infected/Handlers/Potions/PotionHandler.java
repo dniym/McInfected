@@ -19,7 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 
 @SuppressWarnings("deprecation")
 public class PotionHandler {
-
+	
 	public static PotionEffect getPotion(String path) {
 		Integer id = 0;
 		Integer time = 0;
@@ -30,7 +30,7 @@ public class PotionHandler {
 		power = Integer.valueOf(strings[2]) - 1;
 		return new PotionEffect(PotionEffectType.getById(id), time, power);
 	}
-
+	
 	public static ArrayList<PotionEffect> getPotions(List<String> list) {
 		ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 		if (!list.isEmpty())
@@ -47,9 +47,9 @@ public class PotionHandler {
 			}
 		return effects;
 	}
-
+	
 	public static String getPotionToString(PotionEffect pe) {
 		return (pe.getType().getId() + ":" + pe.getDuration() + ":" + pe.getAmplifier());
 	}
-
+	
 }

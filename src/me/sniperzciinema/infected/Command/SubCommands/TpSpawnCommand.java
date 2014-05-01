@@ -19,12 +19,12 @@ import org.bukkit.entity.Player;
 
 
 public class TpSpawnCommand extends SubCommand {
-
+	
 	public TpSpawnCommand()
 	{
 		super("tpspawn");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
@@ -33,39 +33,37 @@ public class TpSpawnCommand extends SubCommand {
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
 			if (!p.hasPermission("Infected.TpSpawn"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
-			else
-				if (ip.getCreating() == null)
-					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+			
+			else if (ip.getCreating() == null)
+				p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+			else if ((args.length == 3) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+			{
+				Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
+				Arena a = Lobby.getArena(ip.getCreating());
+				int i = Integer.valueOf(args[2]) - 1;
+				if (i < a.getSpawns(team).size())
+				{
+					p.teleport(LocationHandler.getPlayerLocation(a.getSpawns(team).get(i)));
+					sender.sendMessage(Msgs.Command_Spawn_Tp.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
+				}
+				
 				else
-					if ((args.length == 3) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
-					{
-						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
-						Arena a = Lobby.getArena(ip.getCreating());
-						int i = Integer.valueOf(args[2]) - 1;
-						if (i < a.getSpawns(team).size())
-						{
-							p.teleport(LocationHandler.getPlayerLocation(a.getSpawns(team).get(i)));
-							sender.sendMessage(Msgs.Command_Spawn_Tp.getString("<team>", team.toString(), "<spawn>", String.valueOf(i + 1)));
-						}
-
-						else
-							sender.sendMessage(Msgs.Error_Arena_Not_A_Spawn.getString());
-
-					}
-					else
-						sender.sendMessage(Msgs.Help_TpSpawn.getString());
+					sender.sendMessage(Msgs.Error_Arena_Not_A_Spawn.getString());
+				
+			}
+			else
+				sender.sendMessage(Msgs.Help_TpSpawn.getString());
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "visitspawn", "seespawn" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

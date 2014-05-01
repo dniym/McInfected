@@ -16,7 +16,7 @@ import com.massivecraft.factions.event.FactionsEventPvpDisallowed;
  * The Factions Api Listener
  */
 public class FactionsEvents implements Listener {
-
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void factionLoosePower(FactionsEventPowerChange e) {
@@ -24,11 +24,11 @@ public class FactionsEvents implements Listener {
 			if (Lobby.isInGame(Bukkit.getPlayer(e.getUPlayer().getName())))
 				e.setNewPower(e.getUPlayer().getPower());
 	}
-
+	
 	@EventHandler
 	public void factionPVP(FactionsEventPvpDisallowed e) {
 		if (Lobby.isInGame(e.getAttacker()) && Lobby.isInGame(e.getDefender()))
 			e.setCancelled(true);
 	}
-
+	
 }

@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 
 
 public class Pictures {
-
+	
 	/**
 	 * Player.sendMessage(Pictures.getHuman())
 	 * 
@@ -26,7 +26,7 @@ public class Pictures {
 		face[9] = "";
 		return face;
 	}
-
+	
 	/**
 	 * Player.sendMessage(Pictures.getZombie())
 	 * 

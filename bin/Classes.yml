@@ -8,6 +8,7 @@
 # Infected's Item Codes
 # ---------------------
 # id:<item id>
+# grenade:<grenade name>
 # data:<item durability>
 # amount:<amount>
 # enchant:<enchantment id>-<enchantment level>
@@ -57,6 +58,7 @@ Classes:
       Items:
       - id:268
       - id:261
+      - grenade:frag amount:2
       - id:262 amount:10
 # The potion effects that get put on players in this class
       Potion Effects:
@@ -83,6 +85,7 @@ Classes:
       Items:
       - id:268
       - id:261
+      - grenade:frag
       - id:262 amount:10
       Potion Effects:
       - '2:99999:1'
@@ -106,6 +109,7 @@ Classes:
       Boots: id:301 color:76,153,0
       Items:
       - id:272
+      - grenade:flash
       Transfer Potion Effects:
       - '23:10:1'
       KillStreaks:
@@ -125,5 +129,6 @@ Classes:
       Items:
       - id:262 enchantment:51 enchantment:49
       - id:261 amount:1
+      - grenade:stun
       Potion Effects:
       - '16:99999:1'

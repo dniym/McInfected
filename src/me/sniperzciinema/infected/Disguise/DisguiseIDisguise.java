@@ -15,27 +15,26 @@ import de.robingrether.idisguise.disguise.MobDisguise;
 
 
 public class DisguiseIDisguise {
-
+	
 	public static DisguiseAPI	idAPI	= Bukkit.getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
-
+	
 	/**
 	 * Disguise the player depending on what their class's disguise is
 	 * 
 	 * @param p
 	 */
 	public static void disguisePlayer(Player p) {
-
+		
 		if (!DisguiseIDisguise.idAPI.isDisguised(p))
 		{
 			InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-
+			
 			if (DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()) != null)
 				DisguiseIDisguise.idAPI.disguiseToAll(p, new MobDisguise(
-						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()),
-						true));
+						DisguiseType.valueOf(IP.getInfClass(Team.Zombie).getDisguise().toUpperCase()), true));
 			else
 				DisguiseIDisguise.idAPI.disguiseToAll(p, new MobDisguise(DisguiseType.ZOMBIE, true));
-
+			
 		}
 		else
 		{
@@ -43,7 +42,7 @@ public class DisguiseIDisguise {
 			disguisePlayer(p);
 		}
 	}
-
+	
 	/**
 	 * @param p
 	 * @return the player's disguise
@@ -51,7 +50,7 @@ public class DisguiseIDisguise {
 	public static Disguise getDisguise(Player p) {
 		return DisguiseIDisguise.idAPI.getDisguise(p);
 	}
-
+	
 	/**
 	 * @param p
 	 * @return if the player is disguised
@@ -59,15 +58,15 @@ public class DisguiseIDisguise {
 	public static boolean isPlayerDisguised(Player p) {
 		return DisguiseIDisguise.idAPI.isDisguised(p);
 	}
-
+	
 	/**
 	 * unDisguise the player
 	 * 
 	 * @param p
 	 */
 	public static void unDisguisePlayer(Player p) {
-
+		
 		DisguiseIDisguise.idAPI.undisguiseToAll(p);
 	}
-
+	
 }

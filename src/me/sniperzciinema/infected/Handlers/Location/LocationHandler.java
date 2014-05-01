@@ -7,7 +7,7 @@ import org.bukkit.World;
 
 
 public class LocationHandler {
-
+	
 	public static String getLocationToString(Location loc) {
 		double ix = loc.getX();
 		double iy = loc.getY();
@@ -18,7 +18,7 @@ public class LocationHandler {
 		String s = world.getName() + "," + ix + "," + iy + "," + iz + "," + yaw + "," + pitch;
 		return s;
 	}
-
+	
 	public static Location getObjectLocation(String loc) {
 		Location Loc = null;
 		if (loc != null)
@@ -30,7 +30,7 @@ public class LocationHandler {
 		}
 		return Loc;
 	}
-
+	
 	public static Location getPlayerLocation(String loc) {
 		Location Loc = null;
 		if (loc != null)
@@ -39,13 +39,13 @@ public class LocationHandler {
 			World world = Bukkit.getServer().getWorld(floc[0]);
 			Loc = new Location(world, Double.valueOf(floc[1]), Double.valueOf(floc[2]) + .5,
 					Double.valueOf(floc[3]), Float.valueOf(floc[4]), Float.valueOf(floc[5]));
-
+			
 			if (!Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).isLoaded())
 				Bukkit.getServer().getWorld(world.getName()).getChunkAt(Loc).load();
 		}
 		return Loc;
 	}
-
+	
 	public static String getRoundedLocation(Location location) {
 		if (location == null)
 			return "Not Set";
@@ -53,10 +53,10 @@ public class LocationHandler {
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
 		String world = location.getWorld().getName();
-
+		
 		String s = world + ", " + x + ", " + y + ", " + z;
-
+		
 		return s;
 	}
-
+	
 }

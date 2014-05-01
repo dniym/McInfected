@@ -22,71 +22,68 @@ import org.bukkit.entity.Player;
 
 
 public class SetSpawnCommand extends SubCommand {
-
+	
 	public SetSpawnCommand()
 	{
 		super("setspawn");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-
+			
 			if (!p.hasPermission("Infected.SetSpawn"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+			
+			else if (ip.getCreating() == null)
+				p.sendMessage(Msgs.Error_Arena_None_Set.getString());
+			else if ((args.length == 2) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
+			{
+				Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
+				
+				Location l = p.getLocation();
+				String s = LocationHandler.getLocationToString(l);
+				Arena a = Lobby.getArena(ip.getCreating());
+				List<String> list = a.getExactSpawns(team);
+				list.add(s);
+				a.setSpawns(list, team);
+				
+				Infected.Menus = new Menus();
+				
+				p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
+			}
+			else if (args.length == 1)
+			{
+				Team team = Team.Global;
+				
+				Location l = p.getLocation();
+				String s = LocationHandler.getLocationToString(l);
+				Arena a = Lobby.getArena(ip.getCreating());
+				List<String> list = a.getExactSpawns(team);
+				list.add(s);
+				a.setSpawns(list, team);
+				
+				Infected.Menus = new Menus();
+				
+				p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
+				
+			}
 			else
-				if (ip.getCreating() == null)
-					p.sendMessage(Msgs.Error_Arena_None_Set.getString());
-				else
-					if ((args.length == 2) && (args[1].equalsIgnoreCase("Global") || args[1].equalsIgnoreCase("Zombie") || args[1].equalsIgnoreCase("Human")))
-					{
-						Team team = args[1].equalsIgnoreCase("Human") ? Team.Human : args[1].equalsIgnoreCase("Zombie") ? Team.Zombie : Team.Global;
-
-						Location l = p.getLocation();
-						String s = LocationHandler.getLocationToString(l);
-						Arena a = Lobby.getArena(ip.getCreating());
-						List<String> list = a.getExactSpawns(team);
-						list.add(s);
-						a.setSpawns(list, team);
-
-						Infected.Menus = new Menus();
-
-						p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
-					}
-					else
-						if (args.length == 1)
-						{
-							Team team = Team.Global;
-
-							Location l = p.getLocation();
-							String s = LocationHandler.getLocationToString(l);
-							Arena a = Lobby.getArena(ip.getCreating());
-							List<String> list = a.getExactSpawns(team);
-							list.add(s);
-							a.setSpawns(list, team);
-
-							Infected.Menus = new Menus();
-
-							p.sendMessage(Msgs.Command_Spawn_Set.getString("<team>", team.toString(), "<spawn>", String.valueOf(list.size())));
-
-						}
-						else
-							p.sendMessage(Msgs.Help_SetSpawn.getString());
+				p.sendMessage(Msgs.Help_SetSpawn.getString());
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "addspawn" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

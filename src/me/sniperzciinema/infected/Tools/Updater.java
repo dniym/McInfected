@@ -45,7 +45,7 @@ import org.json.simple.JSONValue;
  */
 
 public class Updater {
-
+	
 	/**
 	 * Gives the dev the result of the update process. Can be obtained by called
 	 * getResult().
@@ -95,9 +95,9 @@ public class Updater {
 		 */
 		UPDATE_AVAILABLE
 	}
-
+	
 	private class UpdateRunnable implements Runnable {
-
+		
 		@Override
 		public void run() {
 			if (Updater.this.url != null)
@@ -121,7 +121,7 @@ public class Updater {
 							Updater.this.result = UpdateResult.UPDATE_AVAILABLE;
 		}
 	}
-
+	
 	/**
 	 * Allows the dev to specify the type of update that will be run.
 	 */
@@ -143,72 +143,72 @@ public class Updater {
 		 */
 		NO_DOWNLOAD
 	}
-
-	private Plugin					plugin;
-	private UpdateType				type;
-	private String					versionName;
-
-	private String					versionLink;
-
-	private String					versionType;
-	private String					versionGameVersion;
-	private boolean					announce;													// Whether
+	
+	private Plugin								plugin;
+	private UpdateType						type;
+	private String								versionName;
+	
+	private String								versionLink;
+	
+	private String								versionType;
+	private String								versionGameVersion;
+	private boolean								announce;																							// Whether
 	// to
 	// announce
 	// file
 	// downloads
-
-	private URL						url;														// Connecting
-																								// to
-																								// RSS
-	private File					file;														// The
-																								// plugin's
-																								// file
-	private Thread					thread;													// Updater
-																								// thread
-	private int						id				= -1;										// Project's
+	
+	private URL										url;																										// Connecting
+	// to
+	// RSS
+	private File									file;																									// The
+	// plugin's
+	// file
+	private Thread								thread;																								// Updater
+	// thread
+	private int										id						= -1;																		// Project's
 	// Curse
 	// ID
-	private String					apiKey			= null;									// BukkitDev
-																								// ServerMods
-																								// API
-																								// key
-	private static final String		TITLE_VALUE		= "name";									// Gets
-																								// remote
-																								// file's
-																								// title
-	private static final String		LINK_VALUE		= "downloadUrl";							// Gets
-																								// remote
-																								// file's
-																								// download
-																								// link
-	private static final String		TYPE_VALUE		= "releaseType";							// Gets
-
+	private String								apiKey				= null;																	// BukkitDev
+	// ServerMods
+	// API
+	// key
+	private static final String		TITLE_VALUE		= "name";																// Gets
+	// remote
+	// file's
+	// title
+	private static final String		LINK_VALUE		= "downloadUrl";													// Gets
+	// remote
+	// file's
+	// download
+	// link
+	private static final String		TYPE_VALUE		= "releaseType";													// Gets
+																																												
 	// remote
 	// file's
 	// release
 	// type
-	private static final String		VERSION_VALUE	= "gameVersion";							// Gets
-																								// remote
-																								// file's
-																								// build
-																								// version
-	private static final String		QUERY			= "/servermods/files?projectIds=";			// Path
-																								// to
-																								// GET
-	private static final String		HOST			= "https://api.curseforge.com";			// Slugs
-																								// will
-																								// be
-																								// appended
-																								// to
-																								// this
-																								// to
-																								// get
-																								// to
-																								// the
-																								// project's
-																								// RSS
-																								// feed
+	private static final String		VERSION_VALUE	= "gameVersion";													// Gets
+	// remote
+	// file's
+	// build
+	// version
+	private static final String		QUERY					= "/servermods/files?projectIds=";				// Path
+	// to
+	// GET
+	private static final String		HOST					= "https://api.curseforge.com";					// Slugs
+	// will
+	// be
+	// appended
+	// to
+	// this
+	// to
+	// get
+	// to
+	// the
+	// project's
+	// RSS
+	// feed
 	private static final String[]	NO_UPDATE_TAG	= { "-DEV", "-PRE", "-SNAPSHOT, Addon" };	// If
 	// the
 	// version
@@ -219,16 +219,16 @@ public class Updater {
 	// these,
 	// don't
 	// update.
-	private static final int		BYTE_SIZE		= 1024;									// Used
-
+	private static final int			BYTE_SIZE			= 1024;																	// Used
+																																												
 	// for
 	// downloading
 	// files
-	private YamlConfiguration		config;													// Config
-
+	private YamlConfiguration			config;																								// Config
+																																												
 	// file
-	private String					updateFolder;												// The
-
+	private String								updateFolder;																					// The
+																																												
 	// folder
 	// that
 	// downloads
@@ -236,32 +236,32 @@ public class Updater {
 	// be
 	// placed
 	// in
-	private Updater.UpdateResult	result			= Updater.UpdateResult.SUCCESS;			// Used
-																								// for
-																								// determining
-																								// the
-																								// outcome
-																								// of
-																								// the
-																								// update
-																								// process
-
+	private Updater.UpdateResult	result				= Updater.UpdateResult.SUCCESS;					// Used
+																																												
+	// for
+	// determining
+	// the
+	// outcome
+	// of
+	// the
+	// update
+	// process
+	
 	/**
 	 * Initialize the updater
 	 * 
 	 * @param plugin
-	 *            The plugin that is checking for an update.
+	 *          The plugin that is checking for an update.
 	 * @param id
-	 *            The dev.bukkit.org id of the project
+	 *          The dev.bukkit.org id of the project
 	 * @param file
-	 *            The file that the plugin is running from, get this by doing
-	 *            this.getFile() from within your main class.
+	 *          The file that the plugin is running from, get this by doing
+	 *          this.getFile() from within your main class.
 	 * @param type
-	 *            Specify the type of update this will be. See
-	 *            {@link UpdateType}
+	 *          Specify the type of update this will be. See {@link UpdateType}
 	 * @param announce
-	 *            True if the program should announce the progress of new
-	 *            updates in console
+	 *          True if the program should announce the progress of new
+	 *          updates in console
 	 */
 	public Updater(Plugin plugin, int id, File file, UpdateType type, boolean announce)
 	{
@@ -271,11 +271,11 @@ public class Updater {
 		this.file = file;
 		this.id = id;
 		this.updateFolder = plugin.getServer().getUpdateFolder();
-
+		
 		final File pluginFile = plugin.getDataFolder().getParentFile();
 		final File updaterFile = new File(pluginFile, "Updater");
 		final File updaterConfigFile = new File(updaterFile, "config.yml");
-
+		
 		if (!updaterFile.exists())
 			updaterFile.mkdir();
 		if (!updaterConfigFile.exists())
@@ -289,11 +289,11 @@ public class Updater {
 				e.printStackTrace();
 			}
 		this.config = YamlConfiguration.loadConfiguration(updaterConfigFile);
-
+		
 		this.config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n' + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n' + "Some updating systems will not adhere to the disabled value, but these may be turned off in their plugin's configuration.");
 		this.config.addDefault("api-key", "PUT_API_KEY_HERE");
 		this.config.addDefault("disable", false);
-
+		
 		if (this.config.get("api-key", null) == null)
 		{
 			this.config.options().copyDefaults(true);
@@ -307,19 +307,19 @@ public class Updater {
 				e.printStackTrace();
 			}
 		}
-
+		
 		if (this.config.getBoolean("disable"))
 		{
 			this.result = UpdateResult.DISABLED;
 			return;
 		}
-
+		
 		String key = this.config.getString("api-key");
 		if (key.equalsIgnoreCase("PUT_API_KEY_HERE") || key.equals(""))
 			key = null;
-
+		
 		this.apiKey = key;
-
+		
 		try
 		{
 			this.url = new URL(Updater.HOST + Updater.QUERY + id);
@@ -330,11 +330,11 @@ public class Updater {
 			this.result = UpdateResult.FAIL_BADID;
 			e.printStackTrace();
 		}
-
+		
 		this.thread = new Thread(new UpdateRunnable());
 		this.thread.start();
 	}
-
+	
 	/**
 	 * Get the latest version's file link.
 	 */
@@ -342,12 +342,12 @@ public class Updater {
 		waitForThread();
 		return this.versionLink;
 	}
-
+	
 	// Get the latest Infected version
 	public String getLatestFileVersion() {
 		return getLatestName().split(" v")[1].split(" ")[0];
 	}
-
+	
 	/**
 	 * Get the latest version's game version.
 	 */
@@ -355,7 +355,7 @@ public class Updater {
 		waitForThread();
 		return this.versionGameVersion;
 	}
-
+	
 	/**
 	 * Get the latest version's name.
 	 */
@@ -363,7 +363,7 @@ public class Updater {
 		waitForThread();
 		return this.versionName;
 	}
-
+	
 	/**
 	 * Get the latest version's release type (release, beta, or alpha).
 	 */
@@ -371,7 +371,7 @@ public class Updater {
 		waitForThread();
 		return this.versionType;
 	}
-
+	
 	/**
 	 * Get the result of the update process.
 	 */
@@ -379,7 +379,7 @@ public class Updater {
 		waitForThread();
 		return this.result;
 	}
-
+	
 	/**
 	 * Evaluate whether the version number is marked showing that it should not
 	 * be updated by this program
@@ -390,7 +390,7 @@ public class Updater {
 				return true;
 		return false;
 	}
-
+	
 	/**
 	 * Check if the name of a jar is one of the plugins currently installed,
 	 * used for extracting the correct files out of a zip.
@@ -401,37 +401,36 @@ public class Updater {
 				return true;
 		return false;
 	}
-
+	
 	private boolean read() {
 		try
 		{
 			final URLConnection conn = this.url.openConnection();
 			conn.setConnectTimeout(5000);
-
+			
 			if (this.apiKey != null)
 				conn.addRequestProperty("X-API-Key", this.apiKey);
 			conn.addRequestProperty("User-Agent", "Updater (by Gravity)");
-
+			
 			conn.setDoOutput(true);
-
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
+			
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			final String response = reader.readLine();
-
+			
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
-
+			
 			if (array.size() == 0)
 			{
 				System.out.println("The updater could not find any files for the project id " + this.id);
 				this.result = UpdateResult.FAIL_BADID;
 				return false;
 			}
-
+			
 			this.versionName = (String) ((JSONObject) array.get(array.size() - 1)).get(Updater.TITLE_VALUE);
 			this.versionLink = (String) ((JSONObject) array.get(array.size() - 1)).get(Updater.LINK_VALUE);
 			this.versionType = (String) ((JSONObject) array.get(array.size() - 1)).get(Updater.TYPE_VALUE);
 			this.versionGameVersion = (String) ((JSONObject) array.get(array.size() - 1)).get(Updater.VERSION_VALUE);
-
+			
 			return true;
 		}
 		catch (final IOException e)
@@ -450,7 +449,7 @@ public class Updater {
 			return false;
 		}
 	}
-
+	
 	/**
 	 * Save an update from dev.bukkit.org into the server's update folder.
 	 */
@@ -466,7 +465,7 @@ public class Updater {
 			final int fileLength = url.openConnection().getContentLength();
 			in = new BufferedInputStream(url.openStream());
 			fout = new FileOutputStream(folder.getAbsolutePath() + "/" + file);
-
+			
 			final byte[] data = new byte[Updater.BYTE_SIZE];
 			int count;
 			if (this.announce)
@@ -482,8 +481,7 @@ public class Updater {
 			}
 			// Just a quick check to make sure we didn't leave any files from
 			// last time...
-			for (final File xFile : new File(this.plugin.getDataFolder().getParent(),
-					this.updateFolder).listFiles())
+			for (final File xFile : new File(this.plugin.getDataFolder().getParent(), this.updateFolder).listFiles())
 				if (xFile.getName().endsWith(".zip"))
 					xFile.delete();
 			// Check to see if it's a zip file, if it is, unzip it.
@@ -512,7 +510,7 @@ public class Updater {
 			}
 		}
 	}
-
+	
 	/**
 	 * Part of Zip-File-Extractor, modified by Gravity for use with Bukkit
 	 */
@@ -532,13 +530,11 @@ public class Updater {
 					continue;
 				else
 				{
-					final BufferedInputStream bis = new BufferedInputStream(
-							zipFile.getInputStream(entry));
+					final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
 					int b;
 					final byte buffer[] = new byte[Updater.BYTE_SIZE];
 					final FileOutputStream fos = new FileOutputStream(destinationFilePath);
-					final BufferedOutputStream bos = new BufferedOutputStream(fos,
-							Updater.BYTE_SIZE);
+					final BufferedOutputStream bos = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
 					while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1)
 						bos.write(buffer, 0, b);
 					bos.flush();
@@ -546,8 +542,7 @@ public class Updater {
 					bis.close();
 					final String name = destinationFilePath.getName();
 					if (name.endsWith(".jar") && pluginFile(name))
-						destinationFilePath.renameTo(new File(
-								this.plugin.getDataFolder().getParent(),
+						destinationFilePath.renameTo(new File(this.plugin.getDataFolder().getParent(),
 								this.updateFolder + "/" + name));
 				}
 				entry = null;
@@ -556,7 +551,7 @@ public class Updater {
 			e = null;
 			zipFile.close();
 			zipFile = null;
-
+			
 			// Move any plugin data folders that were included to the right
 			// place, Bukkit won't do this for us.
 			for (final File dFile : new File(zipPath).listFiles())
@@ -564,20 +559,21 @@ public class Updater {
 				if (dFile.isDirectory())
 					if (pluginFile(dFile.getName()))
 					{
-						final File oFile = new File(this.plugin.getDataFolder().getParent(),
-								dFile.getName()); // Get current dir
+						final File oFile = new File(this.plugin.getDataFolder().getParent(), dFile.getName()); // Get
+																																																		// current
+																																																		// dir
 						final File[] contents = oFile.listFiles(); // List of
-																	// existing
-																	// files in
-																	// the
-																	// current
-																	// dir
+						// existing
+						// files in
+						// the
+						// current
+						// dir
 						for (final File cFile : dFile.listFiles()) // Loop
-																	// through
-																	// all the
-																	// files in
-																	// the new
-																	// dir
+						// through
+						// all the
+						// files in
+						// the new
+						// dir
 						{
 							boolean found = false;
 							for (final File xFile : contents)
@@ -588,8 +584,7 @@ public class Updater {
 								}
 							if (!found)
 								// Move the new file into the current dir
-								cFile.renameTo(new File(
-										oFile.getCanonicalFile() + "/" + cFile.getName()));
+								cFile.renameTo(new File(oFile.getCanonicalFile() + "/" + cFile.getName()));
 							else
 								// This file already exists, so we don't need it
 								// anymore.
@@ -609,7 +604,7 @@ public class Updater {
 		}
 		new File(file).delete();
 	}
-
+	
 	/**
 	 * Check to see if the program should continue by evaluation whether the
 	 * plugin is already updated, or shouldn't be updated
@@ -621,12 +616,12 @@ public class Updater {
 			if (title.split(" v").length == 2)
 			{
 				final String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get
-																					// the
-																					// newest
-																					// file's
-																					// version
-																					// number
-
+				// the
+				// newest
+				// file's
+				// version
+				// number
+				
 				if (hasTag(version) || version.equalsIgnoreCase(remoteVersion))
 				{
 					// We already have the latest version, or this build is
@@ -648,7 +643,7 @@ public class Updater {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * As the result of Updater output depends on the thread's completion, it is
 	 * necessary to wait for the thread to finish before allowing anyone to

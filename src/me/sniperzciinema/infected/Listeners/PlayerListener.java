@@ -47,7 +47,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * The Miscellaneous Listeners for Infected
  */
 public class PlayerListener implements Listener {
-
+	
 	// Block enchantment tables as levels are used as a timer
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void InventoryClick(InventoryClickEvent e) {
@@ -55,18 +55,18 @@ public class PlayerListener implements Listener {
 		if (Lobby.isInGame(p) && Settings.isEditingInventoryPrevented())
 			e.setCancelled(true);
 	}
-
+	
 	// If an arrow show in game hits the ground
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onArrowShoot(final ProjectileHitEvent e) {
-
+		
 		if (e.getEntity().getShooter() instanceof Player)
 		{
 			Player player = (Player) e.getEntity().getShooter();
 			if (Lobby.isInGame(player) && (Lobby.getGameState() == GameState.Started))
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Infected.me, new Runnable()
 				{
-
+					
 					@Override
 					public void run() {
 						if (e.getEntity() != null)
@@ -75,7 +75,7 @@ public class PlayerListener implements Listener {
 				}, 1);
 		}
 	}
-
+	
 	// When a Entity targets another, block it if it's in a game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityAtk(EntityTargetEvent e) {
@@ -90,7 +90,7 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
-
+	
 	// Stop "Living Entities" from targetting the players in Infected if its
 	// enabled and the player isn't human
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -106,18 +106,18 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
-
+	
 	// If a player is attempting to place a block
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBlockPlace(BlockPlaceEvent e) {
-
+		
 		if (Lobby.isInGame(e.getPlayer()))
 			if (Lobby.getGameState() != GameState.Started)
 				e.setCancelled(true);
 			else
 				Lobby.getActiveArena().setBlock(e.getBlock().getLocation(), Material.AIR);
 	}
-
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBreakBlock(BlockBreakEvent e) {
@@ -129,7 +129,7 @@ public class PlayerListener implements Listener {
 				Files.getSigns().getStringList("Info Signs").remove(LocationHandler.getLocationToString(e.getBlock().getLocation()));
 				Files.saveSigns();
 			}
-
+			
 			if (Files.getSigns().getStringList("Shop Signs").contains(LocationHandler.getLocationToString(e.getBlock().getLocation())))
 			{
 				Files.getSigns().getStringList("Shop Signs").remove(LocationHandler.getLocationToString(e.getBlock().getLocation()));
@@ -137,32 +137,31 @@ public class PlayerListener implements Listener {
 			}
 			// When players break blocks, before we do anything, are they in the
 			// started game?
-			else
-				if (Lobby.isInGame(e.getPlayer()))
-					if ((Lobby.getGameState() == GameState.Started) || (Lobby.getGameState() == GameState.Infecting))
+			else if (Lobby.isInGame(e.getPlayer()))
+				if ((Lobby.getGameState() == GameState.Started) || (Lobby.getGameState() == GameState.Infecting))
+				{
+					// Does the config say they can break it?
+					if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
 					{
-						// Does the config say they can break it?
-						if (Lobby.getActiveArena().getBlocks().containsKey(e.getBlock().getLocation()) || Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), e.getBlock().getTypeId()))
-						{
-							Location loc = e.getBlock().getLocation();
-							// Lets make sure this block wasn't a placed one, if
-							// so
-							// we'll just remove it
-							if (!Lobby.getActiveArena().getBlocks().containsKey(loc))
-								Lobby.getActiveArena().setBlock(loc, e.getBlock().getType());
-							else
-								Lobby.getActiveArena().removeBlock(loc);
-							e.getBlock().setType(Material.AIR);
-						}
+						Location loc = e.getBlock().getLocation();
+						// Lets make sure this block wasn't a placed one, if
+						// so
+						// we'll just remove it
+						if (!Lobby.getActiveArena().getBlocks().containsKey(loc))
+							Lobby.getActiveArena().setBlock(loc, e.getBlock().getType());
 						else
-							e.setCancelled(true);
+							Lobby.getActiveArena().removeBlock(loc);
+						e.getBlock().setType(Material.AIR);
 					}
 					else
 						e.setCancelled(true);
+				}
+				else
+					e.setCancelled(true);
 		}
-
+		
 	}
-
+	
 	// If the player has toggled on InfectedChat, lets make it so they only have
 	// to type
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -174,7 +173,7 @@ public class PlayerListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
-
+	
 	// If a player uses a command and they aren't op, the cmds not on the
 	// allowed list, and it doesn't contain "inf". We'll block the cmd
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -195,16 +194,16 @@ public class PlayerListener implements Listener {
 				e.setCancelled(true);
 			}
 		}
-
+		
 	}
-
+	
 	// If a player attempts to drop an item in game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
 			e.setCancelled(true);
 	}
-
+	
 	// Should we allow for food levels to drop
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerHunger(FoodLevelChangeEvent e) {
@@ -215,7 +214,7 @@ public class PlayerListener implements Listener {
 				e.setCancelled(true);
 		}
 	}
-
+	
 	// When a player interacts with an object well the game is started
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent e) {
@@ -225,11 +224,11 @@ public class PlayerListener implements Listener {
 			{
 				if ((e.getClickedBlock().getRelative(e.getBlockFace()).getType() == Material.FIRE) && !Lobby.getActiveArena().getSettings().canBreakBlock(InfPlayerManager.getInfPlayer(e.getPlayer()).getTeam(), 51))
 					e.setCancelled(true);
-
+				
 				if (Lobby.getGameState() == GameState.Started)
 					if (!Lobby.getActiveArena().getSettings().interactDisabled())
 					{
-
+						
 						if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
 						{
 							Block b = e.getClickedBlock();
@@ -249,11 +248,11 @@ public class PlayerListener implements Listener {
 						e.setUseInteractedBlock(Result.DENY);
 						e.setUseItemInHand(Result.DENY);
 						e.setCancelled(true);
-
+						
 					}
 			}
 	}
-
+	
 	// Check for updates when a player joins, making sure they are OP
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -261,14 +260,14 @@ public class PlayerListener implements Listener {
 		if (Infected.update && player.hasPermission("Infected.Admin"))
 			player.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + "An update is available: " + Infected.updateName);
 	}
-
+	
 	// If the player gets kicked out of the server, do we need to remove them?
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerKick(final PlayerKickEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
 			Game.leaveGame(e.getPlayer());
 	}
-
+	
 	// If a player attempts to drop an item in game
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerPickupItem(PlayerPickupItemEvent e) {
@@ -276,14 +275,14 @@ public class PlayerListener implements Listener {
 			if (Lobby.isInGame(e.getPlayer()))
 				e.setCancelled(true);
 	}
-
+	
 	// If the player quits on the server, do we need to remove them?
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(final PlayerQuitEvent e) {
 		if (Lobby.isInGame(e.getPlayer()))
 			Game.leaveGame(e.getPlayer());
 	}
-
+	
 	// If a player shoots a bow, before the game has started, lets return the
 	// arrow and cancel the shot
 	@SuppressWarnings("deprecation")
@@ -301,7 +300,7 @@ public class PlayerListener implements Listener {
 				}
 			}
 	}
-
+	
 	// Prevent throwing potions well in the lobby of Infected, as it just gets
 	// annoying
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -314,7 +313,7 @@ public class PlayerListener implements Listener {
 					e.setCancelled(true);
 				}
 	}
-
+	
 	// Block enchantment tables as levels are used as a timer
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerTryEnchant(PrepareItemEnchantEvent e) {
@@ -322,5 +321,5 @@ public class PlayerListener implements Listener {
 		if (Lobby.isInGame(p) && Lobby.getActiveArena().getSettings().enchantDisabled())
 			e.setCancelled(true);
 	}
-
+	
 }

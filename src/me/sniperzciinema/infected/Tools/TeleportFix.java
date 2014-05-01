@@ -17,39 +17,39 @@ import org.bukkit.plugin.Plugin;
 
 
 public class TeleportFix implements Listener {
-
+	
 	private Plugin		plugin;
 	private Server		server;
-
+	
 	private final int	TELEPORT_FIX_DELAY	= 15;	// ticks
-
+																							
 	public TeleportFix(Plugin plugin)
 	{
 		this.plugin = plugin;
 		this.server = plugin.getServer();
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-
+		
 		final Player player = event.getPlayer();
 		if (Lobby.isInGame(player))
 			// Fix the visibility issue one tick later
 			this.server.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
 			{
-
+				
 				@Override
 				public void run() {
 					// Refresh nearby clients
 					final List<Player> nearby = Lobby.getPlayersInGame();
-
+					
 					// Hide every player
 					updateEntities(player, nearby);
-
+					
 					// Then show them again
 					TeleportFix.this.server.getScheduler().scheduleSyncDelayedTask(TeleportFix.this.plugin, new Runnable()
 					{
-
+						
 						@Override
 						public void run() {
 							updateEntities(player, nearby);
@@ -58,7 +58,7 @@ public class TeleportFix implements Listener {
 				}
 			}, this.TELEPORT_FIX_DELAY);
 	}
-
+	
 	public void updateEntities(Player tpedPlayer, List<Player> nearby) {
 		// Hide or show every player to tpedPlayer
 		// and hide or show tpedPlayer to every player.
@@ -77,7 +77,7 @@ public class TeleportFix implements Listener {
 						player.showPlayer(tpedPlayer);
 					else
 						player.hidePlayer(tpedPlayer);
-
+				
 			}
 			else
 			{
@@ -89,8 +89,8 @@ public class TeleportFix implements Listener {
 					player.showPlayer(tpedPlayer);
 				else
 					player.hidePlayer(tpedPlayer);
-
+				
 			}
 	}
-
+	
 }

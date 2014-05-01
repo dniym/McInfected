@@ -33,35 +33,35 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class Infected extends JavaPlugin {
-
+	
 	// Initialize all the variables
-	public static String		version		= null;
-	public static Plugin		me;
-
-	public static boolean		update		= false;
-	public static String		updateName	= "";
-	public static String		updateLink	= "";
-	public static File			file;
-
+	public static Plugin			me;
+	
+	public static boolean			update			= false;
+	public static String			updateName	= "";
+	public static String			updateLink	= "";
+	public static File				file;
+	
 	// Plugin Addons
-	public static Plugin		Disguiser;
-	public static Economy		economy		= null;
-
-	public static MySQL			MySQL		= null;
+	public static Plugin			Disguiser;
+	public static Economy			economy			= null;
+	
+	public static MySQL				MySQL				= null;
 	public static Connection	connection	= null;
-
-	public static Menus			Menus;
+	
+	public static Menus				Menus;
 	public static CHandler		commandsHandler;
-
+	
 	@Override
 	public void onDisable() {
+		
 		Infected.Menus.destroyAllMenus();
+		
 		try
 		{
 			// On disable reset players with everything from before
@@ -75,63 +75,63 @@ public class Infected extends JavaPlugin {
 		}
 		catch (Exception e)
 		{
-
+			
 		}
 		if (Settings.MySQLEnabled())
 			Infected.MySQL.closeConnection();
 	}
-
+	
 	@Override
 	public void onEnable() {
-
+		
+		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
+		
+		// Initialize an instance
 		Infected.me = this;
-		Infected.Menus = new Menus();
-
+		
+		// Files
 		Files.updateAll();
 		Files.saveAll();
 		Files.reloadAll();
-
-		PluginManager pm = getServer().getPluginManager();
-		pm = getServer().getPluginManager();
-		System.out.println(Msgs.Format_Header.getString("<title>", " Infected "));
-
-		try
-		{
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-			System.out.println("Metrics was started!");
-		}
-		catch (IOException e)
-		{
-			System.out.println("Metrics was unable to start...");
-		}
-
-		// Check for an update
-		PluginDescriptionFile pdf = getDescription();
-		Infected.version = pdf.getVersion();
-
-		if (Settings.checkForUpdates())
-		{
-
-			Infected.file = getFile();
-			Updater updater = new Updater(this, 44622, getFile(), Updater.UpdateType.NO_DOWNLOAD,
-					true);
-
-			Infected.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			Infected.updateName = updater.getLatestName();
-			Infected.updateLink = updater.getLatestFileLink();
-
-			if (Infected.update)
-				for (Player player : Bukkit.getOnlinePlayers())
-					if (player.hasPermission("Infected.Admin"))
-						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + Infected.updateName);
-		}
-
-		// Get the Commands class and the Listener
+		
+		// Addons
+		Lobby.loadAllArenas();
+		GrenadeManager.loadConfigGrenades();
+		InfClassManager.loadConfigClasses();
+		AddonManager.getAddons();
+		Infected.Menus = new Menus();
+		
+		// Extras
+		checkMySQL();
+		checkForUpdates();
+		startMetrics();
+		
+		// Commands And Events
+		registerCommands();
+		registerEvents();
+		
+		// Create Players for Infected
+		for (Player u : Bukkit.getOnlinePlayers())
+			InfPlayerManager.createInfPlayer(u);
+		
+		// Do the info signs (Updating the info)
+		if (Settings.InfoSignsEnabled())
+			UpdateInfoSigns.update();
+		
+		System.out.println(Msgs.Format_Line.getString());
+	}
+	
+	void registerCommands() {
+		
 		Infected.commandsHandler = new CHandler();
 		getCommand("Infected").setExecutor(Infected.commandsHandler);
 		getCommand("Infected").setTabCompleter(Infected.commandsHandler);
-
+		
+	}
+	
+	void registerEvents() {
+		PluginManager pm = getServer().getPluginManager();
+		pm = getServer().getPluginManager();
 		pm.registerEvents(new ScoreBoardToggle(), this);
 		pm.registerEvents(new DamageEvents(this), this);
 		pm.registerEvents(new PlayerListener(), this);
@@ -139,27 +139,22 @@ public class Infected extends JavaPlugin {
 		pm.registerEvents(new GrenadeListener(), this);
 		pm.registerEvents(new SignListener(), this);
 		pm.registerEvents(new TeleportFix(this), this);
-
-		AddonManager.getAddons();
-
-		// Do the info signs (Updating the info)
-		if (Settings.InfoSignsEnabled())
-			UpdateInfoSigns.update();
-
+	}
+	
+	void checkMySQL() {
 		if (Settings.MySQLEnabled())
 		{
 			System.out.println("Attempting to connect to MySQL");
 			Infected.MySQL = new MySQL(this, Files.getConfig().getString("MySQL.Host"),
-					Files.getConfig().getString("MySQL.Port"),
-					Files.getConfig().getString("MySQL.Database"),
+					Files.getConfig().getString("MySQL.Port"), Files.getConfig().getString("MySQL.Database"),
 					Files.getConfig().getString("MySQL.Username"),
 					Files.getConfig().getString("MySQL.Password"));
-
+			
 			try
 			{
 				Infected.connection = Infected.MySQL.openConnection();
 				Statement statement = Infected.connection.createStatement();
-
+				
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Infected" + " (UUID VARCHAR(40), Kills INT(10), Deaths INT(10), Points INT(10), Score INT(10), PlayingTime INT(15), HighestKillStreak INT(10));");
 				System.out.println("MySQL Table has been loaded");
 			}
@@ -170,15 +165,36 @@ public class Infected extends JavaPlugin {
 				System.out.println("Unable to connect to MySQL");
 			}
 		}
-
-		for (Player u : Bukkit.getOnlinePlayers())
-			InfPlayerManager.createInfPlayer(u);
-
-		Lobby.loadAllArenas();
-		InfClassManager.loadConfigClasses();
-		GrenadeManager.loadConfigGrenades();
-
-		System.out.println(Msgs.Format_Line.getString());
 	}
-
+	
+	void checkForUpdates() {
+		if (Settings.checkForUpdates())
+		{
+			
+			Infected.file = getFile();
+			Updater updater = new Updater(this, 44622, getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+			
+			Infected.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+			Infected.updateName = updater.getLatestName();
+			Infected.updateLink = updater.getLatestFileLink();
+			
+			if (Infected.update)
+				for (Player player : Bukkit.getOnlinePlayers())
+					if (player.hasPermission("Infected.Admin"))
+						player.sendMessage(RandomChatColor.getColor() + "Update for Infected Availble: " + Infected.updateName);
+		}
+	}
+	
+	void startMetrics() {
+		try
+		{
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+			System.out.println("Metrics was started!");
+		}
+		catch (IOException e)
+		{
+			System.out.println("Metrics was unable to start...");
+		}
+	}
 }

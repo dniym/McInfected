@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
  */
 
 public class ScoreBoardToggle implements Listener {
-
+	
 	// Show stats when a player sneaks
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent e) {

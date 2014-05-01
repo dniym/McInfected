@@ -16,12 +16,12 @@ import org.bukkit.entity.Player;
 
 
 public class KillMessages {
-
+	
 	/**
 	 * @param team
-	 *            - The killers team
+	 *          - The killers team
 	 * @param death
-	 *            - The death type
+	 *          - The death type
 	 * @return the death message
 	 */
 	private static String getKill(Team team, DeathType death) {
@@ -38,20 +38,20 @@ public class KillMessages {
 		message = list.get(i);
 		return message;
 	}
-
+	
 	/**
 	 * @param killer
-	 *            - The Killer
+	 *          - The Killer
 	 * @param killed
-	 *            - The Killed
+	 *          - The Killed
 	 * @param death
-	 *            - The DeathType
+	 *          - The DeathType
 	 * @param prefix
-	 *            - Do we want a prefix for this death
+	 *          - Do we want a prefix for this death
 	 * @return The Kill Message
 	 */
 	public static String getKillMessage(Player killer, Player killed, DeathType death, Boolean prefix) {
-
+		
 		InfPlayer IP = null;
 		Team team = Team.Zombie;
 		// Figure out what team the killer was on
@@ -60,14 +60,13 @@ public class KillMessages {
 			IP = InfPlayerManager.getInfPlayer(killer);
 			team = IP.getTeam();
 		}
+		else if (InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Human)
+			team = Team.Zombie;
 		else
-			if (InfPlayerManager.getInfPlayer(killed).getTeam() == Team.Human)
-				team = Team.Zombie;
-			else
-				team = Team.Human;
+			team = Team.Human;
 		// Get the message
 		String msg = getKill(team, death);
-
+		
 		// Replace color codes, and killer and killed names
 		msg = ChatColor.translateAlternateColorCodes('&', msg.replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar())));
 		if (killer != null)

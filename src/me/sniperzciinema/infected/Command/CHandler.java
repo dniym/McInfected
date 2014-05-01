@@ -56,13 +56,13 @@ import org.bukkit.entity.Player;
 
 
 public class CHandler implements TabCompleter, CommandExecutor {
-
+	
 	private ArrayList<SubCommand>	commands;
-
+	
 	public CHandler()
 	{
 		this.commands = new ArrayList<SubCommand>();
-
+		
 		registerSubCommand(new AddonsCommand());
 		registerSubCommand(new AdminCommand());
 		registerSubCommand(new ArenasCommand());
@@ -97,49 +97,23 @@ public class CHandler implements TabCompleter, CommandExecutor {
 		registerSubCommand(new TpLobbyCommand());
 		registerSubCommand(new TpSpawnCommand());
 		registerSubCommand(new VoteCommand());
-
+		
 	}
-
+	
 	public SubCommand getSubCommand(String cmdName) {
 		for (SubCommand cmd : this.commands)
 			if (cmd.getName().equalsIgnoreCase(cmdName))
 				return cmd;
 		return null;
 	}
-
-	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-
-		if (args.length == 1)
-		{
-			List<String> cmds = new ArrayList<String>();
-
-			for (SubCommand subCommand : this.commands)
-				cmds.add(subCommand.getName());
-
-			return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, cmds);
-		}
-
-		else
-		{
-			List<String> params = new ArrayList<String>();
-			for (SubCommand subCommand : this.commands)
-				if (subCommand.getName().equalsIgnoreCase(args[0]) || subCommand.getAliases().contains(args[0].toLowerCase()))
-					params = subCommand.getTabs();
-
-			if (params != null)
-				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, params);
-		}
-		return null;
-	}
-
+	
 	public ArrayList<SubCommand> getSubCommands() {
 		return this.commands;
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
+		
 		if (cmd.getName().equalsIgnoreCase("Infected"))
 		{
 			Player p = null;
@@ -154,7 +128,7 @@ public class CHandler implements TabCompleter, CommandExecutor {
 			if (!ce.isCancelled())
 				if (args.length == 0)
 				{
-
+					
 					sender.sendMessage("");
 					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + ">>>>>>[" + ChatColor.GOLD + ChatColor.BOLD + "Infected" + ChatColor.DARK_AQUA + ChatColor.STRIKETHROUGH + "]<<<<<<");
 					if (Infected.update)
@@ -162,10 +136,11 @@ public class CHandler implements TabCompleter, CommandExecutor {
 							sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.RED + ChatColor.BOLD + "Update Available: " + ChatColor.WHITE + ChatColor.BOLD + Infected.updateName);
 						else
 							new FancyMessage(Msgs.Format_Prefix.getString()).then("§c§lUpdate Available: §f§l" + Infected.updateName).tooltip("§aClick to open page").link(Infected.updateLink).send(p);
-
+					
 					sender.sendMessage("");
 					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Author: " + ChatColor.GREEN + ChatColor.BOLD + "SniperzCiinema" + ChatColor.WHITE + ChatColor.ITALIC + "(" + ChatColor.DARK_AQUA + "xXSniperzXx_SD" + ChatColor.WHITE + ")");
-					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Infected.version);
+					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.GRAY + "Version: " + ChatColor.GREEN + ChatColor.BOLD + Infected.me.getDescription().getVersion());
+					
 					sender.sendMessage(Msgs.Format_Prefix.getString() + ChatColor.WHITE + "BukkitDev: " + ChatColor.GREEN + ChatColor.BOLD + "http://bit.ly/McInfected");
 					if (p == null)
 					{
@@ -192,11 +167,37 @@ public class CHandler implements TabCompleter, CommandExecutor {
 		}
 		return true;
 	}
-
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+		
+		if (args.length == 1)
+		{
+			List<String> cmds = new ArrayList<String>();
+			
+			for (SubCommand subCommand : this.commands)
+				cmds.add(subCommand.getName());
+			
+			return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, cmds);
+		}
+		
+		else
+		{
+			List<String> params = new ArrayList<String>();
+			for (SubCommand subCommand : this.commands)
+				if (subCommand.getName().equalsIgnoreCase(args[0]) || subCommand.getAliases().contains(args[0].toLowerCase()))
+					params = subCommand.getTabs();
+			
+			if (params != null)
+				return TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, params);
+		}
+		return null;
+	}
+	
 	public void registerSubCommand(SubCommand subCommand) {
 		this.commands.add(subCommand);
 	}
-
+	
 	public void unRegisterSubCommand(SubCommand subCommand) {
 		this.commands.remove(subCommand);
 	}

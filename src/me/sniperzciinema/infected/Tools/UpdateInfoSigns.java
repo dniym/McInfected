@@ -15,24 +15,24 @@ import org.bukkit.block.Sign;
 
 
 public class UpdateInfoSigns {
-
+	
 	/**
 	 * Update all signs every few seconds(Set in the config)
 	 */
 	public static void update() {
-
+		
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Infected.me, new Runnable()
 		{
-
+			
 			@Override
 			public void run() {
 				if (!Files.getSigns().getStringList("Info Signs").isEmpty())
 					for (String loc : Files.getSigns().getStringList("Info Signs"))
 					{
 						String status = Lobby.getGameState().toString();
-
+						
 						int time = Lobby.getTimeLeft();
-
+						
 						Location location = LocationHandler.getObjectLocation(loc);
 						if ((location.getBlock().getType() == Material.SIGN_POST) || (location.getBlock().getType() == Material.WALL_SIGN))
 						{

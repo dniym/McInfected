@@ -13,21 +13,21 @@ import org.bukkit.command.CommandSender;
 
 
 public class ArenasCommand extends SubCommand {
-
+	
 	public ArenasCommand()
 	{
 		super("arenas");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (!sender.hasPermission("Infected.Arenas"))
 			sender.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+		
 		else
 		{
 			sender.sendMessage(Msgs.Format_Header.getString("<title>", "Arenas"));
-
+			
 			StringBuilder valid = new StringBuilder();
 			for (Object o : Lobby.getValidArenas())
 			{
@@ -35,7 +35,7 @@ public class ArenasCommand extends SubCommand {
 				if (Lobby.getValidArenas().size() > 1)
 					valid.append(", ");
 			}
-
+			
 			StringBuilder inValid = new StringBuilder();
 			for (Object o : Lobby.getInValidArenas())
 			{
@@ -43,16 +43,16 @@ public class ArenasCommand extends SubCommand {
 				if (Lobby.getInValidArenas().size() > 1)
 					inValid.append(", ");
 			}
-
+			
 			sender.sendMessage(Msgs.Command_Arena_List.getString("<valid>", valid.toString(), "<invalid>", inValid.toString()));
 		}
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "maps", "" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

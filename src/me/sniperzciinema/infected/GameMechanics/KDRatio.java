@@ -9,10 +9,10 @@ import org.bukkit.Bukkit;
 
 
 public class KDRatio {
-
+	
 	/**
 	 * @param user
-	 *            - The players name
+	 *          - The players name
 	 * @return Their kill/death Ratio
 	 */
 	@SuppressWarnings("deprecation")
@@ -27,10 +27,9 @@ public class KDRatio {
 		double ratio = Math.round(((double) kills / (double) deaths) * 100.0D) / 100.0D;
 		if (deaths == 0)
 			ratio = kills;
-		else
-			if (kills == 0)
-				ratio = 0.00;
+		else if (kills == 0)
+			ratio = 0.00;
 		return ratio;
 	}
-
+	
 }

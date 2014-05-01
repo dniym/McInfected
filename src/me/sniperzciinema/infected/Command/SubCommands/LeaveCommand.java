@@ -16,39 +16,38 @@ import org.bukkit.entity.Player;
 
 
 public class LeaveCommand extends SubCommand {
-
+	
 	public LeaveCommand()
 	{
 		super("leave");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) throws CommandException {
 		if (sender instanceof Player)
 		{
 			Player p = (Player) sender;
 			InfPlayer ip = InfPlayerManager.getInfPlayer(p);
-
+			
 			if (!p.hasPermission("Infected.Leave"))
 				p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+			
+			else if (!Lobby.isInGame(p))
+				p.sendMessage(Msgs.Error_Game_Not_In.getString());
+			
 			else
-				if (!Lobby.isInGame(p))
-					p.sendMessage(Msgs.Error_Game_Not_In.getString());
-
-				else
-					ip.leaveInfected();
+				ip.leaveInfected();
 		}
 		else
 			sender.sendMessage(Msgs.Error_Misc_Not_Player.getString());
-
+		
 	}
-
+	
 	@Override
 	public List<String> getAliases() {
 		return Arrays.asList(new String[] { "quit", "leave" });
 	}
-
+	
 	@Override
 	public List<String> getTabs() {
 		return Arrays.asList(new String[] { "" });

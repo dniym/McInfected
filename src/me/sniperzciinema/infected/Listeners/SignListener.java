@@ -39,34 +39,34 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 
 public class SignListener implements Listener {
-
+	
 	// //////////////////////////////////////////////////////-CLICK_COMMAND_SET_SIGN-//////////////////////////////////////////////////
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerClickCmdSetSign(PlayerInteractEvent event) {
 		if (!event.isCancelled())
 		{
 			Player p = event.getPlayer();
-
+			
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
 			{
 				Block b = event.getClickedBlock();
 				if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN))
 				{
-
+					
 					Sign sign = ((Sign) b.getState());
-
+					
 					// If the sign seems like a Command Set's sign
 					if (sign.getLine(0).contains("[Infected]") && sign.getLine(1).contains("CmdSet"))
 					{
 						// Set all the stuff needed
 						String cmdset = ChatColor.stripColor(sign.getLine(2));
 						boolean useVault = false;
-
+						
 						InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-
+						
 						int iPrice = 0;
 						String price = ChatColor.stripColor(sign.getLine(3).replaceAll("Cost: ", ""));
-
+						
 						// If the price starts with a $, then we'll set vault
 						// support to true, and remove the $ for now
 						if (price.startsWith(String.valueOf('$')))
@@ -76,19 +76,19 @@ public class SignListener implements Listener {
 						}
 						iPrice = Integer.valueOf(price);
 						int points = IP.getPoints(useVault);
-
+						
 						// Make sure they have permissions for this command set
 						if (p.hasPermission("Infected.CmdSets") || p.hasPermission("Infected.CmdSets." + cmdset))
 						{
 							if (iPrice <= points)
 							{
 								IP.setPoints(points - iPrice, useVault);
-
+								
 								// Lets just loop through all the commands in
 								// the set.
 								for (String row : Files.getSigns().getStringList("Command Sets." + cmdset))
 									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), row.replaceAll("<player>", event.getPlayer().getName()));
-
+								
 							}
 							else
 							{
@@ -103,9 +103,9 @@ public class SignListener implements Listener {
 			}
 		}
 	}
-
+	
 	// ///////////////////////////////////////////////-CLICK_COMMAND_SIGN-//////////////////////////////////////////////////
-
+	
 	// ///////////////////////////////////////////////-CLCIK_SHOP_SIGN_/////////////////////////////////////////////////////
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -113,7 +113,7 @@ public class SignListener implements Listener {
 		if (!event.isCancelled())
 		{
 			Player p = event.getPlayer();
-
+			
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
 			{
 				Block b = event.getClickedBlock();
@@ -124,12 +124,12 @@ public class SignListener implements Listener {
 						if (sign.getLine(0).contains("[Infected]") && !sign.getLine(1).contains("Playing") && !sign.getLine(1).contains("CmdSet") && !sign.getLine(1).toLowerCase().contains("click to use") && !sign.getLine(1).contains("Class") && !sign.getLine(1).contains("Classes"))
 						{
 							boolean useVault = false;
-
+							
 							InfPlayer IP = InfPlayerManager.getInfPlayer(p);
-
+							
 							int iPrice = 0;
 							String price = ChatColor.stripColor(sign.getLine(3).replaceAll("Cost: ", ""));
-
+							
 							// If the price starts with a $, then we'll set
 							// vault
 							// support to true, and remove the $ for now
@@ -140,7 +140,7 @@ public class SignListener implements Listener {
 							}
 							int points = IP.getPoints(useVault);
 							iPrice = Integer.valueOf(price);
-
+							
 							String materialName = ChatColor.stripColor(sign.getLine(1));
 							ItemStack stack = null;
 							Material material = null;
@@ -156,23 +156,22 @@ public class SignListener implements Listener {
 							// If the material was found
 							if (material != null)
 								stack = new ItemStack(material);
+							else if (Files.getShop().contains("Custom Items." + materialName + ".Item Code"))
+							{
+								stack = ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + materialName + ".Item Code"));
+								ItemMeta meta = stack.getItemMeta();
+								meta.setDisplayName(materialName);
+								stack.setItemMeta(meta);
+							}
+							// It's gotta be the start of an item name
+							// then...
 							else
-								if (Files.getShop().contains("Custom Items." + materialName + ".Item Code"))
-								{
-									stack = ItemHandler.getItemStack(Files.getShop().getString("Custom Items." + materialName + ".Item Code"));
-									ItemMeta meta = stack.getItemMeta();
-									meta.setDisplayName(materialName);
-									stack.setItemMeta(meta);
-								}
-								// It's gotta be the start of an item name
-								// then...
-								else
-									for (Material materials : Material.values())
-										if (materials.toString().startsWith(materialName))
-										{
-											stack = new ItemStack(materials);
-											break;
-										}
+								for (Material materials : Material.values())
+									if (materials.toString().startsWith(materialName))
+									{
+										stack = new ItemStack(materials);
+										break;
+									}
 							if (p.hasPermission("Infected.Shop") || p.hasPermission("Infected.Shop." + stack.getTypeId()))
 							{
 								if (iPrice <= points)
@@ -193,13 +192,13 @@ public class SignListener implements Listener {
 							}
 							else
 								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
-
+							
 						}
 					}
 			}
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateClassSign(SignChangeEvent event) {
 		if (!event.isCancelled())
@@ -215,10 +214,10 @@ public class SignListener implements Listener {
 				String line = event.getLine(3) != null ? event.getLine(3) : "";
 				Team team = line.equalsIgnoreCase("Human") ? Team.Human : line.equalsIgnoreCase("Zombie") ? Team.Zombie : null;
 				String className = event.getLine(2);
-
+				
 				if ((team == null) || className.equalsIgnoreCase("None") || InfClassManager.isRegistered(team, InfClassManager.getClass(team, className)))
 				{
-
+					
 					if (team == null)
 						if (InfClassManager.isClass(className))
 							team = InfClassManager.getClass(className).getTeam();
@@ -230,10 +229,10 @@ public class SignListener implements Listener {
 				else
 					player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 			}
-
+			
 		}
 	}
-
+	
 	// /////////////////////////////////////////////////-CREATE_CMD_SET-////////////////////////////////////////
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateCmdset(SignChangeEvent event) {
@@ -248,7 +247,7 @@ public class SignListener implements Listener {
 					event.setCancelled(true);
 				}
 				String commandSet = "None";
-
+				
 				if (Files.getSigns().getConfigurationSection("Command Sets") != null)
 				{
 					for (String sets : Files.getSigns().getConfigurationSection("Command Sets").getKeys(true))
@@ -257,7 +256,7 @@ public class SignListener implements Listener {
 							commandSet = sets;
 							break;
 						}
-
+					
 					if (!commandSet.equalsIgnoreCase("None"))
 					{
 						event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
@@ -270,7 +269,7 @@ public class SignListener implements Listener {
 						player.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 						event.setCancelled(true);
 					}
-
+					
 				}
 				else
 				{
@@ -280,9 +279,9 @@ public class SignListener implements Listener {
 			}
 		}
 	}
-
+	
 	// /////////////////////////////////////////////////////////-CREATE_SHOP_SIGN-///////////////////////////////////////////////////////
-
+	
 	// /////////////////////////////////////////////////////////-CREATE_COMMAND_SIGN-///////////////////////////////////////////////////
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateCMDSign(SignChangeEvent event) {
@@ -308,19 +307,19 @@ public class SignListener implements Listener {
 					event.setLine(1, ChatColor.GREEN + "Click to use CMD");
 					event.setLine(2, ChatColor.GOLD + event.getLine(2).toUpperCase());
 					event.setLine(3, ChatColor.GOLD + event.getLine(3).toUpperCase());
-
+					
 				}
 			}
 		}
 	}
-
+	
 	// /////////////////////////////////////////////////////////-CREATE_INFO_SIGN-/////////////////////////////////////////////////////
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateInfoSign(SignChangeEvent event) {
 		if (!event.isCancelled())
 		{
-
+			
 			Player player = event.getPlayer();
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && event.getLine(1).equalsIgnoreCase("Info"))
 			{
@@ -337,48 +336,48 @@ public class SignListener implements Listener {
 					event.setCancelled(true);
 				}
 				else
-					// Is Info Signs enabled
-					if (Settings.InfoSignsEnabled())
+				// Is Info Signs enabled
+				if (Settings.InfoSignsEnabled())
+				{
+					
+					event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
+					
+					String status = Lobby.getGameState().toString();
+					
+					int time = Lobby.getTimeLeft();
+					
+					event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Lobby.getPlayersInGame().size()));
+					event.setLine(2, ChatColor.GOLD + status);
+					if ((Lobby.getGameState() == GameState.Started) || (Lobby.getGameState() == GameState.Infecting) || (Lobby.getGameState() == GameState.Voting))
+						event.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
+					else
+						event.setLine(3, "");
+					
+					// Now lets save these signs
+					if (Files.getSigns().getStringList("Info Signs") == null)
 					{
-
-						event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
-
-						String status = Lobby.getGameState().toString();
-
-						int time = Lobby.getTimeLeft();
-
-						event.setLine(1, ChatColor.GREEN + "Playing: " + ChatColor.DARK_GREEN + String.valueOf(Lobby.getPlayersInGame().size()));
-						event.setLine(2, ChatColor.GOLD + status);
-						if ((Lobby.getGameState() == GameState.Started) || (Lobby.getGameState() == GameState.Infecting) || (Lobby.getGameState() == GameState.Voting))
-							event.setLine(3, ChatColor.GRAY + "Time: " + ChatColor.YELLOW + String.valueOf(time));
-						else
-							event.setLine(3, "");
-
-						// Now lets save these signs
-						if (Files.getSigns().getStringList("Info Signs") == null)
-						{
-							String[] list = { LocationHandler.getLocationToString(event.getBlock().getLocation()) };
-							Files.getSigns().set("Info Signs", list);
-							Files.saveSigns();
-						}
-						else
-						{
-							List<String> list = Files.getSigns().getStringList("Info Signs");
-							list.add(LocationHandler.getLocationToString(event.getBlock().getLocation()));
-							Files.getSigns().set("Info Signs", list);
-							Files.saveSigns();
-						}
-
+						String[] list = { LocationHandler.getLocationToString(event.getBlock().getLocation()) };
+						Files.getSigns().set("Info Signs", list);
+						Files.saveSigns();
 					}
+					else
+					{
+						List<String> list = Files.getSigns().getStringList("Info Signs");
+						list.add(LocationHandler.getLocationToString(event.getBlock().getLocation()));
+						Files.getSigns().set("Info Signs", list);
+						Files.saveSigns();
+					}
+					
+				}
 			}
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCreateShop(SignChangeEvent event) {
 		if (!event.isCancelled())
 		{
-
+			
 			Player p = event.getPlayer();
 			if (event.getLine(0).equalsIgnoreCase("[Infected]") && !event.getLine(1).equalsIgnoreCase("Info") && !event.getLine(1).equalsIgnoreCase("CmdSet") && !event.getLine(1).equalsIgnoreCase("cmd") && !event.getLine(1).equalsIgnoreCase("Class") && !event.getLine(1).contains("Classes"))
 			{
@@ -388,7 +387,7 @@ public class SignListener implements Listener {
 					p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					event.setCancelled(true);
 				}
-
+				
 				if (event.getLine(1).isEmpty() || event.getLine(2).isEmpty())
 				{
 					p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
@@ -402,13 +401,13 @@ public class SignListener implements Listener {
 						{
 							// Lets get the Item Code and the price
 							String price = event.getLine(2);
-
+							
 							// Set the sign
 							event.setLine(0, ChatColor.DARK_RED + "" + "[Infected]");
 							event.setLine(1, ChatColor.GRAY + event.getLine(1));
 							event.setLine(2, ChatColor.GREEN + "Click To Buy");
 							event.setLine(3, ChatColor.DARK_RED + price);
-
+							
 						}
 						// If its not in the custom items, it's either an
 						// item
@@ -417,7 +416,7 @@ public class SignListener implements Listener {
 						{
 							p.sendMessage(Msgs.Error_Sign_Not_Valid.getString());
 							event.setCancelled(true);
-
+							
 						}
 					}
 					catch (Exception e)
@@ -427,16 +426,16 @@ public class SignListener implements Listener {
 					}
 			}
 		}
-
+		
 	}
-
+	
 	// ////////////////////////////////////////////////-CHOOSE_A_CLASS-//////////////////////////////////////////////////////
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerChoosesClassFromSign(PlayerInteractEvent event) {
 		if (!event.isCancelled())
 		{
 			Player p = event.getPlayer();
-
+			
 			// Make sure the player is in the game
 			if (Lobby.isInGame(p) && (event.getAction() == Action.RIGHT_CLICK_BLOCK))
 			{
@@ -444,12 +443,12 @@ public class SignListener implements Listener {
 				if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN))
 				{
 					Sign sign = ((Sign) b.getState());
-
+					
 					// Lets make sure it's an Infected Class sign
 					if (sign.getLine(0).contains("[Infected]") && (sign.getLine(1).contains("Class") || sign.getLine(1).contains("Classes")))
 					{
 						// Make sure classes are enabled
-
+						
 						InfPlayer IP = InfPlayerManager.getInfPlayer(p);
 						String className = ChatColor.stripColor(sign.getLine(2));
 						Team team = null;
@@ -457,7 +456,7 @@ public class SignListener implements Listener {
 							team = Team.Zombie;
 						else
 							team = Team.Human;
-
+						
 						// If className is "None" well set the back to the
 						// default class
 						if (className.equalsIgnoreCase("None"))
@@ -467,23 +466,22 @@ public class SignListener implements Listener {
 						}
 						// If its anything other then "None" Make sure they
 						// have the permissions needed
+						else if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
+						{
+							IP.setInfClass(team, InfClassManager.getClass(team, className));
+							p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className, "<team>", team.toString()));
+						}
 						else
-							if (p.hasPermission("Infected.Classes." + team.toString()) || p.hasPermission("Infected.Classes." + team.toString() + "." + className))
-							{
-								IP.setInfClass(team, InfClassManager.getClass(team, className));
-								p.sendMessage(Msgs.Classes_Chosen.getString("<class>", className, "<team>", team.toString()));
-							}
-							else
-								p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
+							p.sendMessage(Msgs.Error_Misc_No_Permission.getString());
 					}
 				}
 			}
-
+			
 		}
 	}
-
+	
 	// //////////////////////////////////////////////////////-CREATE_CLASS_SIGN-//////////////////////////////////////////////////
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerClicksCMDSign(PlayerInteractEvent event) {
 		if (!event.isCancelled())
