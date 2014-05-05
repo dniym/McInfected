@@ -136,13 +136,7 @@ public class DamageEvents implements Listener {
 					if ((victim.getHealth() - e.getDamage()) <= 0)
 						Deaths.playerDies(DeathType.Other, null, victim);
 				}
-				else
-				{
-					// TODO: Check if the projectile was from a Gun, if yes,
-					// then DON'T DO THIS
-					e.setDamage(0);
-					e.setCancelled(true);
-				}
+
 				
 			}
 			
