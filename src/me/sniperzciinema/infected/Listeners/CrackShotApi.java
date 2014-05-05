@@ -20,6 +20,25 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
  * The CrackShot Api Listener
  */
 public class CrackShotApi implements Listener {
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	//Block Egg & Snowball Throwing (Who wants to throw ammo) - dNiym
+	public void NoThrow(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		Action action = event.getAction();
+		if (Lobby.isInGame(player)) {    // Check to see if they are playing
+			if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {  
+				int block = player.getItemInHand().getType().getId();
+				// block snow balls & eggs from being thrown (ammo types)
+				if(block == 332 || block == 344) {
+					player.sendMessage("You can't throw ammunition! Use a Firearm!");
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerGetShot(WeaponDamageEntityEvent e) {
